@@ -18,7 +18,7 @@ class CommandLineOptions:
 
     def set_values(self, args):
         """Examine the command line (args) and set values in the menu."""
-        from Tree import get_leaf
+        from tree.Tree import get_leaf
         for i, arg in enumerate(args):
             if arg.startswith('--'):
                 arg = arg[2:]  # strip off leading --
@@ -202,7 +202,7 @@ def listtree2Menu(menu_tree):
             ]
 
     """
-    from TreeItem import TreePath
+    from tree.Tree import TreePath
 
     def make_data_item(
         menu_path, level, data_item, menu):
@@ -213,17 +213,17 @@ def listtree2Menu(menu_tree):
         path = TreePath(menu_path).to_str()
         menu.submenu(path)
 
-    import tree
+    import tree.list_tree
     menu = Menu()
-    tree.traverse_list_tree(
+    tree.list_tree.traverse_list_tree(
         menu_tree,
-        callback_data_item=make_data_item,
-        callback_submenu_start=make_submenu,
+        callback_leaf=make_data_item,
+        callback_subtree_start=make_submenu,
         user_data=menu)
     return menu
 
 import nose.tools as nt
-from TreeItem import diff_strings, dump
+from tree.Tree import diff_strings, dump
 
 def test_listtree2Menu():
     from math import pi
