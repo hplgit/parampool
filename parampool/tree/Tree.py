@@ -1,4 +1,4 @@
-from SubTree import SubTree
+from parampool.tree.SubTree import SubTree
 
 class Tree:
 

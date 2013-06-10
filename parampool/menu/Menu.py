@@ -3,9 +3,9 @@ Representation of a menu tree.
 class Menu wraps class Tree and makes that class more suitable
 for menus by renaming methods and adding functionality.
 """
-from SubTree import SubTree
-from DataItem import DataItem
-from Tree import *
+from parampool.menu.DataItem import DataItem
+from parampool.tree.SubTree import SubTree
+from parampool.tree.Tree import *
 
 class Menu(Tree):
     def __init__(self, root=None, root_name='main'):

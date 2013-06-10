@@ -1,5 +1,5 @@
 """User interfaces for Menu."""
-from Menu import Menu
+from parampool.menu.Menu import Menu
 
 class CommandLineOptions:
     def __init__(self, menu):
@@ -18,7 +18,7 @@ class CommandLineOptions:
 
     def set_values(self, args):
         """Examine the command line (args) and set values in the menu."""
-        from Tree import get_leaf
+        from parampool.tree.Tree import get_leaf
         for i, arg in enumerate(args):
             if arg.startswith('--'):
                 arg = arg[2:]  # strip off leading --
@@ -202,7 +202,7 @@ def listtree2Menu(menu_tree):
             ]
 
     """
-    from Tree import TreePath
+    from parampool.tree.Tree import TreePath
 
     def make_data_item(
         menu_path, level, data_item, menu):
@@ -213,7 +213,7 @@ def listtree2Menu(menu_tree):
         path = TreePath(menu_path).to_str()
         menu.submenu(path)
 
-    import list_tree
+    from parampool.tree import list_tree
     menu = Menu()
     list_tree.traverse_list_tree(
         menu_tree,
@@ -223,7 +223,7 @@ def listtree2Menu(menu_tree):
     return menu
 
 import nose.tools as nt
-from Tree import diff_strings, dump
+from parampool.tree.Tree import diff_strings, dump
 
 def test_listtree2Menu():
     from math import pi
