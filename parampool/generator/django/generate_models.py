@@ -86,7 +86,7 @@ def generate_models_menu(compute_function, classname, outfile, menu):
     code = '''\
 from django.db import models
 from django.forms import ModelForm
-from html5.django.models import MinMaxFloat
+from parampool.html5.django.models import MinMaxFloat
 
 class %(classname)s(models.Model):
 ''' % vars()

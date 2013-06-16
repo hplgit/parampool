@@ -11,23 +11,37 @@ def generate_controller(compute_function, classname,
 
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
+
+    import inspect
+    arg_names = inspect.getargspec(compute_function).args
+    defaults  = inspect.getargspec(compute_function).defaults
+
     code = '''\
 import os
 from flask import Flask, render_template, request, session
 from werkzeug import secure_filename
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
-from models import %(classname)s
+from model import %(classname)s
 
+# Application object
+app = Flask(__name__)
+''' % vars()
+
+    # Add code for file upload only if it is strictly needed
+    file_upload = False
+    for name in arg_names:
+        if 'filename' in name:
+            file_upload = True
+            break
+
+    if file_upload:
+        code += '''
 # Allowed file types for file upload
 ALLOWED_EXTENSIONS = set(['txt', 'npy'])
 
 # Relative path of folder for uploaded files
 UPLOAD_DIR = 'uploads/'
 
-# Application object
-app = Flask(__name__)
-
-# Configure for uploading of files
 app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
 app.secret_key = 'MySecretKey'
 
@@ -36,20 +50,25 @@ if not os.path.isdir(UPLOAD_DIR):
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+''' % vars()
 
+    code += '''
 # Path to the web application
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = %(classname)s(request.form)
     if request.method == 'POST' and form.validate():
-
+''' % vars()
+    if file_upload:
+        code += '''
         # Save uploaded file if it exists and is valid
         if request.files:
             file = request.files[form.filename.name]
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-
+''' % vars()
+    code += '''
         # Compute result
         result = compute(form)
 
@@ -77,9 +96,6 @@ def compute(form):
     # Insert helper code if positional
     # arguments because the user must then convert form_data
     # elements explicitly.
-    import inspect
-    arg_names = inspect.getargspec(compute_function).args
-    defaults  = inspect.getargspec(compute_function).defaults
     if not defaults or len(defaults) != len(arg_names):
         # Insert example on argument conversion since there are
         # positional arguments where default_field might be the
@@ -92,8 +108,6 @@ def compute(form):
     #         form_data[i] = int(form_data[i])
     #    elif name == '...':
 '''
-
-
     code += '''
     # Run computations
     result = compute_function(*form_data)

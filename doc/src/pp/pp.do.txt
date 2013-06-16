@@ -14,25 +14,20 @@ text, widget type, validation information, etc. A user interface can
 then be automatically generated. The currently supported user
 interfaces are the command line, files, and web pages.
 
-======= TODO =======
+======= Application =======
 
- * Go for projectile motion? Cool plots, ball can be movie.
-   Should include lift force and a wind.
- * Or falling bodies.
- * Use `solver` from `bumpy` as main function. Make an interface to
-   it such that
+We shall work with a sample application concerning the simulation of
+a ball thrown through air. Given the initial velocity of the ball,
+and some other data like mass and radius, we want to compute
+the trajectory of the ball until it hits the ground. The details of
+the calculations are not of interest here as our focus is on software
+for assigning input data and for displaying the results. However,
+the interested reader can consult the box below for the inner workings
+of the simulations.
 
-   * s=k*u, have k as parameter, linear damping, F=0, V=0
-   * F=A*sin(w*t), A and w are parameters
-   * damping with two values and radio buttons, b
-   * s is a text expression
-   * F is a filename (0 is default)
-   * there is a submenu for F with different models: filename,
-     A*sin(w*t) (submenu), white noise with intensity, formula of t
-   * another submenu for s models
-
-   on the main menu: damping can have radio buttons for linear b*u and
-   quadratic b*u**2, F has list of different type of forces
+#The various features of Parampool will be introduced in a series
+#of examples where the complexity of input and the results ranges
+#from very simple to quite advanced.
 
 !bnotice Mathematical model
 
@@ -68,16 +63,68 @@ $\bm{w}=w\bm{i}$. Furthermore,
 \bm{i}_n &= (-b, a)\hbox{ if }a>0\hbox{ else }(b,-a)
 \end{align}
 !et
+!enotice
 
-All our examples build various interfaces to a mathematical model
-for vibrating systems. The model can be used to simulate, e.g.,
 
-the damping of a car or bike on a bumpy road, or
-the oscillatory motion of a pendulum
+======= User interfaces for functions =======
+
+Parampool can automatically generate user interfaces to a given
+function. This functionality will be explained through several examples
+of increasing complexity, using the trajectory of a ball as explained
+above as application.
+
+===== Real numbers as input and output =====
+
+Suppose you have some function
+
+!bc pycod
+def compute_drag_free_landing(initial_velocity, initial_angle):
+    ...
+    return landing_point
+!ec
+This function returns the landing point on
+the ground (`landing_point`) of a ball that is initially thrown with a
+given velocity in magnitude (`initial_velocity`), making
+an angle (`initial_angle`) with the ground. There are two real input
+variables and one real output variable. The function is available
+in a module `compute.py`.
+
+=== Flask interface ===
+
+Next: keyword arguments and return of plot
+
+======= Working with a menu of input parameters =======
+
+Parampool's main focus is on scientific applications with lots of
+input data of different type, organized in a hierarchical tree fashion.
+
+Use example with full drag, spin, wind, choice of numerical scheme, dt,
+and get two plots back.
+
+
+===== Extra =====
+
+Can be exercises:
+Use `solver` from `bumpy` as main function.
+
 !bt
 \begin{equation}
 mu'' + f(u') + s(u) = F(t),
 label{pp:model:eq1}
 \end{equation}
 !et
-!enotice
+
+Make an interface to
+it such that
+
+   * s=k*u, have k as parameter, linear damping, F=0, V=0
+   * F=A*sin(w*t), A and w are parameters
+   * damping with two values and radio buttons, b
+   * s is a text expression
+   * F is a filename (0 is default)
+   * there is a submenu for F with different models: filename,
+     A*sin(w*t) (submenu), white noise with intensity, formula of t
+   * another submenu for s models
+
+On the main menu: damping can have radio buttons for linear b*u and
+quadratic b*u**2, F has list of different type of forces

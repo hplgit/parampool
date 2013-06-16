@@ -10,15 +10,21 @@ setup(name='parampool',
       long_description=parampool.__doc__,
       platforms='any',
       package_dir={
-          'parampool.flask_generator': os.path.join('parampool', 'flask_generator'),
-          'parampool.django_generator': os.path.join('parampool', 'django_generator')},
-      package_data={'parampool.flask_generator': ['static.tar.gz'],
-                    'parampool.django_generator': ['static.tar.gz']},
+          'parampool.generator.flask':
+          os.path.join('parampool', 'generator', 'flask'),
+          'parampool.generator.django':
+          os.path.join('parampool', 'generator', 'django')},
+      package_data={'parampool.generator.flask': ['static.tar.gz'],
+                    'parampool.generator.flask': ['static.tar.gz']},
       packages=['parampool',
                 'parampool.tree',
                 'parampool.menu',
-                'parampool.flask_generator',
-                'parampool.django_generator',
+                'parampool.generator',
+                'parampool.generator.flask',
+                'parampool.generator.django',
+                'parampool.html5',
+                'parampool.html5.flask',
+                'parampool.html5.django',
                 'parampool.misc',
                 ],)
 

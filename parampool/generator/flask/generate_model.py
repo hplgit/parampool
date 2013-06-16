@@ -126,7 +126,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
 
     code = '''\
 import wtforms as wtf
-from html5.flask.fields import FloatField, RangeFloatField
+from parampool.html5.flask.fields import FloatField, RangeFloatField
 
 class %(classname)s(wtf.Form):
 ''' % vars()
@@ -170,7 +170,7 @@ def generate_model_inspect(compute_function, classname, outfile, default_field):
 
     code = '''\
 import wtforms as wtf
-from html5.flask.fields import FloatField
+from parampool.html5.flask.fields import FloatField
 
 class %(classname)s(wtf.Form):
 ''' % vars()
@@ -292,7 +292,7 @@ from parampool.misc.assert_utils import assert_equal_text
 def test_inspect():
     model_code = """\
 import wtforms as wtf
-from html5.flask.fields import FloatField
+from parampool.html5.flask.fields import FloatField
 
 class Test(wtf.Form):
     a        = FloatField(validators=[wtf.validators.InputRequired()])
@@ -321,7 +321,7 @@ def test_menu():
 
     model_code = """\
 import wtforms as wtf
-from html5.flask.fields import FloatField, RangeFloatField
+from parampool.html5.flask.fields import FloatField, RangeFloatField
 
 class Test(wtf.Form):
      a     = wtf.IntegerField(u'velocity of body (km/h)',
@@ -391,7 +391,6 @@ class Test(wtf.Form):
                       'newly generated', 'reference result',
                       msg='Error in generated text!')
 
-print 'Hei'
 if __name__ == '__main__':
     test_inspect()
     test_menu()

@@ -1,6 +1,6 @@
 import odespy
 import numpy as np
-from math import pi, sqrt
+from math import pi, sqrt, sin, cos
 import matplotlib.pyplot as plt
 
 def aerodynamic_force(C, rho, A, v):
@@ -30,7 +30,8 @@ def forces(v_x, v_y, w, rho, A, C_D, C_L, m, g):
     gravity = -m*g
     return drag_x + lift_x, drag_y + lift_y + gravity
 
-class Problem:
+class Ball:
+    """Data for a ball thrown through air."""
     def __init__(self, m, R, drag=True, spinrate=0, w=0):
         self.m, self.R, self.drag, self.spinrate, self.w = \
                 m, R, drag, spinrate, w
@@ -93,30 +94,77 @@ def solver(problem, method, dt):
 
     return x, y, t, gravity_force, drag_force, lift_force
 
-xmax = 0
-ymax = 0
-for dt in [0.02]:
-    #for method in ['ForwardEuler', 'RK2', 'RK4']:
-    method = 'RK4'
-    for drag in [True, False]:
-        spinrate = 50 if drag else 0
-        problem = Problem(m=0.1, R=0.11, drag=drag,
-                          spinrate=spinrate, w=0)
-        problem.set_initial_velocity(5, 5)
-        x, y, t, g, d, l = solver(problem, method, dt)
-        plt.figure(1)
-        plt.plot(x, y, label='drag=%s' % (drag))
-        if drag:
-            plt.figure(2)
-            plt.plot(x, d, label='drag force')
-            if spinrate:
-                plt.plot(x, l, label='lift force')
-            plt.plot(x, np.abs(g), label='gravity force')
-        xmax = max(xmax, x.max())
-        ymax = max(ymax, y.max())
-plt.figure(1)
-plt.axis([x[0], xmax, 0, 1.2*ymax])
-plt.legend()
-plt.figure(2)
-plt.legend()
-plt.show()
+def compute_drag_free_landing(initial_velocity, initial_angle):
+
+    v_x0 = initial_velocity*cos(initial_angle*pi/180)
+    v_y0 = initial_velocity*sin(initial_angle*pi/180)
+    # m and R have no effect when gravity alone acts
+    problem = Ball(m=0.1, R=0.11, drag=False, spinrate=0, w=0)
+    problem.set_initial_velocity(v_x0, v_y0)
+    # Estimate dt
+    T = v_y0/(0.5*9.81); dt = T/500
+    x, y, t, gravity, drag, lift = solver(problem, 'RK4', dt)
+    landing_point = x[-1] # (better: find intersection point)
+    return landing_point
+
+def compute_drag_free_motion_plot(
+    initial_velocity=5,
+    initial_angle=45):
+
+    v_x0 = initial_velocity*cos(initial_angle*pi/180)
+    v_y0 = initial_velocity*sin(initial_angle*pi/180)
+    # m and R have no effect when gravity alone acts
+    problem = Ball(m=0.1, R=0.11, drag=False, spinrate=0, w=0)
+    problem.set_initial_velocity(v_x0, v_y0)
+    # Estimate dt
+    T = v_y0/(0.5*9.81); dt = T/500
+    x, y, t, gravity, drag, lift = solver(problem, 'RK4', dt)
+    plt.plot(x, y)
+    import time  # use time to make unique filenames
+    filename = 'tmp_%s.png' % time.time()
+    plt.savefig(filename)
+    return filename
+
+def compute_motion(
+    initial_velocity=5,
+    initial_angle=45,
+    spinrate=50,
+    m=0.1,
+    R=0.11,
+    ):
+    v_x0 = initial_velocity*cos(initial_angle*pi/180)
+    v_y0 = initial_velocity*sin(initial_angle*pi/180)
+    xmax = 0
+    ymax = 0
+
+    for dt in [0.02]:
+        #for method in ['ForwardEuler', 'RK2', 'RK4']:
+        method = 'RK4'
+        for drag in [True, False]:
+            problem = Ball(m=m, R=R, drag=drag,
+                           spinrate=spinrate if drag else 0, w=0)
+            problem.set_initial_velocity(v_x0, v_y0)
+            x, y, t, g, d, l = solver(problem, method, dt)
+            plt.figure(1)
+            if drag:
+                plt.plot(x, y, label='%s' % ('w/drag' if drag else ''))
+            else:
+                plt.plot(x, y, 'r--')
+            if drag:
+                plt.figure(2)
+                plt.plot(x, d, label='drag force')
+                if spinrate:
+                    plt.plot(x, l, label='lift force')
+                plt.plot(x, np.abs(g), label='gravity force')
+            xmax = max(xmax, x.max())
+            ymax = max(ymax, y.max())
+    plt.figure(1)
+    plt.axis([x[0], xmax, 0, 1.2*ymax])
+    plt.legend()
+    plt.figure(2)
+    plt.legend()
+    plt.show()
+
+if __name__ == '__main__':
+    print compute_drag_free_landing(5, 60)
+    compute_motion()
