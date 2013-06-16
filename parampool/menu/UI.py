@@ -213,9 +213,9 @@ def listtree2Menu(menu_tree):
         path = TreePath(menu_path).to_str()
         menu.submenu(path)
 
-    import parampool.tree.list_tree
+    from parampool.tree import list_tree
     menu = Menu()
-    parampool.tree.list_tree.traverse_list_tree(
+    list_tree.traverse_list_tree(
         menu_tree,
         callback_leaf=make_data_item,
         callback_subtree_start=make_submenu,
