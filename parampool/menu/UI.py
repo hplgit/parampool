@@ -1,5 +1,5 @@
 """User interfaces for Menu."""
-from Menu import Menu
+from parampool.menu.Menu import Menu
 
 class CommandLineOptions:
     def __init__(self, menu):
@@ -18,7 +18,7 @@ class CommandLineOptions:
 
     def set_values(self, args):
         """Examine the command line (args) and set values in the menu."""
-        from Tree import get_leaf
+        from parampool.tree.Tree import get_leaf
         for i, arg in enumerate(args):
             if arg.startswith('--'):
                 arg = arg[2:]  # strip off leading --
@@ -202,7 +202,7 @@ def listtree2Menu(menu_tree):
             ]
 
     """
-    from TreeItem import TreePath
+    from parampool.tree.Tree import TreePath
 
     def make_data_item(
         menu_path, level, data_item, menu):
@@ -213,17 +213,18 @@ def listtree2Menu(menu_tree):
         path = TreePath(menu_path).to_str()
         menu.submenu(path)
 
-    import tree
+    import parampool.tree.list_tree
     menu = Menu()
-    tree.traverse_list_tree(
+    parampool.tree.list_tree.traverse_list_tree(
         menu_tree,
-        callback_data_item=make_data_item,
-        callback_submenu_start=make_submenu,
+        callback_leaf=make_data_item,
+        callback_subtree_start=make_submenu,
         user_data=menu)
     return menu
 
 import nose.tools as nt
-from TreeItem import diff_strings, dump
+from parampool.tree.Tree import dump
+from parampool.misc.assert_utils import assert_equal_text
 
 def test_listtree2Menu():
     from math import pi
@@ -263,8 +264,7 @@ sub menu "main" (level=0)
         A
         d
         C_D"""
-    nt.assert_equal(str(m), reference,
-                    msg=diff_strings(str(m), reference))
+    assert_equal_text(str(m), reference)
     return m
 
 def test_read_menufile():
@@ -302,8 +302,8 @@ sub menu "main" (level=0)
         A
         d
         C_D"""
-    nt.assert_equal(str(m), reference,
-                    msg=diff_strings(str(m), reference))
+    assert_equal_text(str(m), reference)
+
     reference = """\
 submenu main
     print intermediate results
@@ -323,11 +323,10 @@ submenu main
 
 end
 """
-    nt.assert_equal(write_menufile(m), reference,
-                    msg=diff_strings(write_menufile(m), reference))
+    assert_equal_text(write_menufile(m), reference)
 
 def test_CommandLineOptions():
-    import Menu
+    import parampool.menu.Menu as Menu
     menu = Menu.make_test_menu_drag()
     clo = CommandLineOptions(menu)
     clargs = '--/main/U 1.2 --rho 2.6 --mu 5.5E-5 '\

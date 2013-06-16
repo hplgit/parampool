@@ -1,4 +1,4 @@
-from SubTree import SubTree
+from parampool.tree.SubTree import SubTree
 
 class Tree:
 
@@ -268,21 +268,7 @@ def dump(tree):
     return '\n'.join(outlines)
 
 import nose.tools as nt
-
-def diff_strings(new, reference):
-    """
-    Visualize the difference between the strings
-    `new` and `reference`.
-    """
-    import difflib
-    diff_html = difflib.HtmlDiff().make_file(
-        new.splitlines(),
-        reference.splitlines(),
-        'new', 'reference', 5)
-    f = open('__diff.html', 'w')
-    f.write(diff_html)
-    f.close()
-    return 'open __diff.html in a browser to see differences in strings'
+from parampool.misc.assert_utils import assert_equal_text
 
 def test_Tree_basics():
     t = Tree(root_name='main')
@@ -348,8 +334,7 @@ sub tree "sub2" (level=0)
         item10
     subsub tree "sub5" (level=1)
         item11"""
-    nt.assert_equal(str(t), reference,
-                    msg=diff_strings(str(t), reference))
+    assert_equal_text(str(t), reference)
 
     reference = '''\
 Leaf "item1"
@@ -369,8 +354,7 @@ sub tree "sub2" (level=0)
         Leaf "item10"
     subsub tree "sub5" (level=1)
         Leaf "item11"'''
-    nt.assert_equal(dump(t), reference,
-                    msg=diff_strings(dump(t), reference))
+    assert_equal_text(dump(t), reference)
 
 if __name__ == '__main__':
     test_Tree_basics()

@@ -3,9 +3,9 @@ Representation of a menu tree.
 class Menu wraps class Tree and makes that class more suitable
 for menus by renaming methods and adding functionality.
 """
-from SubTree import SubTree
-from DataItem import DataItem
-from TreeItem import *
+from parampool.tree.SubTree import SubTree
+from parampool.menu.DataItem import DataItem
+from parampool.tree.Tree import Tree, hash_all_leaves
 
 class Menu(Tree):
     def __init__(self, root=None, root_name='main'):
@@ -46,13 +46,14 @@ class Menu(Tree):
 
 
 import nose.tools as nt
+from parampool.misc.assert_utils import assert_equal_text
 
 def make_test_menu_dummy():
     return test_Menu()
 
 def make_test_menu_drag():
-    import UI
-    return UI.test_listtree2Menu()
+    import parampool.menu.UI
+    return parampool.menu.UI.test_listtree2Menu()
 
 def test_Menu():
     m = Menu()
@@ -109,8 +110,7 @@ sub menu "sub2" (level=0)
         item10
     subsub menu "sub5" (level=1)
         item11"""
-    nt.assert_equal(str(m), reference,
-                    msg=diff_strings(str(m), reference))
+    assert_equal_text(str(m), reference)
     return m
 
 if __name__ == '__main__':

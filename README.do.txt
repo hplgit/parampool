@@ -3,10 +3,10 @@
 The `parampool` package contains
 
  * a general tree data structure in Python (subpackage `tree`),
- * an adaption of the tree structure to menus of input parameters
+ * an application of the tree structure to menus of input parameters
    for simulation programs (subpackage `menu`),
- * tools automatic generation of web-based user interfaces for
-   the menu (subpackage `generator`).
+ * tools for automatic generation of web-based user interfaces
+   (subpackage `generator`), based on a menu or just a function.
 
 With `parampool` it is easy to equip a scientific application with
 various kinds of user interfaces: graphical via web, command line,

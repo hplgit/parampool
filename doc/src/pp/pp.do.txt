@@ -1,0 +1,83 @@
+TITLE: Parampool Tutorial
+AUTHOR: Hans Petter Langtangen at Center for Biomedical Computing, Simula Research Laboratory and Department of Informatics, University of Oslo
+AUTHOR: Anders Johansen at Center for Biomedical Computing, Simula Research Laboratory
+DATE: today
+
+__Summary.__
+Parampool is a Python package for defining and automatically
+generating web interfaces for scientific applications. The simplest
+use is to pass a Python function to Parampool and get a web interface
+for setting the arguments to the function. More powerful use consists
+in defining an input *menu*, which is a tree structure of parameters,
+where each parameter is associated with a name, default value, help
+text, widget type, validation information, etc. A user interface can
+then be automatically generated. The currently supported user
+interfaces are the command line, files, and web pages.
+
+======= TODO =======
+
+ * Go for projectile motion? Cool plots, ball can be movie.
+   Should include lift force and a wind.
+ * Or falling bodies.
+ * Use `solver` from `bumpy` as main function. Make an interface to
+   it such that
+
+   * s=k*u, have k as parameter, linear damping, F=0, V=0
+   * F=A*sin(w*t), A and w are parameters
+   * damping with two values and radio buttons, b
+   * s is a text expression
+   * F is a filename (0 is default)
+   * there is a submenu for F with different models: filename,
+     A*sin(w*t) (submenu), white noise with intensity, formula of t
+   * another submenu for s models
+
+   on the main menu: damping can have radio buttons for linear b*u and
+   quadratic b*u**2, F has list of different type of forces
+
+!bnotice Mathematical model
+
+!bt
+\begin{equation}
+m\frac{d^2}{\bm{r}}{dt^2} = -m\bm{g} - \frac{1}{2}C_D\varrho A v^2\bm{i}_t
++ \frac{1}{2}C_L\varrho A v^2\bm{i}_n + \frac{1}{2}C_S\varrho A v^2(\bm{i}_t
+\times \bm{i}_n),
+label{pp:ballistic:eq1}
+\end{equation}
+!et
+where $m$ is the mass of the body, $\bm{g}$ is the acceleration of
+gravity vector, $C_D$ is a drag coefficient, $\varrho$ is the density
+of air, $A$ is the cross-section area of the body perpendicular to the motion,
+$v = |\bm{v}-\bm{w}|$ is the relative velocity between the body,
+$\bm{v}=d\bm{r}/dt$, and a given wind velocity $\bm{w}$, $C_L$
+is a lift coefficient, $C_S$ is a coefficient for the sidewind or lateral
+aerodynamic force, $\bm{i}_t$
+is a unit tangent vector of the body's path, while $\bm{i}_n$ is a unit
+vector normal to the path tilting upwards.
+
+We can simplify the equation for a two-dimensional motion in an $xy$ plane
+with unit vectors $\bm{i}$ and $\bm{j}$ in the $x$ and $y$ directions,
+respectively.
+Then we skip the sidewind force (set $C_S=0$). We also let gravity
+point downwards, $\bm{g}=-g\bm{j}$, and let the wind velocity be horizontal:
+$\bm{w}=w\bm{i}$. Furthermore,
+
+!bt
+\begin{align}
+\bm{i}_t &= \frac{\bm{v}}{\left|\bm{v}\right|} \equiv (a,b),\quad \bm{v}
+= \frac{d\bm{r}}{dt},
+\bm{i}_n &= (-b, a)\hbox{ if }a>0\hbox{ else }(b,-a)
+\end{align}
+!et
+
+All our examples build various interfaces to a mathematical model
+for vibrating systems. The model can be used to simulate, e.g.,
+
+the damping of a car or bike on a bumpy road, or
+the oscillatory motion of a pendulum
+!bt
+\begin{equation}
+mu'' + f(u') + s(u) = F(t),
+label{pp:model:eq1}
+\end{equation}
+!et
+!enotice

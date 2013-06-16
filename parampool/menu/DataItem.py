@@ -31,7 +31,7 @@ class DataItem:
 
     A number and a unit can be
     """
-    _legal_data = 'name default unit help value str2type minmax options widget validator namespace user_data symbol'.split()
+    _legal_data = 'name default unit help value str2type minmax options widget validate namespace user_data symbol'.split()
 
     def _signature(self):
         """Return output signature with "DataItem: name=..."."""
@@ -324,7 +324,6 @@ import nose.tools as nt
 
 def test_DataItem_set_value():
     d = DataItem(name='A', default=1.0)  # minimal
-    print isinstance(d, Leaf), issubclass(DataItem, Leaf) #[[[
 
     # Test that non-strings cannot be assigned with set_value
     try:
