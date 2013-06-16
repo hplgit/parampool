@@ -91,7 +91,16 @@ in a module `compute.py`.
 
 === Flask interface ===
 
-Next: keyword arguments and return of plot
+Show plot.
+
+=== Django interface ===
+
+Next: return of HTML code with plot, put plot in static
+
+Next: full app with m, R, spin, w, method, dt, two plots,
+one with trajectory (in title) and one with the forces.
+dt=None makes autocalc of dt based on T (T/500). Need to adjust so
+that None means TextField - can auto handle this.
 
 ======= Working with a menu of input parameters =======
 
@@ -101,6 +110,20 @@ input data of different type, organized in a hierarchical tree fashion.
 Use example with full drag, spin, wind, choice of numerical scheme, dt,
 and get two plots back.
 
+Three submenus:
+
+ * Initial state: velocity and position (4 in a submenu)
+ * Numerics (2 in a submenu, could extend if adaptive scheme with tolerance,
+   have dt=None for sensible default value but that's not relevant if
+   we work with rk45), have method as list of options)
+ * Physics (w, spin, m and R in a submenu)
+
+What about w(t) like a w_0 + sin?
+
+Could have an exercise with a missile, rho depending on height (see sports
+book) rho_sea*exp(-0001036y) fra De Mestre, C_D dep on v see
+http://en.wikipedia.org/wiki/Drag_equation (no the relevant C_D is probably
+beyond the drag crisis and no need for C_D(Re))
 
 ===== Extra =====
 
