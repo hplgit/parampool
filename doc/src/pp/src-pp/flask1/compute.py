@@ -107,6 +107,15 @@ def compute_drag_free_landing(initial_velocity, initial_angle):
     landing_point = x[-1] # (better: find intersection point)
     return landing_point
 
+    class R:
+        def __init__(self, x):
+            self.x = x
+
+        def __str__(self):
+            return '<font color="blue">%s</font>' % self.x
+    result = R(landing_point)
+    return result
+
 def compute_drag_free_motion_plot(
     initial_velocity=5,
     initial_angle=45):
@@ -123,7 +132,8 @@ def compute_drag_free_motion_plot(
     import time  # use time to make unique filenames
     filename = 'tmp_%s.png' % time.time()
     plt.savefig(filename)
-    return filename
+    result = '<img src="%s>' % filename
+    return result
 
 def compute_motion(
     initial_velocity=5,

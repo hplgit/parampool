@@ -35,7 +35,7 @@ def generate_template_std(classname, outfile):
 
     {%% if result != None %%}
       <h2>Results:</h2>
-        {{ result }}
+        {{ result|safe }}
     {%% endif %%}
   </body>
 </html>''' % vars()
