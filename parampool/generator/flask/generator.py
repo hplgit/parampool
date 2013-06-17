@@ -1,3 +1,5 @@
+import os, shutil
+
 from generate_model import generate_model
 from generate_controller import generate_controller
 from generate_template import generate_template
@@ -58,12 +60,6 @@ def generate(compute_function,
         classname = ''.join([s.capitalize()
                              for s in _compute_function_name.split('_')])
 
-    generate_template(compute_function, classname, output_template,
-                      menu, overwrite_template)
-    generate_model(compute_function, classname, output_model,
-                   default_field, menu, overwrite_model)
-    generate_controller(compute_function, classname, output_controller,
-                        output_template, overwrite_controller)
     # Copy static files
     import os, shutil, tarfile
     shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
@@ -72,3 +68,9 @@ def generate(compute_function,
     archive.extractall()
     os.remove('static.tar.gz')
 
+    generate_template(compute_function, classname, output_template,
+                      menu, overwrite_template)
+    generate_model(compute_function, classname, output_model,
+                   default_field, menu, overwrite_model)
+    generate_controller(compute_function, classname, output_controller,
+                        output_template, overwrite_controller)

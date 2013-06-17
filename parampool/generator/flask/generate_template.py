@@ -47,35 +47,14 @@ def generate_template_std(classname, outfile):
         f.write(code)
         f.close()
 
-def generate_template_dtree(compute_function, classname, menu,
-                            outfile, overwrite, align='left'):
+def generate_template_dtree(compute_function, classname,
+                            menu, outfile, align='left'):
 
     # TODO: Support for right align in 'parent' functions
     from latex_symbols import get_symbol, symbols_same_size
     from progressbar import ProgressBar, Percentage, Bar, ETA, RotatingMarker
     import inspect
     args = inspect.getargspec(compute_function).args
-
-    # Copy dtree data to static folder in current directory
-    try:
-        shutil.copytree(os.path.join(os.path.dirname(__file__), 'static'),
-                        os.path.join(os.getcwd(), 'static'))
-    except OSError:
-        if not overwrite:
-            choice = raw_input("A folder named static already exists. Overwrite? [Y/N]: ")
-            if strtobool(choice):
-                # TODO: Perhaps os.path.walk through the folder and copy in
-                # only files that are needed..
-                shutil.rmtree(os.path.join(os.getcwd(), 'static'))
-                shutil.copytree(os.path.join(os.path.dirname(__file__), 'static'),
-                                os.path.join(os.getcwd(), 'static'))
-            else:
-                return None
-        else:
-            shutil.rmtree(os.path.join(os.getcwd(), 'static'))
-            shutil.copytree(os.path.join(os.path.dirname(__file__), 'static'),
-                            os.path.join(os.getcwd(), 'static'))
-
 
     pre_code = """\
 <html>
@@ -206,6 +185,6 @@ def generate_template(compute_function, classname, outfile, menu=None, overwrite
 
     if menu is not None:
         return generate_template_dtree(
-                compute_function, classname, menu, outfile, overwrite)
+                compute_function, classname, menu, outfile)
     else:
         return generate_template_std(classname, outfile)
