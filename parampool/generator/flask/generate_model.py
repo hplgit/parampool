@@ -222,6 +222,7 @@ of code that may be needed.
                  type(True): 'wtf.BooleanField',
                  type([]):   'wtf.TextField',
                  type(()):   'wtf.TextField',
+                 type(None): 'wtf.TextField',
                  type(class_tp):        'wtf.TextField',
                  type(numpy.ndarray):   'wtf.TextField',
                  }
@@ -262,7 +263,7 @@ of code that may be needed.
                         if isinstance(value, str):
                             code += "'%(value)s'," % vars()
 
-                        # Floats, integers, ...
+                        # Floats, integers, whatever...
                         else:
                             code += "%(value)s," % vars()
                         code += """

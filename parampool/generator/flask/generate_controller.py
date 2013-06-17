@@ -127,7 +127,17 @@ def compute(form):
                 pass  # special widgets for these types do the conversion
             elif isinstance(defaults[i], numpy.ndarray):
                 form_data[i] = numpy.ndarray(eval(form_data[i]))
+            elif defaults[i] is None:
+                if form_data[i] == 'None':
+                    form_data[i] = None
+                else:
+                    try:
+                        # Try eval if it succeeds...
+                        form_data[i] = eval(form_data[i])
+                    except:
+                        pass # Just keep the text
             else:
+                # Use eval to convert to right type (hopefully)
                 try:
                     form_data[i] = eval(form_data[i])
                 except:

@@ -160,22 +160,34 @@ of code that may be needed.
 
     # Avoid possible index error
     if defaults:
-        defaults = [None]*(len(arg_names)-len(defaults)) + list(defaults)
+        defaults = ["none"]*(len(arg_names)-len(defaults)) + list(defaults)
     else:
-        defaults = [None]*len(arg_names)
+        defaults = ["none"]*len(arg_names)
     longest_name = max(len(name) for name in arg_names)
 
-    # Map type of default to right form field
+    class Dummy:
+        pass
+
+    class_tp = Dummy()  # for user-defined types
+    import numpy
     type2form = {type(1.0):  'FloatField',
-                 type(1):    'IntegerField',
-                 type(''):   'TextField',
-                 type(True): 'ChoiceField',
+                 type(1):    'wtf.IntegerField',
+                 type(''):   'wtf.TextField',
+                 type(True): 'wtf.BooleanField',
+                 type([]):   'wtf.TextField',
+                 type(()):   'wtf.TextField',
+                 type(None): 'wtf.TextField',
+                 type(class_tp):        'wtf.TextField',
+                 type(numpy.ndarray):   'wtf.TextField',
                  }
+    # A compute(form) function will convert from TextField string
+    # to the right types: list, tuple, user-defined class, array, via
+    # eval
 
     for name, value in zip(arg_names, defaults):
 
         # No default value
-        if value is None:
+        if value is "none":
             code += """\
     %%(name)-%ds = models.%%(default_field)s(verbose_name=' %%(name)s')
 """ % longest_name % vars()
@@ -205,7 +217,7 @@ of code that may be needed.
                         if isinstance(value, str):
                             code += "'%(value)s')\n" % vars()
 
-                        # Floats, integers, ...
+                        # Floats, integers, whatever...
                         else:
                             code += "%(value)s)\n" % vars()
             else:
