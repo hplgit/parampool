@@ -14,5 +14,5 @@ def myfunc(a=1.2, b=2, c='some text', d=None,
     var = 1  # must be defined as variable before iterating over locals()
     for var in locals():
         if var not in ('r', 'var'):
-            r += '<pre>\n' + repr(locals()[var]) + '\n</pre>\n'
+            r += '<tt><font color="red">%s</font>: ' % var + repr(locals()[var]) + '</tt><br>\n'
     return r
