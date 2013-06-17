@@ -198,11 +198,11 @@ See %(outfile)s, # Convert data ... for what type
 of code that may be needed.
 """ % vars()
 
-    # Avoid possible index error
+    # Make defaults as long as arg_names so we can traverse both with zip
     if defaults:
-        defaults = [None]*(len(arg_names)-len(defaults)) + list(defaults)
+        defaults = ["none"]*(len(arg_names)-len(defaults)) + list(defaults)
     else:
-        defaults = [None]*len(arg_names)
+        defaults = ["none"]*len(arg_names)
     longest_name = max(len(name) for name in arg_names)
 
     # Need to use wtforms for all fields except FloatField
@@ -211,16 +211,28 @@ of code that may be needed.
             default_field = "wtf." + default_field
 
     # Map type of default to right form field
+    class Dummy:
+        pass
+
+    class_tp = Dummy()  # for user-defined types
+    import numpy
     type2form = {type(1.0):  'FloatField',
                  type(1):    'wtf.IntegerField',
                  type(''):   'wtf.TextField',
                  type(True): 'wtf.BooleanField',
+                 type([]):   'wtf.TextField',
+                 type(()):   'wtf.TextField',
+                 type(class_tp):        'wtf.TextField',
+                 type(numpy.ndarray):   'wtf.TextField',
                  }
+    # A compute(form) function will convert from TextField string
+    # to the right types: list, tuple, user-defined class, array, via
+    # eval
 
     for name, value in zip(arg_names, defaults):
 
-        # No default value
-        if value is None:
+        # No default value?
+        if value == "none":
             code += """\
     %%(name)-%ds = %%(default_field)s(validators=[wtf.validators.InputRequired()])
 """ % longest_name % vars()

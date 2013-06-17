@@ -108,6 +108,32 @@ def compute(form):
     #         form_data[i] = int(form_data[i])
     #    elif name == '...':
 '''
+    else:
+        # We have default values: do right conversions
+        code += '''
+    defaults  = inspect.getargspec(compute_function).defaults
+
+    # Make defaults as long as arg_names so we can traverse both with zip
+    if defaults:
+        defaults = ["none"]*(len(arg_names)-len(defaults)) + list(defaults)
+    else:
+        defaults = ["none"]*len(arg_names)
+
+    # Convert form data to the right type:
+    import numpy
+    for i in range(len(form_data)):
+        if defaults[i] != "none":
+            if isinstance(defaults[i], (str,bool,int,float)):
+                pass  # special widgets for these types do the conversion
+            elif isinstance(defaults[i], numpy.ndarray):
+                form_data[i] = numpy.ndarray(eval(form_data[i]))
+            else:
+                try:
+                    form_data[i] = eval(form_data[i])
+                except:
+                    print 'Could not convert text %s to %s for argument %s' % (form_data[i], type(default[i]), argnames[i])
+                    print 'when calling the compute function...'
+'''
     code += '''
     # Run computations
     result = compute_function(*form_data)
