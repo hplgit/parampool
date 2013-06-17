@@ -47,3 +47,14 @@ def assert_equal_text(text1, text2,
     assert not pydiff(text1, text2, text1_name, text2_name,
                       prefix_diff_files, n=3), msg
 
+def assert_equal_files(file1, file2,
+                      text1_name='text1', text2_name='text2',
+                      prefix_diff_files='tmp_diff',
+                      msg=''):
+    text1 = open(file1, 'r').read()
+    text2 = open(file2, 'r').read()
+    assert_equal_text(text1, text2,
+                      text1_name=file1, text2_name=file2,
+                      prefix_diff_files=prefix_diff_files,
+                      msg=msg)
+
