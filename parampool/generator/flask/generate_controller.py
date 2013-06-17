@@ -126,7 +126,7 @@ def compute(form):
             if isinstance(defaults[i], (str,bool,int,float)):
                 pass  # special widgets for these types do the conversion
             elif isinstance(defaults[i], numpy.ndarray):
-                form_data[i] = numpy.ndarray(eval(form_data[i]))
+                form_data[i] = numpy.array(eval(form_data[i]))
             elif defaults[i] is None:
                 if form_data[i] == 'None':
                     form_data[i] = None
@@ -141,7 +141,7 @@ def compute(form):
                 try:
                     form_data[i] = eval(form_data[i])
                 except:
-                    print 'Could not convert text %s to %s for argument %s' % (form_data[i], type(default[i]), argnames[i])
+                    print 'Could not convert text %s to %s for argument %s' % (form_data[i], type(defaults[i]), arg_names[i])
                     print 'when calling the compute function...'
 '''
     code += '''

@@ -216,6 +216,7 @@ of code that may be needed.
 
     class_tp = Dummy()  # for user-defined types
     import numpy
+    array_tp = numpy.arange(1)
     type2form = {type(1.0):  'FloatField',
                  type(1):    'wtf.IntegerField',
                  type(''):   'wtf.TextField',
@@ -223,15 +224,14 @@ of code that may be needed.
                  type([]):   'wtf.TextField',
                  type(()):   'wtf.TextField',
                  type(None): 'wtf.TextField',
-                 type(class_tp):        'wtf.TextField',
-                 type(numpy.ndarray):   'wtf.TextField',
+                 type(class_tp): 'wtf.TextField',
+                 type(array_tp): 'wtf.TextField',
                  }
     # A compute(form) function will convert from TextField string
     # to the right types: list, tuple, user-defined class, array, via
     # eval
 
     for name, value in zip(arg_names, defaults):
-
         # No default value?
         if value == "none":
             code += """\
@@ -260,10 +260,14 @@ of code that may be needed.
     %%(name)-%ds = %%(form)s(default=""" % longest_name % vars()
 
                         # Text input
-                        if isinstance(value, str):
+                        if type2form[type(value)] == 'wtf.TextField':
+                            if isinstance(value, numpy.ndarray):
+                                # Hack to make arrays look like lists
+                                value = value.tolist()
+
                             code += "'%(value)s'," % vars()
 
-                        # Floats, integers, whatever...
+                        # Floats, integers,
                         else:
                             code += "%(value)s," % vars()
                         code += """
@@ -271,7 +275,7 @@ of code that may be needed.
 """
             else:
                 raise TypeError('Argument %s=%s is not supported.' %
-                                name, type(value))
+                                (name, type(value)))
 
     if outfile is None:
         return code
