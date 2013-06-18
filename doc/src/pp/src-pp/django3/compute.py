@@ -148,11 +148,7 @@ def compute_drag_free_motion_plot2(
     if new_plot:
         fig_no = plt.figure().number
     else:
-        try:
-            plt.figure(fig_no)
-        except NameError:
-            fig_no = plt.figure().number
-
+        plt.figure(fig_no)
     plt.plot(x, y, label=r'$v=%g,\ \theta=%g$' %
              (initial_velocity, initial_angle))
     plt.legend()
@@ -173,33 +169,12 @@ def compute_motion_and_forces(
     m=0.1,
     R=0.11,
     method='RK4',
-    dt=None,
-    plot_simplified_motion=True,
-    new_plot=True
+    dt=None
     ):
-    """
-    This application computes the motion of a ball with radius R
-    and mass m under the influence of gravity, air resistance (drag)
-    and lift because of a given spinrate. The motion starts with
-    a prescribed initial_velocity making an angle initial_angle
-    with the ground. A wind velocity, positive in positive x direction,
-    can also be given (w). Many numerical methods can be used to
-    solve the equations of motion. Some legal names are ForwardEuler,
-    RK2, RK4, and Fehlberg (adaptive Runge-Kutta 4/5 order).
-    If the timestep dt is None, approximately 500 steps are used,
-    but dt can also be given a desired float value.
-
-    The boolean variable plot_simplified_motion adds the curve of
-    the motion without drag and lift (the standard parabolic
-    trajectory). This curve helps illustrate the effect of drag
-    and lift. When new_plot is false (unchecked), the new computed
-    curves are added to the previous ones since last time new_plot
-    was true.
-
-    # (Doconce format)
-    """
     v_x0 = initial_velocity*cos(initial_angle*pi/180)
     v_y0 = initial_velocity*sin(initial_angle*pi/180)
+    xmax = 0
+    ymax = 0
 
     if dt is None:
         # Estimate dt
@@ -212,27 +187,16 @@ def compute_motion_and_forces(
     x, y, t, g, d, l = solver(problem, method, dt)
 
     # Motion plot
-    global motion_fig_no, forces_fig_no, xmax, ymax
-    if new_plot:
-        motion_fig_no = plt.figure().number
-        forces_fig_no = plt.figure().number
-        xmax = ymax = 0
-    try:
-        plt.figure(motion_fig_no)
-    except NameError:
-        motion_fig_no = plt.figure().number
+    plt.figure(1)
     plt.plot(x, y, label='')
-    xmax = max(xmax, x.max())
-    ymax = max(ymax, y.max())
-    if plot_simplified_motion:
-        problem_simplified = Ball(m=m, R=R, drag=False,
-                                  spinrate=0, w=0)
-        problem_simplified.set_initial_velocity(v_x0, v_y0)
-        xs, ys, ts, dummy1, dummy2, dummy3 = \
-            solver(problem_simplified, method, dt)
-        plt.plot(xs, ys, 'r--')
-        xmax = max(xmax, xs.max())
-        ymax = max(ymax, ys.max())
+    problem_simplified = Ball(m=m, R=R, drag=False,
+                              spinrate=0, w=0)
+    problem_simplified.set_initial_velocity(v_x0, v_y0)
+    xs, ys, ts, dummy1, dummy2, dummy3 = \
+        solver(problem_simplified, method, dt)
+    plt.plot(xs, ys, 'r--', label='simplified (gravity only)')
+    xmax = max(xmax, x.max(), xs.max())
+    ymax = max(ymax, y.max(), ys.max())
     plt.axis([x[0], xmax, 0, 1.2*ymax])
     plt.title('Trajectory')
     plt.legend(loc='upper left')
@@ -251,13 +215,11 @@ def compute_motion_and_forces(
 """ % vars()
 
     # Force plot
-    try:
-        plt.figure(forces_fig_no)
-    except NameError:
-        forces_fig_no = plt.figure().number
-    plt.plot(x, d/np.abs(g), label='drag vs gravity')
+    plt.figure(2)
+    plt.plot(x, d, label='drag force')
     if spinrate != 0:
-        plt.plot(x, l/np.abs(g), label='lift vs gravity')
+        l = l/np.abs(g)
+        plt.plot(x, l, label='lift force')
     plt.legend()
     plt.title('Forces')
 

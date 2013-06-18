@@ -194,7 +194,7 @@ assign the proper form field type.
 The default form field for the positional arguments is
 %(default_field)s, which requires explicit conversion
 for all arguments that are not of this type.
-See %(outfile)s, # Convert data ... for what type
+See controller.py, # Convert data ... for what type
 of code that may be needed.
 """ % vars()
 

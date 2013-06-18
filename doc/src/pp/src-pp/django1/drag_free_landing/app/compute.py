@@ -2,7 +2,6 @@ import odespy
 import numpy as np
 from math import pi, sqrt, sin, cos
 import matplotlib.pyplot as plt
-import os
 
 def aerodynamic_force(C, rho, A, v):
     return 0.5*C*rho*A*v**2
@@ -109,8 +108,8 @@ def compute_drag_free_landing(initial_velocity, initial_angle):
     return landing_point
 
 def compute_drag_free_motion_plot(
-    initial_velocity=5.0,
-    initial_angle=45.0):
+    initial_velocity=5,
+    initial_angle=45):
 
     v_x0 = initial_velocity*cos(initial_angle*pi/180)
     v_y0 = initial_velocity*sin(initial_angle*pi/180)
@@ -120,164 +119,18 @@ def compute_drag_free_motion_plot(
     # Estimate dt
     T = v_y0/(0.5*9.81); dt = T/500
     x, y, t, gravity, drag, lift = solver(problem, 'RK4', dt)
-    plt.figure()
     plt.plot(x, y)
     import time  # use time to make unique filenames
     filename = 'tmp_%s.png' % time.time()
-    if not os.path.isdir('static'):
-        os.mkdir('static')
-    filename = os.path.join('static', filename)
     plt.savefig(filename)
-    html_text = '<img src="%s" width="400">' % filename
-    return html_text
-
-def compute_drag_free_motion_plot2(
-    initial_velocity=5.0,
-    initial_angle=45.0,
-    new_plot=True):
-
-    v_x0 = initial_velocity*cos(initial_angle*pi/180)
-    v_y0 = initial_velocity*sin(initial_angle*pi/180)
-    # m and R have no effect when gravity alone acts
-    problem = Ball(m=0.1, R=0.11, drag=False, spinrate=0, w=0)
-    problem.set_initial_velocity(v_x0, v_y0)
-    # Estimate dt
-    T = v_y0/(0.5*9.81); dt = T/500
-    x, y, t, gravity, drag, lift = solver(problem, 'RK4', dt)
-    global fig_no
-    if new_plot:
-        fig_no = plt.figure().number
-    else:
-        try:
-            plt.figure(fig_no)
-        except NameError:
-            fig_no = plt.figure().number
-
-    plt.plot(x, y, label=r'$v=%g,\ \theta=%g$' %
-             (initial_velocity, initial_angle))
-    plt.legend()
-    import time  # use time to make unique filenames
-    filename = 'tmp_%s.png' % time.time()
-    if not os.path.isdir('static'):
-        os.mkdir('static')
-    filename = os.path.join('static', filename)
-    plt.savefig(filename)
-    html_text = '<img src="%s" width="400">' % filename
-    return html_text
-
-def compute_motion_and_forces(
-    initial_velocity=5.0,
-    initial_angle=45.0,
-    spinrate=50.0,
-    w=0.0,
-    m=0.1,
-    R=0.11,
-    method='RK4',
-    dt=None,
-    plot_simplified_motion=True,
-    new_plot=True
-    ):
-    """
-    This application computes the motion of a ball with radius R
-    and mass m under the influence of gravity, air resistance (drag)
-    and lift because of a given spinrate. The motion starts with
-    a prescribed initial_velocity making an angle initial_angle
-    with the ground. A wind velocity, positive in positive x direction,
-    can also be given (w). Many numerical methods can be used to
-    solve the equations of motion. Some legal names are ForwardEuler,
-    RK2, RK4, and Fehlberg (adaptive Runge-Kutta 4/5 order).
-    If the timestep dt is None, approximately 500 steps are used,
-    but dt can also be given a desired float value.
-
-    The boolean variable plot_simplified_motion adds the curve of
-    the motion without drag and lift (the standard parabolic
-    trajectory). This curve helps illustrate the effect of drag
-    and lift. When new_plot is false (unchecked), the new computed
-    curves are added to the previous ones since last time new_plot
-    was true.
-
-    # (Doconce format)
-    """
-    v_x0 = initial_velocity*cos(initial_angle*pi/180)
-    v_y0 = initial_velocity*sin(initial_angle*pi/180)
-
-    if dt is None:
-        # Estimate dt
-        T = v_y0/(0.5*9.81)
-        dt = T/500
-
-    problem = Ball(m=m, R=R, drag=True,
-                   spinrate=spinrate, w=w)
-    problem.set_initial_velocity(v_x0, v_y0)
-    x, y, t, g, d, l = solver(problem, method, dt)
-
-    # Motion plot
-    global motion_fig_no, forces_fig_no, xmax, ymax
-    if new_plot:
-        motion_fig_no = plt.figure().number
-        forces_fig_no = plt.figure().number
-        xmax = ymax = 0
-    try:
-        plt.figure(motion_fig_no)
-    except NameError:
-        motion_fig_no = plt.figure().number
-    plt.plot(x, y, label='')
-    xmax = max(xmax, x.max())
-    ymax = max(ymax, y.max())
-    if plot_simplified_motion:
-        problem_simplified = Ball(m=m, R=R, drag=False,
-                                  spinrate=0, w=0)
-        problem_simplified.set_initial_velocity(v_x0, v_y0)
-        xs, ys, ts, dummy1, dummy2, dummy3 = \
-            solver(problem_simplified, method, dt)
-        plt.plot(xs, ys, 'r--')
-        xmax = max(xmax, xs.max())
-        ymax = max(ymax, ys.max())
-    plt.axis([x[0], xmax, 0, 1.2*ymax])
-    plt.title('Trajectory')
-    plt.legend(loc='upper left')
-
-    import time  # use time to make unique filenames
-    filename = 'tmp_motion_%s.png' % time.time()
-    if not os.path.isdir('static'):
-        os.mkdir('static')
-    filename = os.path.join('static', filename)
-    plt.savefig(filename)
-    plotwidth = 400
-    html_text = """
-<table>
-<tr>
-<td valign="top"><img src="%(filename)s" width="%(plotwidth)s"></td>
-""" % vars()
-
-    # Force plot
-    try:
-        plt.figure(forces_fig_no)
-    except NameError:
-        forces_fig_no = plt.figure().number
-    plt.plot(x, d/np.abs(g), label='drag vs gravity')
-    if spinrate != 0:
-        plt.plot(x, l/np.abs(g), label='lift vs gravity')
-    plt.legend()
-    plt.title('Forces')
-
-    filename = 'tmp_forces_%s.png' % time.time()
-    filename = os.path.join('static', filename)
-    plt.savefig(filename)
-    html_text += """\
-<td valign="top"><img src="%(filename)s" width="%(plotwidth)s"></td>
-</tr>
-</table>
-""" % vars()
-    return html_text
+    return filename
 
 def compute_motion(
-    initial_velocity=5.0,
-    initial_angle=45.0,
-    spinrate=50.0,
+    initial_velocity=5,
+    initial_angle=45,
+    spinrate=50,
     m=0.1,
     R=0.11,
-    method='RK4'
     ):
     v_x0 = initial_velocity*cos(initial_angle*pi/180)
     v_y0 = initial_velocity*sin(initial_angle*pi/180)
@@ -286,6 +139,7 @@ def compute_motion(
 
     for dt in [0.02]:
         #for method in ['ForwardEuler', 'RK2', 'RK4']:
+        method = 'RK4'
         for drag in [True, False]:
             problem = Ball(m=m, R=R, drag=drag,
                            spinrate=spinrate if drag else 0, w=0)

@@ -2,6 +2,7 @@ import odespy
 import numpy as np
 from math import pi, sqrt, sin, cos
 import matplotlib.pyplot as plt
+import os
 
 def aerodynamic_force(C, rho, A, v):
     return 0.5*C*rho*A*v**2
@@ -107,18 +108,9 @@ def compute_drag_free_landing(initial_velocity, initial_angle):
     landing_point = x[-1] # (better: find intersection point)
     return landing_point
 
-    class R:
-        def __init__(self, x):
-            self.x = x
-
-        def __str__(self):
-            return '<font color="blue">%s</font>' % self.x
-    result = R(landing_point)
-    return result
-
 def compute_drag_free_motion_plot(
-    initial_velocity=5,
-    initial_angle=45):
+    initial_velocity=5.0,
+    initial_angle=45.0):
 
     v_x0 = initial_velocity*cos(initial_angle*pi/180)
     v_y0 = initial_velocity*sin(initial_angle*pi/180)
@@ -131,9 +123,12 @@ def compute_drag_free_motion_plot(
     plt.plot(x, y)
     import time  # use time to make unique filenames
     filename = 'tmp_%s.png' % time.time()
+    if not os.path.isdir('static'):
+        os.mkdir('static')
+    filename = os.path.join('static', filename)
     plt.savefig(filename)
-    result = '<img src="%s>' % filename
-    return result
+    html_text = '<img src="%s" width="400">' % filename
+    return html_text
 
 def compute_motion(
     initial_velocity=5,
