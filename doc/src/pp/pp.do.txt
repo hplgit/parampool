@@ -375,6 +375,8 @@ functionality as the Flask application.
 Parampool's main focus is on scientific applications with lots of
 input data of different type, organized in a hierarchical tree fashion.
 
+First a flat menu, but option list for numerical methods.
+
 Three submenus:
 
  * Initial state: velocity and position (4 in a submenu)

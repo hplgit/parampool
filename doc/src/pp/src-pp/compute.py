@@ -311,6 +311,15 @@ def compute_motion(
     plt.legend()
     plt.show()
 
+def compute_average(data=np.array([1,2]), filename=None):
+    if filename is not None:
+        data = np.loadtxt(os.path.join('uploads', filename))
+        what = 'file data'
+    else:
+        what = 'array'
+    return 'mean of %s: %.3g<br>\nstandard deviation:' % \
+           (what, np.mean(data), np.std(data))
+
 if __name__ == '__main__':
     print compute_drag_free_landing(5, 60)
     compute_motion()
