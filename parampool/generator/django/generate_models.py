@@ -171,15 +171,17 @@ of code that may be needed.
     class_tp = Dummy()  # for user-defined types
     import numpy
     array_tp = numpy.arange(1)
+    textfield = 'CharField'
     type2form = {type(1.0):  'FloatField',
-                 type(1):    'wtf.IntegerField',
-                 type(''):   'wtf.TextField',
-                 type(True): 'wtf.BooleanField',
-                 type([]):   'wtf.TextField',
-                 type(()):   'wtf.TextField',
-                 type(None): 'wtf.TextField',
-                 type(class_tp): 'wtf.TextField',
-                 type(array_tp): 'wtf.TextField',
+                 type(1):    'IntegerField',
+                 type(''):   textfield,
+                 #type(True): 'ChoiceField',
+                 type(True): textfield,
+                 type([]):   textfield,
+                 type(()):   textfield,
+                 type(None): textfield,
+                 type(class_tp): textfield,
+                 type(array_tp): textfield,
                  }
     # A compute(form) function will convert from TextField string
     # to the right types: list, tuple, user-defined class, array, via
@@ -199,23 +201,22 @@ of code that may be needed.
                 if "filename" in name:
                     form = 'FileField'
                     code += """\
-    %%(name)-%ds = models.%%(form)s(verbose_name=' %%(name)s',
-                                    upload_to='uploads/')
+    %%(name)-%ds = models.%%(form)s(verbose_name=' %%(name)s', upload_to='uploads/')
 """ % longest_name % vars()
 
                 else:
                     form = type2form[type(value)]
 
                     # FIXME: Implementation for ChoiceField
-                    if isinstance(value, bool):
-                        raise NotImplementedError("Choices not yet supported.")
+                    if 0: #isinstance(value, bool):
+                        #raise NotImplementedError("Choices not yet supported.")
+                        pass
                     else:
                         code += """\
-    %%(name)-%ds = models.%%(form)s(verbose_name=' %%(name)s',
-                                    default=""" % longest_name % vars()
+    %%(name)-%ds = models.%%(form)s(verbose_name=' %%(name)s', default=""" % longest_name % vars()
 
                         # Text input
-                        if type2form[type(value)] == 'wtf.TextField':
+                        if type2form[type(value)] == textfield:
                             if isinstance(value, numpy.ndarray):
                                 # Hack to make arrays look like lists
                                 value = value.tolist()
@@ -224,7 +225,10 @@ of code that may be needed.
 
                         # Floats, integers, ...
                         else:
-                            code += "%(value)s)\n" % vars()
+                            code += "%(value)s," % vars()
+                        if form == 'CharField':
+                            code += 'max_length=28,'
+                        code += ')\n'
             else:
                 raise TypeError('Argument %s=%s is not supported.' %
                                 (name, type(value)))

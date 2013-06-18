@@ -62,11 +62,15 @@ def generate(compute_function,
 
     # Copy static files
     import os, shutil, tarfile
-    shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
-                os.curdir)
-    archive = tarfile.open('static.tar.gz')
-    archive.extractall()
-    os.remove('static.tar.gz')
+    if menu is not None:
+        shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
+                    os.curdir)
+        archive = tarfile.open('static.tar.gz')
+        archive.extractall()
+        os.remove('static.tar.gz')
+    else:
+        if not os.path.isdir('static'):
+            os.mkdir('static')
 
     generate_template(compute_function, classname, output_template,
                       menu, overwrite_template)

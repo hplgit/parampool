@@ -64,7 +64,10 @@ def generate(compute_function,
     start_all(projectname, appname)
 
     import os
-    os.makedirs(projectname + os.sep + appname + os.sep + "templates")
+    try:
+        os.makedirs(projectname + os.sep + appname + os.sep + "templates")
+    except OSError:
+        pass # directory exists
     outfile_models = os.path.join(projectname + os.sep + appname, output_model)
     outfile_control = os.path.join(projectname + os.sep + appname, output_control)
     outfile_template = os.path.join(projectname + os.sep + appname + os.sep \
@@ -78,11 +81,16 @@ def generate(compute_function,
     import os, shutil, tarfile
     shutil.copy(compute_function.__module__ + ".py",
                 os.path.join(os.getcwd(), projectname + os.sep + appname))
-    shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
-                os.curdir)
-    archive = tarfile.open('static.tar.gz')
-    archive.extractall()
-    os.remove('static.tar.gz')
+    if menu is not None:
+        shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
+                    os.curdir)
+        archive = tarfile.open('static.tar.gz')
+        archive.extractall()
+        os.remove('static.tar.gz')
+    else:
+        if not os.path.isdir('static'):
+            os.mkdir('static')
 
     print "Django app successfully created in %s/" % projectname
-    print "Run python manage.py runserver and access the app at http://127.0.0.1:8000/"
+    print "Run python %s/manage.py runserver" % projectname
+    print "and access the app at http://127.0.0.1:8000/"
