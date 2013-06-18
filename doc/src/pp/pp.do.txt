@@ -367,6 +367,27 @@ A subdirectory `motion_and_forces` contains the files, and the
 Django application is started as shown in previous examples and has the same
 functionality as the Flask application.
 
+===== Other types of function arguments =====
+
+The `generate` function will recognize the following different types
+of function arguments: `float`, `int`, `bool`, `str`, `list`,
+`tuple`, `numpy.ndarray`, as well as user-defined class types
+(a la `MySpecialClass`).
+Here is an minimalistic example on computing the mean and standard
+deviation of data either in an array or in a file (we use the
+file if the operator of the web interface assigns a file to `filename`):
+
+!bc pycod
+def compute_average(data=np.array([1,2]), filename=None):
+    if filename is not None:
+        data = np.loadtxt(os.path.join('uploads', filename))
+        what = 'file data'
+    else:
+        what = 'array'
+    return 'mean of %s: %.3g<br>\nstandard deviation:' % \
+           (what, np.mean(data), np.std(data))
+!ec
+
 ===== Animations =====
 
 
