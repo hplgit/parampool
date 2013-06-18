@@ -1,4 +1,6 @@
-def generate_template_std(classname, outfile):
+import os
+
+def generate_template_std(classname, outfile, doc=''):
     """
     Generate a simple standard template with
     input form. Show result at the bottom of
@@ -12,6 +14,12 @@ def generate_template_std(classname, outfile):
     <title>Django %(classname)s app</title>
   </head>
   <body>
+  %(doc)s
+
+  <!-- Input and Results are typeset as a two-column table -->
+  <table>
+  <tr>
+  <td valign="top">
     <h2>Input:</h2>
 
       <form method=post action="">{%% csrf_token %%}
@@ -29,11 +37,16 @@ def generate_template_std(classname, outfile):
         </table>
         <p><input type=submit value=Compute>
     </form></p>
+  </td>
 
+  <td valign="top">
     {%% if result != None %%}
       <h2>Results:</h2>
         {{ result|safe }}
     {%% endif %%}
+  </td>
+  </tr>
+  </table>
   </body>
 </html>''' % vars()
 
@@ -180,9 +193,12 @@ Please remove it manually.\n""")
         f.write(code)
         f.close()
 
-def generate_template(compute_function, classname, outfile, menu=None):
+def generate_template(compute_function, classname, outfile, menu=None, overwrite=False):
+    from parampool.generator.flask.generate_template import run_doconce_on_text
+    doc = run_doconce_on_text(compute_function.__doc__)
+
     if menu is not None:
         return generate_template_dtree(
             compute_function, classname, menu, outfile)
     else:
-        return generate_template_std(classname, outfile)
+        return generate_template_std(classname, outfile, doc)

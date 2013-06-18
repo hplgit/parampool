@@ -1,7 +1,7 @@
-import os, sys, shutil
+import os, sys, shutil, re
 from distutils.util import strtobool
 
-def generate_template_std(classname, outfile):
+def generate_template_std(classname, outfile, doc=''):
     """
     Generate a simple standard template with
     input form. Show result at the bottom of
@@ -15,6 +15,12 @@ def generate_template_std(classname, outfile):
     <title>Flask %(classname)s app</title>
   </head>
   <body>
+  %(doc)s
+
+  <!-- Input and Results are typeset as a two-column table -->
+  <table>
+  <tr>
+  <td valign="top">
     <h2>Input:</h2>
 
       <form method=post action="" enctype=multipart/form-data>
@@ -32,11 +38,16 @@ def generate_template_std(classname, outfile):
         </table>
         <p><input type=submit value=Compute>
     </form></p>
+  </td>
 
+  <td valign="top">
     {%% if result != None %%}
       <h2>Results:</h2>
         {{ result|safe }}
     {%% endif %%}
+  </td>
+  </tr>
+  </table>
   </body>
 </html>''' % vars()
 
@@ -171,7 +182,44 @@ def generate_template_dtree(compute_function, classname,
         f.write(code)
         f.close()
 
+def run_doconce_on_text(doc):
+    if doc is None:
+        return ''
+
+    def wrap_in_pre_tags(text):
+        return '<code><pre>\n%s\n</pre></code>\n' % text
+
+    if re.search(r'#\s*\(?[Dd]oconce', doc):
+        # Remove indentation and insert breaks to avoid a long paragraph
+        # dictating the width of table columns in the template
+        lines = doc.splitlines()
+        for i in range(len(lines)):
+            if lines[i][0:4] == '    ':
+                lines[i] = lines[i][4:]
+        doc = '\n'.join(lines)
+        filename = 'tmp1'
+        f = open(filename + '.do.txt', 'w')
+        f.write(doc)
+        f.close()
+        failure = os.system('doconce format html %s' % filename)
+        if not failure:
+            f = open(filename + '.html', 'r')
+            doc = f.read()
+            f.close()
+            files = [filename + '.do.txt',
+                     filename + '.html',
+                     '.' + filename + '_html_file_collection']
+            for name in files:
+                os.remove(name)
+        else:
+            doc = wrap_in_pre_tags(doc)
+    else:
+        doc = wrap_in_pre_tags(doc)
+    return doc
+
 def generate_template(compute_function, classname, outfile, menu=None, overwrite=False):
+    doc = run_doconce_on_text(compute_function.__doc__)
+
     if outfile is not None:
         if not os.path.isdir("templates"):
             os.mkdir("templates")
@@ -187,4 +235,4 @@ def generate_template(compute_function, classname, outfile, menu=None, overwrite
         return generate_template_dtree(
                 compute_function, classname, menu, outfile)
     else:
-        return generate_template_std(classname, outfile)
+        return generate_template_std(classname, outfile, doc)
