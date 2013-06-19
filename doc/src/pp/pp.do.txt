@@ -370,10 +370,11 @@ functionality as the Flask application.
 ===== Other types of function arguments =====
 
 The `generate` function will recognize the following different types
-of function arguments: `float`, `int`, `bool`, `str`, `list`,
+of keyword arguments in the compute function:
+`float`, `int`, `bool`, `str`, `list`,
 `tuple`, `numpy.ndarray`, as well as user-defined class types
 (a la `MySpecialClass`).
-Here is an minimalistic example on computing the mean and standard
+Here is a minimalistic example on computing the mean and standard
 deviation of data either in an array or in a file (we use the
 file if the operator of the web interface assigns a file to `filename`):
 
@@ -387,6 +388,9 @@ def compute_average(data=np.array([1,2]), filename=None):
     return 'mean of %s: %.3g<br>\nstandard deviation:' % \
            (what, np.mean(data), np.std(data))
 !ec
+The output is extremely simple, just text and two numbers, but we format
+the numbers (3 decimals) and the output appears as two lines
+of text (because of the linebreak tag: `<br>`).
 
 ===== Animations =====
 
