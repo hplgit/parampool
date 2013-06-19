@@ -37,7 +37,7 @@ app = Flask(__name__)
     if file_upload:
         code += '''
 # Allowed file types for file upload
-ALLOWED_EXTENSIONS = set(['txt', 'npy'])
+ALLOWED_EXTENSIONS = set(['txt', 'dat', 'npy'])
 
 # Relative path of folder for uploaded files
 UPLOAD_DIR = 'uploads/'
@@ -60,6 +60,8 @@ def index():
     if request.method == 'POST' and form.validate():
 ''' % vars()
     if file_upload:
+        # Need to write custom validation for files
+        code = code.replace(" and form.validate()", "")
         code += '''
         # Save uploaded file if it exists and is valid
         if request.files:
@@ -67,6 +69,11 @@ def index():
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
                 file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                session["filename"] = filename
+            else:
+                session["filename"] = None
+        else:
+            session["filename"] = None
 ''' % vars()
     code += '''
         # Compute result
@@ -90,8 +97,21 @@ def compute(form):
     # Extract values from form
     form_values = [getattr(form, name) for name in arg_names
                    if hasattr(form, name)]
-    form_data = [value.data for value in form_values]
 ''' % vars()
+    if not file_upload:
+        code += '''
+    form_data = [value.data for value in form_values]
+'''
+    else:
+        code += '''
+    import wtforms
+    form_data = []
+    for value in form_values:
+        if not isinstance(value, wtforms.fields.simple.FileField):
+            form_data.append(value.data)
+        else:
+            form_data.append(session["filename"])
+'''
 
     # Insert helper code if positional
     # arguments because the user must then convert form_data
