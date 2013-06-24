@@ -360,7 +360,7 @@ else:
 !ec
 !ewarning
 
-!bwarning Remark
+!bnotice Avoiding plot files
 The compute function generates plot files with unique names, but we can
 avoid making files at all and just insert the PNG code of the plot,
 using base64 encoding,
@@ -380,7 +380,7 @@ figdata_png = base64.b64encode(figdata_png)
 html_text = '<img src="data:image/png;base64,%s" width="400">' % \
             figdata_png
 !ec
-!ewarning
+!enotice
 
 
 ===== More input parameters and results =====
@@ -394,22 +394,44 @@ The lift is caused by spinning the ball.
 
 The function that performs the computations has the following signature:
 
-@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""\s+This
+@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
 and returns a formatted string `html_text` with plots in a tabular
 format. Details can be found in the "`compute.py`": "${src_path}/compute.py"
 source code.
 
-Any doc string of the compute function is copied and typeset
-verbatim at the top of the web interface. However, if `# (Doconce format)`
-appears somewhere in the doc string, the text is taken as
-"Doconce": "http://code.google.com/p/doconce" source code and translated
-to HTML, which enables typesetting of LaTeX mathematics and
+Any doc string of the compute function is copied and typeset verbatim
+at the top of the web interface. However, if the text `# (Doconce
+format)` appears somewhere in the doc string, the text is taken as
+"Doconce": "http://code.google.com/p/doconce" source code and
+translated to HTML, which enables typesetting of LaTeX mathematics and
 computer code snippets (with nice pygments formatting).
 
 The documentation of the web interface can therefore be included as a
 doc string in the compute function. A simple plain text might be
 
-@@@CODE src-pp/compute.py fromto: """\s+This@v_x0 =
+!bc pycod
+"""
+This application computes the motion of a ball with radius R
+and mass m under the influence of gravity, air resistance (drag)
+and lift because of a given spinrate. The motion starts with
+a prescribed initial_velocity making an angle initial_angle
+with the ground. A wind velocity, positive in positive x direction,
+can also be given (w). Many numerical methods can be used to
+solve the equations of motion. Some legal names are ForwardEuler,
+RK2, RK4, and Fehlberg (adaptive Runge-Kutta 4/5 order).
+If the timestep dt is None, approximately 500 steps are used,
+but dt can also be given a desired float value.
+
+The boolean variable plot_simplified_motion adds the curve of
+the motion without drag and lift (the standard parabolic
+trajectory). This curve helps illustrate the effect of drag
+and lift. When new_plot is false (unchecked), the new computed
+curves are added to the previous ones since last time new_plot
+was true.
+
+# (Doconce format)
+"""
+!ec
 
 The `generate.py` code for creating the web GUI goes as in the other examples,
 
@@ -436,12 +458,23 @@ functionality as the Flask application.
 We can make an improved compute function, called `compute_motion_and_forces2`,
 where we insert a doc string with documentation of the mathematical model
 and where we use the idea of replacing plot files by strings with
-PNG code as described in the *Remark* box at the end of
+PNG code as described in the *Avoiding plot files* box at the end of
 Section {pp:plot:output}. The input variables and the functionality
-remain the same. Our new doc strings makes use of Doconce syntax
-for LaTeX mathematics and monospace font for Python variables:
+remain the same.
+
+Our new doc strings makes use of Doconce syntax for LaTeX mathematics
+and monospace font for Python variables:
 
 @@@CODE src-pp/compute.py fromto: compute_motion_and_forces2@v_x0 =
+The resulting documentation in HTML format is visualized in
+Figure
+
+For complete information on how to return PNG plots as strings, we
+refer to the `compute_motion_and_forces2` function in the
+"`compute.py`": "${src_path}/compute.py"
+source code.
+
+FIGURE: [fig-pp/flask5.png, width=850] Web interface with documentation containing mathematical formulas. label{pp:flask5:fig1}
 
 
 ===== Other types of function arguments =====
@@ -449,27 +482,33 @@ for LaTeX mathematics and monospace font for Python variables:
 The `generate` function will recognize the following different types
 of keyword arguments in the compute function:
 `float`, `int`, `bool`, `str`, `list`,
-`tuple`, `numpy.ndarray`, as well as user-defined class types
+`tuple`, `numpy.ndarray`, name of a file, as well as user-defined class types
 (a la `MySpecialClass`).
 Here is a minimalistic example on computing the mean and standard
 deviation of data either in an array or in a file (we use the
 file if the operator of the web interface assigns a file to `filename`):
 
-!bc pycod
-def compute_average(data=np.array([1,2]), filename=None):
-    if filename is not None:
-        data = np.loadtxt(os.path.join('uploads', filename))
-        what = 'file data'
-    else:
-        what = 'array'
-    return 'mean of %s: %.3g<br>\nstandard deviation:' % \
-           (what, np.mean(data), np.std(data))
-!ec
-The output is extremely simple, just text and two numbers, but we format
-the numbers (3 decimals) and the output appears as two lines
-of text (because of the linebreak tag: `<br>`).
+@@@CODE src-pp/compute.py fromto: def compute_average@if __name
+The output is simple, basically two numbers in a table and an intro line.
 
-===== Animations =====
+We write a `generate.py` file as shown before, but with `compute_average`
+as the name of the compute function. For any argument containing
+the string `filename` it is assumed that the argument represents
+the name of a file. The web interface will then feature a button
+for uploading the file.
+
+When the applicatin runs, we
+have two data fields: one for setting an array with list syntax and one
+for uploading a file. Clicking on the latter and uploading an
+file `mydata.dat` containing just columns of numbers, results in
+the web page displayed in Figure ref{pp:flask6:fig1}. In this case,
+when a filename was assigned, we use the data in the file.
+Alternatively, we can instead fill in the data array and click *Compute*,
+which then will compute the basic statistics of the assigned data array.
+
+FIGURE: [fig-pp/flask6.png, width=500] Web interface for uploading a file. label{pp:flask6:fig1}
+
+#===== Animations =====
 
 
 ======= Working with a menu of input parameters =======

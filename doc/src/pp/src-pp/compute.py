@@ -453,14 +453,20 @@ def compute_motion(
     plt.legend()
     plt.show()
 
-def compute_average(data=np.array([1,2]), filename=None):
+def compute_average(data_array=np.array([1]), filename=None):
     if filename is not None:
         data = np.loadtxt(os.path.join('uploads', filename))
-        what = 'file data'
+        what = 'file %s' % filename
     else:
-        what = 'array'
-    return 'mean of %s: %.3g<br>\nstandard deviation:' % \
-           (what, np.mean(data), np.std(data))
+        data = data_array
+        what = 'data_array'
+    return """
+Data from %s:
+<p>
+<table border=1>
+<tr><td> mean    </td><td> %.3g </td></tr>
+<tr><td> st.dev. </td><td> %.3g </td></tr>
+""" % (what, np.mean(data), np.std(data))
 
 if __name__ == '__main__':
     print compute_drag_free_landing(5, 60)

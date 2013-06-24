@@ -198,10 +198,14 @@ def run_doconce_on_text(doc):
             if lines[i][0:4] == '    ':
                 lines[i] = lines[i][4:]
         doc = '\n'.join(lines)
+
+        # Run doconce
+        print 'Found doc string in doconce format:'
         filename = 'tmp1'
         f = open(filename + '.do.txt', 'w')
         f.write(doc)
         f.close()
+        print 'Running doconce on help file', filename + '.do.txt'
         failure = os.system('doconce format html %s' % filename)
         if not failure:
             f = open(filename + '.html', 'r')
