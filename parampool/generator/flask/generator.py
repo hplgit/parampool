@@ -62,6 +62,8 @@ def generate(compute_function,
 
     # Copy static files
     import os, shutil, tarfile
+    shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
+                os.curdir)
     if menu is not None:
         shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
                     os.curdir)

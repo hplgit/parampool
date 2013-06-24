@@ -81,6 +81,8 @@ def generate(compute_function,
     import os, shutil, tarfile
     shutil.copy(compute_function.__module__ + ".py",
                 os.path.join(os.getcwd(), projectname + os.sep + appname))
+    shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
+                os.curdir)
     if menu is not None:
         shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
                     os.curdir)

@@ -190,13 +190,14 @@ def run_doconce_on_text(doc):
         return '<code><pre>\n%s\n</pre></code>\n' % text
 
     if re.search(r'#\s*\(?[Dd]oconce', doc):
+        from doconce.common import fix_backslashes
+        doc = fix_backslashes(doc)
         # Remove indentation
         lines = doc.splitlines()
         for i in range(len(lines)):
             if lines[i][0:4] == '    ':
                 lines[i] = lines[i][4:]
         doc = '\n'.join(lines)
-        print 'XXX doc:', doc
         filename = 'tmp1'
         f = open(filename + '.do.txt', 'w')
         f.write(doc)
@@ -209,8 +210,8 @@ def run_doconce_on_text(doc):
             files = [filename + '.do.txt',
                      filename + '.html',
                      '.' + filename + '_html_file_collection']
-            for name in files:
-                os.remove(name)
+            #for name in files:
+            #    os.remove(name)
         else:
             doc = wrap_in_pre_tags(doc)
     else:

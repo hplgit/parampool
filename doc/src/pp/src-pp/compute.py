@@ -305,7 +305,7 @@ def compute_motion_and_forces2(
     \frac{1}{2}C_L\varrho A v^2\bm{i}_n\\
     \bm{r}(0) &= 0\bm{i} + 0\bm{j}\\
     \frac{d\bm{r}}{dt}(0) &= v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j},
-    \end{align}
+    \end{align*}
     !et
     where $\bm{i}$ and $\bm{j}$ are unit vectors in the $x$ and $y$
     directions, respectively, $g$ is the acceleration of gravity,
@@ -384,7 +384,7 @@ def compute_motion_and_forces2(
 <table>
 <tr>
 <td valign="top">
-<img src="data:image/png;base64,%(figdata_png)" width="%(plotwidth)s">
+<img src="data:image/png;base64,%(figdata_png)s" width="%(plotwidth)s">
 </td>
 """ % vars()
 
@@ -406,7 +406,7 @@ def compute_motion_and_forces2(
     figdata_png = base64.b64encode(figdata_png)
     html_text += """\
 <td valign="top">
-<img src="data:image/png;base64,%(figdata_png)" width="%(plotwidth)s">
+<img src="data:image/png;base64,%(figdata_png)s" width="%(plotwidth)s">
 </td>
 </tr>
 </table>
