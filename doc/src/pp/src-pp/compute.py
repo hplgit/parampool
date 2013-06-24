@@ -271,6 +271,148 @@ def compute_motion_and_forces(
 """ % vars()
     return html_text
 
+# The following function has the same functionality as
+# compute_motion_and_forces, but has true math in
+# the doc string and avoids plot files.
+
+def compute_motion_and_forces2(
+    initial_velocity=5.0,
+    initial_angle=45.0,
+    spinrate=50.0,
+    w=0.0,
+    m=0.1,
+    R=0.11,
+    method='RK4',
+    dt=None,
+    plot_simplified_motion=True,
+    new_plot=True
+    ):
+    """
+    This application computes the motion of a ball with radius $R$
+    and mass $m$ under the influence of gravity, air drag and lift
+    because of a given spinrate $\omega$. The motion starts with a
+    prescribed initial velocity $v_0$ making an angle initial_angle
+    $\theta$ with the ground. A wind velocity $w$, positive in
+    positive $x$ direction, can also be given.
+
+    The ordinary differential equation problem governing the
+    motion reads
+
+    !bt
+    \begin{align*}
+    m\frac{d^2\bm{r}}{dt^2} &= -mg\bm{j} -
+    \frac{1}{2}C_D\varrho A v^2\bm{i}_t +
+    \frac{1}{2}C_L\varrho A v^2\bm{i}_n\\
+    \bm{r}(0) &= 0\bm{i} + 0\bm{j}\\
+    \frac{d\bm{r}}{dt}(0) &= v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j},
+    \end{align}
+    !et
+    where $\bm{i}$ and $\bm{j}$ are unit vectors in the $x$ and $y$
+    directions, respectively, $g$ is the acceleration of gravity,
+    $A$ is the cross section area normal to the motion, $\bm{i}_t$
+    is a unit tangent vector to the trajectory, $\bm{i}_n$ is
+    a normal vector (pointing upwards) to the trajectory,
+    $C_D$ and $C_L$ are lift coefficients, and $\varrho$ is the
+    air density. For a ball, $C_D$ is taken as 0.45, while
+    $C_L$ depends on the spinrate through $C_L=0.2\omega/500$.
+
+    Many numerical methods can be used to solve the problem.
+    Some legal names are `ForwardEuler`, `RK2`, `RK4`,
+    and `Fehlberg` (adaptive Runge-Kutta 4/5 order).  If the
+    timestep `dt` is None, approximately 500 steps are used, but
+    `dt` can also be given a desired `float` value.
+
+    The boolean variable `plot_simplified_motion` adds the curve
+    of the motion without drag and lift (the standard parabolic
+    trajectory). This curve helps illustrate the effect of drag
+    and lift. When `new_plot` is `False` (unchecked), the new
+    computed curves are added to the previous ones since last
+    time `new_plot` was true.
+
+    # (Doconce format)
+    """
+    v_x0 = initial_velocity*cos(initial_angle*pi/180)
+    v_y0 = initial_velocity*sin(initial_angle*pi/180)
+
+    if dt is None:
+        # Estimate dt
+        T = v_y0/(0.5*9.81)
+        dt = T/500
+
+    problem = Ball(m=m, R=R, drag=True,
+                   spinrate=spinrate, w=w)
+    problem.set_initial_velocity(v_x0, v_y0)
+    x, y, t, g, d, l = solver(problem, method, dt)
+
+    # Motion plot
+    global motion_fig_no, forces_fig_no, xmax, ymax
+    if new_plot:
+        motion_fig_no = plt.figure().number
+        forces_fig_no = plt.figure().number
+        xmax = ymax = 0
+    try:
+        plt.figure(motion_fig_no)
+    except NameError:
+        motion_fig_no = plt.figure().number
+    plt.plot(x, y, label='')
+    xmax = max(xmax, x.max())
+    ymax = max(ymax, y.max())
+    if plot_simplified_motion:
+        problem_simplified = Ball(m=m, R=R, drag=False,
+                                  spinrate=0, w=0)
+        problem_simplified.set_initial_velocity(v_x0, v_y0)
+        xs, ys, ts, dummy1, dummy2, dummy3 = \
+            solver(problem_simplified, method, dt)
+        plt.plot(xs, ys, 'r--')
+        xmax = max(xmax, xs.max())
+        ymax = max(ymax, ys.max())
+    plt.axis([x[0], xmax, 0, 1.2*ymax])
+    plt.title('Trajectory')
+    plt.legend(loc='upper left')
+
+    # Avoid plot file: make PNG code as base64 coded string
+    # embedded in the HTML image tag
+    plotwidth = 400
+    from StringIO import StringIO
+    figfile = StringIO()
+    plt.savefig(figfile, format='png')
+    figfile.seek(0)  # rewind to beginning of file
+    figdata_png = figfile.buf  # extract string
+    import base64
+    figdata_png = base64.b64encode(figdata_png)
+    html_text = """
+<table>
+<tr>
+<td valign="top">
+<img src="data:image/png;base64,%(figdata_png)" width="%(plotwidth)s">
+</td>
+""" % vars()
+
+    # Force plot
+    try:
+        plt.figure(forces_fig_no)
+    except NameError:
+        forces_fig_no = plt.figure().number
+    plt.plot(x, d/np.abs(g), label='drag vs gravity')
+    if spinrate != 0:
+        plt.plot(x, l/np.abs(g), label='lift vs gravity')
+    plt.legend()
+    plt.title('Forces')
+
+    figfile = StringIO()
+    plt.savefig(figfile, format='png')
+    figfile.seek(0)  # rewind to beginning of file
+    figdata_png = figfile.buf  # extract string
+    figdata_png = base64.b64encode(figdata_png)
+    html_text += """\
+<td valign="top">
+<img src="data:image/png;base64,%(figdata_png)" width="%(plotwidth)s">
+</td>
+</tr>
+</table>
+""" % vars()
+    return html_text
+
 def compute_motion(
     initial_velocity=5.0,
     initial_angle=45.0,
