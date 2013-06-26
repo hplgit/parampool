@@ -19,6 +19,10 @@ class DataItem:
     ``str2type``   object transforming a string to desired type,
                    can be ``eval``, ``float``, ... Based on type
                    of ``default`` if not given.
+    ``convert``    boolean value that decides if str2type should be
+                   used. Defaults to True, and is automatically
+                   changed to False if a DataItem gets a value of
+                   the same type as its default value set.
     ``value``      current value assigned in a user interface
     ``minmax``     legal interval (2-list) of values
     ``options``    legal list of values
@@ -31,7 +35,7 @@ class DataItem:
 
     A number and a unit can be
     """
-    _legal_data = 'name default unit help value str2type minmax options widget validate namespace user_data symbol'.split()
+    _legal_data = 'name default unit help value str2type convert minmax options widget validate namespace user_data symbol'.split()
 
     def _signature(self):
         """Return output signature with "DataItem: name=..."."""
@@ -80,6 +84,10 @@ class DataItem:
 
         self._check_validity_of_data()
 
+        # Can be changed to False if a value other than str of correct
+        # type is set. Thus no need to convert to the correct type.
+        self._use_str2type = self.data.get("convert", True)
+
         self._values = [self.data['default']]
         self._assigned_value = False  # True if value from UI
 
@@ -120,7 +128,12 @@ class DataItem:
         value to right type according to str2type, and perform
         validation.
         """
-        value = self._handle_unit_conversion(value)
+
+        if isinstance(value, str):
+            value = self._handle_unit_conversion(value)
+
+        if not self._use_str2type:
+            return value
 
         # Convert value to the right type
 
@@ -210,10 +223,15 @@ class DataItem:
     def set_value(self, value):
         """Set value as a string."""
         if not isinstance(value, str):
-            raise ValueError('%s: value=%s %s must be a string' %
-                             (self._signature(), value, type(value)))
+            if not type(value) == type(self.data["default"]):
+                raise ValueError('%s: value=%s %s must be a string (or %s)' %
+                                 (self._signature(), value, type(value),
+                                  type(self.data["default"])))
+            else:
+                self._use_str2type = False
+
         # The item can have a single value or multiple values
-        if '&' in value:
+        if isinstance(value, str) and '&' in value:
             self._values = [v.strip() for v in value.split('&')]
         else:
             self._values = [value]
