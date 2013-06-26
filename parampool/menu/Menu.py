@@ -5,7 +5,7 @@ for menus by renaming methods and adding functionality.
 """
 from parampool.tree.SubTree import SubTree
 from parampool.menu.DataItem import DataItem
-from parampool.tree.Tree import Tree, hash_all_leaves
+from parampool.tree.Tree import Tree, hash_all_leaves, get_leaf
 
 class Menu(Tree):
     def __init__(self, root=None, root_name='main'):
