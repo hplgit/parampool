@@ -18,26 +18,29 @@ text, widget type, validation information, etc. A user interface can
 then be automatically generated. The currently supported user
 interfaces are the command line, files, and web pages.
 
-======= Application =======
+======= Simulation program =======
 
-We shall work with a sample application concerning the simulation of
-a ball thrown through air. Given the initial velocity of the ball,
-and some other data like mass and radius, we want to compute
-the trajectory of the ball until it hits the ground. The details of
-the calculations are not of interest here as our focus is on software
-for assigning input data and for displaying the results. However,
-the interested reader can consult the box below for the inner workings
-of the simulations.
+We shall work with a sample application that takes a few variables as
+input and produces numbers and/or graphs as result.  Specifically, our
+application, later referred to as a *simulation program* or simply a
+*simulator*, concerns the simulation of a ball thrown through air.
+Given the initial velocity of the ball, and some other data like mass
+and radius, we can compute the trajectory of the ball until it hits
+the ground. The details of the calculations are not of interest here
+as our focus is on software for assigning input data and for
+displaying the results. However, the interested reader can consult the
+box below for the inner workings of the simulation program.
 
 #The various features of Parampool will be introduced in a series
 #of examples where the complexity of input and the results ranges
 #from very simple to quite advanced.
 
 !bnotice Mathematical model
-
+The motion of the mass center $\bm{r}$ of a body through a fluid is
+given by
 !bt
 \begin{equation}
-m\frac{d^2}{\bm{r}}{dt^2} = -m\bm{g} - \frac{1}{2}C_D\varrho A v^2\bm{i}_t
+m\frac{d^2\bm{r}}{dt^2} = -m\bm{g} - \frac{1}{2}C_D\varrho A v^2\bm{i}_t
 + \frac{1}{2}C_L\varrho A v^2\bm{i}_n + \frac{1}{2}C_S\varrho A v^2(\bm{i}_t
 \times \bm{i}_n),
 label{pp:ballistic:eq1}
@@ -52,32 +55,50 @@ is a lift coefficient, $C_S$ is a coefficient for the sidewind or lateral
 aerodynamic force, $\bm{i}_t$
 is a unit tangent vector of the body's path, while $\bm{i}_n$ is a unit
 vector normal to the path tilting upwards.
+The drag $C_D$ coefficient for a sphere is taken as 0.45. The lift coefficient
+$C_L$ depends on the spinrate $\omega$ (rad $\hbox{s}^{-1}$)
+of the body, and a simple linear relation often suffices:
+$C_L = 0.2\omega/500$. A negative $\omega$ gives a negative lift.
 
-We can simplify the equation for a two-dimensional motion in an $xy$ plane
+We can simplify the model for a two-dimensional motion in an $xy$ plane
 with unit vectors $\bm{i}$ and $\bm{j}$ in the $x$ and $y$ directions,
 respectively.
-Then we skip the sidewind force (set $C_S=0$). We also let gravity
+Then we skip the sidewind force ($C_S=0$). We also let gravity
 point downwards, $\bm{g}=-g\bm{j}$, and let the wind velocity be horizontal:
-$\bm{w}=w\bm{i}$. Furthermore,
+$\bm{w}=w\bm{i}$. Furthermore, we have that
 
 !bt
 \begin{align}
-\bm{i}_t &= \frac{\bm{v}}{\left|\bm{v}\right|} \equiv (a,b),\quad \bm{v}
-= \frac{d\bm{r}}{dt},
-\bm{i}_n &= (-b, a)\hbox{ if }a>0\hbox{ else }(b,-a)
+\bm{i}_t &= \frac{\bm{v}}{\left|\bm{v}\right|} \equiv a\bm{i} + b\bm{j},
+\quad \bm{v} = \frac{d\bm{r}}{dt},\\
+\bm{i}_n &= -b\bm{i} + a\bm{j}\hbox{ if }a>0\hbox{ else }b\bm{i}-a\bm{j}
 \end{align}
 !et
+The initial conditions associated with
+(ref{pp:ballistic:eq1})
+express that the body starts at the
+origin with an initial velocity $v_0$ making an angle $\theta$ with
+the horizontal. In the two-dimensional case the conditions become
+
+!bt
+\[ \bm{r}(0) = 0\bm{i} + 0\bm{j},\quad \frac{d\bm{r}}{dt}(0)=\bm{v}(0)=
+v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j}.\]
+!et
+
 !enotice
 
 
-======= User interfaces for functions =======
+======= User interfaces for Python functions =======
+label{pp:GUI4functions}
 
-Parampool can automatically generate user interfaces to a given
-function. The usage of this functionality will be explained in problems
-of increasing complexity, using the trajectory of a ball as explained
+Parampool can automatically generate user interfaces for communicating
+with a given function.
+The usage of this functionality will be explained in problems
+of increasing complexity, using the trajectory of a ball as described
 above as application.
 
 ===== Real numbers as input and output =====
+label{pp:real:inout}
 
 Suppose you have some function
 
@@ -99,7 +120,10 @@ for which we want to generate a web interface, as a *compute function*.
 
 === Flask interface ===
 
-To generate a Flask application for our compute function, simply create a
+"Flask": "http://flask.pocoo.org/" is a tool that can be used to write
+a graphical user interface (GUI) to be operated in a web browser. Here
+we shall use Flask to create a GUI for our computed function, as
+displayed in Figure ref{pp:flask1:fig1}. To this end, simply create a
 Python file `generate.py` with the following lines:
 
 @@@CODE src-pp/flask1/generate.py
@@ -134,28 +158,32 @@ You can now view the generated web interface by running
 Terminal> python controller.py
 !ec
 and open your web browser at the location
-`http://127.0.0.1:5000/`.. Fill in values for the two input variables
+`http://127.0.0.1:5000/`. Fill in values for the two input variables
 and press *Compute*. The browser window will now look like Figure
 ref{pp:flask1:fig1}.
 
 FIGURE: [fig-pp/flask1.png, width=400] A simple web interface. label{pp:flask1:fig1}
 
 !bnotice Generated files:
-You will realize that some files with Flask code are generated:
+Readers with knowledge of Flask will notice
+that some files with Flask code have been generated:
 
  * `model.py` with a definition of the forms in the web interface
  * `controller.py` which glues the interface with the compute function
  * `templates/view.html` which defines the design of the web interface
 
 You are of course free to tailor these files to your needs if you know
-about Flask programming.
+about Flask programming. An introduction to Flask for scientific
+applications is provided in cite{Langtangen:web4sciapps}.
 
 # Reference!
 !enotice
 
 === Django interface ===
 
-We can easily create a web application in Django. Just replace `flask`
+"Django": "https://www.djangoproject.com/" is a very widespread and popular
+programming environment for creating web applications.
+We can easily create our web application in Django too. Just replace `flask`
 by `django` in `generate.py`:
 
 @@@CODE src-pp/django1/generate.py
@@ -180,12 +208,16 @@ ones are
  * `views.py` which glues the interface with the compute function
  * `templates/index.html` which defines the design of the web interface
 
-With some knowledge of basic Django programming you can edit these files.
+With some knowledge of basic Django programming you can edit these
+files to adjust the functionality.  Reference
+cite{Langtangen:web4sciapps} provides a basic introduction to Django
+for creating scientific applications.
 
 # Reference!
 !enotice
 
 ===== A plot as output =====
+label{pp:plot:output}
 
 The result of the previous computation was just a number. Let us instead
 make a plot of the trajectory of a ball without any air resistance.
@@ -199,18 +231,19 @@ def compute_drag_free_motion_plot(
     return html_text
 !ec
 is now our compute function, in `compute.py`, which takes the same two
-input arguments but returns the some HTML text that will display
-a plot in the browser window. This HTML text is basically
+input arguments as before, but returns the some HTML text that will display
+a plot in the browser window. This HTML text is basically the inclusion
+of the image file containing the plot,
 
 !bc
 <img src="X">
 !ec
-where `X` is the name of the plot file. However, if you do repeated
-computations, the name of the plot file must change for the browser to
+where `X` is the name of the file. However, if you do repeated
+computations, the name of the image file must change for the browser to
 update the plot. Inside the compute function we must therefore generate
-a unique name of each plot file. For this purpose, we can use the
+a unique name of each image file. For this purpose, we can use the
 number of seconds since the Epoch (January 1, 1970) as part of the filename,
-obtained by calling `time.time()`. In addition, the plot file must
+obtained by calling `time.time()`. In addition, the image file must
 reside in a subdirectory `static`. The appropriate code is displayed below.
 
 !bc pydoc
@@ -237,7 +270,8 @@ part of the page to our needs.
 
 === Flask application ===
 
-The `generate.py` function imports the appropriate compute function:
+The `generate.py` file for this example is similar to what is shown above.
+Only the name of the compute function has changed:
 
 @@@CODE src-pp/flask2/generate.py
 
@@ -246,36 +280,38 @@ This time we do not need to specify `default_field` because we have
 used keyword arguments with default values in the compute function.
 The `generate` function can then from the default values see the
 type of our arguments. Remember to use `float` default values
-and not integers if the variable is supposed to be a `float`.
+(like 5.0)
+and not simply integers (like 5) if the variable is supposed to be a `float`.
 !enotice
 
-We run `python generator.py` to generate files and then
-`python controller.py` to start the application. Now the default
+We run `python generator.py` to generate the Flask files and then
+`python controller.py` to start the web GUI. Now the default
 values appear in the input fields. These can ba altered, or you can
 just click *Compute*. The computations result in a plot as
 showed in Figure ref{pp:flask2:fig1}.
 
-FIGURE: [fig-pp/flask2.png, width=600] A simple web interface. label{pp:flask2:fig1}
+FIGURE: [fig-pp/flask2.png, width=600] A web interface with graphics. label{pp:flask2:fig1}
 
 === Django application ===
 
-The corresponding Django application is generate by the same
-`generator.py` code as above, except that we import the `generate`
-function from `parampool.generator.django`. The Django files are
-now in the `drag_free_motion_plot` subdirectory, and the application
+The corresponding Django application is generated by the same
+`generator.py` code as above, except that tword `flask` is replaced
+by `django`. The Django files are
+now placed in the `drag_free_motion_plot` subdirectory, and the web GUI
 is started by running
 
 !bc sys
 Terminal> python drag_free_motion_plot/manage.py runserver
 !ec
-The functionality of the application is identical to that of the Flask
+The functionality of the GUI is identical to that of the Flask
 version.
 
 === Comparing graphs in the same plot ===
 
 With a little trick we can compare several trajectories in the
-same plot: inserting `plt.figure(1)` makes all `plt.plot` calls
-draw curves in the same figure. We introduce a boolean parameter
+same plot: inserting `plt.figure(X)` makes all `plt.plot` calls
+draw curves in the same figure (with figure number `X`).
+We introduce a boolean parameter
 `new_plot` reflecting whether we want a new fresh plot or not,
 
 !bc pycod
@@ -284,7 +320,7 @@ def compute_drag_free_motion_plot2(
     initial_angle=45.0,
     new_plot=True):
 !ec
-and add the test
+and add the following code before the `plt.plot` call:
 
 !bc pycod
 global fig_no
@@ -296,16 +332,16 @@ plt.plot(x, y, label=r'$v=%g,\ \theta=%g$' %
          (initial_velocity, initial_angle))
 plt.legend()
 !ec
-before the `plt.plot` call. The `new_plot` parameter will turn up as a
+The `new_plot` parameter will turn up as a
 boolean variable in the web interface, and when checked, we create
-a new figure, otherwise we draw curves in the existing figure number
+a new figure. Otherwise, we draw curves in the existing figure number
 `fig_no` which was initialized last time `new_plot` was true (with
 a global variable we ensure that the value of `fig_no` survives between
 the calls to the compute function).
 Figure ref{pp:flask3:fig1} displays an attempt to not check `new_plot`
 and compare the curves corresponding to three different parameters.
 
-FIGURE: [fig-pp/flask3.png, width=600] Plot with multiple graphs. label{pp:flask3:fig1}
+FIGURE: [fig-pp/flask3.png, width=600] Plot with multiple curves. label{pp:flask3:fig1}
 
 !bwarning Caveat.
 If `new_plot` is unchecked before the first computation is carried out,
@@ -324,30 +360,80 @@ else:
 !ec
 !ewarning
 
+!bnotice Avoiding plot files
+The compute function generates plot files with unique names, but we can
+avoid making files at all and just insert the PNG code of the plot,
+using base64 encoding,
+as a long string directly in the HTML image tag. The statements
+below sketches the idea:
+
+!bc pycod
+import matplotlib.pyplot as plot
+# make plot
+from StringIO import StringIO
+figfile = StringIO()
+plt.savefig(figfile, format='png')
+figfile.seek(0)  # rewind to beginning of file
+figdata_png = figfile.buf  # extract string
+import base64
+figdata_png = base64.b64encode(figdata_png)
+html_text = '<img src="data:image/png;base64,%s" width="400">' % \
+            figdata_png
+!ec
+!enotice
+
+
 ===== More input parameters and results =====
 
 It is time to address a more complicated application: we want
 to compute the trajectory of a ball subject to air drag and lift
-(because of spin) and compare that trajectory to the one where
+and compare that trajectory to the one where
 drag and lift are omitted. We also want to visualize the
 relative importance between the three forces: gravity, drag, and lift.
+The lift is caused by spinning the ball.
 
 The function that performs the computations has the following signature:
 
-@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@v_x0 =
+@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
 and returns a formatted string `html_text` with plots in a tabular
 format. Details can be found in the "`compute.py`": "${src_path}/compute.py"
 source code.
 
-The doc string of the `compute_motion_and_forces` function deserves
-a comment. Any doc string of the compute function is copied and typeset
-verbatim at the top of the web interface. However, if `# (Doconce format)`
-appears somewhere in the doc string, the text is taken as
-"Doconce": "http://code.google.com/p/doconce" source code and translated
-to HTML, which enables typesetting of LaTeX mathematics and
-computer code snippets (with pygments formatting).
+Any doc string of the compute function is copied and typeset verbatim
+at the top of the web interface. However, if the text `# (Doconce
+format)` appears somewhere in the doc string, the text is taken as
+"Doconce": "http://code.google.com/p/doconce" source code and
+translated to HTML, which enables typesetting of LaTeX mathematics and
+computer code snippets (with nice pygments formatting).
 
-The generate of the web interface goes as in the other examples,
+The documentation of the web interface can therefore be included as a
+doc string in the compute function. A simple plain text might be
+
+!bc pycod
+"""
+This application computes the motion of a ball with radius R
+and mass m under the influence of gravity, air resistance (drag)
+and lift because of a given spinrate. The motion starts with
+a prescribed initial_velocity making an angle initial_angle
+with the ground. A wind velocity, positive in positive x direction,
+can also be given (w). Many numerical methods can be used to
+solve the equations of motion. Some legal names are ForwardEuler,
+RK2, RK4, and Fehlberg (adaptive Runge-Kutta 4/5 order).
+If the timestep dt is None, approximately 500 steps are used,
+but dt can also be given a desired float value.
+
+The boolean variable plot_simplified_motion adds the curve of
+the motion without drag and lift (the standard parabolic
+trajectory). This curve helps illustrate the effect of drag
+and lift. When new_plot is false (unchecked), the new computed
+curves are added to the previous ones since last time new_plot
+was true.
+
+# (Doconce format)
+"""
+!ec
+
+The `generate.py` code for creating the web GUI goes as in the other examples,
 
 @@@CODE src-pp/flask4/generate.py
 and we start the application as usual by `python controller.py`.
@@ -357,7 +443,7 @@ off the `plot_simplified_motion` curve and `new_plot`, then running
 two cases with the wind parameter `w`. The plot clearly show the
 influence of drag and wind against the motion.
 
-FIGURE: [fig-pp/flask4.png, width=850] A more comprehensive interface. label{pp:flask4:fig1}
+FIGURE: [fig-pp/flask4.png, width=850] Web interface with documentation and two graphs. label{pp:flask4:fig1}
 
 === Django interface ===
 
@@ -367,28 +453,62 @@ A subdirectory `motion_and_forces` contains the files, and the
 Django application is started as shown in previous examples and has the same
 functionality as the Flask application.
 
+=== Improvements: more advanced doc string and no plot files ===
+
+We can make an improved compute function, called `compute_motion_and_forces2`,
+where we insert a doc string with documentation of the mathematical model
+and where we use the idea of replacing plot files by strings with
+PNG code as described in the *Avoiding plot files* box at the end of
+Section {pp:plot:output}. The input variables and the functionality
+remain the same.
+
+Our new doc strings makes use of Doconce syntax for LaTeX mathematics
+and monospace font for Python variables:
+
+@@@CODE src-pp/compute.py fromto: compute_motion_and_forces2@v_x0 =
+The resulting documentation in HTML format is visualized in
+Figure
+
+For complete information on how to return PNG plots as strings, we
+refer to the `compute_motion_and_forces2` function in the
+"`compute.py`": "${src_path}/compute.py"
+source code.
+
+FIGURE: [fig-pp/flask5.png, width=850] Web interface with documentation containing mathematical formulas. label{pp:flask5:fig1}
+
+
 ===== Other types of function arguments =====
 
 The `generate` function will recognize the following different types
-of function arguments: `float`, `int`, `bool`, `str`, `list`,
-`tuple`, `numpy.ndarray`, as well as user-defined class types
+of keyword arguments in the compute function:
+`float`, `int`, `bool`, `str`, `list`,
+`tuple`, `numpy.ndarray`, name of a file, as well as user-defined class types
 (a la `MySpecialClass`).
-Here is an minimalistic example on computing the mean and standard
+Here is a minimalistic example on computing the mean and standard
 deviation of data either in an array or in a file (we use the
 file if the operator of the web interface assigns a file to `filename`):
 
-!bc pycod
-def compute_average(data=np.array([1,2]), filename=None):
-    if filename is not None:
-        data = np.loadtxt(os.path.join('uploads', filename))
-        what = 'file data'
-    else:
-        what = 'array'
-    return 'mean of %s: %.3g<br>\nstandard deviation:' % \
-           (what, np.mean(data), np.std(data))
-!ec
+@@@CODE src-pp/compute.py fromto: def compute_average@if __name
+The output is simple, basically two numbers in a table and an intro line.
 
-===== Animations =====
+We write a `generate.py` file as shown before, but with `compute_average`
+as the name of the compute function. For any argument containing
+the string `filename` it is assumed that the argument represents
+the name of a file. The web interface will then feature a button
+for uploading the file.
+
+When the applicatin runs, we
+have two data fields: one for setting an array with list syntax and one
+for uploading a file. Clicking on the latter and uploading an
+file `mydata.dat` containing just columns of numbers, results in
+the web page displayed in Figure ref{pp:flask6:fig1}. In this case,
+when a filename was assigned, we use the data in the file.
+Alternatively, we can instead fill in the data array and click *Compute*,
+which then will compute the basic statistics of the assigned data array.
+
+FIGURE: [fig-pp/flask6.png, width=500] Web interface for uploading a file. label{pp:flask6:fig1}
+
+#===== Animations =====
 
 
 ======= Working with a menu of input parameters =======
@@ -439,3 +559,5 @@ it such that
 
 On the main menu: damping can have radio buttons for linear b*u and
 quadratic b*u**2, F has list of different type of forces
+
+BIBFILE: papers.pub

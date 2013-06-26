@@ -190,17 +190,22 @@ def run_doconce_on_text(doc):
         return '<code><pre>\n%s\n</pre></code>\n' % text
 
     if re.search(r'#\s*\(?[Dd]oconce', doc):
-        # Remove indentation and insert breaks to avoid a long paragraph
-        # dictating the width of table columns in the template
+        from doconce.common import fix_backslashes
+        doc = fix_backslashes(doc)
+        # Remove indentation
         lines = doc.splitlines()
         for i in range(len(lines)):
             if lines[i][0:4] == '    ':
                 lines[i] = lines[i][4:]
         doc = '\n'.join(lines)
+
+        # Run doconce
+        print 'Found doc string in doconce format:'
         filename = 'tmp1'
         f = open(filename + '.do.txt', 'w')
         f.write(doc)
         f.close()
+        print 'Running doconce on help file', filename + '.do.txt'
         failure = os.system('doconce format html %s' % filename)
         if not failure:
             f = open(filename + '.html', 'r')
@@ -209,8 +214,8 @@ def run_doconce_on_text(doc):
             files = [filename + '.do.txt',
                      filename + '.html',
                      '.' + filename + '_html_file_collection']
-            for name in files:
-                os.remove(name)
+            #for name in files:
+            #    os.remove(name)
         else:
             doc = wrap_in_pre_tags(doc)
     else:
