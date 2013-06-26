@@ -67,16 +67,6 @@ def generate_template_dtree(compute_function, classname, menu, outfile, align='l
     app_path = outfile.split("templates")[0]
     static_dir = os.path.join(app_path, "static")
 
-    # Copy dtree data to static folder in current directory
-    try:
-        shutil.copytree(os.path.join(os.path.dirname(__file__),
-            'static'), static_dir)
-    except OSError:
-        import sys
-        sys.stderr.write("""A folder named static already exists. \
-Please remove it manually.\n""")
-        sys.exit(1)
-
     pre_code = """\
 <html>
   <head>
