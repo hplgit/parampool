@@ -220,6 +220,7 @@ def listtree2Menu(menu_tree):
         callback_leaf=make_data_item,
         callback_subtree_start=make_submenu,
         user_data=menu)
+    menu.update()
     return menu
 
 import nose.tools as nt
