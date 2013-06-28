@@ -34,8 +34,7 @@ from model import %(classname)s
 ''' % vars()
     if menu:
         code += '''\
-from %(menu_module)s import %(menu_name)s
-from parampool.menu.UI import listtree2Menu
+from %(menu_module)s import %(menu_name)s as menu
 ''' % vars()
     if file_upload:
         code += '''\
@@ -49,7 +48,9 @@ app = Flask(__name__)
     if menu:
         code += '''
 # Menu object
-menu = listtree2Menu(%(menu_name)s)
+if isinstance(menu, (list, tuple)):
+    from parampool.menu.UI import listtree2Menu
+    menu = listtree2Menu(menu)
 ''' % vars()
 
     if file_upload:
