@@ -26,13 +26,41 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             minvalue = item.data["minmax"][0]
             maxvalue = item.data["minmax"][1]
 
-        widget = item.data.get("widget", None)
+        widget = item.data.get("widget")
 
-        if widget is not None:
-            if widget == "RangeField":
-                if not item.data.has_key("minmax"):
-                    raise TypeError("Cannot create a range without min/max values")
-                user_data.code += """ \
+        if widget == "integer":
+            user_data.code += """ \
+    %%(name)-%ds = html5.IntegerField(u'%%(label)s',
+                        default=%%(default)s,
+                        validators=[wtf.validators.InputRequired()\
+""" % user_data.longest_name % vars()
+            if item.data.has_key("minmax"):
+                user_data.code += """,
+                                wtf.validators.NumberRange(%(minvalue)g,
+                                                           %(maxvalue)g)]
+""" % vars()
+            else:
+                user_data.code += "])\n"
+
+        elif widget == "float":
+            user_data.code += """ \
+    %%(name)-%ds = FloatField(u'%%(label)s',
+                        default=%%(default)g,
+                        validators=[wtf.validators.InputRequired()\
+""" % user_data.longest_name % vars()
+            if item.data.has_key("minmax"):
+                user_data.code += """,
+                                    wtf.validators.NumberRange(%(minvalue)g,
+                                                               %(maxvalue)g)])
+""" % vars()
+            else:
+                user_data.code += "])\n"
+
+
+        elif widget == "range":
+            if not item.data.has_key("minmax"):
+                raise TypeError("Cannot create a range without min/max values")
+            user_data.code += """ \
     %%(name)-%ds = RangeFloatField(u'%%(label)s',
                         onchange="showValue(this.value)",
                         min=%%(minvalue)g,
@@ -43,10 +71,10 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                                                                %%(maxvalue)g)])
 """ % user_data.longest_name % vars()
 
-            elif widget == "IntRangeField":
-                if not item.data.has_key("minmax"):
-                    raise TypeError("Cannot create a range without min/max values")
-                user_data.code += """ \
+        elif widget == "integer_range":
+            if not item.data.has_key("minmax"):
+                raise TypeError("Cannot create a range without min/max values")
+            user_data.code += """ \
     %%(name)-%ds = RangeFloatField(u'%%(label)s',
                         onchange="showValue(this.value)",
                         step=1.0,
@@ -54,18 +82,17 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                         max=%%(maxvalue)g,
                         default=%%(default)g,
                         validators=[wtf.validators.InputRequired(),
-                                    wtf.validators.NumberRange(%%(minvalue)g,
-                                                               %%(maxvalue)g)])
+                                   wtf.validators.NumberRange(%%(minvalue)g,
+                                                            %%(maxvalue)g)])
 """ % user_data.longest_name % vars()
 
-            elif widget == "FileField":
-                user_data.code += """ \
+        elif widget == "file":
+            user_data.code += """ \
     %%(name)-%ds = wtf.FileField(u'%%(label)s',
                         validators=[wtf.validators.InputRequired())
 """ % user_data.longest_name % vars()
 
-        else:
-            # Choose between given options
+        elif widget == "select":
             if item.data.has_key("options"):
                 choices = item.data["options"]
                 user_data.code += """ \
@@ -75,58 +102,36 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                         choices=%%(choices)s)
 """ % user_data.longest_name % vars()
 
-            # Bool
-            elif isinstance(default, bool):
+        elif widget == "checkbox":
                 user_data.code += """ \
     %%(name)-%ds = wtf.BooleanField(u'%%(label)s', default=%%(default)s)
 """ % user_data.longest_name % vars()
 
-            # Text input
-            elif isinstance(default, str):
+        else:
+            widget2field = {"textline": "html5.TextField",
+                            "textarea": "wtf.TextAreaField",
+                            "email":    "html5.EmailField",
+                            "hidden":   "wtf.HiddenField",
+                            "password": "wtf.PasswordField",
+                            "url":      "html5.URLField",
+                            "tel":      "html5.TelField",
+                            "date":     "html5.DateField"}
+
+            if widget in widget2field.keys():
+                field = widget2field[widget]
                 user_data.code += """ \
-    %%(name)-%ds = wtf.TextField(u'%%(label)s',
+    %%(name)-%ds = %%(field)s(u'%%(label)s',
                         default='%%(default)s',
                         validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()
-
-            # Regular float input
-            elif isinstance(default, float):
-                user_data.code += """ \
-    %%(name)-%ds = FloatField(u'%%(label)s',
-                        default=%%(default)g,
-                        validators=[wtf.validators.InputRequired()\
-""" % user_data.longest_name % vars()
-                if item.data.has_key("minmax"):
-                    user_data.code += """,
-                                    wtf.validators.NumberRange(%(minvalue)g,
-                                                               %(maxvalue)g)])
-""" % vars()
-                else:
-                    user_data.code += "])\n"
-
-            # Integer
-            elif isinstance(default, int):
-                user_data.code += """ \
-    %%(name)-%ds = wtf.IntegerField(u'%%(label)s',
-                        default=%%(default)g,
-                        validators=[wtf.validators.InputRequired()\
-""" % user_data.longest_name % vars()
-                if item.data.has_key("minmax"):
-                    user_data.code += """,
-                                    wtf.validators.NumberRange(%(minvalue)g,
-                                                               %(maxvalue)g)])
-""" % vars()
-                else:
-                    user_data.code += "])\n"
-
-            # Anything else
             else:
-                raise TypeError('Argument %s=%s is not supported.' %
-                                name, type(value))
+                raise TypeError("Widget %s not allowed" % widget)
+
 
     code = '''\
 import wtforms as wtf
 from parampool.html5.flask.fields import FloatField, RangeFloatField
+import flask.ext.wtf.html5 as html5
 
 class %(classname)s(wtf.Form):
 ''' % vars()
@@ -339,10 +344,11 @@ def test_menu():
     model_code = """\
 import wtforms as wtf
 from parampool.html5.flask.fields import FloatField, RangeFloatField
+import flask.ext.wtf.html5 as html5
 
 class Test(wtf.Form):
-     a     = wtf.IntegerField(u'velocity of body (km/h)',
-                        default=120,
+     a     = html5.TextField(u'velocity of body (km/h)',
+                        default='120',
                         validators=[wtf.validators.InputRequired()])
      b     = FloatField(u'mass (kg)',
                         default=0.43,
@@ -369,7 +375,7 @@ class Test(wtf.Form):
                         default='y',
                         validators=[wtf.validators.InputRequired()],
                         choices=[('y', 'y'), ('y3', 'y^3'), ('siny', 'sin(y)')])
-     test4 = wtf.TextField(u'texttest',
+     test4 = html5.TextField(u'texttest',
                         default='Test',
                         validators=[wtf.validators.InputRequired()])
      test5 = wtf.BooleanField(u'booltest', default=True)
@@ -377,7 +383,7 @@ class Test(wtf.Form):
 
     menu_tree = [
         'main', [
-            dict(name='a', default=120, unit='km/h',
+            dict(name='a', default='120', unit='km/h',
                  help='velocity of body', str2type=eval),
             'test properties1', [
                 dict(name='b', default=0.43, unit='kg', help='mass'),
@@ -387,13 +393,13 @@ class Test(wtf.Form):
                 ],
             'test properties2', [
                 dict(name='test1', default=0.5, help='rangetest',
-                     widget='RangeField', minmax=[0,1]),
+                     widget='range', minmax=[0,1]),
                 dict(name='test2', default='', help='filetest',
-                     widget='FileField'),
-                dict(name='test3', default='y', help='choicetest',
+                     widget='file'),
+                dict(name='test3', default='y', help='choicetest', widget="select",
                      options=[('y', 'y'), ('y3', 'y^3'), ('siny', 'sin(y)')]),
                 dict(name='test4', default='Test', help='texttest'),
-                dict(name='test5', default=True, help='booltest'),
+                dict(name='test5', default=True, str2type=bool, help='booltest'),
                 ],
             ],
         ]

@@ -26,11 +26,15 @@ class DataItem:
     ``value``      current value assigned in a user interface
     ``minmax``     legal interval (2-list) of values
     ``options``    legal list of values
-    ``widget``     recommended widget in graphical user interfaces
     ``namespace``  user's namespace for use when ``str2type=eval``
     ``user_data``  meta data stored in this object
     ``validate``   callable that can validate the value
     ``symbol``     LaTex code for mathematical symbol
+    ``widget``     recommended widget in graphical user interfaces.
+                   Allowed types are: "integer", "float", "range",
+                   "integer_range", "textline", "textarea",
+                   "checkbox", "select", "email", "hidden",
+                   "password", "file", "url", "date", "tel".
     ============== ==================================================
 
     A number and a unit can be
@@ -114,6 +118,27 @@ class DataItem:
                 raise TypeError(
                     '%s: options must list/tuple, not %s' %
                     type(attr))
+
+        if 'widget' in self.data:
+            widget = self.data['widget']
+            allowed_widgets = ("integer", "float", "range", "integer_range",
+                               "textline", "textarea", "checkbox", "select",
+                               "email", "hidden", "password", "file", "url",
+                               "date", "tel")
+            if not widget in allowed_widgets:
+                raise TypeError('%s: widget %s is not allowed. Plese select \
+from the following list: %s' % (self._signature(), widget, allowed_widgets))
+        else:
+            # Map str2type to widget
+            str2type2widget = {str:        "textline",
+                               type(1.0):  "float",
+                               type(1):    "integer",
+                               type(True): "checkbox"}
+            if self.data['str2type'] in str2type2widget.keys():
+                self.data['widget'] = str2type2widget[self.data['str2type']]
+            else:
+                self.data['widget'] = "textline" # default
+
 
         for attr in 'help', 'widget':
             if attr in self.data:
@@ -222,6 +247,11 @@ class DataItem:
 
     def set_value(self, value):
         """Set value as a string."""
+
+        if isinstance(value, unicode):
+            value.encode('ascii', 'replace')
+            value = str(value)
+
         if not isinstance(value, str):
             if not type(value) == type(self.data["default"]):
                 raise ValueError('%s: value=%s %s must be a string (or %s)' %

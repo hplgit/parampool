@@ -2,7 +2,8 @@ import os
 from distutils.util import strtobool
 
 def generate_controller(compute_function, classname,
-                        outfile, output_template, overwrite):
+                        outfile, output_template,
+                        menu_module, menu_name, overwrite):
 
     if not overwrite and outfile is not None and os.path.isfile(outfile):
         if not strtobool(raw_input(
@@ -16,23 +17,40 @@ def generate_controller(compute_function, classname,
     arg_names = inspect.getargspec(compute_function).args
     defaults  = inspect.getargspec(compute_function).defaults
 
-    code = '''\
-import os
-from flask import Flask, render_template, request, session
-from werkzeug import secure_filename
-from %(compute_function_file)s import %(compute_function_name)s as compute_function
-from model import %(classname)s
-
-# Application object
-app = Flask(__name__)
-''' % vars()
-
     # Add code for file upload only if it is strictly needed
     file_upload = False
     for name in arg_names:
         if 'filename' in name:
             file_upload = True
             break
+
+    menu = bool(menu_module and menu_name)
+
+    code = '''\
+import os
+from flask import Flask, render_template, request, session
+from %(compute_function_file)s import %(compute_function_name)s as compute_function
+from model import %(classname)s
+''' % vars()
+    if menu:
+        code += '''\
+from %(menu_module)s import %(menu_name)s
+from parampool.menu.UI import listtree2Menu
+''' % vars()
+    if file_upload:
+        code += '''\
+from werkzeug import secure_filename
+'''
+    code += '''
+# Application object
+app = Flask(__name__)
+''' % vars()
+
+    if menu:
+        code += '''
+# Menu object
+menu = listtree2Menu(%(menu_name)s)
+''' % vars()
 
     if file_upload:
         code += '''
@@ -75,15 +93,50 @@ def index():
         else:
             session["filename"] = None
 ''' % vars()
-    code += '''
-        # Compute result
+
+    if menu:
+        code += '''
+        # Send data to Menu object
+        for field in form:
+            menu.set_value(field.name, field.data)
+
+        result = compute(menu)
+'''
+    else:
+        code += '''
         result = compute(form)
+'''
+    code += '''\
 
     else:
         result = None
 
     return render_template("%(output_template)s", form=form, result=result)
+''' % vars()
 
+    if menu:
+        code += '''\
+def compute(menu):
+    """
+    Generic function for compute_function with values
+    taken from the menu object.
+    Return the output from the compute_function.
+    """
+
+    # If compute_function only has one argument (named menu),
+    # send only the menu object itself to the function.
+    import inspect
+    arg_names = inspect.getargspec(compute_function).args
+    if len(arg_names) == 1 and arg_names[0] == "menu":
+        return compute_function(menu)
+
+    # Else, extract values from menu and send them to
+    # compute_function.
+    values = [menu.get(name).get_value() for name in arg_names]
+    return compute_function(*values)
+'''
+    else:
+        code += '''\
 def compute(form):
     """
     Generic function for compute_function with arguments
@@ -98,12 +151,12 @@ def compute(form):
     form_values = [getattr(form, name) for name in arg_names
                    if hasattr(form, name)]
 ''' % vars()
-    if not file_upload:
-        code += '''
+        if not file_upload:
+            code += '''
     form_data = [value.data for value in form_values]
 '''
-    else:
-        code += '''
+        else:
+            code += '''
     import wtforms
     form_data = []
     for value in form_values:
@@ -113,14 +166,14 @@ def compute(form):
             form_data.append(session["filename"])
 '''
 
-    # Insert helper code if positional
-    # arguments because the user must then convert form_data
-    # elements explicitly.
-    if not defaults or len(defaults) != len(arg_names):
-        # Insert example on argument conversion since there are
-        # positional arguments where default_field might be the
-        # wrong type
-        code += '''
+            # Insert helper code if positional
+            # arguments because the user must then convert form_data
+            # elements explicitly.
+            if not defaults or len(defaults) != len(arg_names):
+                # Insert example on argument conversion since there are
+                # positional arguments where default_field might be the
+                # wrong type
+                code += '''
     # Convert data to right types (if necessary)
     # for i in range(len(form_data)):
     #    name = arg_names[i]
@@ -128,9 +181,9 @@ def compute(form):
     #         form_data[i] = int(form_data[i])
     #    elif name == '...':
 '''
-    else:
-        # We have default values: do right conversions
-        code += '''
+            else:
+                # We have default values: do right conversions
+                code += '''
     defaults  = inspect.getargspec(compute_function).defaults
 
     # Make defaults as long as arg_names so we can traverse both with zip
@@ -164,11 +217,12 @@ def compute(form):
                     print 'Could not convert text %s to %s for argument %s' % (form_data[i], type(defaults[i]), arg_names[i])
                     print 'when calling the compute function...'
 '''
-    code += '''
+        code += '''
     # Run computations
     result = compute_function(*form_data)
     return result
-
+'''
+    code += '''
 if __name__ == '__main__':
     app.run(debug=True)
 ''' % vars()

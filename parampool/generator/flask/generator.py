@@ -7,6 +7,8 @@ from generate_template import generate_template
 def generate(compute_function,
              classname=None,
              menu=None,
+             menu_module=None,
+             menu_name=None,
              default_field='TextField',
              output_template='view.html',
              overwrite_template=False,
@@ -60,6 +62,12 @@ def generate(compute_function,
         classname = ''.join([s.capitalize()
                              for s in _compute_function_name.split('_')])
 
+    if menu_module and menu_name and not menu:
+        exec("from %(menu_module)s import %(menu_name)s as menu_data" % vars())
+        if isinstance(menu_data, list):
+            from parampool.menu.UI import listtree2Menu
+            menu = listtree2Menu(menu_data)
+
     # Copy static files
     import os, shutil, tarfile
     shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
@@ -79,4 +87,5 @@ def generate(compute_function,
     generate_model(compute_function, classname, output_model,
                    default_field, menu, overwrite_model)
     generate_controller(compute_function, classname, output_controller,
-                        output_template, overwrite_controller)
+                        output_template, menu_module, menu_name,
+                        overwrite_controller)
