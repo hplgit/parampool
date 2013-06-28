@@ -10,6 +10,8 @@ def generate_controller(compute_function, classname,
             "The file %s already exists. Overwrite? [Y/N]: " % outfile)):
             return None
 
+    menu = bool(menu_module and menu_name)
+
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
 
@@ -19,12 +21,21 @@ def generate_controller(compute_function, classname,
 
     # Add code for file upload only if it is strictly needed
     file_upload = False
-    for name in arg_names:
-        if 'filename' in name:
-            file_upload = True
-            break
+    if menu:
+        # FIXME: This should be replaced by a good regex
+        filetxt = ("widget='file'", 'widget="file"',
+                   "widget = 'file'", 'widget = "file"')
+        menutxt = open(menu_module + ".py", 'r').read()
+        for txt in filetxt:
+            if txt in menutxt:
+                file_upload = True
+                break
+    else:
+        for name in arg_names:
+            if 'filename' in name:
+                file_upload = True
+                break
 
-    menu = bool(menu_module and menu_name)
 
     code = '''\
 import os
@@ -83,7 +94,19 @@ def index():
         code = code.replace(" and form.validate()", "")
         code += '''
         # Save uploaded file if it exists and is valid
-        if request.files:
+        if request.files:'''
+        if menu:
+            code += '''
+            for name, file in request.files.iteritems():
+                if allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    menu.set_value(name, filename)
+                else:
+                    raise TypeError("Illegal filename")
+'''
+        else:
+            code += '''
             file = request.files[form.filename.name]
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
@@ -93,13 +116,14 @@ def index():
                 session["filename"] = None
         else:
             session["filename"] = None
-''' % vars()
+'''
 
     if menu:
         code += '''
         # Send data to Menu object
         for field in form:
-            menu.set_value(field.name, field.data)
+            if field.data:
+                menu.set_value(field.name, field.data)
 
         result = compute(menu)
 '''

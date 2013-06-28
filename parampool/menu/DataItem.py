@@ -34,7 +34,7 @@ class DataItem:
                    Allowed types are: "integer", "float", "range",
                    "integer_range", "textline", "textarea",
                    "checkbox", "select", "email", "hidden",
-                   "password", "file", "url", "date", "tel".
+                   "password", "file", "url", "tel".
     ============== ==================================================
 
     A number and a unit can be
@@ -124,7 +124,7 @@ class DataItem:
             allowed_widgets = ("integer", "float", "range", "integer_range",
                                "textline", "textarea", "checkbox", "select",
                                "email", "hidden", "password", "file", "url",
-                               "date", "tel")
+                               "tel")
             if not widget in allowed_widgets:
                 raise TypeError('%s: widget %s is not allowed. Plese select \
 from the following list: %s' % (self._signature(), widget, allowed_widgets))

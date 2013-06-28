@@ -75,21 +75,20 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             if not item.data.has_key("minmax"):
                 raise TypeError("Cannot create a range without min/max values")
             user_data.code += """ \
-    %%(name)-%ds = RangeFloatField(u'%%(label)s',
+    %%(name)-%ds = IntegerRangeField(u'%%(label)s',
                         onchange="showValue(this.value)",
-                        step=1.0,
                         min=%%(minvalue)g,
                         max=%%(maxvalue)g,
                         default=%%(default)g,
                         validators=[wtf.validators.InputRequired(),
                                    wtf.validators.NumberRange(%%(minvalue)g,
-                                                            %%(maxvalue)g)])
+                                                              %%(maxvalue)g)])
 """ % user_data.longest_name % vars()
 
         elif widget == "file":
             user_data.code += """ \
     %%(name)-%ds = wtf.FileField(u'%%(label)s',
-                        validators=[wtf.validators.InputRequired())
+                        validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()
 
         elif widget == "select":
@@ -114,8 +113,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                             "hidden":   "wtf.HiddenField",
                             "password": "wtf.PasswordField",
                             "url":      "html5.URLField",
-                            "tel":      "html5.TelField",
-                            "date":     "html5.DateField"}
+                            "tel":      "html5.TelField"}
 
             if widget in widget2field.keys():
                 field = widget2field[widget]
@@ -130,7 +128,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
 
     code = '''\
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField, RangeFloatField
+from parampool.html5.flask.fields import FloatField, FloatRangeField, IntegerRangeField
 import flask.ext.wtf.html5 as html5
 
 class %(classname)s(wtf.Form):

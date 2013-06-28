@@ -79,7 +79,7 @@ def generate_template_dtree(compute_function, classname,
     <div class="dtree">
     <h2>Input:</h2>
     <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
-    <form method=post action="">
+    <form method=post action="" enctype=multipart/form-data>
       <script type="text/javascript">
         d = new dTree('d');
 """ % vars()
@@ -115,7 +115,7 @@ def generate_template_dtree(compute_function, classname,
         imgsrc = get_symbol(symbol, tree_path)
 
         # Use slider and show current value
-        if item.data.has_key("minmax"):
+        if item.data.get("widget", None) in ("range", "integer_range"):
             showvalue = ' &nbsp; <span id="range"></span>'
         else:
             showvalue = ""
