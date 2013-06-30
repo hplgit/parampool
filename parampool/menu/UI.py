@@ -225,7 +225,7 @@ def listtree2Menu(menu_tree):
 
 import nose.tools as nt
 from parampool.tree.Tree import dump
-from parampool.misc.assert_utils import assert_equal_text
+from parampool.utils import assert_equal_text
 
 def test_listtree2Menu():
     from math import pi

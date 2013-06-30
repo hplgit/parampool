@@ -46,7 +46,7 @@ class Menu(Tree):
 
 
 import nose.tools as nt
-from parampool.misc.assert_utils import assert_equal_text
+from parampool.utils import assert_equal_text
 
 def make_test_menu_dummy():
     return test_Menu()

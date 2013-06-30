@@ -380,6 +380,18 @@ figdata_png = base64.b64encode(figdata_png)
 html_text = '<img src="data:image/png;base64,%s" width="400">' % \
             figdata_png
 !ec
+
+There is a convenient function `parampool.utils.save_png_to_str`
+performing the statements above and returning the `html_text`
+string:
+
+!bc pycod
+from parampool.utils import save_png_to_str
+# make plot in plt (matplotlib.pyplot) object
+html_text = save_png_to_str(plt, plotwidth=400)
+!ec
+With this construction one can very easily avoid plot files and
+embed the plot directly in the HTML code.
 !enotice
 
 

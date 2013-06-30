@@ -1,3 +1,19 @@
+def save_png_to_str(plt, plotwidth=400):
+    """
+    Given a matplotlib.pyplot object plt, the current figure
+    is saved to a PNG string which is embedded in an HTML
+    image tag and returned.
+    """
+    from StringIO import StringIO
+    figfile = StringIO()
+    plt.savefig(figfile, format='png')
+    figfile.seek(0)  # rewind to beginning of file
+    figdata_png = figfile.buf  # extract string
+    import base64
+    figdata_png = base64.b64encode(figdata_png)
+    html_text = '<img src="data:image/png;base64,%(figdata_png)s" width="%(plotwidth)s">' % vars()
+    return html_text
+
 def pydiff(text1, text2, text1_name='text1', text2_name='text2',
            prefix_diff_files='tmp_diff', n=3):
     """

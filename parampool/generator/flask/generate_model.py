@@ -309,7 +309,7 @@ def generate_model(compute_func, classname, outfile, default_field,
         return generate_model_inspect(
             compute_func, classname, outfile, default_field)
 
-from parampool.misc.assert_utils import assert_equal_text
+from parampool.utils import assert_equal_text
 
 def test_inspect():
     model_code = """\

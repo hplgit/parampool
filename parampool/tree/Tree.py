@@ -268,7 +268,7 @@ def dump(tree):
     return '\n'.join(outlines)
 
 import nose.tools as nt
-from parampool.misc.assert_utils import assert_equal_text
+from parampool.utils import assert_equal_text
 
 def test_Tree_basics():
     t = Tree(root_name='main')

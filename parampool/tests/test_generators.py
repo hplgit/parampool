@@ -1,5 +1,5 @@
 import os, shutil, glob
-from parampool.misc.assert_utils import assert_equal_files
+from parampool.utils import assert_equal_files
 
 # Test function with positional arguments and one keyword argument
 
