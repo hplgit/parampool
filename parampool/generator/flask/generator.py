@@ -88,4 +88,4 @@ def generate(compute_function,
                    default_field, menu, overwrite_model)
     generate_controller(compute_function, classname, output_controller,
                         output_template, menu_module, menu_name,
-                        overwrite_controller)
+                        overwrite_controller, output_model)

@@ -3,7 +3,8 @@ from distutils.util import strtobool
 
 def generate_controller(compute_function, classname,
                         outfile, output_template,
-                        menu_module, menu_name, overwrite):
+                        menu_module, menu_name, overwrite,
+                        output_model):
 
     if not overwrite and outfile is not None and os.path.isfile(outfile):
         if not strtobool(raw_input(
@@ -25,12 +26,13 @@ def generate_controller(compute_function, classname,
             break
 
     menu = bool(menu_module and menu_name)
+    model_module = output_model.replace('.py', '')
 
     code = '''\
 import os
 from flask import Flask, render_template, request, session
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
-from model import %(classname)s
+from %(model_module)s import %(classname)s
 ''' % vars()
     if menu:
         code += '''\
@@ -112,6 +114,7 @@ def index():
         result = None
 
     return render_template("%(output_template)s", form=form, result=result)
+
 ''' % vars()
 
     if menu:
@@ -151,6 +154,7 @@ def compute(form):
     form_values = [getattr(form, name) for name in arg_names
                    if hasattr(form, name)]
 ''' % vars()
+
         if not file_upload:
             code += '''
     form_data = [value.data for value in form_values]
@@ -166,14 +170,14 @@ def compute(form):
             form_data.append(session["filename"])
 '''
 
-            # Insert helper code if positional
-            # arguments because the user must then convert form_data
-            # elements explicitly.
-            if not defaults or len(defaults) != len(arg_names):
-                # Insert example on argument conversion since there are
-                # positional arguments where default_field might be the
-                # wrong type
-                code += '''
+        # Insert helper code if positional
+        # arguments because the user must then convert form_data
+        # elements explicitly.
+        if not defaults or len(defaults) != len(arg_names):
+            # Insert example on argument conversion since there are
+            # positional arguments where default_field might be the
+            # wrong type
+            code += '''
     # Convert data to right types (if necessary)
     # for i in range(len(form_data)):
     #    name = arg_names[i]
@@ -181,9 +185,9 @@ def compute(form):
     #         form_data[i] = int(form_data[i])
     #    elif name == '...':
 '''
-            else:
-                # We have default values: do right conversions
-                code += '''
+        else:
+            # We have default values: do right conversions
+            code += '''
     defaults  = inspect.getargspec(compute_function).defaults
 
     # Make defaults as long as arg_names so we can traverse both with zip
@@ -217,7 +221,7 @@ def compute(form):
                     print 'Could not convert text %s to %s for argument %s' % (form_data[i], type(defaults[i]), arg_names[i])
                     print 'when calling the compute function...'
 '''
-        code += '''
+    code += '''
     # Run computations
     result = compute_function(*form_data)
     return result

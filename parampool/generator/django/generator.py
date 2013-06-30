@@ -76,7 +76,8 @@ def generate(compute_function,
     generate_models(compute_function, classname, outfile_models,
                     default_field, menu)
     generate_template(compute_function, classname, outfile_template, menu)
-    generate_views(compute_function, classname, outfile_control, output_template)
+    generate_views(compute_function, classname, outfile_control,
+                   output_template, output_models)
     # Copy static files
     import os, shutil, tarfile
     shutil.copy(compute_function.__module__ + ".py",

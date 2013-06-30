@@ -1,15 +1,18 @@
 def generate_views(compute_function,
                    classname,
                    outfile,
-                   output_template):
+                   output_template,
+                   output_models):
 
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
 
+    models_module = output_models.replace('.py', '')
+
     code = '''\
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from models import %(classname)sForm
+from %(models_module)s import %(classname)sForm
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
 
 def index(request):
