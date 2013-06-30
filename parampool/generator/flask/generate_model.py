@@ -61,7 +61,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             if not item.data.has_key("minmax"):
                 raise TypeError("Cannot create a range without min/max values")
             user_data.code += """ \
-    %%(name)-%ds = RangeFloatField(u'%%(label)s',
+    %%(name)-%ds = FloatRangeField(u'%%(label)s',
                         onchange="showValue(this.value)",
                         min=%%(minvalue)g,
                         max=%%(maxvalue)g,
@@ -341,7 +341,7 @@ def test_menu():
 
     model_code = """\
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField, RangeFloatField
+from parampool.html5.flask.fields import FloatField, FloatRangeField, IntegerRangeField
 import flask.ext.wtf.html5 as html5
 
 class Test(wtf.Form):
@@ -359,7 +359,7 @@ class Test(wtf.Form):
                         validators=[wtf.validators.InputRequired(),
                                     wtf.validators.NumberRange(0,
                                                                1)])
-     test1 = RangeFloatField(u'rangetest',
+     test1 = FloatRangeField(u'rangetest',
                         onchange="showValue(this.value)",
                         min=0,
                         max=1,
@@ -368,7 +368,7 @@ class Test(wtf.Form):
                                     wtf.validators.NumberRange(0,
                                                                1)])
      test2 = wtf.FileField(u'filetest',
-                        validators=[wtf.validators.InputRequired())
+                        validators=[wtf.validators.InputRequired()])
      test3 = wtf.SelectField(u'choicetest',
                         default='y',
                         validators=[wtf.validators.InputRequired()],

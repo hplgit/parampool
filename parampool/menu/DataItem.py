@@ -501,8 +501,8 @@ def test_DataItem_multiple_values():
 def test_DataItem_str():
     """Test output of __str__."""
     d = DataItem(name='Q', default=1.2, minmax=[0,2],
-                 widget='slider', help='volume flux')
-    answer = """DataItem "Q": value=1.2 default=1.2, help=volume flux, minmax=[0, 2], str2type=<type 'float'>, widget=slider"""
+                 widget='range', help='volume flux')
+    answer = """DataItem "Q": value=1.2 default=1.2, help=volume flux, minmax=[0, 2], str2type=<type 'float'>, widget=range"""
     nt.assert_equal(str(d), answer)
 
 def test_DataItem_math():
@@ -526,7 +526,7 @@ def test_DataItem_namespace():
 def test_DataItem_dict2DataItem():
     data = dict(name="A", help="area", default=1, str2type=float)
     d = DataItem(**data)
-    nt.assert_equal(str(d), """DataItem "A": value=1 default=1, help=area, str2type=<type 'float'>""")
+    nt.assert_equal(str(d), """DataItem "A": value=1 default=1, help=area, str2type=<type 'float'>, widget=float""")
 
 
 if __name__ == '__main__':
