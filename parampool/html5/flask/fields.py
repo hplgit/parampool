@@ -1,4 +1,5 @@
 from wtforms.fields import FloatField as FlaskFloatField
+from wtforms.fields import IntegerField as FlaskIntegerField
 from wtforms.widgets import HTMLString, Input
 
 class HTML5Input(Input):
@@ -25,7 +26,7 @@ class HTML5Input(Input):
 class RangeInput(HTML5Input):
     input_type = "range" # HTML5 input type
 
-class RangeFloatField(FlaskFloatField):
+class FloatRangeField(FlaskFloatField):
     """
     HTML5 compatibal version of FloatField. Using slider input widget.
     """
@@ -38,7 +39,22 @@ class RangeFloatField(FlaskFloatField):
         self.max = max
         self.unit = unit
         self.onchange = onchange
-        super(RangeFloatField, self).__init__(label, validators, **kwargs)
+        super(FloatRangeField, self).__init__(label, validators, **kwargs)
+
+class IntegerRangeField(FlaskIntegerField):
+    """
+    HTML5 compatibal version of FloatField. Using slider input widget.
+    """
+    widget = RangeInput()
+
+    def __init__(self, label=None, validators=None, step=1, min=-1,
+                 max=1, onchange="", unit=None, **kwargs):
+        self.step = step
+        self.min = min
+        self.max = max
+        self.unit = unit
+        self.onchange = onchange
+        super(IntegerRangeField, self).__init__(label, validators, **kwargs)
 
 class NumberInput(HTML5Input):
     input_type = "number" # HTML5 input type
