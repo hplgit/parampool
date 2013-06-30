@@ -3,7 +3,7 @@ from distutils.util import strtobool
 
 def generate_controller(compute_function, classname,
                         outfile, output_template,
-                        menu_module, menu_name, overwrite,
+                        menu_function, overwrite,
                         output_model):
 
     if not overwrite and outfile is not None and os.path.isfile(outfile):
@@ -11,10 +11,13 @@ def generate_controller(compute_function, classname,
             "The file %s already exists. Overwrite? [Y/N]: " % outfile)):
             return None
 
-    menu = bool(menu_module and menu_name)
-
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
+
+    if menu_function:
+        menu_function_name = menu_function.__name__
+        menu_function_file = menu_function.__module__
+        menu = True
 
     import inspect
     arg_names = inspect.getargspec(compute_function).args
@@ -22,11 +25,12 @@ def generate_controller(compute_function, classname,
 
     # Add code for file upload only if it is strictly needed
     file_upload = False
+
     if menu:
         # FIXME: This should be replaced by a good regex
         filetxt = ("widget='file'", 'widget="file"',
                    "widget = 'file'", 'widget = "file"')
-        menutxt = open(menu_module + ".py", 'r').read()
+        menutxt = open(menu_function_file + ".py", 'r').read()
         for txt in filetxt:
             if txt in menutxt:
                 file_upload = True
@@ -37,7 +41,6 @@ def generate_controller(compute_function, classname,
                 file_upload = True
                 break
 
-    menu = bool(menu_module and menu_name)
     model_module = output_model.replace('.py', '')
 
     code = '''\
@@ -46,10 +49,7 @@ from flask import Flask, render_template, request, session
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
 from %(model_module)s import %(classname)s
 ''' % vars()
-    if menu:
-        code += '''\
-from %(menu_module)s import %(menu_name)s as menu
-''' % vars()
+
     if file_upload:
         code += '''\
 from werkzeug import secure_filename
@@ -62,9 +62,8 @@ app = Flask(__name__)
     if menu:
         code += '''
 # Menu object
-if isinstance(menu, (list, tuple)):
-    from parampool.menu.UI import listtree2Menu
-    menu = listtree2Menu(menu)
+from %(menu_function_file)s import %(menu_function_name)s
+menu = menu_function()
 ''' % vars()
 
     if file_upload:
