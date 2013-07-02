@@ -18,6 +18,8 @@ def generate_controller(compute_function, classname,
         menu_function_name = menu_function.__name__
         menu_function_file = menu_function.__module__
         menu = True
+    else:
+        menu = False
 
     import inspect
     arg_names = inspect.getargspec(compute_function).args
