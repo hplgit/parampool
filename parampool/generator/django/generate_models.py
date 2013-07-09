@@ -24,64 +24,86 @@ def generate_models_menu(compute_function, classname, outfile, menu):
             minvalue = item.data["minmax"][0]
             maxvalue = item.data["minmax"][1]
 
-        widget = item.data.get("widget", None)
+        widget = item.data.get("widget")
 
-        if widget is not None:
-            # FIXME: Slider not yet supported.
-            if widget == "RangeField" or widget == "IntRangeField":
-                raise NotImplementedError("Slider not yet supported.")
+        # TODO: Slider widgets for Django
+        if widget in ("range", "integer_range"):
+            print "*** WARNING: widget '%s' not yet supported" % widget
+            mapping = {"range": "float",
+                       "integer_range": "integer"}
+            wigdet = mapping.get(widget)
+            print "    Using standard %s instead" % widget
 
-            elif widget == "FileField":
-                user_data.code += """ \
-    %%(name)-%ds = models.FileField(verbose_name='%%(label)s',
-                        upload_to='uploads/')
+        if widget == "integer":
+            user_data.code += """ \
+    %%(name)-%ds = models.IntegerField(verbose_name='%%(label)s',
+                        default=%%(default)g)
 """ % user_data.longest_name % vars()
+            # TODO: Minmax for integers
+            if item.data.has_key("minmax"):
+                pass
 
-        else:
-            # Choose between given options
-            if item.data.has_key("options"):
-                choices = item.data["options"]
-                # TODO: Implement this!
-
-            # Text input
-            elif isinstance(default, str):
+        elif widget == "float":
+            if item.data.has_key("minmax"):
                 user_data.code += """ \
-    %%(name)-%ds = models.TextField(verbose_name='%%(label)s',
-                        default='%%(default)s')
-""" % user_data.longest_name % vars()
-
-            # Regular float input
-            elif isinstance(default, float):
-                if item.data.has_key("minmax"):
-                    user_data.code += """ \
     %%(name)-%ds = MinMaxFloat(verbose_name='%%(label)s',
                         default=%%(default)g,
                         min_value=%%(minvalue)g,
                         max_value=%%(maxvalue)g)
 """ % user_data.longest_name % vars()
-                else:
-                    user_data.code += """ \
+            else:
+                user_data.code += """ \
     %%(name)-%ds = models.FloatField(verbose_name='%%(label)s',
                         default=%%(default)g)
 """ % user_data.longest_name % vars()
 
-
-
-            # Integer
-            elif isinstance(default, int):
-                if item.data.has_key("minmax"):
-                    # TODO: Implement MinMaxInt
-                    pass
-
-                user_data.code += """ \
-    %%(name)-%ds = models.IntegerField(verbose_name='%%(label)s',
-                        default=%%(default)g)
+        elif widget == "file":
+            user_data.code += """ \
+    %%(name)-%ds = models.FileField(verbose_name='%%(label)s',
+                        upload_to='uploads/')
 """ % user_data.longest_name % vars()
 
-            # Anything else
+        elif widget == "select":
+            if item.data.has_key("options"):
+                choices = item.data["options"]
+                # FIXME: TextField is currently hardcoded
+                # Maybe use default_field.
+                user_data.code += """ \
+    %%(name)-%ds = models.TextField(verbose_name='%%(label)s',
+                        default='%%(default)s',
+                        choices=%%(choices)s)
+""" % user_data.longest_name % vars()
             else:
-                raise TypeError('Argument %s=%s is not supported.' %
-                                name, type(value))
+                print "*** ERROR: Cannot use widget 'select' without any options."
+                import sys
+                sys.exit(1)
+
+        elif widget == "checkbox":
+            # TODO: Check if we need to use NullBoleanField instead.
+            user_data.code += """ \
+    %%(name)-%ds = models.BooleanField(verbose_name='%%(label)s', default=%%(default)s)
+""" % user_data.longest_name % vars()
+
+        else:
+            not_supported = ("textarea", "hidden", "password", "tel")
+            if widget in not_supported:
+                print "*** ERROR: Widget '%s' is not currently supported." % widget
+                import sys
+                sys.exit(1)
+
+            widget2field = {"textline": "models.TextField",
+                            "email":    "models.EmailField",
+                            "url":      "models.URLField"}
+
+            if widget in widget2field.keys():
+                field = widget2field[widget]
+                user_data.code += """ \
+    %%(name)-%ds = %%(field)s(verbose_name='%%(label)s',
+                        default='%%(default)s')
+""" % user_data.longest_name % vars()
+            else:
+                raise TypeError("Widget '%s' not allowed" % widget)
+
 
     code = '''\
 from django.db import models
@@ -253,6 +275,7 @@ def generate_models(compute_func, classname, outfile, default_field,
     Generate the Django ModelForm using menu if given,
     else use inspect on the compute function.
     """
+
     if menu is not None:
         return generate_models_menu(
             compute_func, classname, outfile, menu)

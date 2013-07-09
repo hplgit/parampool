@@ -1,4 +1,5 @@
 import os
+from distutils.util import strtobool
 
 def generate_template_std(classname, outfile, doc=''):
     """
@@ -22,7 +23,7 @@ def generate_template_std(classname, outfile, doc=''):
   <td valign="top">
     <h2>Input:</h2>
 
-      <form method=post action="">{%% csrf_token %%}
+      <form method=post action="" enctype=multipart/form-data>{%% csrf_token %%}
         <table>
           {%% for field in form %%}
             <tr><td>{{ field.name }}</td>
@@ -57,15 +58,16 @@ def generate_template_std(classname, outfile, doc=''):
         f.write(code)
         f.close()
 
-def generate_template_dtree(compute_function, classname, menu, outfile, align='left'):
+def generate_template_dtree(compute_function, classname,
+                            menu, outfile, doc, align='left'):
+
     # TODO: Support for right align in 'parent' functions
     from latex_symbols import get_symbol, symbols_same_size
     from progressbar import ProgressBar, Percentage, Bar, ETA, RotatingMarker
-    import os, inspect, shutil
+    import inspect
     args = inspect.getargspec(compute_function).args
-
-    app_path = outfile.split("templates")[0]
-    static_dir = os.path.join(app_path, "static")
+    app_dir = outfile.split("templates")[0]
+    static_dir = os.path.join(app_dir, "static")
 
     pre_code = """\
 <html>
@@ -77,6 +79,7 @@ def generate_template_dtree(compute_function, classname, menu, outfile, align='l
   </head>
   <body>
     <div class="dtree">
+    %(doc)s
     <h2>Input:</h2>
     <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
     <form method=post action="">{%% csrf_token %%}
@@ -116,7 +119,7 @@ def generate_template_dtree(compute_function, classname, menu, outfile, align='l
         imgsrc = '/'.join(imgsrc.split('/')[2:])
 
         # Use slider and show current value
-        if item.data.has_key("minmax"):
+        if item.data.get("widget", None) in ("range", "integer_range"):
             showvalue = ' &nbsp; <span id="range"></span>'
         else:
             showvalue = ""
@@ -183,12 +186,12 @@ def generate_template_dtree(compute_function, classname, menu, outfile, align='l
         f.write(code)
         f.close()
 
-def generate_template(compute_function, classname, outfile, menu=None, overwrite=False):
+def generate_template(compute_function, classname, outfile, menu=None):
     from parampool.generator.flask.generate_template import run_doconce_on_text
     doc = run_doconce_on_text(compute_function.__doc__)
 
-    if menu is not None:
+    if menu:
         return generate_template_dtree(
-            compute_function, classname, menu, outfile)
+            compute_function, classname, menu, outfile, doc)
     else:
         return generate_template_std(classname, outfile, doc)

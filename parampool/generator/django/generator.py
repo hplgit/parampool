@@ -1,17 +1,19 @@
+import os, shutil, tarfile
+
 from generate_models import generate_models
 from generate_views import generate_views
 from generate_template import generate_template
 from django_fix import start_all
 
 def generate(compute_function,
+             menu_function=None,
              projectname=None,
              appname=None,
              classname=None,
-             menu=None,
-             default_field='FloatField',
+             default_field='TextField',
              output_template="index.html",
-             output_control="views.py",
-             output_model="models.py"):
+             output_views="views.py",
+             output_models="models.py"):
     """
     Given a function `compute_function` that takes a series of
     arguments, generate a Django web form where
@@ -62,37 +64,49 @@ def generate(compute_function,
                              for s in _compute_function_name.split('_')])
 
     start_all(projectname, appname)
+    project_dir = os.path.join(os.getcwd(), projectname)
+    app_dir = os.path.join(project_dir, appname)
+    static_dir = os.path.join(app_dir, "static")
+    templates_dir = os.path.join(app_dir, "templates")
 
-    import os
-    try:
-        os.makedirs(projectname + os.sep + appname + os.sep + "templates")
-    except OSError:
-        pass # directory exists
-    outfile_models = os.path.join(projectname + os.sep + appname, output_model)
-    outfile_control = os.path.join(projectname + os.sep + appname, output_control)
-    outfile_template = os.path.join(projectname + os.sep + appname + os.sep \
-            + "templates", output_template)
+    if not os.path.isdir(templates_dir):
+        os.mkdir(templates_dir)
 
-    generate_models(compute_function, classname, outfile_models,
-                    default_field, menu)
-    generate_template(compute_function, classname, outfile_template, menu)
-    generate_views(compute_function, classname, outfile_control,
-                   output_template, output_models)
+    output_models = os.path.join(app_dir, output_models)
+    output_views = os.path.join(app_dir, output_views)
+    output_template = os.path.join(templates_dir, output_template)
+
+    if menu_function:
+        menu = menu_function()
+    else:
+        menu = None
+
     # Copy static files
-    import os, shutil, tarfile
-    shutil.copy(compute_function.__module__ + ".py",
-                os.path.join(os.getcwd(), projectname + os.sep + appname))
+    shutil.copy(compute_function.__module__ + ".py", app_dir)
+    if menu_function:
+        shutil.copy(menu_function.__module__ + ".py", app_dir)
     shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
                 os.curdir)
+
     if menu is not None:
+        os.chdir(app_dir)
         shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
                     os.curdir)
         archive = tarfile.open('static.tar.gz')
         archive.extractall()
         os.remove('static.tar.gz')
+        os.chdir("../../")
     else:
-        if not os.path.isdir('static'):
-            os.mkdir('static')
+        if not os.path.isdir(static_dir):
+            os.mkdir(static_dir)
+
+    generate_template(compute_function, classname, output_template,
+                      menu)
+    generate_models(compute_function, classname, output_models,
+                    default_field, menu)
+    generate_views(compute_function, classname, output_views,
+                   output_template, menu_function,
+                   output_models)
 
     print "Django app successfully created in %s/" % projectname
     print "Run python %s/manage.py runserver" % projectname
