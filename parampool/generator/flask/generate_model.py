@@ -100,6 +100,10 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                         validators=[wtf.validators.InputRequired()],
                         choices=%%(choices)s)
 """ % user_data.longest_name % vars()
+            else:
+                print "*** ERROR: Cannot use widget select without any options."
+                import sys
+                sys.exit(1)
 
         elif widget == "checkbox":
                 user_data.code += """ \
@@ -123,7 +127,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                         validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()
             else:
-                raise TypeError("Widget %s not allowed" % widget)
+                raise TypeError("Widget '%s' not allowed" % widget)
 
 
     code = '''\
@@ -288,7 +292,7 @@ of code that may be needed.
         f.close()
 
 def generate_model(compute_func, classname, outfile, default_field,
-                    menu=None, overwrite=False):
+                   menu=None, overwrite=False):
     """
     Generate the Flask form using menu if given,
     else use inspect on the compute function.

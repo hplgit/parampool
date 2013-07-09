@@ -61,7 +61,6 @@ def generate(compute_function,
                              for s in _compute_function_name.split('_')])
 
     if menu_function:
-        #from menu_function.__module__ import menu_function.__name__ as menu_definition
         menu = menu_function()
     else:
         menu = None
