@@ -82,7 +82,7 @@ def generate_template_dtree(compute_function, classname,
     %(doc)s
     <h2>Input:</h2>
     <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
-    <form method=post action="">{%% csrf_token %%}
+    <form method=post action="" enctype=multipart/form-data>{%% csrf_token %%}
       <script type="text/javascript">
         d = new dTree('d');
 """ % vars()
@@ -116,7 +116,7 @@ def generate_template_dtree(compute_function, classname,
         else:
             symbol = "\\mbox{%s}" % name
         imgsrc = get_symbol(symbol, static_dir, tree_path)
-        imgsrc = '/'.join(imgsrc.split('/')[2:])
+        imgsrc = os.sep + "static" + os.sep + imgsrc.split("static")[-1]
 
         # Use slider and show current value
         if item.data.get("widget", None) in ("range", "integer_range"):

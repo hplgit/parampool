@@ -79,19 +79,25 @@ def generate_models_menu(compute_function, classname, outfile, menu):
                 sys.exit(1)
 
         elif widget == "checkbox":
-            # TODO: Check if we need to use NullBoleanField instead.
             user_data.code += """ \
     %%(name)-%ds = models.BooleanField(verbose_name='%%(label)s', default=%%(default)s)
 """ % user_data.longest_name % vars()
 
+        elif widget == "textline":
+            user_data.code += """ \
+    %%(name)-%ds = models.CharField(verbose_name='%%(label)s',
+                        default='%%(default)s',
+                        max_length=50)
+""" % user_data.longest_name % vars()
+
         else:
-            not_supported = ("textarea", "hidden", "password", "tel")
+            not_supported = ("hidden", "password", "tel")
             if widget in not_supported:
                 print "*** ERROR: Widget '%s' is not currently supported." % widget
                 import sys
                 sys.exit(1)
 
-            widget2field = {"textline": "models.TextField",
+            widget2field = {"textarea": "models.TextField",
                             "email":    "models.EmailField",
                             "url":      "models.URLField"}
 

@@ -5,6 +5,7 @@ def generate_views(compute_function,
                    menu_function,
                    output_models):
 
+    output_models = output_models.strip(".py")
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
 
@@ -37,13 +38,10 @@ def generate_views(compute_function,
                 file_upload = True
                 break
 
-    import os
-    models_module = output_models.replace('.py', '').split(os.sep)[-1]
-
     code = '''\
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from %(models_module)s import %(classname)sForm
+from %(output_models)s import %(classname)sForm
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
 ''' % vars()
 
@@ -54,6 +52,14 @@ from %(menu_function_file)s import %(menu_function_name)s
 menu = menu_function()
 ''' % vars()
 
+    if file_upload:
+        code += '''
+import os
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+if not os.path.isdir(UPLOAD_DIR):
+    os.mkdir(UPLOAD_DIR)
+'''
+
     code += '''
 def index(request):
     result = None
@@ -61,30 +67,31 @@ def index(request):
 
     if file_upload and menu:
         code += '''
-    form = %(classname)sForm(request.POST, request.FILES)
+    form = %(classname)sForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
-        for name, file in request.FILES.iteritems():
-            if allowed_file(file.filename):
-                filename = file.filename
-                file.save(os.path.join(uploads, filename))
-                menu.set_value(name, filename)
-        # FIXME: Probably won't work. Maybe after form.save
-        # and maybe .name and .data are Flask
         for field in form:
-            menu.set_value(field.name, field.data)
-        form = form.save(commit=False)
+            if field.name in request.FILES:
+                filename = field.data.name
+                menu.set_value(field.name, filename)
+                with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
+                    for chunk in field.data.chunks():
+                        destination.write(chunk)
+            else:
+                menu.set_value(field.name, field.data)
         result = compute(menu)
         form = %(classname)sForm(request.POST, request.FILES)
 ''' % vars()
 
     elif file_upload and not menu:
         code += '''
-    form = %(classname)sForm(request.POST, request.FILES)
+    form = %(classname)sForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
-        for name, file in request.FILES.iteritems():
-            if allowed_file(file.filename):
-                filename = file.filename
-                file.save(os.path.join(uploads, filename))
+        for field in form:
+            if field.name in request.FILES:
+                filename = field.data.name
+                with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
+                    for chunk in field.data.chunks():
+                        destination.write(chunk)
         form = form.save(commit=False)
         result = compute(form)
         form = %(classname)sForm(request.POST, request.FILES)
@@ -94,13 +101,10 @@ def index(request):
         code += '''
     form = %(classname)sForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        # FIXME: Probably won't work. Maybe after form.save
-        # and maybe .name and .data are Flask
         for field in form:
             menu.set_value(field.name, field.data)
-        form = form.save(commit=False)
         result = compute(menu)
-        form = %(classname)sForm(request.POST or None)
+        form = %(classname)sForm(request.POST)
 ''' % vars()
 
     else:

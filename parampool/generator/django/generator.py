@@ -72,9 +72,9 @@ def generate(compute_function,
     if not os.path.isdir(templates_dir):
         os.mkdir(templates_dir)
 
-    output_models = os.path.join(app_dir, output_models)
-    output_views = os.path.join(app_dir, output_views)
-    output_template = os.path.join(templates_dir, output_template)
+    output_models_path = os.path.join(app_dir, output_models)
+    output_views_path = os.path.join(app_dir, output_views)
+    output_template_path = os.path.join(templates_dir, output_template)
 
     if menu_function:
         menu = menu_function()
@@ -100,11 +100,11 @@ def generate(compute_function,
         if not os.path.isdir(static_dir):
             os.mkdir(static_dir)
 
-    generate_template(compute_function, classname, output_template,
+    generate_template(compute_function, classname, output_template_path,
                       menu)
-    generate_models(compute_function, classname, output_models,
+    generate_models(compute_function, classname, output_models_path,
                     default_field, menu)
-    generate_views(compute_function, classname, output_views,
+    generate_views(compute_function, classname, output_views_path,
                    output_template, menu_function,
                    output_models)
 
