@@ -31,7 +31,7 @@ def generate_models_menu(compute_function, classname, outfile, menu):
             print "*** WARNING: widget '%s' not yet supported" % widget
             mapping = {"range": "float",
                        "integer_range": "integer"}
-            wigdet = mapping.get(widget)
+            widget = mapping.get(widget)
             print "    Using standard %s instead" % widget
 
         if widget == "integer":
