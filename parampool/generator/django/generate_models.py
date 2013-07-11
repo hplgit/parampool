@@ -229,7 +229,7 @@ of code that may be needed.
                 if "filename" in name:
                     form = 'FileField'
                     code += """\
-    %%(name)-%ds = models.%%(form)s(verbose_name=' %%(name)s', upload_to='uploads/')
+    %%(name)-%ds = models.%%(form)s(verbose_name=' %%(name)s', upload_to='uploads/', blank=True)
 """ % longest_name % vars()
 
                 else:

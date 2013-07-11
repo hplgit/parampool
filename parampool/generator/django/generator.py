@@ -63,8 +63,9 @@ def generate(compute_function,
         classname = ''.join([s.capitalize()
                              for s in _compute_function_name.split('_')])
 
-    start_all(projectname, appname)
+
     project_dir = os.path.join(os.getcwd(), projectname)
+    start_all(projectname, appname, project_dir)
     app_dir = os.path.join(project_dir, appname)
     static_dir = os.path.join(app_dir, "static")
     templates_dir = os.path.join(app_dir, "templates")

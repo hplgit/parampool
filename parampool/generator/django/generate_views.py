@@ -84,6 +84,7 @@ def index(request):
 
     elif file_upload and not menu:
         code += '''
+    filename = None
     form = %(classname)sForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
         for field in form:
@@ -93,7 +94,8 @@ def index(request):
                     for chunk in field.data.chunks():
                         destination.write(chunk)
         form = form.save(commit=False)
-        result = compute(form)
+        request.session["filename"] = filename
+        result = compute(form, request)
         form = %(classname)sForm(request.POST, request.FILES)
 ''' % vars()
 
@@ -122,11 +124,11 @@ def index(request):
         {"form": form,
          "result": result},
         context_instance=RequestContext(request))
+
 ''' % vars()
 
     if menu:
         code += '''
-
 def compute(menu):
     """
     Generic function for compute_function with values
@@ -148,9 +150,15 @@ def compute(menu):
 '''
 
     else:
-        code += '''
-
+        if file_upload:
+            code += '''
+def compute(form, request):
+'''
+        else:
+            code += '''
 def compute(form):
+'''
+        code += '''
     """
     Generic function for compute_function with arguments
     taken from a form object (django.forms.ModelForm subclass).
@@ -159,11 +167,26 @@ def compute(form):
     # Extract arguments to the compute function
     import inspect
     arg_names = inspect.getargspec(compute_function).args
+'''
+
+        if file_upload:
+            code += '''
+
+    form_data = []
+    for name in arg_names:
+        if name != "filename":
+            if hasattr(form, name):
+                form_data.append(getattr(form, name))
+        else:
+            form_data.append(request.session.get("filename"))
+'''
+        else:
+            code += '''
 
     # Extract values from form
     form_data = [getattr(form, name) for name in arg_names
                  if hasattr(form, name)]
-''' % vars()
+'''
 
         # Give a warning and insert helper code if positional
         # arguments because the user must then convert form_data
