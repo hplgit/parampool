@@ -70,7 +70,8 @@ def generate_template_dtree(compute_function, classname,
     static_dir = os.path.join(app_dir, "static")
 
     pre_code = """\
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Django %(classname)s app</title>
@@ -78,9 +79,14 @@ def generate_template_dtree(compute_function, classname,
     <script type="text/javascript" src="static/dtree.js"></script>
   </head>
   <body>
-    <div class="dtree">
-    %(doc)s
+  %(doc)s
+
+  <!-- Input and Results are typeset as a two-column table -->
+  <table>
+  <tr>
+  <td valign="top">
     <h2>Input:</h2>
+    <div class="dtree">
     <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
     <form method=post action="" enctype=multipart/form-data>{%% csrf_token %%}
       <script type="text/javascript">
@@ -91,11 +97,16 @@ def generate_template_dtree(compute_function, classname,
       </script>
     </div>
     <p><input type=submit value=Compute></form></p>
+    </td>
 
-    {% if result != None %}
-      <h2>Result:</h2>
-        {{ result }}
+    <td valign="top">
+      {% if result != None %}
+        <h2>Result:</h2>
+        {{ result|safe }}
     {% endif %}
+    </td>
+    </tr>
+    </table>
   </body>
 </html>"""
 
@@ -192,6 +203,6 @@ def generate_template(compute_function, classname, outfile, menu=None):
 
     if menu:
         return generate_template_dtree(
-            compute_function, classname, menu, outfile, doc)
+                compute_function, classname, menu, outfile, doc)
     else:
         return generate_template_std(classname, outfile, doc)

@@ -254,7 +254,8 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
 
         if not isinstance(value, str):
             if not type(value) == type(self.data["default"]):
-                raise ValueError('%s: value=%s %s must be a string (or %s)' %
+                if not (isinstance(value, float) and isinstance(self.data["default"], int)):
+                    raise ValueError('%s: value=%s %s must be a string (or %s)' %
                                  (self._signature(), value, type(value),
                                   type(self.data["default"])))
             else:

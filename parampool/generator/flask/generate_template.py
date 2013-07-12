@@ -59,7 +59,7 @@ def generate_template_std(classname, outfile, doc=''):
         f.close()
 
 def generate_template_dtree(compute_function, classname,
-                            menu, outfile, align='left'):
+                            menu, outfile, doc, align='left'):
 
     # TODO: Support for right align in 'parent' functions
     from latex_symbols import get_symbol, symbols_same_size
@@ -68,7 +68,8 @@ def generate_template_dtree(compute_function, classname,
     args = inspect.getargspec(compute_function).args
 
     pre_code = """\
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <title>Flask %(classname)s app</title>
@@ -76,8 +77,14 @@ def generate_template_dtree(compute_function, classname,
     <script type="text/javascript" src="static/dtree.js"></script>
   </head>
   <body>
-    <div class="dtree">
+  %(doc)s
+
+  <!-- Input and Results are typeset as a two-column table -->
+  <table>
+  <tr>
+  <td valign="top">
     <h2>Input:</h2>
+    <div class="dtree">
     <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
     <form method=post action="" enctype=multipart/form-data>
       <script type="text/javascript">
@@ -88,11 +95,16 @@ def generate_template_dtree(compute_function, classname,
       </script>
     </div>
     <p><input type=submit value=Compute></form></p>
+    </td>
 
-    {% if result != None %}
-      <h2>Result:</h2>
-        {{ result }}
+    <td valign="top">
+      {% if result != None %}
+        <h2>Result:</h2>
+        {{ result|safe }}
     {% endif %}
+    </td>
+    </tr>
+    </table>
   </body>
 </html>"""
 
@@ -238,6 +250,6 @@ def generate_template(compute_function, classname, outfile, menu=None, overwrite
 
     if menu is not None:
         return generate_template_dtree(
-                compute_function, classname, menu, outfile)
+                compute_function, classname, menu, outfile, doc)
     else:
         return generate_template_std(classname, outfile, doc)
