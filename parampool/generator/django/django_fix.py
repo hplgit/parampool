@@ -159,21 +159,28 @@ LOGGING = {
     f.write(code)
     f.close()
 
-def fix_urls(projectname, appname):
+def fix_urls(projectname, appname, login):
     f = open("%(projectname)s/%(projectname)s/urls.py" % vars(), "w")
     f.write("""\
 from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^$', '%(appname)s.views.index', name='home'),
-)""" % vars())
+""" % vars())
+    if login:
+        f.write("""\
+    url(r'^reg', '%(appname)s.views.create_login', name='home'),
+    url(r'^login', '%(appname)s.views.login_func', name='home'),
+    url(r'^logout', '%(appname)s.views.logout_func', name='home'),
+""" % vars())
+    f.write(')')
     f.close()
 
-def start_all(projectname, appname, project_dir):
+def start_all(projectname, appname, project_dir, login):
     os.system("django-admin.py startproject %s" % projectname)
     os.chdir(projectname)
     os.system("django-admin.py startapp %s" % appname)
     os.chdir("../")
 
     fix_settings(projectname, appname, project_dir)
-    fix_urls(projectname, appname)
+    fix_urls(projectname, appname, login)

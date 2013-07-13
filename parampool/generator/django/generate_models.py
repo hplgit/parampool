@@ -274,17 +274,68 @@ class %(classname)sForm(ModelForm):
         out.write(code)
         out.close()
 
+def loginize(classname, outfile):
+    f = open(outfile, 'r')
+    code = f.read()
+    f.close()
+    f = open(outfile, 'w')
+    f.write("""\
+from django.contrib.auth.models import User
+%(code)s""" % vars())
+    f.close()
+
+    f = open(outfile, 'r')
+    lines = f.readlines()
+    f.close()
+
+    code = ""
+    append = False
+    for line in lines:
+        code += line
+        if line == "class %(classname)sForm(ModelForm):\n" % vars():
+            append = False
+        if line == "class %(classname)s(models.Model):\n" % vars():
+            newcode = """
+class %(classname)sUser(models.Model):
+""" % vars()
+            append = True
+            continue
+        if append:
+            newcode += line
+
+    newcode += """\
+
+     user = models.ForeignKey(User)
+     result = models.TextField(blank=True)
+
+
+class %(classname)sUserForm(ModelForm):
+    class Meta:
+        model = %(classname)sUser""" % vars()
+
+
+    code += newcode
+
+    if outfile is None:
+        return code
+    else:
+        out = open(outfile, 'w')
+        out.write(code)
+        out.close()
 
 def generate_models(compute_func, classname, outfile, default_field,
-                    menu=None):
+                    menu=None, login=False):
     """
     Generate the Django ModelForm using menu if given,
     else use inspect on the compute function.
     """
 
     if menu is not None:
-        return generate_models_menu(
+        generate_models_menu(
             compute_func, classname, outfile, menu)
     else:
-        return generate_models_inspect(
+        generate_models_inspect(
             compute_func, classname, outfile, default_field)
+
+    if login:
+        loginize(classname, outfile)

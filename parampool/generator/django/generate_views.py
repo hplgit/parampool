@@ -3,7 +3,8 @@ def generate_views(compute_function,
                    outfile,
                    output_template,
                    menu_function,
-                   output_models):
+                   output_models,
+                   login):
 
     output_models = output_models.strip(".py")
     compute_function_name = compute_function.__name__
@@ -42,6 +43,18 @@ def generate_views(compute_function,
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from %(output_models)s import %(classname)sForm
+''' % vars()
+    if login:
+        code += '''\
+from %(output_models)s import %(classname)sUser
+from %(output_models)s import %(classname)sUserForm
+from forms import CreateNewLoginForm, LoginForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import User
+from django.db import IntegrityError
+from django.http import HttpResponse, HttpResponseRedirect
+''' % vars()
+    code += '''\
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
 ''' % vars()
 
@@ -64,9 +77,87 @@ if not os.path.isdir(UPLOAD_DIR):
 def index(request):
     result = None
 '''
-
+    if login:
+        code += '''\
+    user = request.user
+'''
     if file_upload and menu:
-        code += '''
+        if login:
+            code += '''
+    form = %(classname)sForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+
+        # User is logged in
+        if request.user.is_authenticated():
+            data = request.POST.copy()
+            data['user'] = user.id
+            form = %(classname)sUserForm(data)
+            if form.is_valid():
+                for field in form:
+                    if field.name in request.FILES:
+                        filename = field.data.name
+                        menu.set_value(field.name, filename)
+                        with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
+                            for chunk in field.data.chunks():
+                                destination.write(chunk)
+                    else:
+                        if field.name not in ("user", "result"):
+                            menu.set_value(field.name, field.data)
+
+                f = form.save(commit=False)
+                result = compute(menu)
+                # Disable emails for now
+                #if user.email:
+                if False:
+
+                    user.email_user("Computations Complete", """\
+A simulation has been completed. Please log in at
+
+http://localhost:8000/login
+
+to see the results.""")
+
+                # Save to db
+                f.result = result
+                f.save()
+
+        # Anonymous user
+        else:
+            #form = %(classname)sForm(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                for field in form:
+                    if field.name in request.FILES:
+                        filename = field.data.name
+                        menu.set_value(field.name, filename)
+                        with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
+                            for chunk in field.data.chunks():
+                                destination.write(chunk)
+                    else:
+                        menu.set_value(field.name, field.data)
+
+                result = compute(menu)
+
+        form = %(classname)sForm(request.POST, request.FILES)
+
+    else:
+        # Retrieve previous result and input if user is logged in
+        if request.user.is_authenticated():
+
+            # FIXME: Find out why this fails when there are no objects
+            # and find a better way to deal with the error.
+            try:
+                objects = %(classname)sUser.objects.filter(user=user)
+                if len(objects) > 0:
+                    # Negative indexing not allowed.
+                    instance = objects[len(objects)-1]
+                    form = %(classname)sForm(instance=instance)
+                    result = instance.result
+            except:
+                pass
+
+''' % vars()
+        else:
+            code += '''
     form = %(classname)sForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
         for field in form:
@@ -83,7 +174,76 @@ def index(request):
 ''' % vars()
 
     elif file_upload and not menu:
-        code += '''
+        if login:
+            code += '''
+    filename = None
+    form = %(classname)sForm(request.POST or None, request.FILES or None)
+    if request.method == 'POST':
+
+        # User is logged in
+        if request.user.is_authenticated():
+            data = request.POST.copy()
+            data['user'] = user.id
+            form = %(classname)sUserForm(data)
+            if form.is_valid():
+                for field in form:
+                    if field.name in request.FILES:
+                        filename = field.data.name
+                        with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
+                            for chunk in field.data.chunks():
+                                destination.write(chunk)
+                f = form.save(commit=False)
+                result = compute(f)
+                # Disable emails for now
+                #if user.email:
+                if False:
+                    user.email_user("Computations Complete", """\
+A simulation has been completed. Please log in at
+
+http://localhost:8000/login
+
+to see the results.""")
+
+                # Save to db
+                f.result = result
+                f.save()
+
+        # Anonymous user
+        else:
+            #form = %(classname)sForm(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                for field in form:
+                    if field.name in request.FILES:
+                        filename = field.data.name
+                        with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
+                            for chunk in field.data.chunks():
+                                destination.write(chunk)
+                form = form.save(commit=False)
+                request.session["filename"] = filename
+                result = compute(form, request)
+
+        form = %(classname)sForm(request.POST, request.FILES)
+
+    else:
+        # Retrieve previous result and input if user is logged in
+        if request.user.is_authenticated():
+
+            # FIXME: Find out why this fails when there are no objects
+            # and find a better way to deal with the error.
+            try:
+                objects = %(classname)sUser.objects.filter(user=user)
+                if len(objects) > 0:
+                    # Negative indexing not allowed.
+                    instance = objects[len(objects)-1]
+                    form = %(classname)sForm(instance=instance)
+                    result = instance.result
+            except:
+                pass
+
+''' % vars()
+
+        else:
+            code += '''
     filename = None
     form = %(classname)sForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
@@ -100,7 +260,67 @@ def index(request):
 ''' % vars()
 
     elif not file_upload and menu:
-        code += '''
+        if login:
+            code += '''
+    form = %(classname)sForm(request.POST or None)
+    if request.method == 'POST':
+
+        # User is logged in
+        if request.user.is_authenticated():
+            data = request.POST.copy()
+            data['user'] = user.id
+            form = %(classname)sUserForm(data)
+            if form.is_valid():
+                for field in form:
+                    if field.name not in ("user", "result"):
+                        menu.set_value(field.name, field.data)
+                f = form.save(commit=False)
+                result = compute(menu)
+                # Disable emails for now
+                #if user.email:
+                if False:
+
+                    user.email_user("Computations Complete", """\
+A simulation has been completed. Please log in at
+
+http://localhost:8000/login
+
+to see the results.""")
+
+                # Save to db
+                f.result = result
+                f.save()
+
+        # Anonymous user
+        else:
+            #form = %(classname)sForm(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                for field in form:
+                    menu.set_value(field.name, field.data)
+                result = compute(menu)
+
+        form = %(classname)sForm(request.POST, request.FILES)
+
+    else:
+        # Retrieve previous result and input if user is logged in
+        if request.user.is_authenticated():
+
+            # FIXME: Find out why this fails when there are no objects
+            # and find a better way to deal with the error.
+            try:
+                objects = %(classname)sUser.objects.filter(user=user)
+                if len(objects) > 0:
+                    # Negative indexing not allowed.
+                    instance = objects[len(objects)-1]
+                    form = %(classname)sForm(instance=instance)
+                    result = instance.result
+            except:
+                pass
+
+''' % vars()
+
+        else:
+            code += '''
     form = %(classname)sForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         for field in form:
@@ -110,7 +330,61 @@ def index(request):
 ''' % vars()
 
     else:
-        code += '''
+        if login:
+            code += '''
+    form = %(classname)sForm(request.POST or None)
+    if request.method == 'POST':
+
+        # User is logged in
+        if request.user.is_authenticated():
+            data = request.POST.copy()
+            data['user'] = user.id
+            form = %(classname)sUserForm(data)
+            if form.is_valid():
+                f = form.save(commit=False)
+                result = compute(f)
+                # Disable emails for now
+                #if user.email:
+                if False:
+                    user.email_user("Computations Complete", """\
+A simulation has been completed. Please log in at
+
+http://localhost:8000/login
+
+to see the results.""")
+
+                # Save to db
+                f.result = result
+                f.save()
+
+        # Anonymous user
+        else:
+            #form = %(classname)sForm(request.POST or None, request.FILES or None)
+            if form.is_valid():
+                result = compute(form)
+
+        form = %(classname)sForm(request.POST, request.FILES)
+
+    else:
+        # Retrieve previous result and input if user is logged in
+        if request.user.is_authenticated():
+
+            # FIXME: Find out why this fails when there are no objects
+            # and find a better way to deal with the error.
+            try:
+                objects = %(classname)sUser.objects.filter(user=user)
+                if len(objects) > 0:
+                    # Negative indexing not allowed.
+                    instance = objects[len(objects)-1]
+                    form = %(classname)sForm(instance=instance)
+                    result = instance.result
+            except:
+                pass
+
+''' % vars()
+
+        else:
+            code += '''
     form = %(classname)sForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         form = form.save(commit=False)
@@ -122,9 +396,15 @@ def index(request):
     return render_to_response(
         "%(output_template)s",
         {"form": form,
-         "result": result},
+         "result": result,
+''' % vars()
+    if login:
+        code += '''\
+         "user": user,
+'''
+    code += '''
+        },
         context_instance=RequestContext(request))
-
 ''' % vars()
 
     if menu:
@@ -249,6 +529,59 @@ def compute(form):
     result = compute_function(*form_data)
     return result
 ''' % vars()
+
+    if login:
+        code += '''
+
+def create_login(request):
+    """
+    Create a login for a new user.
+    """
+    form = CreateNewLoginForm()
+    if request.POST:
+        form = CreateNewLoginForm(request.POST)
+        if form.is_valid():
+            newuser = User()
+            username = form.cleaned_data['username']
+            pw = form.cleaned_data['password']
+            newuser.username = username
+            newuser.set_password(pw)
+            newuser.email = form.cleaned_data['email']
+            newuser.save()
+            user = authenticate(username=username, password=pw)
+            login(request, user)
+            return HttpResponseRedirect('/')
+
+    return render_to_response('reg.html', {'form' : form},
+            context_instance=RequestContext(request))
+
+def login_func(request):
+    form = LoginForm()
+    if request.POST:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+
+            if user:
+                if user.is_authenticated():
+                    if user.is_active:
+                        login(request, user)
+                        return HttpResponseRedirect('/')
+                    else:
+                        return HttpRespose("Account disabled")
+                else:
+                    return HttpResponse("Invalid login")
+            else:
+                return HttpResponse("Invalid login")
+    return render_to_response("login.html", {'form' : form},
+            context_instance=RequestContext(request))
+
+def logout_func(request):
+    logout(request)
+    return HttpResponseRedirect('/')
+'''
 
     if outfile is None:
         return code

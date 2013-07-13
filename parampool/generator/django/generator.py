@@ -10,6 +10,7 @@ def generate(compute_function,
              projectname=None,
              appname=None,
              classname=None,
+             enable_login=False,
              default_field='TextField',
              output_template="index.html",
              output_views="views.py",
@@ -65,7 +66,7 @@ def generate(compute_function,
 
 
     project_dir = os.path.join(os.getcwd(), projectname)
-    start_all(projectname, appname, project_dir)
+    start_all(projectname, appname, project_dir, enable_login)
     app_dir = os.path.join(project_dir, appname)
     static_dir = os.path.join(app_dir, "static")
     templates_dir = os.path.join(app_dir, "templates")
@@ -76,6 +77,8 @@ def generate(compute_function,
     output_models_path = os.path.join(app_dir, output_models)
     output_views_path = os.path.join(app_dir, output_views)
     output_template_path = os.path.join(templates_dir, output_template)
+    if enable_login:
+        output_forms_path = os.path.join(app_dir, "forms.py")
 
     if menu_function:
         menu = menu_function()
@@ -86,8 +89,8 @@ def generate(compute_function,
     shutil.copy(compute_function.__module__ + ".py", app_dir)
     if menu_function:
         shutil.copy(menu_function.__module__ + ".py", app_dir)
-    shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
-                os.curdir)
+    #shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
+    #            os.curdir)
 
     if menu is not None:
         os.chdir(app_dir)
@@ -102,13 +105,19 @@ def generate(compute_function,
             os.mkdir(static_dir)
 
     generate_template(compute_function, classname, output_template_path,
-                      menu)
+                      menu, enable_login)
     generate_models(compute_function, classname, output_models_path,
-                    default_field, menu)
+                    default_field, menu, enable_login)
     generate_views(compute_function, classname, output_views_path,
                    output_template, menu_function,
-                   output_models)
+                   output_models, enable_login)
+    if enable_login:
+        from generate_forms import generate_forms
+        generate_forms(output_forms_path)
 
     print "Django app successfully created in %s/" % projectname
     print "Run python %s/manage.py runserver" % projectname
     print "and access the app at http://127.0.0.1:8000/"
+    if enable_login:
+        print "PS - remember to run python %s/manage.py syncdb before python %s/manage.py runserver" \
+                % (projectname, projectname)

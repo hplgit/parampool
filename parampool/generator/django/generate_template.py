@@ -1,7 +1,7 @@
 import os
 from distutils.util import strtobool
 
-def generate_template_std(classname, outfile, doc=''):
+def generate_template_std(classname, outfile, doc='', login=False):
     """
     Generate a simple standard template with
     input form. Show result at the bottom of
@@ -15,6 +15,18 @@ def generate_template_std(classname, outfile, doc=''):
     <title>Django %(classname)s app</title>
   </head>
   <body>
+''' % vars()
+
+    if login:
+        code += '''\
+  {% if user.is_anonymous %}
+  <p align="right"><a href="/login">Login</a> / <a href="/reg">Register</a></p>
+  {% else %}
+  <p align="right">Logged in as {{user}}<br><a href="/logout">Logout</a>
+  {% endif %}
+''' % vars()
+
+    code += '''\
   %(doc)s
 
   <!-- Input and Results are typeset as a two-column table -->
@@ -59,7 +71,7 @@ def generate_template_std(classname, outfile, doc=''):
         f.close()
 
 def generate_template_dtree(compute_function, classname,
-                            menu, outfile, doc, align='left'):
+                            menu, outfile, doc, login, align='left'):
 
     # TODO: Support for right align in 'parent' functions
     from latex_symbols import get_symbol, symbols_same_size
@@ -79,6 +91,18 @@ def generate_template_dtree(compute_function, classname,
     <script type="text/javascript" src="static/dtree.js"></script>
   </head>
   <body>
+""" % vars()
+
+    if login:
+        pre_code += '''\
+  {% if user.is_anonymous %}
+  <p align="right"><a href="/login">Login</a> / <a href="/reg">Register</a></p>
+  {% else %}
+  <p align="right">Logged in as {{user}}<br><a href="/logout">Logout</a>
+  {% endif %}
+'''
+
+    pre_code += """\
   %(doc)s
 
   <!-- Input and Results are typeset as a two-column table -->
@@ -92,6 +116,7 @@ def generate_template_dtree(compute_function, classname,
       <script type="text/javascript">
         d = new dTree('d');
 """ % vars()
+
     post_code = """\
         document.write(d);
       </script>
@@ -197,12 +222,43 @@ def generate_template_dtree(compute_function, classname,
         f.write(code)
         f.close()
 
-def generate_template(compute_function, classname, outfile, menu=None):
+def generate_form_templates(outfile):
+    path = os.path.split(outfile)[0]
+    login_file = os.path.join(path, "login.html")
+    reg_file = os.path.join(path, "reg.html")
+
+    login = open(login_file, 'w')
+    login.write("""\
+<form method="post" action="">{% csrf_token %}
+<table>
+  {{form.as_table}}
+  <tr><td>&nbsp;</td><td><input type="submit" value="Login" /></td></tr>
+</table>
+</form>""")
+    login.close()
+    reg = open(reg_file, 'w')
+    reg.write("""\
+<form method="post" action="">{% csrf_token %}
+<table>
+  {{form.as_table}}
+  <tr><td>&nbsp;</td><td><input type="submit" value="Create User" /></td></tr>
+</table>
+</form>
+{% for e in errors %}
+{{ e }}
+{% endfor %}""")
+    reg.close()
+
+def generate_template(compute_function, classname,
+                      outfile, menu=None, login=False):
     from parampool.generator.flask.generate_template import run_doconce_on_text
     doc = run_doconce_on_text(compute_function.__doc__)
 
+    if login:
+        generate_form_templates(outfile)
+
     if menu:
         return generate_template_dtree(
-                compute_function, classname, menu, outfile, doc)
+                compute_function, classname, menu, outfile, doc, login)
     else:
-        return generate_template_std(classname, outfile, doc)
+        return generate_template_std(classname, outfile, doc, login)
