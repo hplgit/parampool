@@ -18,7 +18,7 @@ class DataItem:
     ``help``       description of the data item
     ``str2type``   object transforming a string to desired type,
                    can be ``eval``, ``float``, ... Based on type
-                   of ``default`` if not given.
+                   of ``widget`` or ``default`` if not given.
     ``convert``    boolean value that decides if str2type should be
                    used. Defaults to True, and is automatically
                    changed to False if a DataItem gets a value of
@@ -37,7 +37,34 @@ class DataItem:
                    "password", "file", "url", "tel".
     ============== ==================================================
 
-    A number and a unit can be
+    The ``str2type`` attribute should be explicitly set to have full
+    control of how user input in form of strings (on the command line
+    or in a GUI) is transferred to the right type. For example,
+    if the data item is a real value, set call the constructor with
+    ``str2type=float``, if the value is boolean use ``bool``,
+    if string use ``str``, if integer use ``int``, if list, tuple,
+    or dictionary use ``eval``, if user-defined data type (class)
+    use the class name (implying the constructor for converting from
+    string to right data type).
+
+    If ``str2type`` is not set, one first checks if ``widget`` is
+    specified and sets the ``str2type`` accordingly ("float" and
+    "float_range" lead to ``float``,"integer" and "integer_range" to ``int``,
+    "checkbox" to ``bool`` (or more precisely, the built in
+    ``str2bool`` converter), while all other widgets lead to
+    ``str2type`` as ``str`` (assuming the answer is a string).
+    If ``widget`` is not set, one applies the type of the ``default``
+    value for setting ``str2type``. A ``float``, ``int``, ``bool``,
+    or ``str`` is recognized by the types, while lists, tuples,
+    and dictionaries and in fact all other types leads to using
+    ``eval`` as ``str2type``. This means that the string (``s``) must have
+    the right Python syntax so that ``eval(s)`` turns the string into
+    the right object. As emphasized, it is best to explicitly set
+    ``str2type``.
+
+    A number and a unit can be specified together as value. If unit
+    is not given, it is set based on the unit used in the value, otherwise
+    (unit specified) a unit conversion of the numerical value takes place.
     """
     _legal_data = 'name default unit help value str2type convert minmax options widget validate namespace user_data symbol'.split()
 
@@ -65,13 +92,26 @@ class DataItem:
         self.data = OrderedDict(**kwargs)
 
         if 'str2type' not in self.data:
-            # use type(default) as str2type, except for
-            # boolean values
-            if self.data['default'] is None:
+            # use widget type if set, otherwise use the type
+            # of the default value
+            if 'widget' in self.data and self.data['widget']:
+                if self.data['widget'] in ('float', 'range'):
+                    self.data['str2type'] = float
+                elif self.data['widget'] in ('integer', 'integer_range'):
+                    self.data['str2type'] = int
+                elif self.data['widget'] in ('file', 'select', 'textline',
+                                             'textarea', 'email', 'hidden',
+                                             'password', 'url', 'tel'):
+                    self.data['str2type'] = str
+                elif self.data['widget'] in ('checkbox',):
+                    self.data['str2type'] = str2bool
+
+            elif self.data['default'] is None:
                 self.data['str2type'] = str
             elif isinstance(self.data['default'], basestring):
                 self.data['str2type'] = str
             elif type(self.data['default']) == type(True):
+                # Careful with boolean values, use special str2bool
                 self.data['str2type'] = str2bool
             elif type(self.data['default']) in (
                 type(()), type([]), type({})):
@@ -85,6 +125,11 @@ class DataItem:
                 # Assume user's non-standard data can be turned
                 # from str to object via eval and self.data['namespace']
                 self.data['str2type'] = eval
+            # If user has set str2type to bool, change to str2bool
+            # since bool does not work properly for turning a string
+            # to a boolean
+            if self.data['str2type'] == bool:
+                self.data['str2type'] = str2bool
 
         self._check_validity_of_data()
 

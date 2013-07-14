@@ -600,42 +600,51 @@ introduce two servers we recommend for the scientific computing usage.
 
 ===== Wakari =====
 
-"Wakari":"https://www.wakari.io" is originally meant to be a Python data analysis
-environment for internet-accessible services and sharing of computing environments.
-It does not allow users to deploy webservers that can be accessed by others. However,
-accessing a Flask server process running in Wakari is possible using SSH
-tunneling:
+"Wakari":"https://www.wakari.io" is originally meant to be a Python
+data analysis environment for internet-accessible services and sharing
+of computing environments.  It does not allow users to deploy
+webservers that can be accessed by others. However, accessing a Flask
+server process running in Wakari is possible using SSH tunneling:
 
 !bc
 wakari-terminal> python controller.py
-laptop-terminal> ssh -p [port] -f -N -L 5000:localhost:5000 [username]@[wakari-hostname].wakari.io
+laptop-terminal> ssh -p [port] -f -N -L 5000:localhost:5000 \
+                 [username]@[wakari-hostname].wakari.io
 !ec
 
 !bnotice Port, username and hostname
-Information about which port to forward, as well as username and wakari-hostname, is
-available under `SSH Access` at the user submeu in Wakari.
-FIGURE: [fig-pp/wakari1.png, width=350] SSH access information. label{pp:wakari1:fig1}
-It is also necessary to add your public SSH key to Wakari "Settings":"https://www.wakari.io/settings/sshkeys".
+
+Information about which port to forward, as well as username and
+wakari-hostname, is available under `SSH Access` at the user submeu in
+Wakari.  FIGURE: [fig-pp/wakari1.png, width=350] SSH access
+information. label{pp:wakari1:fig1} It is also necessary to add your
+public SSH key to Wakari
+"Settings":"https://www.wakari.io/settings/sshkeys".
+
 !enotice
 
-Now the application is available as usual at `http://127.0.0.1:5000/` on your laptop.
+Now the application is available as usual at `http://127.0.0.1:5000/`
+on your laptop.
 
-Even though only Flask and not Django is pre-installed in Wakari, it is relatively
-straight-forward to download Django "source":"https://www.djangoproject.com/download/"
-and install it locally to your user. Also, if Gnuplot is to be installed and
-compiled with PNG support, the library `Pnglib` needs to be installed before
-Gnuplot is compiled. The script `install_on_wakari.sh` in the top directory
-of cbc-websolver accomplishes this.
+Even though only Flask and not Django is pre-installed in Wakari, it
+is relatively straight-forward to download Django
+"source":"https://www.djangoproject.com/download/" and install it
+locally to your user. Also, if Gnuplot is to be installed and compiled
+with PNG support, the library `Pnglib` needs to be installed before
+Gnuplot is compiled. The script `install_on_wakari.sh` in the top
+directory of cbc-websolver accomplishes this.
 
 ===== Uni Oslo =====
 
-The biggest downside with the Uni Oslo server is that you need to be a student or
-employee to access it. Nevertheless, the procedure described below for running web
-applications through a CGI script can be applied to any server.
+The biggest downside with the Uni Oslo server is that you need to be a
+student or employee to access it. Nevertheless, the procedure
+described below for running web applications through a CGI script can
+be applied to any server.
 
-If only little traffic has to be handled, it is possible to run Flask and Django
-through a CGI script. The script imports and starts the application's wsgi handler
-and works as a gateway between the Internet and the Flask or Django server.
+If only little traffic has to be handled, it is possible to run Flask
+and Django through a CGI script. The script imports and starts the
+application's wsgi handler and works as a gateway between the Internet
+and the Flask or Django server.
 
 The simplest example of a CGI script running Flask follows:
 
@@ -647,17 +656,19 @@ from controller import app
 CGIHandler().run(app)
 !ec
 
-This assumes that the Python executive in `/usr/bin/` is available and up-to-date,
-and that all required Python modules are on the `PYTHONPATH` environment and are
-available to be run by others. As the Python version on the Uni Oslo server,
-version 2.5, is no longer supported by the Python web frameworks, we need to
-install a newer version locally and use the absolute path to its executive in
-the header of the CGI script.
+This code assumes that the Python executive in `/usr/bin/` is available and
+up-to-date, and that all required Python modules are on the
+`PYTHONPATH` environment and are available to be run by others. As the
+Python version on the Uni Oslo server, version 2.5, is no longer
+supported by the Python web frameworks, we need to install a newer
+version locally and use the absolute path to its executive in the
+header of the CGI script.
 
 With a new Python installation we also need to (re)install all required modules
 and add them to `sys.path`. The script `install_on_uio.sh` in the top directory
 of cbc-websolver installs all required packages locally. Then we can
 add the location of these modules to `sys.path` in the CGI script:
+
 !bc pycod
 import sys
 sys.path += ['/path/to/local/installation/lib/python2.7/site-packages/']
@@ -671,6 +682,7 @@ The only difference between the CGI script for Flask and Django is that for
 Django one needs to add the directory containing the `settings.py` file to
 `sys.path` and set `os.environ['DJANGO_SETTINGS_MODULE']` to settings. Also,
 the import of the app is a bit different than before:
+
 !bc pycod
 sys.path += ['path/to/myproject'] # The folder containing settings.py
 os.environ['DJANGO_SETTINGS_MODULE'] = 'myproject.settings'
@@ -681,10 +693,20 @@ CGIHandler().run(app)
 
 !bnotice Make CGI script accessible for others
 Remember that all scripts and modules to be accessed from the web need to
-have permissions for everyone to read and execute. This can be done by e.g.:
-!bc
-chmod 755 run_django.cgi
+have permissions for everyone to read and execute. This can be done by, e.g.,
+
+!bc syst
+Terminal> chmod 755 run_django.cgi
 !ec
 !enotice
 
 BIBFILE: papers.pub
+
+======= Appendix: Installation =======
+
+We need
+
+ * Flask
+ * Django (optional)
+ * wtf...
+ * progressbar

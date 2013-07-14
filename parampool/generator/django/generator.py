@@ -3,7 +3,7 @@ import os, shutil, tarfile
 from generate_models import generate_models
 from generate_views import generate_views
 from generate_template import generate_template
-from django_fix import start_all
+from django_setup import start_all
 
 def generate(compute_function,
              menu_function=None,

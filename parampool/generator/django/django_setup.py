@@ -177,6 +177,9 @@ urlpatterns = patterns('',
     f.close()
 
 def start_all(projectname, appname, project_dir, login):
+    if os.path.isdir(projectname):
+        print '%s directory exists - will be deleted' % projectname
+        shutil.rmtree(projectname)
     os.system("django-admin.py startproject %s" % projectname)
     os.chdir(projectname)
     os.system("django-admin.py startapp %s" % appname)
