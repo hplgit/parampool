@@ -98,7 +98,7 @@ def generate_template_dtree(compute_function, classname,
   {% if user.is_anonymous %}
   <p align="right"><a href="/login">Login</a> / <a href="/reg">Register</a></p>
   {% else %}
-  <p align="right">Logged in as {{user}}<br><a href="/logout">Logout</a>
+  <p align="right">Logged in as {{user}}<br><a href="/old">Previous simulations</a><br><a href="/logout">Logout</a></p>
   {% endif %}
 '''
 
@@ -152,7 +152,7 @@ def generate_template_dtree(compute_function, classname,
         else:
             symbol = "\\mbox{%s}" % name
         imgsrc = get_symbol(symbol, static_dir, tree_path)
-        imgsrc = os.sep + "static" + os.sep + imgsrc.split("static")[-1]
+        imgsrc = os.sep + "static" + imgsrc.split("static")[-1]
 
         # Use slider and show current value
         if item.data.get("widget", None) in ("range", "integer_range"):
@@ -226,6 +226,7 @@ def generate_form_templates(outfile):
     path = os.path.split(outfile)[0]
     login_file = os.path.join(path, "login.html")
     reg_file = os.path.join(path, "reg.html")
+    old_file = os.path.join(path, "old.html")
 
     login = open(login_file, 'w')
     login.write("""\
@@ -248,6 +249,58 @@ def generate_form_templates(outfile):
 {{ e }}
 {% endfor %}""")
     reg.close()
+
+    old = open(old_file, 'w')
+    old.write('''\
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+      <meta charset="utf-8" />
+  </head>
+  <body>
+      <h2>Previous simulations</h2>
+      <p align="right"><a href="/">Back to index</a></p>
+      {% if results %}
+      {% load extras %}
+        {% for form, result in forms|zip:results %}
+        <hr>
+        <table>
+            <tr>
+                <td valign="top" width="20%">
+                    <h3>Input</h3>
+                    <table>
+                    {% for field in form %}
+                      <tr><td>{{ field.name }}:&nbsp;</td>
+                        <td>{{ field.value }}</td></tr>
+                    {% endfor %}
+                    </table>
+                    </td><td valign="top" width="80%">
+                    <h3>Results</h3>
+                    {{ result|safe }}
+            </td></tr>
+        </table>
+        {% endfor %}
+      {% else %}
+          No previous simulations
+      {% endif %}
+  </body>
+</html>''')
+    old.close()
+
+    app = path.strip("templates")
+    tagsdir = app + os.sep + "templatetags"
+    os.mkdir(tagsdir)
+    f = open(os.path.join(tagsdir, "extras.py"), 'w')
+    f.write('''\
+from django import template
+register = template.Library()
+@register.filter(name='zip')
+def zip_lists(a, b):
+    return zip(a, b)''')
+    f.close()
+    f = open(os.path.join(tagsdir, "__init__.py"), 'w')
+    f.write('')
+    f.close()
 
 def generate_template(compute_function, classname,
                       outfile, menu=None, login=False):
