@@ -1,6 +1,6 @@
 import os, sys
 
-def fix_settings(projectname, appname, project_dir):
+def fix_settings(projectname, appname, project_dir, login):
     db_name = os.path.join(project_dir, "sqlite3.db")
     f = open("%(projectname)s/%(projectname)s/settings.py" % vars(), "w")
     code = """ \
@@ -156,6 +156,16 @@ LOGGING = {
         },
     }
 }""" % vars()
+    if login:
+        code += """
+
+DEFAULT_FROM_EMAIL = 'Websolver Mail <cbcwebsolvermail@gmail.com>'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'cbcwebsolvermail@gmail.com'
+EMAIL_HOST_PASSWORD = 'DifficultPW!'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True"""
+
     f.write(code)
     f.close()
 
@@ -169,9 +179,11 @@ urlpatterns = patterns('',
 """ % vars())
     if login:
         f.write("""\
-    url(r'^reg', '%(appname)s.views.create_login', name='home'),
-    url(r'^login', '%(appname)s.views.login_func', name='home'),
-    url(r'^logout', '%(appname)s.views.logout_func', name='home'),
+    url(r'^reg', '%(appname)s.views.create_login'),
+    url(r'^login', '%(appname)s.views.login_func'),
+    url(r'^logout', '%(appname)s.views.logout_func'),
+    url(r'^old', '%(appname)s.views.old'),
+
 """ % vars())
     f.write(')')
     f.close()
@@ -185,5 +197,5 @@ def start_all(projectname, appname, project_dir, login):
     os.system("django-admin.py startapp %s" % appname)
     os.chdir("../")
 
-    fix_settings(projectname, appname, project_dir)
+    fix_settings(projectname, appname, project_dir, login)
     fix_urls(projectname, appname, login)

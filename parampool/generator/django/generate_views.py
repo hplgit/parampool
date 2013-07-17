@@ -106,10 +106,7 @@ def index(request):
 
                 f = form.save(commit=False)
                 result = compute(menu)
-                # Disable emails for now
-                #if user.email:
-                if False:
-
+                if user.email:
                     user.email_user("Computations Complete", """\
 A simulation has been completed. Please log in at
 
@@ -123,7 +120,6 @@ to see the results.""")
 
         # Anonymous user
         else:
-            #form = %(classname)sForm(request.POST or None, request.FILES or None)
             if form.is_valid():
                 for field in form:
                     if field.name in request.FILES:
@@ -194,9 +190,7 @@ to see the results.""")
                                 destination.write(chunk)
                 f = form.save(commit=False)
                 result = compute(f)
-                # Disable emails for now
-                #if user.email:
-                if False:
+                if user.email:
                     user.email_user("Computations Complete", """\
 A simulation has been completed. Please log in at
 
@@ -276,10 +270,7 @@ to see the results.""")
                         menu.set_value(field.name, field.data)
                 f = form.save(commit=False)
                 result = compute(menu)
-                # Disable emails for now
-                #if user.email:
-                if False:
-
+                if user.email:
                     user.email_user("Computations Complete", """\
 A simulation has been completed. Please log in at
 
@@ -293,7 +284,6 @@ to see the results.""")
 
         # Anonymous user
         else:
-            #form = %(classname)sForm(request.POST or None, request.FILES or None)
             if form.is_valid():
                 for field in form:
                     menu.set_value(field.name, field.data)
@@ -343,9 +333,7 @@ to see the results.""")
             if form.is_valid():
                 f = form.save(commit=False)
                 result = compute(f)
-                # Disable emails for now
-                #if user.email:
-                if False:
+                if user.email:
                     user.email_user("Computations Complete", """\
 A simulation has been completed. Please log in at
 
@@ -359,7 +347,6 @@ to see the results.""")
 
         # Anonymous user
         else:
-            #form = %(classname)sForm(request.POST or None, request.FILES or None)
             if form.is_valid():
                 result = compute(form)
 
@@ -581,7 +568,29 @@ def login_func(request):
 def logout_func(request):
     logout(request)
     return HttpResponseRedirect('/')
-'''
+
+def old(request):
+    forms = []
+    results = []
+    if request.user.is_authenticated():
+        user = request.user
+        try:
+            objects = %(classname)sUser.objects.filter(user=user)
+            counter = len(objects) - 1
+            while counter >= 0:
+                instance = objects[counter]
+                forms.append(%(classname)sForm(instance=instance))
+                results.append(instance.result)
+                counter -= 1
+        except:
+            pass
+
+    data = zip(forms, results)
+    return render_to_response("old.html",
+            {"forms": forms,
+             "results": results},
+            context_instance=RequestContext(request))
+''' % vars()
 
     if outfile is None:
         return code
