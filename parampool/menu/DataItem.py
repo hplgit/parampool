@@ -62,6 +62,11 @@ class DataItem:
     the right object. As emphasized, it is best to explicitly set
     ``str2type``.
 
+    A common problem with setting ``str2type`` based on default
+    value is if you have a real number, but set the default to (e.g.)
+    5. Then ``str2type`` becomes ``int``, and any attempt to set
+    the value to something real like 5.1 will fail.
+
     A number and a unit can be specified together as value. If unit
     is not given, it is set based on the unit used in the value, otherwise
     (unit specified) a unit conversion of the numerical value takes place.
@@ -208,12 +213,14 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
         # Convert value to the right type
 
         if not 'str2type' in self.data:
-            return value
+            return value # cannot do any conversion
+
+        # No conversion of str2type is some string type
         if inspect.isclass(self.data['str2type']) and \
                issubclass(self.data['str2type'], basestring):
             return value
 
-        # Otherwise, convert to registered type (str2type)
+        # Otherwise, convert to registered type using str2type
         if self.data['str2type'] == eval:
             # Execute in some namespace?
             if 'namespace' in self.data:
@@ -231,10 +238,20 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
             try:
                 value = self.data['str2type'](value)
             except Exception, e:
+                # Deal with common error first: default is int by accident,
+                # should have been float
+                msg = ''
+                if self.data['str2type'] == int:
+                    try:
+                        value = float(value)
+                        if type(self.data['default']) == type(1):
+                            msg = 'str2type is int but should have been float, either specify str2type=float or set the default value to %d.0, not just %d (which makes str2type become int if not explicitly set).'
+                    except:
+                        pass # cannot find out of this case
                 raise TypeError(
-                'could not apply str2type=%s to value %s %s\n'\
+                'could not apply str2type=%s to value %s %s\n%s\n'
                 'Python exception: %s' %
-                (self.data['str2type'], value, type(value), e))
+                (self.data['str2type'], value, type(value), msg, e))
 
         return value
 
