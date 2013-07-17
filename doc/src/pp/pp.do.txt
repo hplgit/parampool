@@ -538,7 +538,19 @@ which then will compute the basic statistics of the assigned data array.
 
 FIGURE: [fig-pp/flask6.png, width=500] Web interface for uploading a file. label{pp:flask6:fig1}
 
-#===== Animations =====
+===== Animations =====
+
+===== Python expressions as input =====
+
+This can only be done in menus unless the value of the parameter is a string (positional argument and default field as text, with explicit conversion).
+
+Describe input as
+
+ * `sin(2.5)*exp(-1)` (need to specify py code to be included in the controller/views or add such code manually? or do from numpy import * always? an argument with pycode is probably smart, the menu needs something similar for running str2type=eval in the right namespaces, could just be an additional data item attr namespace that, if present, is used if str2type is eval - yes, that's the solution)
+
+ * `MySpecialObject(2,3,4)` (works)
+
+
 
 
 ======= Working with a menu of input parameters =======
@@ -558,10 +570,16 @@ Three submenus:
 
 What about w(t) like a w_0 + sin?
 
-Could have an exercise with a missile, rho depending on height (see sports
-book) rho_sea*exp(-0001036y) fra De Mestre, C_D dep on v see
-http://en.wikipedia.org/wiki/Drag_equation (no the relevant C_D is probably
-beyond the drag crisis and no need for C_D(Re))
+#Could have an exercise with a missile, rho depending on height (see sports
+#book) rho_sea*exp(-0001036y) fra De Mestre, C_D dep on v see
+#http://en.wikipedia.org/wiki/Drag_equation (no the relevant C_D is probably
+#beyond the drag crisis and no need for C_D(Re))
+
+======= Enable users to log in and store data =======
+
+# existing example: lorenz_with_login, probably better to just adapt vib with login
+# lorenz_with_login is an excellent exercise! Can provide the math and
+# compute.py in a form where plot files are generated but no HTML code
 
 ===== Extra =====
 
@@ -710,3 +728,4 @@ We need
  * Django (optional)
  * wtf...
  * progressbar
+
