@@ -2,6 +2,8 @@ import os, sys
 
 def fix_settings(projectname, appname, project_dir, login):
     db_name = os.path.join(project_dir, "sqlite3.db")
+    import base64
+    password = base64.encodestring('DifficultPW!').strip()
     f = open("%(projectname)s/%(projectname)s/settings.py" % vars(), "w")
     code = """ \
 # Django settings for %(projectname)s project.
@@ -159,12 +161,13 @@ LOGGING = {
     if login:
         code += """
 
+import base64
 DEFAULT_FROM_EMAIL = 'Websolver Mail <cbcwebsolvermail@gmail.com>'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'cbcwebsolvermail@gmail.com'
-EMAIL_HOST_PASSWORD = 'DifficultPW!'
+EMAIL_HOST_PASSWORD = base64.decodestring('%(password)s')
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True"""
+EMAIL_USE_TLS = True""" % vars()
 
     f.write(code)
     f.close()
