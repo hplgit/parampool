@@ -1,26 +1,3 @@
-* articles
-** Direct Numerical Simulation of Transitional Flow in a Patient-Specific Intracranial Aneurysm
-   key:       Valen-Sendstad_et_al_2011
-   author:    K. Valen-Sendstad, K.-A. Mardal, M. Mortensen, B. A. P. Reif, H. P. Langtangen
-   year:      2011
-   journal:   Journal of Biomechanics
-   volume:    44
-   number:    16
-   pages:     2826-2832
-   status:    published
-   entrytype: article
-* proceedings
-** A {FEniCS} Tutorial
-   key:       langtangen2012fenics
-   author:    H. P. Langtangen
-   editor:    Anders Logg, Kent-Andre Mardal, Garth N. Wells
-   year:      2012
-   booktitle: Automated Solution of Differential Equations by the Finite Element Method
-   publisher: Springer
-   chapter:   1
-   pages:     1--73
-   status:    published
-   entrytype: inproceedings
 * misc
 ** {Python} Programming Language
    key:       Python
@@ -28,50 +5,6 @@
    status:    published
    sortkey:   Python
    note:      \url{http://python.org}
-   entrytype: misc
-** {NumPy} Array Processing Package for {P}ython
-   key:       NumPy
-   author:    T. Oliphant, others
-   url:       http://www.numpy.org
-   status:    published
-   sortkey:   NumPy
-   note:      \url{http://www.numpy.org}
-   entrytype: misc
-** {SciPy} Scientific Computing Library for {P}ython
-   key:       SciPy
-   author:    E. Jones, T. Oliphant, P. Peterson, others
-   url:       http://scipy.org
-   status:    published
-   sortkey:   SciPy
-   note:      \url{http://scipy.org}
-   entrytype: misc
-** F2PY: a Tool for Connecting {FORTRAN} and {P}ython Programs
-   key:       f2py_paper
-   author:    P. Peterson
-   year:      2009
-   journal:   International Journal of Computational Science and Engineering
-   volume:    4
-   number:    4
-   pages:     296-305
-   url:       http://cens.ioc.ee/~pearu/papers/IJCSE4.4_Paper_8.pdf
-   status:    published
-   note:      \url{http://cens.ioc.ee/~pearu/papers/IJCSE4.4_Paper_8.pdf}
-   entrytype: misc
-** F2PY Generator for {P}ython Interfaces to {FORTRAN} Codes
-   key:       f2py
-   author:    P. Peterson
-   url:       http://cens.ioc.ee/projects/f2py2e/
-   status:    published
-   sortkey:   f2py
-   note:      \url{http://cens.ioc.ee/projects/f2py2e/}
-   entrytype: misc
-** {SWIG} Software Package
-   key:       swig
-   author:    D. Beazley, others
-   url:       http://www.swig.org
-   status:    published
-   sortkey:   SWIG
-   note:      \url{http://www.swig.org}
    entrytype: misc
 * reports
 ** Introduction to computing with finite difference methods

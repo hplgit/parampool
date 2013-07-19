@@ -67,8 +67,6 @@ def generate(compute_function,
 
     # Copy static files
     import os, shutil, tarfile
-    shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
-                os.curdir)
     if menu is not None:
         shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
                     os.curdir)
@@ -78,6 +76,14 @@ def generate(compute_function,
     else:
         if not os.path.isdir('static'):
             os.mkdir('static')
+    # Generate clean-up script
+    f = open('clean.sh', 'w')
+    f.write("""\
+#!/bin/sh
+# Clean up files that can be regenerated
+rm -rf uploads/ templates/ static/ %(output_controller)s %(output_model)s *.pyc *~ clean.sh
+""")
+    f.close()
 
     generate_template(compute_function, classname, output_template,
                       menu, overwrite_template)

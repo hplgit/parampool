@@ -89,8 +89,6 @@ def generate(compute_function,
     shutil.copy(compute_function.__module__ + ".py", app_dir)
     if menu_function:
         shutil.copy(menu_function.__module__ + ".py", app_dir)
-    #shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
-    #            os.curdir)
 
     if menu is not None:
         os.chdir(app_dir)
@@ -103,6 +101,8 @@ def generate(compute_function,
     else:
         if not os.path.isdir(static_dir):
             os.mkdir(static_dir)
+    # No need for clean-up script since all generated files are in
+    # the project subdirectory which can be easily removed
 
     generate_template(compute_function, classname, output_template_path,
                       menu, enable_login)
