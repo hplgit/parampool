@@ -2,9 +2,9 @@ import os
 from distutils.util import strtobool
 
 def generate_controller(compute_function, classname,
-                        outfile, output_template,
+                        outfile, filename_template,
                         menu_function, overwrite,
-                        output_model):
+                        filename_model):
 
     if not overwrite and outfile is not None and os.path.isfile(outfile):
         if not strtobool(raw_input(
@@ -43,7 +43,7 @@ def generate_controller(compute_function, classname,
                 file_upload = True
                 break
 
-    model_module = output_model.replace('.py', '')
+    model_module = filename_model.replace('.py', '')
 
     code = '''\
 import os
@@ -140,7 +140,7 @@ def index():
     else:
         result = None
 
-    return render_template("%(output_template)s", form=form, result=result)
+    return render_template("%(filename_template)s", form=form, result=result)
 
 ''' % vars()
 

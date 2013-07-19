@@ -12,9 +12,9 @@ def generate(compute_function,
              classname=None,
              enable_login=False,
              default_field='TextField',
-             output_template="index.html",
-             output_views="views.py",
-             output_models="models.py"):
+             filename_template="index.html",
+             filename_views="views.py",
+             filename_models="models.py"):
     """
     Given a function `compute_function` that takes a series of
     arguments, generate a Django web form where
@@ -74,9 +74,9 @@ def generate(compute_function,
     if not os.path.isdir(templates_dir):
         os.mkdir(templates_dir)
 
-    output_models_path = os.path.join(app_dir, output_models)
-    output_views_path = os.path.join(app_dir, output_views)
-    output_template_path = os.path.join(templates_dir, output_template)
+    filename_models_path = os.path.join(app_dir, filename_models)
+    filename_views_path = os.path.join(app_dir, filename_views)
+    filename_template_path = os.path.join(templates_dir, filename_template)
     if enable_login:
         output_forms_path = os.path.join(app_dir, "forms.py")
 
@@ -104,13 +104,13 @@ def generate(compute_function,
     # No need for clean-up script since all generated files are in
     # the project subdirectory which can be easily removed
 
-    generate_template(compute_function, classname, output_template_path,
+    generate_template(compute_function, classname, filename_template_path,
                       menu, enable_login)
-    generate_models(compute_function, classname, output_models_path,
+    generate_models(compute_function, classname, filename_models_path,
                     default_field, menu, enable_login)
-    generate_views(compute_function, classname, output_views_path,
-                   output_template, menu_function,
-                   output_models, enable_login)
+    generate_views(compute_function, classname, filename_views_path,
+                   filename_template, menu_function,
+                   filename_models, enable_login)
     if enable_login:
         from generate_forms import generate_forms
         generate_forms(output_forms_path)

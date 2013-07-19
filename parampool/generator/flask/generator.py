@@ -8,11 +8,11 @@ def generate(compute_function,
              menu_function=None,
              classname=None,
              default_field='TextField',
-             output_template='view.html',
+             filename_template='view.html',
              overwrite_template=False,
-             output_controller='controller.py',
+             filename_controller='controller.py',
              overwrite_controller=False,
-             output_model='model.py',
+             filename_model='model.py',
              overwrite_model=False):
     """
     Given a function `compute_function` that takes a series of
@@ -81,14 +81,14 @@ def generate(compute_function,
     f.write("""\
 #!/bin/sh
 # Clean up files that can be regenerated
-rm -rf uploads/ templates/ static/ %(output_controller)s %(output_model)s *.pyc *~ clean.sh
+rm -rf uploads/ templates/ static/ %(filename_controller)s %(filename_model)s *.pyc *~ clean.sh
 """)
     f.close()
 
-    generate_template(compute_function, classname, output_template,
+    generate_template(compute_function, classname, filename_template,
                       menu, overwrite_template)
-    generate_model(compute_function, classname, output_model,
+    generate_model(compute_function, classname, filename_model,
                    default_field, menu, overwrite_model)
-    generate_controller(compute_function, classname, output_controller,
-                        output_template, menu_function,
-                        overwrite_controller, output_model)
+    generate_controller(compute_function, classname, filename_controller,
+                        filename_template, menu_function,
+                        overwrite_controller, filename_model)

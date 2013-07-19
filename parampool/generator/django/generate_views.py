@@ -1,12 +1,12 @@
 def generate_views(compute_function,
                    classname,
                    outfile,
-                   output_template,
+                   filename_template,
                    menu_function,
-                   output_models,
+                   filename_models,
                    login):
 
-    output_models = output_models.strip(".py")
+    filename_models = filename_models.strip(".py")
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
 
@@ -42,12 +42,12 @@ def generate_views(compute_function,
     code = '''\
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from %(output_models)s import %(classname)sForm
+from %(filename_models)s import %(classname)sForm
 ''' % vars()
     if login:
         code += '''\
-from %(output_models)s import %(classname)sUser
-from %(output_models)s import %(classname)sUserForm
+from %(filename_models)s import %(classname)sUser
+from %(filename_models)s import %(classname)sUserForm
 from forms import CreateNewLoginForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
@@ -381,7 +381,7 @@ to see the results.""")
 
     code += '''
     return render_to_response(
-        "%(output_template)s",
+        "%(filename_template)s",
         {"form": form,
          "result": result,
 ''' % vars()
