@@ -13,7 +13,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
 
     def leaf_func(tree_path, level, item, user_data):
         name = item.name
-        field_name = name
+        field_name = name  # Python variable name corresponding to name
         field_name = field_name.replace(' ', '_')
         for char in r'''[]{}\/^%$#@!+-<>?|'"=~`,.;:''':
             field_name = field_name.replace(char, '')
