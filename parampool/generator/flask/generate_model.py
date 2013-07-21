@@ -13,24 +13,29 @@ def generate_model_menu(compute_function, classname, outfile, menu):
 
     def leaf_func(tree_path, level, item, user_data):
         name = item.name
+        field_name = name
+        field_name = field_name.replace(' ', '_')
+        for char in r'''[]{}\/^%$#@!+-<>?|'"=~`,.;:''':
+            field_name = field_name.replace(char, '')
         default = item.data["default"]
 
         # Make label
         label = ""
-        if item.data.has_key("help"):
-            label += item.data["help"]
-        if item.data.has_key("unit"):
-            label += " (" + item.data["unit"] + ")"
+        if 'name' in item.data:
+            label += item.data['name']
+        if 'unit' in item.data:
+            label += " (" + item.data['unit'] + ")"
 
-        if item.data.has_key("minmax"):
-            minvalue = item.data["minmax"][0]
-            maxvalue = item.data["minmax"][1]
+        if 'minmax' in item.data:
+            minvalue = item.data['minmax'][0]
+            maxvalue = item.data['minmax'][1]
 
         widget = item.data.get("widget")
+        print 'XXX widget type', widget, 'for', item.data['name']
 
         if widget == "integer":
             user_data.code += """ \
-    %%(name)-%ds = html5.IntegerField(u'%%(label)s',
+    %%(field_name)-%ds = html5.IntegerField(u'%%(label)s',
                         default=%%(default)s,
                         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
@@ -43,8 +48,10 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                 user_data.code += "])\n"
 
         elif widget == "float":
+            print 'XXX user_data.longest_name', user_data.longest_name
+            print 'XXX label, default', label, default
             user_data.code += """ \
-    %%(name)-%ds = FloatField(u'%%(label)s',
+    %%(field_name)-%ds = FloatField(u'%%(label)s',
                         default=%%(default)g,
                         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
@@ -61,7 +68,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             if not item.data.has_key("minmax"):
                 raise TypeError("Cannot create a range without min/max values")
             user_data.code += """ \
-    %%(name)-%ds = FloatRangeField(u'%%(label)s',
+    %%(field_name)-%ds = FloatRangeField(u'%%(label)s',
                         onchange="showValue(this.value)",
                         min=%%(minvalue)g,
                         max=%%(maxvalue)g,
@@ -75,7 +82,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             if not item.data.has_key("minmax"):
                 raise TypeError("Cannot create a range without min/max values")
             user_data.code += """ \
-    %%(name)-%ds = IntegerRangeField(u'%%(label)s',
+    %%(field_name)-%ds = IntegerRangeField(u'%%(label)s',
                         onchange="showValue(this.value)",
                         min=%%(minvalue)g,
                         max=%%(maxvalue)g,
@@ -87,7 +94,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
 
         elif widget == "file":
             user_data.code += """ \
-    %%(name)-%ds = wtf.FileField(u'%%(label)s',
+    %%(field_name)-%ds = wtf.FileField(u'%%(label)s',
                         validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()
 
@@ -95,7 +102,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             if item.data.has_key("options"):
                 choices = item.data["options"]
                 user_data.code += """ \
-    %%(name)-%ds = wtf.SelectField(u'%%(label)s',
+    %%(field_name)-%ds = wtf.SelectField(u'%%(label)s',
                         default='%%(default)s',
                         validators=[wtf.validators.InputRequired()],
                         choices=%%(choices)s)
@@ -107,7 +114,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
 
         elif widget == "checkbox":
                 user_data.code += """ \
-    %%(name)-%ds = wtf.BooleanField(u'%%(label)s', default=%%(default)s)
+    %%(field_name)-%ds = wtf.BooleanField(u'%%(label)s', default=%%(default)s)
 """ % user_data.longest_name % vars()
 
         else:
@@ -122,7 +129,7 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             if widget in widget2field.keys():
                 field = widget2field[widget]
                 user_data.code += """ \
-    %%(name)-%ds = %%(field)s(u'%%(label)s',
+    %%(field_name)-%ds = %%(field)s(u'%%(label)s',
                         default='%%(default)s',
                         validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()

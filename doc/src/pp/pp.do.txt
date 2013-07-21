@@ -497,7 +497,7 @@ and monospace font for Python variables:
 
 @@@CODE src-pp/compute.py fromto: compute_motion_and_forces2@v_x0 =
 The resulting documentation in HTML format is visualized in
-Figure
+Figure ref{pp:flask5:fig1}.
 
 For complete information on how to return PNG plots as strings, we
 refer to the `compute_motion_and_forces2` function in the

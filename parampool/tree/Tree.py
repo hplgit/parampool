@@ -15,23 +15,32 @@ class Tree:
         for i in range(1, 6):
             self.level_name[i] = 'sub'*(i+1) + ' tree'
 
-    def subtree(self, path):
-        """Go to subtree, or create it if it does not exist."""
+    def subtree(self, path, subtree=None):
+        """
+        Go to subtree with relative path `path`. Add `subtree` here,
+        or create a new subtree node if no subtree `path` exists.
+        """
         path = TreePath(path)
         try:
             self.change_subtree(path)
         except NonExistingSubtreeError:
             # This subtree was not found.
-            # self.locator is now at a position where we can make the subtree.
-            self.create_subtree(path.basename())
-
-    def create_subtree(self, name):
-        """Create a subtree at current location."""
-        # As mkdir name; cd name
-        new_subtree = SubTree(name, parent=self.locator)
-
-        self.locator.add(new_subtree)
-        self.locator = new_subtree
+            # self.locator is now at a position where we can make
+            # the subtree or add the given subtree.
+            if subtree is None:
+                # As mkdir name; cd name
+                new_subtree = SubTree(path.basename(),
+                                      parent=self.locator)
+            else:
+                if isinstance(subtree, Menu):
+                    subtree = subtree.root  # extract subtree
+                if not isinstance(subtree, tree.SubTree):
+                    raise TypeError(
+                        'subtree must be Menu or submenu/SubTree, not %s'
+                        % type(subtree))
+                new_subtree = subtree
+            self.locator.add(new_subtree)
+            self.locator = new_subtree
 
     def add_leaf(self, leaf):
         """Create a new leaf object at current location (subtree)."""
@@ -217,10 +226,10 @@ def get_all_tree_paths(tree, add_leaf_object=False):
     return paths
 
 def hash_all_leaves(tree):
-    """Return dict[path] = leaf_object."""
+    """Return paths2leaves[path] = leaf_object."""
     paths = get_all_tree_paths(tree, add_leaf_object=True)
-    path2leaf = {path: leaf for path, leaf in paths}
-    return path2leaf
+    paths2leaves = {path: leaf for path, leaf in paths}
+    return paths2leaves
 
 def unique_short_name(short_path, paths):
     """
@@ -235,18 +244,23 @@ def unique_short_name(short_path, paths):
         index = short_paths.index(short_path)
         return paths[index]
 
-def get_leaf(short_path, path2leaf):
+def get_leaf(short_path, paths2leaves):
     """
     Return leaf object if `short_path` is a unique path name.
-    `path2leaf` is a dict with paths as keys and leaf
+    `paths2leaves` is a dict with paths as keys and leaf
     objects as values.
     """
-    path = unique_short_name(short_path, list(path2leaf.keys()))
+    path = unique_short_name(short_path, list(paths2leaves.keys()))
     if path is None:
         raise ValueError('%s is not a unique short name' % short_path)
     else:
-        return path2leaf[path]
+        return paths2leaves[path]
 
+# Is this one really necessary? Do not think so...
+def get_subtree(short_path, paths2subtrees):
+    # 2DO
+    # Check if hash_all_leaves also creates paths to subtrees - no!
+    return NotImplementedError
 
 def dump(tree):
     """Dump tree using str() for subtrees and leaves."""

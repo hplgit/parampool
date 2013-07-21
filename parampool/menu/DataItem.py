@@ -85,6 +85,12 @@ class DataItem:
         if 'default' not in kwargs:
             kwargs['default'] = None  # indicates required variable
 
+        if kwargs['default'] is None:
+            # Override user's choice
+            kwargs['widget'] = 'textline'
+            kwargs['str2type'] = eval
+            print 'Data item "%s" has default value None and gets widget "textline" and str2type=eval' % self.name
+
         # Check that all arguments are valid
         for arg in kwargs:
             if arg not in self._legal_data:

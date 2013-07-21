@@ -413,45 +413,171 @@ def compute_motion_and_forces2(
 """ % vars()
     return html_text
 
-def compute_motion(
-    initial_velocity=5.0,
-    initial_angle=45.0,
-    spinrate=50.0,
-    m=0.1,
-    R=0.11,
-    method='RK4'
-    ):
-    v_x0 = initial_velocity*cos(initial_angle*pi/180)
-    v_y0 = initial_velocity*sin(initial_angle*pi/180)
-    xmax = 0
-    ymax = 0
+# 2DO: add unit and other attrs
+# label must be name, not help, in django too
+# variable name of FloatField etc cannot be name, must replace ' ' by _,
+# fix in django too
 
-    for dt in [0.02]:
-        #for method in ['ForwardEuler', 'RK2', 'RK4']:
-        for drag in [True, False]:
-            problem = Ball(m=m, R=R, drag=drag,
-                           spinrate=spinrate if drag else 0, w=0)
-            problem.set_initial_velocity(v_x0, v_y0)
-            x, y, t, g, d, l = solver(problem, method, dt)
-            plt.figure(1)
-            if drag:
-                plt.plot(x, y, label='%s' % ('w/drag' if drag else ''))
-            else:
-                plt.plot(x, y, 'r--')
-            if drag:
-                plt.figure(2)
-                plt.plot(x, d, label='drag force')
-                if spinrate:
-                    plt.plot(x, l, label='lift force')
-                plt.plot(x, np.abs(g), label='gravity force')
-            xmax = max(xmax, x.max())
-            ymax = max(ymax, y.max())
-    plt.figure(1)
-    plt.axis([x[0], xmax, 0, 1.2*ymax])
-    plt.legend()
-    plt.figure(2)
-    plt.legend()
-    plt.show()
+def menu_definition_list():
+    menu = [
+        'Main', [
+            'Initial motion data', [
+                dict(name='Initial velocity', default=5.0),
+                dict(name='Initial angle', default=45,
+                     widget='range', minmax=[0,90]),
+                dict(name='Spinrate', default=50, widget='float',
+                     str2type=float),
+                ],
+            'Body and environment data', [
+                dict(name='Wind velocity', default=0.0,
+                     help='Wind velocity in negative x direction.'),
+                dict(name='Mass', default=0.1,
+                     help='Mass of body.'),
+                dict(name='Radius', default=0.11,
+                     help='Radius of spherical body.'),
+                ],
+            'Numerical parameters', [
+                dict(name='Method', default='RK4',
+                     widget='select',
+                     options=['RK4', 'RK2', 'ForwardEuler'],
+                     help='Numerical solution method.'),
+                dict(name='Time step', default=None,
+                     widget='float'),
+                ],
+            'Plot parameters', [
+                dict(name='Plot simplified motion', default=True,
+                     help='Plot motion without drag+lift forces.'),
+                dict(name='New plot', default=True,
+                     help='Erase all old curves.'),
+                ],
+            ],
+        ]
+    from parampool.menu.UI import listtree2Menu
+    return listtree2Menu(menu)
+
+def menu_definition_api():
+    from parampool.Menu import Menu
+    menu = Menu(root_name='Main')
+    menu.submenu('Initial motion data')
+    menu.data_item(
+        name='Initial velocity', default=5.0)
+    menu.data_item(
+        name='Initial angle', default=45,
+        widget='range', minmax=[0,90])
+    menu.data_item(
+        name='Spinrate', default=50, widget='float',
+        str2type=float)
+
+    menu.submenu('../Body and environment data')
+    menu.data_item(
+        name='Wind velocity', default=0.0,
+        help='Wind velocity in negative x direction.')
+    menu.data_item(
+        name='Mass', default=0.1,
+        help='Mass of body.')
+    menu.data_item(
+        name='Radius', default=0.11,
+        help='Radius of spherical body.')
+
+    menu.submenu('../Numerical parameters')
+    menu.data_item(
+        name='Method', default='RK4',
+        widget='select',
+        options=['RK4', 'RK2', 'ForwardEuler'],
+        help='Numerical solution method.')
+    menu.data_item(
+        name='Time step', default=None,
+        widget='float')
+
+    menu.submenu('../Plot parameters')
+    menu.data_item(
+        name='Plot simplified motion', default=True,
+        help='Plot motion without drag and lift forces.')
+    menu.data_item(
+        name='New plot', default=True,
+        help='Erase all old curves.')
+
+    return menu
+
+# Another version where we have different functions for creating
+# submenus.
+
+def menu_definition_api_with_separate_submenus():
+    from parampool.Menu import Menu
+    menu = Menu(root_name='Main')
+    menu = motion_menu(menu)
+    menu.change_submenu('..')
+    menu = body_and_envir_menu(menu)
+    menu.change_submenu('..')
+    menu = numerics_menu(menu)
+    menu.change_submenu('..')
+    menu = plot_menu(menu)
+    return menu
+
+def motion_menu(menu, name='Initial motion data'):
+    menu.submenu(name)
+    menu.data_item(
+        name='Initial velocity', default=5.0)
+    menu.data_item(
+        name='Initial angle', default=45,
+        widget='range', minmax=[0,90])
+    menu.data_item(
+        name='Spinrate', default=50, widget='float',
+        str2type=float)
+    return menu
+
+def body_and_envir_menu(menu, name='Body and environment data'):
+    menu.submenu(name)
+    menu.data_item(
+        name='Wind velocity', default=0.0,
+        help='Wind velocity in negative x direction.')
+    menu.data_item(
+        name='Mass', default=0.1,
+        help='Mass of body.')
+    menu.data_item(
+        name='Radius', default=0.11,
+        help='Radius of spherical body.')
+    return menu
+
+def numerics_menu(menu, name='Numerical parameters'):
+    menu.submenu(name)
+    menu.data_item(
+        name='Method', default='RK4',
+        widget='select',
+        options=['RK4', 'RK2', 'ForwardEuler'],
+        help='Numerical solution method.')
+    menu.data_item(
+        name='Time step', default=None,
+        widget='float')
+    return menu
+
+def plot_menu(menu, name='Plot parameters'):
+    menu.submenu(name)
+    menu.data_item(
+        name='Plot simplified motion', default=True,
+        help='Plot motion without drag and lift forces.')
+    menu.data_item(
+        name='New plot', default=True,
+        help='Erase all old curves.')
+    return menu
+
+
+def compute_motion_and_forces_with_menu(menu):
+    initial_velocity = menu.get('Initial velocity')
+    initial_angle = menu.get('Initial angle')
+    spinrate = menu.get('Spin rate')
+    w = menu.get('Wind velocity')
+    m = menu.get('Mass')
+    R = menu.get('Radius')
+    method = menu.get('Method')
+    dt = menu.get('Time step')
+    plot_simplified_motion = menu.get('Plot simplified motion'),
+    new_plot = menu.get('New plot')
+    return compute_motion_and_forces2(
+        initial_velocity, initial_angle, spinrate, w,
+        m, R, method, dt, plot_simplified_motion,
+        new_plot)
+
 
 def compute_average(data_array=np.array([1]), filename=None):
     if filename is not None:

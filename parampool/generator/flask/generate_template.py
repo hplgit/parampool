@@ -174,7 +174,8 @@ def generate_template_dtree(compute_function, classname,
     # Progressbar
     widgets = ['Generating: ', Percentage(), ' ',
                Bar(marker=RotatingMarker()), ' ', ETA()]
-    pb = ProgressBar(widgets=widgets, maxval=len(args)-1).start()
+    num_widgets = len(args) if menu is None else len(menu.paths2data_items)
+    pb = ProgressBar(widgets=widgets, maxval=num_widgets-1).start()
     codedata = CodeData()
     codedata.pb = pb
     codedata.code = pre_code

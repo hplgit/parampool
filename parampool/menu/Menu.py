@@ -18,6 +18,7 @@ class Menu(Tree):
         self.add_leaf(DataItem(**data_item_attributes))
 
     submenu = Tree.subtree
+    change_submenu = Tree.change_subtree
 
     def update(self):
         self.paths2data_items = hash_all_leaves(self)
@@ -48,12 +49,15 @@ class Menu(Tree):
 import nose.tools as nt
 from parampool.utils import assert_equal_text
 
+"""
+Not used:
 def make_test_menu_dummy():
     return test_Menu()
 
 def make_test_menu_drag():
     import parampool.menu.UI
     return parampool.menu.UI.test_listtree2Menu()
+"""
 
 def test_Menu():
     m = Menu()

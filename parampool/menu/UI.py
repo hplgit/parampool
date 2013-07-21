@@ -77,7 +77,7 @@ def interpret_value(value):
         return str2type, str2type(value)
 
 def read_menufile(filename):
-    """Load tree from file."""
+    """Load menu tree from file."""
     if isinstance(filename, basestring):
         f = open(filename, 'r')
         data = f.read()

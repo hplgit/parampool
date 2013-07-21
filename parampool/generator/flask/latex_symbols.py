@@ -13,8 +13,9 @@ def get_symbol(symbol, path=[], dpi=120):
     if not os.path.isdir(symdir):
         os.makedirs(symdir)
 
-    name = symbol.strip('\\') + '.png'
+    name = symbol.replace(' ', '_').replace('mbox', '').strip('\\{}') + '.png'
     filename = os.path.join(symdir, name)
+    print 'XXX saving to file [%s]' % filename
     link = 'http://latex.codecogs.com/png.latex?\dpi{%(dpi)d}&space;%(symbol)s' \
             % vars()
 
@@ -46,8 +47,9 @@ def symbols_same_size():
             height = img.size[1]
             cmd = 'convert -extent %(max_width)dx%(height)d %(symdir)s %(symdir)s' \
                     % vars()
-            status, output = commands.getstatusoutput(cmd)
-            if status:
+            print 'XXX running command\n', cmd
+            failure, output = commands.getstatusoutput(cmd)
+            if failure:
                 import sys
-                sys.stderr.write(output + '\n')
-                sys.exit(status)
+                sys.stderr.write(output + '\nAbort!\n')
+                sys.exit(failure)
