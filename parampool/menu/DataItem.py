@@ -89,7 +89,7 @@ class DataItem:
             # Override user's choice
             kwargs['widget'] = 'textline'
             kwargs['str2type'] = eval
-            print 'Data item "%s" has default value None and gets widget "textline" and str2type=eval' % self.name
+            #print 'Data item "%s" has default value None and gets widget "textline" and str2type=eval' % self.name
 
         # Check that all arguments are valid
         for arg in kwargs:
@@ -302,16 +302,23 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
         # else: just return value as it came in
         return value              # float if with unit, otherwise str
 
-    def get(self, attribute_name):
-        """Return value of attribute name."""
+    def get(self, attribute_name, default=None):
+        """
+        Return value of attribute name.
+        If attribute_name is not registered, raise exception if
+        default is None, otherwise return default.
+        """
         if attribute_name in self.data:
             return self.data[attribute_name]
         else:
-            raise ValueError(
-                '%s: no attribute with name "%s"\n'
-                'registered names are %s' %
-                (self._signature(), attribute_name,
-                 ', '.join(list(self.data.keys()))))
+            if default is None:
+                raise ValueError(
+                    '%s: no attribute with name "%s"\n'
+                    'registered names are %s' %
+                    (self._signature(), attribute_name,
+                     ', '.join(list(self.data.keys()))))
+            else:
+                return default
 
     def set_value(self, value):
         """Set value as a string."""

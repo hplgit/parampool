@@ -82,7 +82,7 @@ def generate(compute_function,
 #!/bin/sh
 # Clean up files that can be regenerated
 rm -rf uploads/ templates/ static/ %(filename_controller)s %(filename_model)s *.pyc *~ clean.sh
-""")
+""" % vars())
     f.close()
 
     generate_template(compute_function, classname, filename_template,

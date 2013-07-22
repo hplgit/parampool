@@ -1,36 +1,44 @@
 import os
 
-STATIC_DIR = 'static/latex/'
+_contacted_latex_codecogs_com = False
 
-def get_symbol(symbol, path=[], dpi=120):
+def get_symbol(symbol, static_dir='static', path=[], dpi=120):
     """Download a transparent LaTeX symbol."""
+
+    static_dir = os.path.join(static_dir, "latex")
 
     # Remove space in dirname
     path = [p.replace(' ', '_') for p in path]
 
     subdir = "/".join(path)
-    symdir = os.path.join(STATIC_DIR, subdir)
+    symdir = os.path.join(static_dir, subdir)
     if not os.path.isdir(symdir):
         os.makedirs(symdir)
 
     name = symbol.replace(' ', '_').replace('mbox', '').strip('\\{}') + '.png'
     filename = os.path.join(symdir, name)
-    print 'XXX saving to file [%s]' % filename
     link = 'http://latex.codecogs.com/png.latex?\dpi{%(dpi)d}&space;%(symbol)s' \
             % vars()
 
+    if not _contacted_latex_codecogs_com:
+        print '....contacting http://latex.codecogs.com to convert latex symbols to png files'
+        global _contacted_latex_codecogs_com
+        _contacted_latex_codecogs_com = True
     import urllib
+    code = urllib.urlopen(link).read()
     f = open(filename, 'wb')
-    f.write(urllib.urlopen(link).read())
+    f.write(code)
     f.close()
     return filename
 
-def symbols_same_size():
+def symbols_same_size(static_dir='static'):
     """Enforce the same dimensions on all symbols in each subdirectory."""
     from PIL import Image
     import commands
 
-    for dir, subdirs, symbols in os.walk(STATIC_DIR):
+    static_dir = os.path.join(static_dir, "latex")
+
+    for dir, subdirs, symbols in os.walk(static_dir):
         max_width  = 0
         dir = dir.replace(' ', '_')
 
@@ -45,9 +53,7 @@ def symbols_same_size():
             symdir = os.path.join(dir, symbol)
             img = Image.open(symdir)
             height = img.size[1]
-            cmd = 'convert -extent %(max_width)dx%(height)d %(symdir)s %(symdir)s' \
-                    % vars()
-            print 'XXX running command\n', cmd
+            cmd = 'convert -extent %(max_width)dx%(height)d %(symdir)s %(symdir)s' % vars()
             failure, output = commands.getstatusoutput(cmd)
             if failure:
                 import sys

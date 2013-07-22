@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Django MotionAndForces app</title>
+  </head>
+  <body>
+  
+<!-- tocinfo
+{'highest level': 4, 'sections': []}
+end of tocinfo -->
+
+
+<!-- ------------------- main content ---------------------- -->
+
+
+<p>
+This application computes the motion of a ball with radius R
+and mass m under the influence of gravity, air resistance (drag)
+and lift because of a given spinrate. The motion starts with
+a prescribed initial_velocity making an angle initial_angle
+with the ground. A wind velocity, positive in positive x direction,
+can also be given (w). Many numerical methods can be used to
+solve the equations of motion. Some legal names are ForwardEuler,
+RK2, RK4, and Fehlberg (adaptive Runge-Kutta 4/5 order).
+If the timestep dt is None, approximately 500 steps are used,
+but dt can also be given a desired float value.
+
+<p>
+The boolean variable plot_simplified_motion adds the curve of
+the motion without drag and lift (the standard parabolic
+trajectory). This curve helps illustrate the effect of drag
+and lift. When new_plot is false (unchecked), the new computed
+curves are added to the previous ones since last time new_plot
+was true.
+
+<p>
+<!-- (Doconce format) -->
+
+<!-- ------------------- end of main content --------------- -->
+
+
+
+  <!-- Input and Results are typeset as a two-column table -->
+  <table>
+  <tr>
+  <td valign="top">
+    <h2>Input:</h2>
+
+      <form method=post action="" enctype=multipart/form-data>{% csrf_token %}
+        <table>
+          {% for field in form %}
+            <tr><td>{{ field.name }}</td>
+                <td>{{ field }}</td>
+                <td>{% if field.errors %}
+                  <ul class=errors>
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}</ul>
+                {% endif %}</td></tr>
+          {% endfor %}
+        </table>
+        <p><input type=submit value=Compute>
+    </form></p>
+  </td>
+
+  <td valign="top">
+    {% if result != None %}
+      <h2>Results:</h2>
+        {{ result|safe }}
+    {% endif %}
+  </td>
+  </tr>
+  </table>
+  </body>
+</html>

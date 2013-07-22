@@ -65,7 +65,7 @@ with unit vectors $\bm{i}$ and $\bm{j}$ in the $x$ and $y$ directions,
 respectively.
 Then we skip the sidewind force ($C_S=0$). We also let gravity
 point downwards, $\bm{g}=-g\bm{j}$, and let the wind velocity be horizontal:
-$\bm{w}=w\bm{i}$. Furthermore, we have that
+$\bm{w}=-w\bm{i}$. Furthermore, we have that
 
 !bt
 \begin{align}
@@ -728,4 +728,5 @@ We need
  * Django (optional)
  * wtf...
  * progressbar
+ * Flask-WTF: `pip install Flask-WTF`
 

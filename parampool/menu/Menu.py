@@ -14,7 +14,7 @@ class Menu(Tree):
             self.level_name[level] = \
             self.level_name[level].replace('tree', 'menu')
 
-    def data_item(self, **data_item_attributes):
+    def add_data_item(self, **data_item_attributes):
         self.add_leaf(DataItem(**data_item_attributes))
 
     submenu = Tree.subtree
@@ -43,6 +43,7 @@ class Menu(Tree):
         """
         data_item = self.get(data_item_name)
         data_item.set_value(value)
+        return data_item  # for convenience
 
 
 

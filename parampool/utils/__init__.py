@@ -1,3 +1,19 @@
+def legal_variable_name(name):
+    """
+    Make a variable name from the string name.
+    Replace space by underscore and remove all illegal
+    characters in a Python variable name.
+    """
+    var_name = name.replace(' ', '_')
+    for char in r'''[]{}\/^%$#@!+-<>?|'"=~`,.;:''':
+        if char in var_name:
+            var_name = var_name.replace(char, '')
+    for char in var_name:
+        if ord(char) > 127:  # remove non-ascii characters
+            var_name = var_name.replace(char, '')
+    return var_name
+
+
 def save_png_to_str(plt, plotwidth=400):
     """
     Given a matplotlib.pyplot object plt, the current figure

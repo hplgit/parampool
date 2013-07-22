@@ -1,11 +1,12 @@
 import os
 from distutils.util import strtobool
+import parampool.utils
 
 def generate_template_std(classname, outfile, doc='', login=False):
     """
     Generate a simple standard template with
-    input form. Show result at the bottom of
-    the page.
+    input form in the left column and results in
+    the right column.
     """
     code = '''\
 <!DOCTYPE html>
@@ -74,7 +75,8 @@ def generate_template_dtree(compute_function, classname,
                             menu, outfile, doc, login, align='left'):
 
     # TODO: Support for right align in 'parent' functions
-    from latex_symbols import get_symbol, symbols_same_size
+    from parampool.generator.flask.latex_symbols import \
+         get_symbol, symbols_same_size
     from progressbar import ProgressBar, Percentage, Bar, ETA, RotatingMarker
     import inspect
     args = inspect.getargspec(compute_function).args
@@ -139,9 +141,10 @@ def generate_template_dtree(compute_function, classname,
         id = user_data.id
         parent_id = user_data.parent_id[-1]
         name = item.name
+        field_name = parampool.utils.legal_variable_name(name)
         form = """\
-&nbsp; {{ form.%(name)s }} {%% if form.%(name)s.errors %%} \
-{%% for error in form.%(name)s.errors %%} <err> {{error}} </err> \
+&nbsp; {{ form.%(field_name)s }} {%% if form.%(field_name)s.errors %%} \
+{%% for error in form.%(field_name)s.errors %%} <err> {{error}} </err> \
 {%% endfor %%}{%% endif %%} """ % vars()
 
         user_data.pb.update(user_data.pbid)
@@ -202,7 +205,8 @@ def generate_template_dtree(compute_function, classname,
     # Progressbar
     widgets = ['Generating: ', Percentage(), ' ',
                Bar(marker=RotatingMarker()), ' ', ETA()]
-    pb = ProgressBar(widgets=widgets, maxval=len(args)-1).start()
+    num_widgets = len(args) if menu is None else len(menu.paths2data_items)
+    pb = ProgressBar(widgets=widgets, maxval=num_widgets-1).start()
     codedata = CodeData()
     codedata.pb = pb
     codedata.code = pre_code

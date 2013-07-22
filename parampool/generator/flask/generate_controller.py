@@ -64,7 +64,7 @@ app = Flask(__name__)
     if menu:
         code += '''
 # Menu object
-from %(menu_function_file)s import %(menu_function_name)s
+from %(menu_function_file)s import %(menu_function_name)s as menu_function
 menu = menu_function()
 ''' % vars()
 
@@ -127,7 +127,7 @@ def index():
         # Send data to Menu object
         for field in form:
             if field.data:
-                menu.set_value(field.name, field.data)
+                data_item = menu.set_value(field.name, field.data)
 
         result = compute(menu)
 '''

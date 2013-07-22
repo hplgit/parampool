@@ -125,11 +125,11 @@ def read_menufile(filename):
                 data['unit'] = unit
             if help:
                 data['help'] = help
-            menu.data_item(**data)
+            menu.add_data_item(**data)
         else:
             # line contains just the name of a data item
             data = {'name': line.strip()}
-            menu.data_item(**data)
+            menu.add_data_item(**data)
     return menu
 
 
@@ -206,7 +206,7 @@ def listtree2Menu(menu_tree):
 
     def make_data_item(
         menu_path, level, data_item, menu):
-        menu.data_item(**data_item)
+        menu.add_data_item(**data_item)
 
     def make_submenu(
         menu_path, level, submenu, menu):

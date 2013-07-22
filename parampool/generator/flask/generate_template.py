@@ -1,5 +1,6 @@
 import os, sys, shutil, re
 from distutils.util import strtobool
+import parampool.utils
 
 def generate_template_std(classname, outfile, doc=''):
     """
@@ -112,9 +113,10 @@ def generate_template_dtree(compute_function, classname,
         id = user_data.id
         parent_id = user_data.parent_id[-1]
         name = item.name
+        field_name = parampool.utils.legal_variable_name(name)
         form = """\
-&nbsp; {{ form.%(name)s }} {%% if form.%(name)s.errors %%} \
-{%% for error in form.%(name)s.errors %%} <err> {{error}} </err> \
+&nbsp; {{ form.%(field_name)s }} {%% if form.%(field_name)s.errors %%} \
+{%% for error in form.%(field_name)s.errors %%} <err> {{error}} </err> \
 {%% endfor %%}{%% endif %%} """ % vars()
 
         user_data.pb.update(user_data.pbid)
@@ -124,7 +126,7 @@ def generate_template_dtree(compute_function, classname,
             symbol = item.data["symbol"]
         else:
             symbol = "\\mbox{%s}" % name
-        imgsrc = get_symbol(symbol, tree_path)
+        imgsrc = get_symbol(symbol, 'static', tree_path)
 
         # Use slider and show current value
         if item.data.get("widget", None) in ("range", "integer_range"):
@@ -186,7 +188,7 @@ def generate_template_dtree(compute_function, classname,
           verbose=False)
     pb.finish()
     code = codedata.code + post_code
-    symbols_same_size()
+    symbols_same_size('static')
 
     if outfile is None:
         return code

@@ -1,3 +1,5 @@
+import parampool.utils
+
 def generate_models_menu(compute_function, classname, outfile, menu):
     """
     Generate Django ModelForm by iterating through
@@ -11,18 +13,13 @@ def generate_models_menu(compute_function, classname, outfile, menu):
 
     def leaf_func(tree_path, level, item, user_data):
         name = item.name
-        field_name = name  # Python variable name corresponding to name
-        field_name = field_name.replace(' ', '_')
-        for char in r'''[]{}\/^%$#@!+-<>?|'"=~`,.;:''':
-            field_name = field_name.replace(char, '')
+        field_name = parampool.utils.legal_variable_name(name)
         default = item.data["default"]
 
         # Make label
         label = " "
         if 'name' in item.data:
             label += item.data['name']
-        if 'unit' in item.data:
-            label += " (" + item.data['unit'] + ")"
 
         if 'minmax' in item.data:
             minvalue = item.data['minmax'][0]
@@ -39,9 +36,11 @@ def generate_models_menu(compute_function, classname, outfile, menu):
             print "    Using standard %s instead" % widget
 
         if widget == "integer":
-            user_data.code += """ \
-    %%(field_name)-%ds = models.IntegerField(verbose_name='%%(label)s',
-                        default=%%(default)g)
+            user_data.code += """\
+
+    %%(field_name)-%ds = models.IntegerField(
+        verbose_name='%%(label)s',
+        default=%%(default)g)
 """ % user_data.longest_name % vars()
             # TODO: Minmax for integers
             if item.data.has_key("minmax"):
@@ -49,33 +48,41 @@ def generate_models_menu(compute_function, classname, outfile, menu):
 
         elif widget == "float":
             if item.data.has_key("minmax"):
-                user_data.code += """ \
-    %%(field_name)-%ds = MinMaxFloat(verbose_name='%%(label)s',
-                        default=%%(default)g,
-                        min_value=%%(minvalue)g,
-                        max_value=%%(maxvalue)g)
+                user_data.code += """\
+
+    %%(field_name)-%ds = MinMaxFloat(
+        verbose_name='%%(label)s',
+        default=%%(default)g,
+        min_value=%%(minvalue)g, max_value=%%(maxvalue)g)
 """ % user_data.longest_name % vars()
             else:
-                user_data.code += """ \
-    %%(field_name)-%ds = models.FloatField(verbose_name='%%(label)s',
-                        default=%%(default)g)
+                user_data.code += """\
+
+    %%(field_name)-%ds = models.FloatField(
+        verbose_name='%%(label)s',
+        default=%%(default)g)
 """ % user_data.longest_name % vars()
 
         elif widget == "file":
-            user_data.code += """ \
-    %%(field_name)-%ds = models.FileField(verbose_name='%%(label)s',
-                        upload_to='uploads/')
+            user_data.code += """\
+
+    %%(field_name)-%ds = models.FileField(
+        verbose_name='%%(label)s',
+        upload_to='uploads/')
 """ % user_data.longest_name % vars()
 
         elif widget == "select":
             if item.data.has_key("options"):
-                choices = item.data["options"]
+                # Django requires choices to be two-tuples
+                choices = [(c,c) for c in item.data["options"]]
                 # FIXME: TextField is currently hardcoded
                 # Maybe use default_field.
-                user_data.code += """ \
-    %%(field_name)-%ds = models.TextField(verbose_name='%%(label)s',
-                        default='%%(default)s',
-                        choices=%%(choices)s)
+                user_data.code += """\
+
+    %%(field_name)-%ds = models.TextField(
+        verbose_name='%%(label)s',
+        default='%%(default)s',
+        choices=%%(choices)s)
 """ % user_data.longest_name % vars()
             else:
                 print "*** ERROR: Cannot use widget 'select' without any options."
@@ -83,15 +90,20 @@ def generate_models_menu(compute_function, classname, outfile, menu):
                 sys.exit(1)
 
         elif widget == "checkbox":
-            user_data.code += """ \
-    %%(field_name)-%ds = models.BooleanField(verbose_name='%%(label)s', default=%%(default)s)
+            user_data.code += """\
+
+    %%(field_name)-%ds = models.BooleanField(
+        verbose_name='%%(label)s',
+        default=%%(default)s)
 """ % user_data.longest_name % vars()
 
         elif widget == "textline":
-            user_data.code += """ \
-    %%(field_name)-%ds = models.CharField(verbose_name='%%(label)s',
-                        default='%%(default)s',
-                        max_length=50)
+            user_data.code += """\
+
+    %%(field_name)-%ds = models.CharField(
+        verbose_name='%%(label)s',
+        default='%%(default)s',
+        max_length=50)
 """ % user_data.longest_name % vars()
 
         else:
@@ -107,9 +119,11 @@ def generate_models_menu(compute_function, classname, outfile, menu):
 
             if widget in widget2field.keys():
                 field = widget2field[widget]
-                user_data.code += """ \
-    %%(field_name)-%ds = %%(field)s(verbose_name='%%(label)s',
-                        default='%%(default)s')
+                user_data.code += """\
+
+    %%(field_name)-%ds = %%(field)s(
+        verbose_name='%%(label)s',
+        default='%%(default)s')
 """ % user_data.longest_name % vars()
             else:
                 raise TypeError("Widget '%s' not allowed" % widget)
@@ -309,8 +323,8 @@ class %(classname)sUser(models.Model):
 
     newcode += """\
 
-     user = models.ForeignKey(User)
-     result = models.TextField(blank=True)
+    user = models.ForeignKey(User)
+    result = models.TextField(blank=True)
 
 
 class %(classname)sUserForm(ModelForm):

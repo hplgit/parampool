@@ -61,7 +61,7 @@ from %(compute_function_file)s import %(compute_function_name)s as compute_funct
     if menu:
         code += '''
 # Menu object
-from %(menu_function_file)s import %(menu_function_name)s
+from %(menu_function_file)s import %(menu_function_name)s as menu_function
 menu = menu_function()
 ''' % vars()
 
@@ -102,7 +102,7 @@ def index(request):
                                 destination.write(chunk)
                     else:
                         if field.name not in ("user", "result"):
-                            menu.set_value(field.name, field.data)
+                            data_item = menu.set_value(field.name, field.data)
 
                 f = form.save(commit=False)
                 result = compute(menu)

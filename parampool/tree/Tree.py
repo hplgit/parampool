@@ -85,7 +85,7 @@ class Tree:
         tree_path=None,   # list of parent subtree names
         subtree=None,     # subtree to invoke
         user_data=None,   # users data - for in-place manipulation
-        verbose=True):    # True: write out the traversal
+        verbose=False):   # True: write out the traversal
         if subtree is None:
             subtree = self.root
         if tree_path is None:
