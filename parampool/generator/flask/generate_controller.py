@@ -127,7 +127,10 @@ def index():
         # Send data to Menu object
         for field in form:
             if field.data:
-                data_item = menu.set_value(field.name, field.data)
+                try:
+                    data_item = menu.set_value(field.name, field.data)
+                except ValueError:
+                    data_item = menu.set_value(' '.join(field.name.split('_')), field.data)
 
         result = compute(menu)
 '''

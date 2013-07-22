@@ -97,6 +97,14 @@ def generate_model_menu(compute_function, classname, outfile, menu):
         elif widget == "select":
             if item.data.has_key("options"):
                 choices = item.data["options"]
+                # Create a list of two-tuples if
+                # choices is just a list of strings
+                if not isinstance(choices[0], (list, tuple)):
+                    tmp = []
+                    for choice in choices:
+                        tmp.append((choice, choice))
+                    choices = tmp
+
                 user_data.code += """\
 
     %%(field_name)-%ds = wtf.SelectField(
