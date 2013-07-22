@@ -101,7 +101,7 @@ def index(request):
                             for chunk in field.data.chunks():
                                 destination.write(chunk)
                     else:
-                        if field.name not in ("user", "result"):
+                        if field.name not in ("user", "result", "comments"):
                             data_item = menu.set_value(field.name, field.data)
 
                 f = form.save(commit=False)
@@ -266,7 +266,7 @@ to see the results.""")
             form = %(classname)sUserForm(data)
             if form.is_valid():
                 for field in form:
-                    if field.name not in ("user", "result"):
+                    if field.name not in ("user", "result", "comments"):
                         menu.set_value(field.name, field.data)
                 f = form.save(commit=False)
                 result = compute(menu)
@@ -519,6 +519,22 @@ def compute(form):
 
     if login:
         code += '''
+def add_comment(request):
+    if request.method == 'POST':
+        try:
+            objects = %(classname)sUser.objects.filter(user=request.user)
+            if len(objects) > 0:
+                instance = objects[len(objects)-1]
+                instance.delete()
+                form = %(classname)sUserForm(instance=instance)
+                f = form.save(commit=False)
+                f.comments = request.POST.get("comments", None)
+                f.save()
+                form = %(classname)sForm(instance=instance)
+                result = instance.result
+        except:
+            pass
+    return HttpResponseRedirect("/")
 
 def create_login(request):
     """
@@ -580,7 +596,10 @@ def old(request):
             while counter >= 0:
                 instance = objects[counter]
                 forms.append(%(classname)sForm(instance=instance))
-                results.append(instance.result)
+                result = instance.result
+                if instance.comments:
+                    result += "<h3>Comments</h3>" + instance.comments
+                results.append(result)
                 counter -= 1
         except:
             pass
