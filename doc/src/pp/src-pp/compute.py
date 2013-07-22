@@ -561,16 +561,16 @@ def plot_menu(menu, name='Plot parameters'):
 
 
 def compute_motion_and_forces_with_menu(menu):
-    initial_velocity = menu.get('Initial velocity')
-    initial_angle = menu.get('Initial angle')
-    spinrate = menu.get('Spin rate')
-    w = menu.get('Wind velocity')
-    m = menu.get('Mass')
-    R = menu.get('Radius')
-    method = menu.get('Method')
-    dt = menu.get('Time step')
-    plot_simplified_motion = menu.get('Plot simplified motion'),
-    new_plot = menu.get('New plot')
+    initial_velocity = menu.get('Initial velocity').get_value()
+    initial_angle = menu.get('Initial angle').get_value()
+    spinrate = menu.get('Spinrate').get_value()
+    w = menu.get('Wind velocity').get_value()
+    m = menu.get('Mass').get_value()
+    R = menu.get('Radius').get_value()
+    method = menu.get('Method').get_value()
+    dt = menu.get('Time step').get_value()
+    plot_simplified_motion = menu.get('Plot simplified motion').get_value()
+    new_plot = menu.get('New plot').get_value()
     return compute_motion_and_forces2(
         initial_velocity, initial_angle, spinrate, w,
         m, R, method, dt, plot_simplified_motion,
