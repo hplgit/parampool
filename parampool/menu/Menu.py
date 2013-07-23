@@ -26,8 +26,8 @@ class Menu(Tree):
 
     def get(self, data_item_name):
         """
-        Return DataItem object corresponding to `data_item_name`,
-        which can be a uniqu valid abbreviation of the full name.
+        Return ``DataItem`` object corresponding to `data_item_name`,
+        which can be a unique valid abbreviation of the full name.
         """
         try:
             return get_leaf(data_item_name, self.paths2data_items)
@@ -35,6 +35,21 @@ class Menu(Tree):
             raise ValueError('%s is not a unique data item name '
                   'among\n%s' % (data_item_name,
                   ', '.join(self.paths2data_items.keys())))
+
+    def get_value(self, data_item_name, default=None):
+        """
+        Return value set in ``DataItem`` object with name `data_item_name`.
+        If name is not found, an exception is raised if `default` is None,
+        otherwise `default` is returned.
+        """
+        try:
+            data_item = self.get(data_item_name)
+            return data_item.get_value()
+        except ValueError, e:
+            if default is None:
+                raise e
+            else:
+                return default
 
     def set_value(self, data_item_name, value):
         """

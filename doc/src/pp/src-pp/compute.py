@@ -565,16 +565,16 @@ def plot_menu(menu, name='Plot parameters'):
 
 
 def compute_motion_and_forces_with_menu(menu):
-    initial_velocity = menu.get('Initial velocity')
-    initial_angle = menu.get('Initial angle')
-    spinrate = menu.get('Spin rate')
-    w = menu.get('Wind velocity')
-    m = menu.get('Mass')
-    R = menu.get('Radius')
-    method = menu.get('Method')
-    dt = menu.get('Time step')
-    plot_simplified_motion = menu.get('Plot simplified motion'),
-    new_plot = menu.get('New plot')
+    initial_velocity = menu.get_value('Initial velocity')
+    initial_angle = menu.get_value('Initial angle')
+    spinrate = menu.get_value('Spin rate')
+    w = menu.get_value('Wind velocity')
+    m = menu.get_value('Mass')
+    R = menu.get_value('Radius')
+    method = menu.get_value('Method')
+    dt = menu.get_value('Time step')
+    plot_simplified_motion = menu.get_value('Plot simplified motion'),
+    new_plot = menu.get_value('New plot')
     #from parampool.menu.UI import write_menu_to_file
     #write_menu_to_file(menu, filename=...)
     return compute_motion_and_forces2(

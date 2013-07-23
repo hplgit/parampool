@@ -57,12 +57,25 @@ def generate_template_std(classname, outfile, doc='', login=False):
     {%% if result != None %%}
       <h2>Results:</h2>
         {{ result|safe }}
-    {%% endif %%}
+''' % vars()
+
+    if login:
+        code += '''
+        {% if not user.is_anonymous %}
+        <h3>Comments:</h3>
+        <form method=post action="/add_comment/">{% csrf_token %}
+            <textarea name="comments" rows="4" cols="40"></textarea>
+            <p><input type=submit value=Add>
+        </form>
+        {% endif %}
+'''
+    code +='''
+    {% endif %}
   </td>
   </tr>
   </table>
   </body>
-</html>''' % vars()
+</html>'''
 
     if outfile is None:
         return code
@@ -130,12 +143,25 @@ def generate_template_dtree(compute_function, classname,
       {% if result != None %}
         <h2>Result:</h2>
         {{ result|safe }}
+"""
+
+    if login:
+        post_code += '''
+        {% if not user.is_anonymous %}
+        <h3>Comments:</h3>
+        <form method=post action="/add_comment/">{% csrf_token %}
+          <textarea name="comments" rows="4" cols="40"></textarea>
+          <p><input type=submit value=Add>
+        </form>
+        {% endif %}
     {% endif %}
-    </td>
-    </tr>
-    </table>
+'''
+    post_code +='''
+  </td>
+  </tr>
+  </table>
   </body>
-</html>"""
+</html>'''
 
     def leaf_func(tree_path, level, item, user_data):
         id = user_data.id

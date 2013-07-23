@@ -325,6 +325,7 @@ class %(classname)sUser(models.Model):
 
     user = models.ForeignKey(User)
     result = models.TextField(blank=True)
+    comments = models.TextField(blank=True)
 
 
 class %(classname)sUserForm(ModelForm):
