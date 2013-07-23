@@ -42,7 +42,7 @@ def generate_views(compute_function,
     code = '''\
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from %(filename_models)s import %(classname)sForm
+from %(filename_models)s import %(classname)s, %(classname)sForm
 ''' % vars()
     if login:
         code += '''\
@@ -94,7 +94,7 @@ def index(request):
             form = %(classname)sUserForm(data)
             if form.is_valid():
                 for field in form:
-                    name = field.verbose_name.strip()
+                    name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
                     value = field.data
                     if field.name in request.FILES:
                         filename = field.data.name
@@ -124,14 +124,16 @@ to see the results.""")
         else:
             if form.is_valid():
                 for field in form:
+                    name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
+                    value = field.data
                     if field.name in request.FILES:
                         filename = field.data.name
-                        menu.set_value(field.name, filename)
+                        menu.set_value(name, filename)
                         with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
                             for chunk in field.data.chunks():
                                 destination.write(chunk)
                     else:
-                        menu.set_value(field.name, field.data)
+                        menu.set_value(name, value)
 
                 result = compute(menu)
 
@@ -159,14 +161,16 @@ to see the results.""")
     form = %(classname)sForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
         for field in form:
+            name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
+            value = field.data
             if field.name in request.FILES:
                 filename = field.data.name
-                menu.set_value(field.name, filename)
+                menu.set_value(name, filename)
                 with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
                     for chunk in field.data.chunks():
                         destination.write(chunk)
             else:
-                menu.set_value(field.name, field.data)
+                menu.set_value(name, value)
         result = compute(menu)
         form = %(classname)sForm(request.POST, request.FILES)
 ''' % vars()
@@ -269,7 +273,9 @@ to see the results.""")
             if form.is_valid():
                 for field in form:
                     if field.name not in ("user", "result", "comments"):
-                        menu.set_value(field.name, field.data)
+                        name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
+                        value = field.data
+                        menu.set_value(name, value)
                 f = form.save(commit=False)
                 result = compute(menu)
                 if user.email:
@@ -288,7 +294,9 @@ to see the results.""")
         else:
             if form.is_valid():
                 for field in form:
-                    menu.set_value(field.name, field.data)
+                    name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
+                    value = field.data
+                    menu.set_value(name, value)
                 result = compute(menu)
 
         form = %(classname)sForm(request.POST, request.FILES)
@@ -316,7 +324,9 @@ to see the results.""")
     form = %(classname)sForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         for field in form:
-            menu.set_value(field.name, field.data)
+            name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
+            value = field.data
+            menu.set_value(name, value)
         result = compute(menu)
         form = %(classname)sForm(request.POST)
 ''' % vars()
