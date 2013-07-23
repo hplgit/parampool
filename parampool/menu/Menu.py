@@ -1,6 +1,6 @@
 """
 Representation of a menu tree.
-class Menu wraps class Tree and makes that class more suitable
+class ``Menu`` wraps class ``Tree`` and makes that class more suitable
 for menus by renaming methods and adding functionality.
 """
 from parampool.tree.SubTree import SubTree
@@ -15,6 +15,12 @@ class Menu(Tree):
             self.level_name[level].replace('tree', 'menu')
 
     def add_data_item(self, **data_item_attributes):
+        """
+        Add a new ``DataItem`` object at the current location
+        in the menu tree. The keyword arguments sets various
+        attributes in the data item. At least ``name`` must
+        be given.
+        """
         self.add_leaf(DataItem(**data_item_attributes))
 
     submenu = Tree.subtree
@@ -53,7 +59,7 @@ class Menu(Tree):
 
     def set_value(self, data_item_name, value):
         """
-        Set value of DataItem object corresponding to `data_item_name`,
+        Set value of ``DataItem`` object corresponding to `data_item_name`,
         which can be a uniqu valid abbreviation of the full name.
         """
         data_item = self.get(data_item_name)

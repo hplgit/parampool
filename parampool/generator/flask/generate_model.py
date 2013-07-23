@@ -32,7 +32,8 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             user_data.code += """\
 
     %%(field_name)-%ds = html5.IntegerField(
-        u'%%(label)s',
+        label=u'%%(label)s',
+        description=u'%%(label)s',
         default=%%(default)s,
         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
@@ -47,7 +48,8 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             user_data.code += """\
 
     %%(field_name)-%ds = FloatField(
-        u'%%(label)s',
+        label=u'%%(label)s',
+        description=u'%%(label)s',
         default=%%(default)g,
         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
@@ -65,7 +67,8 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             user_data.code += """\
 
     %%(field_name)-%ds = FloatRangeField(
-        u'%%(label)s',
+        label=u'%%(label)s',
+        description=u'%%(label)s',
         default=%%(default)g,
         onchange="showValue(this.value)",
         min=%%(minvalue)g, max=%%(maxvalue)g,
@@ -78,7 +81,9 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                 raise TypeError("Cannot create a range without min/max values")
             user_data.code += """\
 
-    %%(field_name)-%ds = IntegerRangeField(u'%%(label)s',
+    %%(field_name)-%ds = IntegerRangeField(
+        label=u'%%(label)s',
+        description=u'%%(label)s',
         default=%%(default)g,
         onchange="showValue(this.value)",
         min=%%(minvalue)g, max=%%(maxvalue)g,
@@ -90,25 +95,23 @@ def generate_model_menu(compute_function, classname, outfile, menu):
             user_data.code += """\
 
     %%(field_name)-%ds = wtf.FileField(
-        u'%%(label)s',
+        label=u'%%(label)s',
+        description=u'%%(label)s',
         validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()
 
         elif widget == "select":
             if item.data.has_key("options"):
                 choices = item.data["options"]
-                # Create a list of two-tuples if
-                # choices is just a list of strings
                 if not isinstance(choices[0], (list, tuple)):
-                    tmp = []
-                    for choice in choices:
-                        tmp.append((choice, choice))
-                    choices = tmp
+                    # Flask requires choices to be two-tuples
+                    choices = [(choice,choice) for choice in choices]
 
                 user_data.code += """\
 
     %%(field_name)-%ds = wtf.SelectField(
-        u'%%(label)s',
+        label=u'%%(label)s',
+        description=u'%%(label)s',
         default='%%(default)s',
         validators=[wtf.validators.InputRequired()],
         choices=%%(choices)s)
@@ -122,7 +125,9 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                 user_data.code += """\
 
     %%(field_name)-%ds = wtf.BooleanField(
-        u'%%(label)s', default=%%(default)s)
+        label=u'%%(label)s',
+        description=u'%%(label)s',
+        default=%%(default)s)
 """ % user_data.longest_name % vars()
 
         else:
@@ -138,7 +143,9 @@ def generate_model_menu(compute_function, classname, outfile, menu):
                 field = widget2field[widget]
                 user_data.code += """\
 
-    %%(field_name)-%ds = %%(field)s(u'%%(label)s',
+    %%(field_name)-%ds = %%(field)s(
+        label=u'%%(label)s',
+        description=u'%%(label)s',
         default='%%(default)s',
         validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()

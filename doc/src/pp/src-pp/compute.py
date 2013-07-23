@@ -221,6 +221,7 @@ def compute_motion_and_forces(
         plt.figure(motion_fig_no)
     except NameError:
         motion_fig_no = plt.figure().number
+        xmax = ymax = 0
     plt.plot(x, y, label='')
     xmax = max(xmax, x.max())
     ymax = max(ymax, y.max())
@@ -345,15 +346,16 @@ def compute_motion_and_forces2(
     x, y, t, g, d, l = solver(problem, method, dt)
 
     # Motion plot
-    global motion_fig_no, forces_fig_no, xmax, ymax
+    global motion_fig_no, forces_fig_no, xmax, ymax # reused from call to call
     if new_plot:
-        motion_fig_no = plt.figure().number
+        motion_fig_no = plt.figure().number  # make new figure and get its no
         forces_fig_no = plt.figure().number
         xmax = ymax = 0
     try:
-        plt.figure(motion_fig_no)
+        plt.figure(motion_fig_no)            # set plt to existing figure
     except NameError:
         motion_fig_no = plt.figure().number
+        xmax = ymax = 0
     plt.plot(x, y, label='')
     xmax = max(xmax, x.max())
     ymax = max(ymax, y.max())
@@ -413,8 +415,6 @@ def compute_motion_and_forces2(
 """ % vars()
     return html_text
 
-# 2DO: add unit and other attrs
-# fix layout of model.py
 
 def menu_definition_list():
     menu = [
@@ -567,13 +567,14 @@ def plot_menu(menu, name='Plot parameters'):
 def compute_motion_and_forces_with_menu(menu):
     initial_velocity = menu.get_value('Initial velocity')
     initial_angle = menu.get_value('Initial angle')
-    spinrate = menu.get_value('Spin rate')
+    spinrate = menu.get_value('Spinrate')
     w = menu.get_value('Wind velocity')
     m = menu.get_value('Mass')
     R = menu.get_value('Radius')
     method = menu.get_value('Method')
     dt = menu.get_value('Time step')
-    plot_simplified_motion = menu.get_value('Plot simplified motion'),
+    plot_simplified_motion = menu.get_value('Plot simplified motion')
+    print 'XXX', plot_simplified_motion
     new_plot = menu.get_value('New plot')
     #from parampool.menu.UI import write_menu_to_file
     #write_menu_to_file(menu, filename=...)

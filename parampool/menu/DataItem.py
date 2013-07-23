@@ -189,7 +189,8 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
             str2type2widget = {str:        "textline",
                                type(1.0):  "float",
                                type(1):    "integer",
-                               type(True): "checkbox"}
+                               type(True): "checkbox",
+                               str2bool:   "checkbox"}
             if self.data['str2type'] in str2type2widget.keys():
                 self.data['widget'] = str2type2widget[self.data['str2type']]
             else:

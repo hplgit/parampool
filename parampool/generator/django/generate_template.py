@@ -90,7 +90,6 @@ def generate_template_dtree(compute_function, classname,
     # TODO: Support for right align in 'parent' functions
     from parampool.generator.flask.latex_symbols import \
          get_symbol, symbols_same_size
-    from progressbar import ProgressBar, Percentage, Bar, ETA, RotatingMarker
     import inspect
     args = inspect.getargspec(compute_function).args
     app_dir = outfile.split("templates")[0]
@@ -139,24 +138,24 @@ def generate_template_dtree(compute_function, classname,
     <p><input type=submit value=Compute></form></p>
     </td>
 
-    <td valign="top">
-      {% if result != None %}
-        <h2>Result:</h2>
-        {{ result|safe }}
+  <td valign="top">
+    {% if result != None %}
+      <h2>Result:</h2>
+      {{ result|safe }}
 """
 
     if login:
         post_code += '''
-        {% if not user.is_anonymous %}
-        <h3>Comments:</h3>
-        <form method=post action="/add_comment/">{% csrf_token %}
-          <textarea name="comments" rows="4" cols="40"></textarea>
-          <p><input type=submit value=Add>
-        </form>
-        {% endif %}
-    {% endif %}
+      {% if not user.is_anonymous %}
+      <h3>Comments:</h3>
+      <form method=post action="/add_comment/">{% csrf_token %}
+        <textarea name="comments" rows="4" cols="40"></textarea>
+        <p><input type=submit value=Add>
+      </form>
+      {% endif %}
 '''
     post_code +='''
+    {% endif %}
   </td>
   </tr>
   </table>
@@ -173,8 +172,9 @@ def generate_template_dtree(compute_function, classname,
 {%% for error in form.%(field_name)s.errors %%} <err> {{error}} </err> \
 {%% endfor %%}{%% endif %%} """ % vars()
 
-        user_data.pb.update(user_data.pbid)
-        user_data.pbid += 1
+        if hasattr(user_data, 'pb'):
+            user_data.pb.update(user_data.pbid)
+            user_data.pbid += 1
 
         if item.data.has_key("symbol"):
             symbol = item.data["symbol"]
@@ -190,11 +190,12 @@ def generate_template_dtree(compute_function, classname,
             showvalue = ""
 
         # Make label
-        label = ""
-        if item.data.has_key("help"):
-            label += item.data["help"]
-        if item.data.has_key("unit"):
-            label += " (" + item.data["unit"] + ")"
+        label = []
+        if 'help' in item.data:
+            label.append(item.data['help'])
+        if 'unit' in item.data:
+            label.append('Unit: ' + item.data['unit'])
+        label = ' '.join(label)
 
         if align == "right":
             line = '%(form)s<img src="%(imgsrc)s" />' % vars()
@@ -228,20 +229,26 @@ def generate_template_dtree(compute_function, classname,
         pbid = 0
         parent_id = [-1]
 
-    # Progressbar
-    widgets = ['Generating: ', Percentage(), ' ',
-               Bar(marker=RotatingMarker()), ' ', ETA()]
-    num_widgets = len(args) if menu is None else len(menu.paths2data_items)
-    pb = ProgressBar(widgets=widgets, maxval=num_widgets-1).start()
     codedata = CodeData()
-    codedata.pb = pb
     codedata.code = pre_code
+    # Display a progressbar if we have many data items
+    num_widgets = len(args) if menu is None else len(menu.paths2data_items)
+    display_progressbar = num_widgets > 20
+    if display_progressbar:
+        from progressbar import \
+             ProgressBar, Percentage, Bar, ETA, RotatingMarker
+        widgets = ['Generating: ', Percentage(), ' ',
+                   Bar(marker=RotatingMarker()), ' ', ETA()]
+        pb = ProgressBar(widgets=widgets, maxval=num_widgets-1).start()
+        codedata.pb = pb
     menu.traverse(callback_leaf=leaf_func,
           callback_subtree_start=subtree_start_func,
           callback_subtree_end=subtree_end_func,
           user_data=codedata,
           verbose=False)
-    pb.finish()
+    if display_progressbar:
+        pb.finish()
+
     code = codedata.code + post_code
     symbols_same_size(static_dir)
 

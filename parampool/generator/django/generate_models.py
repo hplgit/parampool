@@ -17,9 +17,10 @@ def generate_models_menu(compute_function, classname, outfile, menu):
         default = item.data["default"]
 
         # Make label
-        label = " "
+        label = ""
         if 'name' in item.data:
             label += item.data['name']
+        verbose_name = ' ' + label  # space avoids upper case first char
 
         if 'minmax' in item.data:
             minvalue = item.data['minmax'][0]
@@ -39,7 +40,7 @@ def generate_models_menu(compute_function, classname, outfile, menu):
             user_data.code += """\
 
     %%(field_name)-%ds = models.IntegerField(
-        verbose_name='%%(label)s',
+        verbose_name='%%(verbose_name)s',
         default=%%(default)g)
 """ % user_data.longest_name % vars()
             # TODO: Minmax for integers
@@ -51,7 +52,7 @@ def generate_models_menu(compute_function, classname, outfile, menu):
                 user_data.code += """\
 
     %%(field_name)-%ds = MinMaxFloat(
-        verbose_name='%%(label)s',
+        verbose_name='%%(verbose_name)s',
         default=%%(default)g,
         min_value=%%(minvalue)g, max_value=%%(maxvalue)g)
 """ % user_data.longest_name % vars()
@@ -59,7 +60,7 @@ def generate_models_menu(compute_function, classname, outfile, menu):
                 user_data.code += """\
 
     %%(field_name)-%ds = models.FloatField(
-        verbose_name='%%(label)s',
+        verbose_name='%%(verbose_name)s',
         default=%%(default)g)
 """ % user_data.longest_name % vars()
 
@@ -67,20 +68,22 @@ def generate_models_menu(compute_function, classname, outfile, menu):
             user_data.code += """\
 
     %%(field_name)-%ds = models.FileField(
-        verbose_name='%%(label)s',
+        verbose_name='%%(verbose_name)s',
         upload_to='uploads/')
 """ % user_data.longest_name % vars()
 
         elif widget == "select":
             if item.data.has_key("options"):
-                # Django requires choices to be two-tuples
-                choices = [(c,c) for c in item.data["options"]]
+                choices = item.data["options"]
+                if not isinstance(choices[0], (list, tuple)):
+                    # Django requires choices to be two-tuples
+                    choices = [(choice,choice) for choice in choices]
                 # FIXME: TextField is currently hardcoded
                 # Maybe use default_field.
                 user_data.code += """\
 
     %%(field_name)-%ds = models.TextField(
-        verbose_name='%%(label)s',
+        verbose_name='%%(verbose_name)s',
         default='%%(default)s',
         choices=%%(choices)s)
 """ % user_data.longest_name % vars()
@@ -93,7 +96,7 @@ def generate_models_menu(compute_function, classname, outfile, menu):
             user_data.code += """\
 
     %%(field_name)-%ds = models.BooleanField(
-        verbose_name='%%(label)s',
+        verbose_name='%%(verbose_name)s',
         default=%%(default)s)
 """ % user_data.longest_name % vars()
 
@@ -101,7 +104,7 @@ def generate_models_menu(compute_function, classname, outfile, menu):
             user_data.code += """\
 
     %%(field_name)-%ds = models.CharField(
-        verbose_name='%%(label)s',
+        verbose_name='%%(verbose_name)s',
         default='%%(default)s',
         max_length=50)
 """ % user_data.longest_name % vars()
@@ -122,7 +125,7 @@ def generate_models_menu(compute_function, classname, outfile, menu):
                 user_data.code += """\
 
     %%(field_name)-%ds = %%(field)s(
-        verbose_name='%%(label)s',
+        verbose_name='%%(verbose_name)s',
         default='%%(default)s')
 """ % user_data.longest_name % vars()
             else:

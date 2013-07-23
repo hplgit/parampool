@@ -127,10 +127,9 @@ def index():
         # Send data to Menu object
         for field in form:
             if field.data:
-                try:
-                    data_item = menu.set_value(field.name, field.data)
-                except ValueError:
-                    data_item = menu.set_value(' '.join(field.name.split('_')), field.data)
+                name = field.description
+                value = field.data
+                data_item = menu.set_value(name, value)
 
         result = compute(menu)
 '''
@@ -151,22 +150,21 @@ def index():
         code += '''\
 def compute(menu):
     """
-    Generic function for compute_function with values
+    Generic function for calling compute_function with values
     taken from the menu object.
     Return the output from the compute_function.
     """
 
-    # If compute_function only has one argument (named menu),
-    # send only the menu object itself to the function.
+    # compute_function must have only one positional argument
+    # named menu
     import inspect
     arg_names = inspect.getargspec(compute_function).args
     if len(arg_names) == 1 and arg_names[0] == "menu":
-        return compute_function(menu)
-
-    # Else, extract values from menu and send them to
-    # compute_function.
-    values = [menu.get(name).get_value() for name in arg_names]
-    return compute_function(*values)
+        result = compute_function(menu)
+    else:
+        raise TypeError('%s(%s) can only have one argument named "menu"'
+                        % (compute_function_name, ', '.join(arg_names)))
+    return result
 '''
     else:
         code += '''\
@@ -251,7 +249,7 @@ def compute(form):
                     print 'Could not convert text %s to %s for argument %s' % (form_data[i], type(defaults[i]), arg_names[i])
                     print 'when calling the compute function...'
 '''
-    code += '''
+        code += '''
     # Run computations
     result = compute_function(*form_data)
     return result

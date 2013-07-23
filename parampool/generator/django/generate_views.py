@@ -94,15 +94,17 @@ def index(request):
             form = %(classname)sUserForm(data)
             if form.is_valid():
                 for field in form:
+                    name = field.verbose_name.strip()
+                    value = field.data
                     if field.name in request.FILES:
                         filename = field.data.name
-                        menu.set_value(field.name, filename)
+                        data_item = menu.set_value(name, filename)
                         with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
                             for chunk in field.data.chunks():
                                 destination.write(chunk)
                     else:
                         if field.name not in ("user", "result", "comments"):
-                            data_item = menu.set_value(field.name, field.data)
+                            data_item = menu.set_value(name, value)
 
                 f = form.save(commit=False)
                 result = compute(menu)
@@ -398,22 +400,21 @@ to see the results.""")
         code += '''
 def compute(menu):
     """
-    Generic function for compute_function with values
+    Generic function for calling compute_function with values
     taken from the menu object.
     Return the output from the compute_function.
     """
 
-    # If compute_function only has one argument (named menu),
-    # send only the menu object itself to the function.
+    # compute_function must have only one positional argument
+    # named menu
     import inspect
     arg_names = inspect.getargspec(compute_function).args
     if len(arg_names) == 1 and arg_names[0] == "menu":
-        return compute_function(menu)
-
-    # Else, extract values from menu and send them to
-    # compute_function.
-    values = [menu.get(name).get_value() for name in arg_names]
-    return compute_function(*values)
+        result = compute_function(menu)
+    else:
+        raise TypeError('%s(%s) can only have one argument named "menu"'
+                        % (compute_function_name, ', '.join(arg_names)))
+    return result
 '''
 
     else:
