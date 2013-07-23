@@ -451,7 +451,11 @@ def menu_definition_list():
             ],
         ]
     from parampool.menu.UI import listtree2Menu
-    return listtree2Menu(menu)
+    menu = listtree2Menu(menu)
+    # from parampool.menu.UI import load_values_from_file, load_values_from_command_line
+    #menu = load_values_from_file(menu, command_line_option='--menufile')
+    #menu = load_values_from_command_line(menu)
+    return menu
 
 def menu_definition_api():
     from parampool.Menu import Menu
@@ -571,6 +575,8 @@ def compute_motion_and_forces_with_menu(menu):
     dt = menu.get('Time step')
     plot_simplified_motion = menu.get('Plot simplified motion'),
     new_plot = menu.get('New plot')
+    #from parampool.menu.UI import write_menu_to_file
+    #write_menu_to_file(menu, filename=...)
     return compute_motion_and_forces2(
         initial_velocity, initial_angle, spinrate, w,
         m, R, method, dt, plot_simplified_motion,
