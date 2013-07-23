@@ -126,10 +126,9 @@ def index():
         code += '''
         # Send data to Menu object
         for field in form:
-            if field.data:
-                name = field.description
-                value = field.data
-                data_item = menu.set_value(name, value)
+            name = field.description
+            value = field.data
+            data_item = menu.set_value(name, value)
 
         result = compute(menu)
 '''
