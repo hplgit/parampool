@@ -1,19 +1,19 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from compute_drag_free_motion_plot2_models.html import DragFreeMotionPlot2Form
-from compute import compute_drag_free_motion_plot2 as compute_function
+from compute_motion_and_forces_models import MotionAndForcesForm
+from compute import compute_motion_and_forces as compute_function
 
 def index(request):
     result = None
 
-    form = DragFreeMotionPlot2Form(request.POST or None)
+    form = MotionAndForcesForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         form = form.save(commit=False)
         result = compute(form)
-        form = DragFreeMotionPlot2Form(request.POST or None)
+        form = MotionAndForcesForm(request.POST or None)
 
     return render_to_response(
-        "compute_drag_free_motion_plot2_index.html",
+        "compute_motion_and_forces_index.html",
         {"form": form,
          "result": result,
 

@@ -1,26 +1,39 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from compute_drag_free_landing_models.html import DragFreeLandingForm
-from compute import compute_drag_free_landing as compute_function
+from compute_average_models import AverageForm
+from compute import compute_average as compute_function
+
+import os
+UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
+if not os.path.isdir(UPLOAD_DIR):
+    os.mkdir(UPLOAD_DIR)
 
 def index(request):
     result = None
 
-    form = DragFreeLandingForm(request.POST or None)
+    filename = None
+    form = AverageForm(request.POST or None, request.FILES or None)
     if request.method == 'POST' and form.is_valid():
+        for field in form:
+            if field.name in request.FILES:
+                filename = field.data.name
+                with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
+                    for chunk in field.data.chunks():
+                        destination.write(chunk)
         form = form.save(commit=False)
-        result = compute(form)
-        form = DragFreeLandingForm(request.POST or None)
+        request.session["filename"] = filename
+        result = compute(form, request)
+        form = AverageForm(request.POST, request.FILES)
 
     return render_to_response(
-        "compute_drag_free_landing_index.html",
+        "compute_average_index.html",
         {"form": form,
          "result": result,
 
         },
         context_instance=RequestContext(request))
 
-def compute(form):
+def compute(form, request):
 
     """
     Generic function for compute_function with arguments
@@ -32,9 +45,13 @@ def compute(form):
     arg_names = inspect.getargspec(compute_function).args
 
 
-    # Extract values from form
-    form_data = [getattr(form, name) for name in arg_names
-                 if hasattr(form, name)]
+    form_data = []
+    for name in arg_names:
+        if name != "filename":
+            if hasattr(form, name):
+                form_data.append(getattr(form, name))
+        else:
+            form_data.append(request.session.get("filename"))
 
     defaults  = inspect.getargspec(compute_function).defaults
 

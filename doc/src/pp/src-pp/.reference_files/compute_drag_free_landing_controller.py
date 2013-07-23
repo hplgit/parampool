@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, session
 from compute import compute_drag_free_landing as compute_function
-from compute_drag_free_landing_model.html import DragFreeLanding
+from compute_drag_free_landing_model import DragFreeLanding
 
 # Application object
 app = Flask(__name__)

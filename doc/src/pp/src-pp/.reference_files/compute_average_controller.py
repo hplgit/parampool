@@ -1,23 +1,51 @@
 import os
 from flask import Flask, render_template, request, session
-from compute import compute_motion_and_forces as compute_function
-from compute_motion_and_forces_model.html import MotionAndForces
+from compute import compute_average as compute_function
+from compute_average_model import Average
+from werkzeug import secure_filename
 
 # Application object
 app = Flask(__name__)
 
+# Allowed file types for file upload
+ALLOWED_EXTENSIONS = set(['txt', 'dat', 'npy'])
+
+# Relative path of folder for uploaded files
+UPLOAD_DIR = 'uploads/'
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
+app.secret_key = 'MySecretKey'
+
+if not os.path.isdir(UPLOAD_DIR):
+    os.mkdir(UPLOAD_DIR)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
 # Path to the web application
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    form = MotionAndForces(request.form)
-    if request.method == 'POST' and form.validate():
+    form = Average(request.form)
+    if request.method == 'POST':
+
+        # Save uploaded file if it exists and is valid
+        if request.files:
+            file = request.files[form.filename.name]
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                session["filename"] = filename
+            else:
+                session["filename"] = None
+        else:
+            session["filename"] = None
 
         result = compute(form)
 
     else:
         result = None
 
-    return render_template("compute_motion_and_forces_view.html", form=form, result=result)
+    return render_template("compute_average_view.html", form=form, result=result)
 
 def compute(form):
     """
@@ -33,7 +61,13 @@ def compute(form):
     form_values = [getattr(form, name) for name in arg_names
                    if hasattr(form, name)]
 
-    form_data = [value.data for value in form_values]
+    import wtforms
+    form_data = []
+    for value in form_values:
+        if not isinstance(value, wtforms.fields.simple.FileField):
+            form_data.append(value.data)
+        else:
+            form_data.append(session["filename"])
 
     defaults  = inspect.getargspec(compute_function).defaults
 

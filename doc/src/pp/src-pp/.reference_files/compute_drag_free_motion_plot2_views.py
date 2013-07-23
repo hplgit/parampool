@@ -1,39 +1,26 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from compute_average_models.html import AverageForm
-from compute import compute_average as compute_function
-
-import os
-UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")
-if not os.path.isdir(UPLOAD_DIR):
-    os.mkdir(UPLOAD_DIR)
+from compute_drag_free_motion_plot2_models import DragFreeMotionPlot2Form
+from compute import compute_drag_free_motion_plot2 as compute_function
 
 def index(request):
     result = None
 
-    filename = None
-    form = AverageForm(request.POST or None, request.FILES or None)
+    form = DragFreeMotionPlot2Form(request.POST or None)
     if request.method == 'POST' and form.is_valid():
-        for field in form:
-            if field.name in request.FILES:
-                filename = field.data.name
-                with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
-                    for chunk in field.data.chunks():
-                        destination.write(chunk)
         form = form.save(commit=False)
-        request.session["filename"] = filename
-        result = compute(form, request)
-        form = AverageForm(request.POST, request.FILES)
+        result = compute(form)
+        form = DragFreeMotionPlot2Form(request.POST or None)
 
     return render_to_response(
-        "compute_average_index.html",
+        "compute_drag_free_motion_plot2_index.html",
         {"form": form,
          "result": result,
 
         },
         context_instance=RequestContext(request))
 
-def compute(form, request):
+def compute(form):
 
     """
     Generic function for compute_function with arguments
@@ -45,13 +32,9 @@ def compute(form, request):
     arg_names = inspect.getargspec(compute_function).args
 
 
-    form_data = []
-    for name in arg_names:
-        if name != "filename":
-            if hasattr(form, name):
-                form_data.append(getattr(form, name))
-        else:
-            form_data.append(request.session.get("filename"))
+    # Extract values from form
+    form_data = [getattr(form, name) for name in arg_names
+                 if hasattr(form, name)]
 
     defaults  = inspect.getargspec(compute_function).defaults
 

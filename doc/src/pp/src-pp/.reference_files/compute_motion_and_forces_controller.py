@@ -1,40 +1,39 @@
-from django.shortcuts import render_to_response
-from django.template import RequestContext
-from compute_drag_free_motion_plot_models.html import DragFreeMotionPlotForm
-from compute import compute_drag_free_motion_plot as compute_function
+import os
+from flask import Flask, render_template, request, session
+from compute import compute_motion_and_forces as compute_function
+from compute_motion_and_forces_model import MotionAndForces
 
-def index(request):
-    result = None
+# Application object
+app = Flask(__name__)
 
-    form = DragFreeMotionPlotForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        form = form.save(commit=False)
+# Path to the web application
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    form = MotionAndForces(request.form)
+    if request.method == 'POST' and form.validate():
+
         result = compute(form)
-        form = DragFreeMotionPlotForm(request.POST or None)
 
-    return render_to_response(
-        "compute_drag_free_motion_plot_index.html",
-        {"form": form,
-         "result": result,
+    else:
+        result = None
 
-        },
-        context_instance=RequestContext(request))
+    return render_template("compute_motion_and_forces_view.html", form=form, result=result)
 
 def compute(form):
-
     """
     Generic function for compute_function with arguments
-    taken from a form object (django.forms.ModelForm subclass).
+    taken from a form object (wtforms.Form subclass).
     Return the output from the compute_function.
     """
     # Extract arguments to the compute function
     import inspect
     arg_names = inspect.getargspec(compute_function).args
 
-
     # Extract values from form
-    form_data = [getattr(form, name) for name in arg_names
-                 if hasattr(form, name)]
+    form_values = [getattr(form, name) for name in arg_names
+                   if hasattr(form, name)]
+
+    form_data = [value.data for value in form_values]
 
     defaults  = inspect.getargspec(compute_function).defaults
 
@@ -48,8 +47,7 @@ def compute(form):
     import numpy
     for i in range(len(form_data)):
         if defaults[i] != "none":
-            #if isinstance(defaults[i], (str,bool,int,float)): # bool not ready
-            if isinstance(defaults[i], (str,int,float)):
+            if isinstance(defaults[i], (str,bool,int,float)):
                 pass  # special widgets for these types do the conversion
             elif isinstance(defaults[i], numpy.ndarray):
                 form_data[i] = numpy.array(eval(form_data[i]))
@@ -73,3 +71,6 @@ def compute(form):
     # Run computations
     result = compute_function(*form_data)
     return result
+
+if __name__ == '__main__':
+    app.run(debug=True)

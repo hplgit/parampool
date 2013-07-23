@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, session
-from compute import compute_drag_free_motion_plot2 as compute_function
-from compute_drag_free_motion_plot2_model.html import DragFreeMotionPlot2
+from compute import compute_drag_free_motion_plot as compute_function
+from compute_drag_free_motion_plot_model import DragFreeMotionPlot
 
 # Application object
 app = Flask(__name__)
@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Path to the web application
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    form = DragFreeMotionPlot2(request.form)
+    form = DragFreeMotionPlot(request.form)
     if request.method == 'POST' and form.validate():
 
         result = compute(form)
@@ -17,7 +17,7 @@ def index():
     else:
         result = None
 
-    return render_template("compute_drag_free_motion_plot2_view.html", form=form, result=result)
+    return render_template("compute_drag_free_motion_plot_view.html", form=form, result=result)
 
 def compute(form):
     """

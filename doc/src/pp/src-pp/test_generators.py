@@ -14,8 +14,8 @@ def _flask_tester(func):
     shutil.copy('compute.py', test_dir)
     os.chdir(test_dir)
     template = '%s_view.html' % func.__name__
-    controller = '%s_controller.html' % func.__name__
-    model = '%s_model.html' % func.__name__
+    controller = '%s_controller.py' % func.__name__
+    model = '%s_model.py' % func.__name__
     flask_generate(func,
                    default_field='FloatField',
                    filename_template=template,
@@ -42,8 +42,8 @@ def _django_tester(func):
     shutil.copy('compute.py', test_dir)
     os.chdir(test_dir)
     template = '%s_index.html' % func.__name__
-    views = '%s_views.html' % func.__name__
-    models = '%s_models.html' % func.__name__
+    views = '%s_views.py' % func.__name__
+    models = '%s_models.py' % func.__name__
     django_generate(func,
                     default_field='FloatField',
                     filename_template=template,
@@ -66,7 +66,7 @@ def _django_tester(func):
             original,
             generated,
             msg='failure in test ' + func.__name__)
-    # Test login.html, old.html, reg.html if they exist...
+        # Test login.html, old.html, reg.html if they exist...
     shutil.rmtree(test_dir)
 
 def test_compute_drag_free_landing():
