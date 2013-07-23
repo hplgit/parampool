@@ -78,12 +78,11 @@ def generate_models_menu(compute_function, classname, outfile, menu):
                 if not isinstance(choices[0], (list, tuple)):
                     # Django requires choices to be two-tuples
                     choices = [(choice,choice) for choice in choices]
-                # FIXME: TextField is currently hardcoded
-                # Maybe use default_field.
                 user_data.code += """\
 
-    %%(field_name)-%ds = models.TextField(
+    %%(field_name)-%ds = models.CharField(
         verbose_name='%%(verbose_name)s',
+        max_length=50,
         default='%%(default)s',
         choices=%%(choices)s)
 """ % user_data.longest_name % vars()

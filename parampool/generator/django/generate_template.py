@@ -168,8 +168,10 @@ def generate_template_dtree(compute_function, classname,
         name = item.name
         field_name = parampool.utils.legal_variable_name(name)
         form = """\
-&nbsp; {{ form.%(field_name)s }} {%% if form.%(field_name)s.errors %%} \
-{%% for error in form.%(field_name)s.errors %%} <err> {{error}} </err> \
+&nbsp; {%% spaceless %%} {{ form.%(field_name)s }} {%% endspaceless %%} \
+{%% if form.%(field_name)s.errors %%} \
+{%% for error in form.%(field_name)s.errors %%} \
+<err> {{error}} </err> \
 {%% endfor %%}{%% endif %%} """ % vars()
 
         if hasattr(user_data, 'pb'):
