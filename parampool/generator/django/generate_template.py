@@ -377,9 +377,11 @@ def zip_lists(a, b):
 
 def generate_template(compute_function, classname,
                       outfile, menu=None, login=False,
-                      MathJax=False):
+                      MathJax=False, doc=''):
     from parampool.generator.flask.generate_template import run_doconce_on_text
-    doc = run_doconce_on_text(compute_function.__doc__)
+    if doc == '':
+        # Apply doc string as documentation
+        doc = run_doconce_on_text(compute_function.__doc__)
 
     if 'MathJax.Hub.Config' in doc:
         MathJax = False  # no need to enable MathJax - it's in the doc HTML

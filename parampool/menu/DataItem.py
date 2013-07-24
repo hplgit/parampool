@@ -145,6 +145,11 @@ class DataItem:
 
         self._check_validity_of_data()
 
+        # Override widget if unit is given - then we need a text field
+        if 'unit' in self.data:
+            if 'widget' in self.data:
+                self.data['widget'] = 'textline'
+
         # Can be changed to False if a value other than str of correct
         # type is set. Thus no need to convert to the correct type.
         self._use_str2type = self.data.get("convert", True)
@@ -196,7 +201,6 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
                 self.data['widget'] = str2type2widget[self.data['str2type']]
             else:
                 self.data['widget'] = "textline" # default
-
 
         for attr in 'help', 'widget':
             if attr in self.data:

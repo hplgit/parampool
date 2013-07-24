@@ -619,14 +619,23 @@ Let us organize 10 input parameters into X submenus:
 
 2DO:
 
+ * units and text fields
+ * menu list: no doc
+ * menu API: add doc in `doc.html`
  * possibility for documentation in the top - new `doc` argument to generate,
    if None, use doc string, else valid HTML code, use it in menu example
- * units and text fields
  * ...
 
 ===== Specify a menu as a list =====
 
 ===== Specify a menu using an API =====
+
+===== Using LaTeX symbols in the menu =====
+
+===== Menu with other data structures =====
+
+filename and text field with special `str2type` conversion. Allow list
+syntax, but convert to array in `str2type` after list is eval'ed.
 
 
 ===== Animations =====
