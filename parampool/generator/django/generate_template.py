@@ -339,7 +339,7 @@ def generate_form_templates(outfile):
         <hr>
         <table>
             <tr>
-                <td valign="top" width="20%">
+                <td valign="top" width="30%">
                     <h3>Input</h3>
                     <table>
                     {% for field in form %}
@@ -347,12 +347,23 @@ def generate_form_templates(outfile):
                         <td>{{ field.value }}</td></tr>
                     {% endfor %}
                     </table>
-                    </td><td valign="top" width="80%">
+                    </td><td valign="top" width="60%">
                     <h3>Results</h3>
                     {{ result|safe }}
+                    </td><td valign="top" width="10%">
+                    <p>
+                    <form method="POST" action="/delete/{{ iterator.next }}/">{% csrf_token %}
+                <input type=submit value="Delete" title="Delete this post from database">
+            </form>
             </td></tr>
         </table>
         {% endfor %}
+        <hr>
+        <center>
+        <form method="POST" action="/delete/-1/">{% csrf_token %}
+            <input type=submit value="Delete all">
+        </form>
+        </center>
       {% else %}
           No previous simulations
       {% endif %}

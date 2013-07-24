@@ -615,11 +615,23 @@ def old(request):
         except:
             pass
 
-    data = zip(forms, results)
+    import itertools
+    iterator = itertools.count()
     return render_to_response("old.html",
             {"forms": forms,
-             "results": results},
+             "results": results,
+             "iterator": iterator},
             context_instance=RequestContext(request))
+
+def delete(request, id):
+    id = int(id)
+    objects = %(classname)sUser.objects.filter(user=request.user)
+    if id == -1:
+        objects.delete()
+    elif id in range(len(objects)):
+        instance = objects[len(objects)-id-1]
+        instance.delete()
+    return HttpResponseRedirect('/old/')
 ''' % vars()
 
     if outfile is None:

@@ -186,6 +186,7 @@ urlpatterns = patterns('',
     url(r'^login', '%(appname)s.views.login_func'),
     url(r'^logout', '%(appname)s.views.logout_func'),
     url(r'^old', '%(appname)s.views.old'),
+    url(r'^delete/(-?[0-9]+)', '%(appname)s.views.delete'),
     url(r'^add_comment', '%(appname)s.views.add_comment'),
 
 """ % vars())
