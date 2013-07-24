@@ -456,13 +456,14 @@ function goes as follows:
 <td align="center"> \( \omega \) </td>
 <td align="center"> \( w \)    </td>
 <td align="center"> \( m \)    </td>
+<td align="center"> \( R \)    </td>
 <td align="center"> method     </td>
 <td align="center"> \( \Delta t \) </td>
 <td align="center"> landing point </td>
 </tr>
-<tr><td> 5 </td><td> 45 </td><td> 0 </td> ...</tr>
-<tr><td> 5 </td><td> 45 </td><td> 0 </td> ...</tr>
-<tr><td> 5 </td><td> 45 </td><td> 0 </td> ...</tr>
+<tr><td align="right"> 5 </td><td align="right"> 45 </td> ...</tr>
+<tr><td align="right"> 5 </td><td align="right"> 45 </td> ...</tr>
+<tr><td align="right"> 5 </td><td align="right"> 45 </td> ...</tr>
 </table>
 </center>
 !ec
@@ -637,12 +638,15 @@ Let us organize 10 input parameters into X submenus:
 filename and text field with special `str2type` conversion. Allow list
 syntax, but convert to array in `str2type` after list is eval'ed.
 
+======= Advanced topics =======
+
+===== Login and archival of results =====
 
 ===== Animations =====
 
 ===== Python expressions as input =====
 
-This can only be done in menus unless the value of the parameter is a string (positional argument and default field as text, with explicit conversion).
+This can only be done in menus unless the value of the parameter is a string (positional argument or default field as text, with explicit conversion).
 
 Describe input as
 

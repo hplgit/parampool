@@ -1,7 +1,7 @@
 from Scientific.Physics.PhysicalQuantities import PhysicalQuantity as PQ
 from collections import OrderedDict
 import re, inspect, numpy
-from math import *  # enable eval to work with math functions
+from math import *  # enable eval to work with math functions (str2type=eval)
 
 class DataItem:
     """
@@ -157,6 +157,10 @@ class DataItem:
         self._values = [self.data['default']]
         self._assigned_value = False  # True if value from UI
 
+        import math
+        self.math_functions = [name for name in dir(math)
+                               if not name.startswith('_')]
+
     def _check_validity_of_data(self):
         if 'minmax' in self.data:
             attr = self.data['minmax']
@@ -209,6 +213,17 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
                                     self._signature(), attr,
                                     type(self.data[attr]))
 
+    def _has_math_expression(self, value):
+        if isinstance(value, str):
+            for operator in ['*', '+', '-', '/']:
+                if operator in value:
+                    if not value.strip().startswith('-'):
+                        return True
+            for math_function in self.math_functions:
+                if math_function in value:
+                    return True
+        return False
+
     def _process_value(self, value):
         """
         Perform unit conversion (if relevant), convert to string
@@ -227,13 +242,15 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
         if not 'str2type' in self.data:
             return value # cannot do any conversion
 
-        # No conversion of str2type is some string type
+        # No conversion needed if str2type is some string type
         if inspect.isclass(self.data['str2type']) and \
                issubclass(self.data['str2type'], basestring):
             return value
 
         # Otherwise, convert to registered type using str2type
-        if self.data['str2type'] == eval:
+        print 'XXX', self.name, value, type(value), self._has_math_expression(value)
+        if self.data['str2type'] == eval or \
+               self._has_math_expression(value):
             # Execute in some namespace?
             if 'namespace' in self.data:
                 value = eval(value, self.data['namespace'])
@@ -243,7 +260,7 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
                     # Note: this eval can handle math expressions
                     # like sin(pi/2) since this module imports all of
                     # the math module
-                except:
+                except Exception, e:
                     # value is a string
                     pass
         else:
@@ -286,6 +303,19 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
         Return converted value (float) if value with unit,
         otherwise just return value.
         """
+        # Is value an expression and a unit?
+        if self._has_math_expression(value):
+            if ' ' in value.strip():
+                # Space indicates that it might have a unit, let's try
+                # eval on first part
+                parts = value.split()
+                if len(parts) == 2:
+                    expression, unit = parts
+                    if self._has_math_expression(expression):
+                        # Evaluate expression and recreate value
+                        expression = eval(expression)
+                        value = str(expression) + ' ' + unit
+
         # Is value a number and a unit?
         number_with_unit = r'^\s*([Ee.0-9+-]+) +([A-Za-z0-9*/]+)\s*$'
         if re.search(number_with_unit, value):
@@ -304,9 +334,9 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
             else:
                 # No unit registered, register this one
                 self.data['unit'] = unit
-            value = q.getValue()  # always float
+            value = str(q.getValue())  # ensure str so we can do eval on math
         # else: just return value as it came in
-        return value              # float if with unit, otherwise str
+        return value
 
     def get(self, attribute_name, default=None):
         """

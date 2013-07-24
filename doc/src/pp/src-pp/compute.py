@@ -370,6 +370,7 @@ def compute_motion_and_forces(
         (latex_symbol(r'\omega'), spinrate),
         (latex_symbol('w'), w),
         (latex_symbol('m'), m),
+        (latex_symbol('R'), R),
         ('method', method),
         (latex_symbol(r'\Delta t'), dt),
         ('landing point', x[-1])]))
@@ -446,7 +447,7 @@ def compute_motion_and_forces(
         table += '<tr>'
         for variable in case:
             if isinstance(case[variable], float):
-                table += '<td> %.3g </td>' % case[variable]
+                table += '<td align="right"> %.3g </td>' % case[variable]
             else:
                 table += '<td> %-10s </td>' % case[variable]
         table += '</tr>\n'
