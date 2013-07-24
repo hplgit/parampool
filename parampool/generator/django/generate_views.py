@@ -423,7 +423,7 @@ def compute(menu):
         result = compute_function(menu)
     else:
         raise TypeError('%s(%s) can only have one argument named "menu"'
-                        % (compute_function_name, ', '.join(arg_names)))
+                        % (compute_function.__name__, ', '.join(arg_names)))
     return result
 '''
 
