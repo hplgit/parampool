@@ -94,10 +94,26 @@ def test_compute_average():
     _django_tester(func)
 
 def test_compute_motion_and_forces_with_menu():
-    from compute import compute_motion_and_forces as func, \
-         menu_definition_list as menu_function
+    from compute import compute_motion_and_forces_with_menu as func, \
+         menu_definition_list, menu_definition_api, \
+         menu_definition_api_with_separate_submenus
+    menu_function = menu_definition_list
     _flask_tester(func, menu_function)
     _django_tester(func, menu_function)
+
+    menu_function = menu_definition_api
+    _flask_tester(func, menu_function)
+    _django_tester(func, menu_function)
+
+    menu_function = menu_definition_api_with_separate_submenus
+    _flask_tester(func, menu_function)
+    _django_tester(func, menu_function)
+
+    # Test setting menu values
+    m = menu_function()
+    m.set_value('Radius', '0.11*100 cm')
+    v = m.get_value('Radius')
+    assert v == 0.11, 'Wrong value %s, not 0.11' % v
 
 
 if __name__ == '__main__':

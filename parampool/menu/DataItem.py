@@ -248,7 +248,6 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
             return value
 
         # Otherwise, convert to registered type using str2type
-        print 'XXX', self.name, value, type(value), self._has_math_expression(value)
         if self.data['str2type'] == eval or \
                self._has_math_expression(value):
             # Execute in some namespace?

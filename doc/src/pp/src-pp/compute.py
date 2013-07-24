@@ -414,7 +414,6 @@ def compute_motion_and_forces(
         plt.figure(forces_fig_no)
     except NameError:
         forces_fig_no = plt.figure().number
-    print 'XXX before plt.plot(x,d/g)'
     plt.plot(x, d/np.abs(g), label='drag vs gravity')
     if spinrate != 0:
         plt.plot(x, l/np.abs(g), label='lift vs gravity')
@@ -581,7 +580,6 @@ def menu_definition_api():
         name='New plot', default=True,
         help='Erase all old curves.')
     menu.update()
-    print menu
     return menu
 
 # Another version where we have different functions for creating
@@ -599,7 +597,6 @@ def menu_definition_api_with_separate_submenus():
     menu.change_submenu('..')
     menu = plot_menu(menu)
     menu.update()
-    print menu
     return menu
 
 def motion_menu(menu, name='Initial motion data'):

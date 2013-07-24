@@ -72,7 +72,7 @@ def assert_equal_text(text1, text2,
                       prefix_diff_files='tmp_diff',
                       msg=''):
     if msg != '' and msg[-1] not in ('.', '?', ':', ';', '!'):
-        msg = '.'
+        msg += '.'
     if msg != '':
         msg += '\n'
     msg += 'Load tmp_diff.html into a browser to see differences.'

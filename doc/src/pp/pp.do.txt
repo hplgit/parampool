@@ -620,12 +620,15 @@ Let us organize 10 input parameters into X submenus:
 
 2DO:
 
- * units and text fields
+ * units and text fields: Done
  * menu list: no doc
- * menu API: add doc in `doc.html`
- * possibility for documentation in the top - new `doc` argument to generate,
-   if None, use doc string, else valid HTML code, use it in menu example
- * ...
+ * menu API: add doc in `doc.html`, also show possibility to call
+
+!bc
+from parampool.generator.flask.generate_template import \
+     run_doconce_on_text
+doc = run_doconce_on_text(compute_function.__doc__)
+!ec
 
 ===== Specify a menu as a list =====
 
@@ -647,6 +650,7 @@ syntax, but convert to array in `str2type` after list is eval'ed.
 ===== Python expressions as input =====
 
 This can only be done in menus unless the value of the parameter is a string (positional argument or default field as text, with explicit conversion).
+Treat menu only - drop implementation for inspection of compute function.
 
 Describe input as
 

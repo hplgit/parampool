@@ -118,6 +118,8 @@ def test_Menu():
     m.data_item(name='item11', default=11)
     m.subtree('/sub2/sub3/sub4')
     m.data_item(name='item12', default=12)
+    m.update()
+
     reference = """\
 item1
 item2
@@ -137,6 +139,8 @@ sub menu "sub2" (level=0)
     subsub menu "sub5" (level=1)
         item11"""
     assert_equal_text(str(m), reference)
+
+    # Test setting values
     return m
 
 if __name__ == '__main__':
