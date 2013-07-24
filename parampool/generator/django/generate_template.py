@@ -314,8 +314,11 @@ def generate_form_templates(outfile):
     reg.write("""\
 <form method="post" action="">{% csrf_token %}
 <table>
-  {{form.as_table}}
-  <tr><td>&nbsp;</td><td><input type="submit" value="Create User" /></td></tr>
+    {{form.as_table}}
+    <tr><td>&nbsp;</td>
+    <td>
+    Leave the email field blank to avoid email notifications.
+    <br> <input type="submit" value="Create User" /></td></tr>
 </table>
 </form>
 {% for e in errors %}
