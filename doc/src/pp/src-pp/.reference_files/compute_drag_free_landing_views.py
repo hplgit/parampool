@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from compute_drag_free_landing_models import DragFreeLandingForm
+from compute_drag_free_landing_models import DragFreeLanding, DragFreeLandingForm
 from compute import compute_drag_free_landing as compute_function
 
 def index(request):

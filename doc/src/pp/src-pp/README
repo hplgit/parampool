@@ -1,0 +1,26 @@
+flask and django subdirectories contain specific examples.
+
+1:
+
+2:
+
+3:
+
+4:
+Full application with many input parameters. The returned HTML code
+has two embedded plots and a table of results.
+
+5:
+Application with a list and filename as input.
+
+menu1:
+Example on using a menu, defined in terms of a nested list.
+
+menu2:
+As menu1, but the menu is defined through the parampool.menu.Menu
+API.
+
+menu3:
+Almost as menu2, but the programming of the menu is distributed
+to different functions. Mathematical symbols for input variables
+are also defined as well as more help texts and unit specifications.

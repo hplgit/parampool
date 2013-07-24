@@ -13,7 +13,8 @@ def generate(compute_function,
              filename_controller='controller.py',
              overwrite_controller=False,
              filename_model='model.py',
-             overwrite_model=False):
+             overwrite_model=False,
+             MathJax=False):
     """
     Given a function `compute_function` that takes a series of
     arguments, generate a Flask web form where
@@ -86,7 +87,7 @@ rm -rf uploads/ templates/ static/ %(filename_controller)s %(filename_model)s *.
     f.close()
 
     generate_template(compute_function, classname, filename_template,
-                      menu, overwrite_template)
+                      menu, overwrite_template, MathJax)
     generate_model(compute_function, classname, filename_model,
                    default_field, menu, overwrite_model)
     generate_controller(compute_function, classname, filename_controller,

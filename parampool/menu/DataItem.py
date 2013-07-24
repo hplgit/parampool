@@ -88,7 +88,8 @@ class DataItem:
         if kwargs['default'] is None:
             # Override user's choice
             kwargs['widget'] = 'textline'
-            kwargs['str2type'] = eval
+            if not 'str2type' in kwargs:
+                kwargs['str2type'] = eval
             #print 'Data item "%s" has default value None and gets widget "textline" and str2type=eval' % self.name
 
         # Check that all arguments are valid

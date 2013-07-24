@@ -2,7 +2,8 @@ import os
 from distutils.util import strtobool
 import parampool.utils
 
-def generate_template_std(classname, outfile, doc='', login=False):
+def generate_template_std(classname, outfile, doc='', login=False,
+                          MathJax=False):
     """
     Generate a simple standard template with
     input form in the left column and results in
@@ -17,7 +18,22 @@ def generate_template_std(classname, outfile, doc='', login=False):
   </head>
   <body>
 ''' % vars()
-
+    if MathJax:
+        code += '''
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "AMS"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- Fix slow MathJax rendering in IE8 -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+'''
     if login:
         code += '''\
   {% if user.is_anonymous %}
@@ -85,7 +101,8 @@ def generate_template_std(classname, outfile, doc='', login=False):
         f.close()
 
 def generate_template_dtree(compute_function, classname,
-                            menu, outfile, doc, login, align='left'):
+                            menu, outfile, doc, login, align='left',
+                            MathJax=False):
 
     # TODO: Support for right align in 'parent' functions
     from parampool.generator.flask.latex_symbols import \
@@ -106,7 +123,23 @@ def generate_template_dtree(compute_function, classname,
   </head>
   <body>
 """ % vars()
+    if MathJax:
+        pre_code += '''
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "AMS"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- Fix slow MathJax rendering in IE8 -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 
+'''
     if login:
         pre_code += '''\
   {% if user.is_anonymous %}
@@ -234,8 +267,9 @@ def generate_template_dtree(compute_function, classname,
     codedata = CodeData()
     codedata.code = pre_code
     # Display a progressbar if we have many data items
+    menu.update()
     num_widgets = len(args) if menu is None else len(menu.paths2data_items)
-    display_progressbar = num_widgets > 20
+    display_progressbar = num_widgets >= 10
     if display_progressbar:
         from progressbar import \
              ProgressBar, Percentage, Bar, ETA, RotatingMarker
@@ -342,15 +376,20 @@ def zip_lists(a, b):
     f.close()
 
 def generate_template(compute_function, classname,
-                      outfile, menu=None, login=False):
+                      outfile, menu=None, login=False,
+                      MathJax=False):
     from parampool.generator.flask.generate_template import run_doconce_on_text
     doc = run_doconce_on_text(compute_function.__doc__)
+
+    if 'MathJax.Hub.Config' in doc:
+        MathJax = False  # no need to enable MathJax - it's in the doc HTML
 
     if login:
         generate_form_templates(outfile)
 
     if menu:
         return generate_template_dtree(
-                compute_function, classname, menu, outfile, doc, login)
+            compute_function, classname, menu, outfile, doc, login,
+            MathJax=MathJax)
     else:
-        return generate_template_std(classname, outfile, doc, login)
+        return generate_template_std(classname, outfile, doc, login, MathJax)

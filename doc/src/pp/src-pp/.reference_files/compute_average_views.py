@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from compute_average_models import AverageForm
+from compute_average_models import Average, AverageForm
 from compute import compute_average as compute_function
 
 import os

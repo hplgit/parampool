@@ -21,7 +21,7 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=120):
             % vars()
 
     if not _contacted_latex_codecogs_com:
-        print '....contacting http://latex.codecogs.com to convert latex symbols to png files'
+        print '....contacting http://latex.codecogs.com to convert latex symbols to png files\n'
         global _contacted_latex_codecogs_com
         _contacted_latex_codecogs_com = True
     import urllib

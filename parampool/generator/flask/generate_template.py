@@ -2,7 +2,7 @@ import os, sys, shutil, re
 from distutils.util import strtobool
 import parampool.utils
 
-def generate_template_std(classname, outfile, doc=''):
+def generate_template_std(classname, outfile, doc='', MathJax=False):
     """
     Generate a simple standard template with
     input form. Show result at the bottom of
@@ -16,6 +16,25 @@ def generate_template_std(classname, outfile, doc=''):
     <title>Flask %(classname)s app</title>
   </head>
   <body>
+''' % vars()
+    if MathJax:
+        code += '''
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "AMS"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- Fix slow MathJax rendering in IE8 -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+
+'''
+    code += '''\
   %(doc)s
 
   <!-- Input and Results are typeset as a two-column table -->
@@ -60,7 +79,8 @@ def generate_template_std(classname, outfile, doc=''):
         f.close()
 
 def generate_template_dtree(compute_function, classname,
-                            menu, outfile, doc, align='left'):
+                            menu, outfile, doc, align='left',
+                            MathJax=False):
 
     # TODO: Support for right align in 'parent' functions
     from latex_symbols import get_symbol, symbols_same_size
@@ -77,6 +97,25 @@ def generate_template_dtree(compute_function, classname,
     <script type="text/javascript" src="static/dtree.js"></script>
   </head>
   <body>
+""" % vars()
+    if MathJax:
+        pre_code += '''
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "AMS"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- Fix slow MathJax rendering in IE8 -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+
+'''
+    pre_code += """
   %(doc)s
 
   <!-- Input and Results are typeset as a two-column table -->
@@ -177,8 +216,9 @@ def generate_template_dtree(compute_function, classname,
     codedata = CodeData()
     codedata.code = pre_code
     # Display a progressbar if we have many data items
+    menu.update()
     num_widgets = len(args) if menu is None else len(menu.paths2data_items)
-    display_progressbar = num_widgets > 20
+    display_progressbar = num_widgets >= 10
     if display_progressbar:
         from progressbar import \
              ProgressBar, Percentage, Bar, ETA, RotatingMarker
@@ -222,7 +262,7 @@ def run_doconce_on_text(doc):
 
         # Run doconce
         print 'Found doc string in doconce format:'
-        filename = 'tmp1'
+        filename = 'tmp_doc_string'
         f = open(filename + '.do.txt', 'w')
         f.write(doc)
         f.close()
@@ -243,8 +283,12 @@ def run_doconce_on_text(doc):
         doc = wrap_in_pre_tags(doc)
     return doc
 
-def generate_template(compute_function, classname, outfile, menu=None, overwrite=False):
+def generate_template(compute_function, classname, outfile,
+                      menu=None, overwrite=False, MathJax=False):
     doc = run_doconce_on_text(compute_function.__doc__)
+
+    if 'MathJax.Hub.Config' in doc:
+        MathJax = False  # no need to enable MathJax - it's in the doc HTML
 
     if outfile is not None:
         if not os.path.isdir("templates"):
@@ -259,6 +303,7 @@ def generate_template(compute_function, classname, outfile, menu=None, overwrite
 
     if menu is not None:
         return generate_template_dtree(
-                compute_function, classname, menu, outfile, doc)
+            compute_function, classname, menu, outfile, doc,
+            MathJax=MathJax)
     else:
-        return generate_template_std(classname, outfile, doc)
+        return generate_template_std(classname, outfile, doc, MathJax)

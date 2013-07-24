@@ -14,7 +14,8 @@ def generate(compute_function,
              default_field='TextField',
              filename_template="index.html",
              filename_views="views.py",
-             filename_models="models.py"):
+             filename_models="models.py",
+             MathJax=False):
     """
     Given a function `compute_function` that takes a series of
     arguments, generate a Django web form where
@@ -105,7 +106,7 @@ def generate(compute_function,
     # the project subdirectory which can be easily removed
 
     generate_template(compute_function, classname, filename_template_path,
-                      menu, enable_login)
+                      menu, enable_login, MathJax)
     generate_models(compute_function, classname, filename_models_path,
                     default_field, menu, enable_login)
     generate_views(compute_function, classname, filename_views_path,

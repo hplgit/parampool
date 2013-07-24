@@ -414,6 +414,7 @@ import matplotlib.pyplot as plot
 
 
 ===== More input parameters and results =====
+label{pp:flask4}
 
 It is time to address a more complicated application: we want
 to compute the trajectory of a ball subject to air drag and lift
@@ -425,9 +426,53 @@ The lift is caused by spinning the ball.
 The function that performs the computations has the following signature:
 
 @@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
-and returns a formatted string `html_text` with plots in a tabular
-format. Details can be found in the "`compute.py`": "${src_path}/compute.py"
-source code.
+and returns a formatted string `html_text` with two plots organized
+as a table. The technique described in the
+*Avoiding plot files* box at the end of Section {pp:plot:output} is
+implemented to embed PNG images directly in the HTML code.
+Under the plots there is a table of input values and the landing point.
+Curves can be accumulated in the plots (`new_plot=True`), with
+the corresponding data added to the table.
+A rough sketch of the HTML code returned from the compute
+function goes as follows:
+
+!bc htmlcod
+<table>
+<tr>
+<td valign="top">
+<img src="data:image/png;base64,iVBORw0KGgoAAAA..." width="400">
+</td>
+<td valign="top">
+<img src="data:image/png;base64,iVBORw0KGgoAAAA..." width="400">
+</td>
+</tr>
+</table>
+
+<center>
+<table border=1>
+<tr>
+<td align="center"> \( v_0 \)  </td>
+<td align="center"> \( \theta \) </td>
+<td align="center"> \( \omega \) </td>
+<td align="center"> \( w \)    </td>
+<td align="center"> \( m \)    </td>
+<td align="center"> method     </td>
+<td align="center"> \( \Delta t \) </td>
+<td align="center"> landing point </td>
+</tr>
+<tr><td> 5 </td><td> 45 </td><td> 0 </td> ...</tr>
+<tr><td> 5 </td><td> 45 </td><td> 0 </td> ...</tr>
+<tr><td> 5 </td><td> 45 </td><td> 0 </td> ...</tr>
+</table>
+</center>
+!ec
+Note that we use MathJax syntax for having LaTeX mathematics
+in the table heading.
+All details about the computations and the construction
+of the returned HTML string can be found in the "`compute.py`":
+"${src_path}/compute.py" file.
+
+FIGURE: [fig-pp/flask4.png, width=850] Web interface with two graphs. label{pp:flask4:fig1}
 
 Any doc string of the compute function is copied and typeset verbatim
 at the top of the web interface. However, if the text `# (Doconce
@@ -437,43 +482,82 @@ translated to HTML, which enables typesetting of LaTeX mathematics and
 computer code snippets (with nice pygments formatting).
 
 The documentation of the web interface can therefore be included as a
-doc string in the compute function. A simple plain text might be
+doc string in the compute function. Here is descriptive doc string
+using Doconce syntax for LaTeX mathematics (equations inside `!bt` and
+`!et` commands)
+and monospace font for Python variables (names in backticks). The
+corresponding view in a browser is shown in Figure ref{pp:flask4:fig2}.
 
-!bc pycod
+!bc
 """
-This application computes the motion of a ball with radius R
-and mass m under the influence of gravity, air resistance (drag)
-and lift because of a given spinrate. The motion starts with
-a prescribed initial_velocity making an angle initial_angle
-with the ground. A wind velocity, positive in positive x direction,
-can also be given (w). Many numerical methods can be used to
-solve the equations of motion. Some legal names are ForwardEuler,
-RK2, RK4, and Fehlberg (adaptive Runge-Kutta 4/5 order).
-If the timestep dt is None, approximately 500 steps are used,
-but dt can also be given a desired float value.
+This application computes the motion of a ball with radius $R$
+and mass $m$ under the influence of gravity, air drag and lift
+because of a given spinrate $\omega$. The motion starts with a
+prescribed initial velocity $v_0$ making an angle initial_angle
+$\theta$ with the ground. A wind velocity $w$, positive in
+positive $x$ direction, can also be given.
 
-The boolean variable plot_simplified_motion adds the curve of
-the motion without drag and lift (the standard parabolic
+The ordinary differential equation problem governing the
+motion reads
+
+!bt
+\begin{align*}
+m\frac{d^2\bm{r}}{dt^2} &= -mg\bm{j} -
+\frac{1}{2}C_D\varrho A v^2\bm{i}_t +
+\frac{1}{2}C_L\varrho A v^2\bm{i}_n\\
+\bm{r}(0) &= 0\bm{i} + 0\bm{j}\\
+\frac{d\bm{r}}{dt}(0) &= v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j},
+\end{align*}
+!et
+where $\bm{i}$ and $\bm{j}$ are unit vectors in the $x$ and $y$
+directions, respectively, $g$ is the acceleration of gravity,
+$A$ is the cross section area normal to the motion, $\bm{i}_t$
+is a unit tangent vector to the trajectory, $\bm{i}_n$ is
+a normal vector (pointing upwards) to the trajectory,
+$C_D$ and $C_L$ are lift coefficients, and $\varrho$ is the
+air density. For a ball, $C_D$ is taken as 0.45, while
+$C_L$ depends on the spinrate through $C_L=0.2\omega/500$.
+
+Many numerical methods can be used to solve the problem.
+Some legal names are `ForwardEuler`, `RK2`, `RK4`,
+and `Fehlberg` (adaptive Runge-Kutta 4/5 order).  If the
+timestep `dt` is None, approximately 500 steps are used, but
+`dt` can also be given a desired `float` value.
+
+The boolean variable `plot_simplified_motion` adds the curve
+of the motion without drag and lift (the standard parabolic
 trajectory). This curve helps illustrate the effect of drag
-and lift. When new_plot is false (unchecked), the new computed
-curves are added to the previous ones since last time new_plot
-was true.
+and lift. When `new_plot` is `False` (unchecked), the new
+computed curves are added to the previous ones since last
+time `new_plot` was true.
 
 # (Doconce format)
 """
 !ec
 
+FIGURE: [fig-pp/flask4_doc.png, width=850] Web interface with documentation. label{pp:flask4:fig2}
+
 The `generate.py` code for creating the web GUI goes as in the other examples,
 
 @@@CODE src-pp/flask4/generate.py
-and we start the application as usual by `python controller.py`.
-The resulting web interface appears in Figure ref{pp:flask4:fig1}.
-The graphs correspond to starting with the default values, then turning
-off the `plot_simplified_motion` curve and `new_plot`, then running
-two cases with the wind parameter `w`. The plot clearly show the
-influence of drag and wind against the motion.
+and we start the application as usual by `python controller.py`.  The
+resulting web interface appears in Figure ref{pp:flask4:fig1}.  The
+table shows the sequence of data we have given; starting with the
+default values, then turning off the `plot_simplified_motion` curve
+and `new_plot`, then running two cases with different values for the
+wind parameter `w`.  The plot clearly show the influence of drag and
+wind against the motion.
 
-FIGURE: [fig-pp/flask4.png, width=850] Web interface with documentation and two graphs. label{pp:flask4:fig1}
+!bwarning MathJax
+The `compute_motion_and_forces` function returns mathematical symbols
+in the heading line of the table with data.
+MathJax must be enabled in the HTML code for these symbols to be
+rendered correctly. This is specified by the `MathJax=True` argument
+to `generate`. (However, in this particular example MathJax is
+automatically turned on since we use Doconce syntax and mathematics
+in the doc string.)
+!ewarning
+
 
 === Django interface ===
 
@@ -482,29 +566,6 @@ As before, the Django interface is generated by importing the function
 A subdirectory `motion_and_forces` contains the files, and the
 Django application is started as shown in previous examples and has the same
 functionality as the Flask application.
-
-=== Improvements: more advanced doc string and no plot files ===
-
-We can make an improved compute function, called `compute_motion_and_forces2`,
-where we insert a doc string with documentation of the mathematical model
-and where we use the idea of replacing plot files by strings with
-PNG code as described in the *Avoiding plot files* box at the end of
-Section {pp:plot:output}. The input variables and the functionality
-remain the same.
-
-Our new doc strings makes use of Doconce syntax for LaTeX mathematics
-and monospace font for Python variables:
-
-@@@CODE src-pp/compute.py fromto: compute_motion_and_forces2@v_x0 =
-The resulting documentation in HTML format is visualized in
-Figure ref{pp:flask5:fig1}.
-
-For complete information on how to return PNG plots as strings, we
-refer to the `compute_motion_and_forces2` function in the
-"`compute.py`": "${src_path}/compute.py"
-source code.
-
-FIGURE: [fig-pp/flask5.png, width=850] Web interface with documentation containing mathematical formulas. label{pp:flask5:fig1}
 
 
 ===== Other types of function arguments =====
@@ -527,16 +588,46 @@ the string `filename` it is assumed that the argument represents
 the name of a file. The web interface will then feature a button
 for uploading the file.
 
-When the applicatin runs, we
-have two data fields: one for setting an array with list syntax and one
-for uploading a file. Clicking on the latter and uploading an
-file `mydata.dat` containing just columns of numbers, results in
-the web page displayed in Figure ref{pp:flask6:fig1}. In this case,
-when a filename was assigned, we use the data in the file.
-Alternatively, we can instead fill in the data array and click *Compute*,
-which then will compute the basic statistics of the assigned data array.
+When the applicatin runs, we have two data fields: one for setting an
+array with list syntax and one for uploading a file. Clicking on the
+latter and uploading an file `mydata.dat` containing just columns of
+numbers, results in the web page displayed in Figure
+ref{pp:flask5:fig1}. In this case, when a filename was assigned, we
+use the data in the file.  Alternatively, we can instead fill in the
+data array and click *Compute*, which then will compute the basic
+statistics of the assigned data array.
 
-FIGURE: [fig-pp/flask6.png, width=500] Web interface for uploading a file. label{pp:flask6:fig1}
+FIGURE: [fig-pp/flask5.png, width=500] Web interface for uploading a file. label{pp:flask5:fig1}
+
+======= Working with a menu of input parameters =======
+
+Parampool's main focus is on scientific applications with lots of
+input data of different type, organized in a hierarchical tree fashion.
+The various input parameters are defined in terms of a *menu*.
+The menu can be defined as a nested list or through function
+application programming interface (known as an API, and here
+consisting of calls functionality in the `parampool.menu` package).
+
+To exemplify the use of menus, we apply the
+`compute_motion_and_forces` function (from
+Section ref{pp:flask4}):
+
+@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
+Let us organize 10 input parameters into X submenus:
+
+ * ...
+
+2DO:
+
+ * possibility for documentation in the top - new `doc` argument to generate,
+   if None, use doc string, else valid HTML code, use it in menu example
+ * units and text fields
+ * ...
+
+===== Specify a menu as a list =====
+
+===== Specify a menu using an API =====
+
 
 ===== Animations =====
 
@@ -553,22 +644,7 @@ Describe input as
 
 
 
-======= Working with a menu of input parameters =======
-
-Parampool's main focus is on scientific applications with lots of
-input data of different type, organized in a hierarchical tree fashion.
-
-First a flat menu, but option list for numerical methods.
-
-Three submenus:
-
- * Initial state: velocity and position (4 in a submenu)
- * Numerics (2 in a submenu, could extend if adaptive scheme with tolerance,
-   have dt=None for sensible default value but that's not relevant if
-   we work with rk45), have method as list of options)
- * Physics (w, spin, m and R in a submenu)
-
-What about w(t) like a w_0 + sin?
+#What about w(t) like a w_0 + sin?
 
 #Could have an exercise with a missile, rho depending on height (see sports
 #book) rho_sea*exp(-0001036y) fra De Mestre, C_D dep on v see
@@ -724,7 +800,7 @@ BIBFILE: papers.pub
 
 We need
 
- * Flask
+ * Flask: `sudo pip install Flask`
  * Django (optional)
  * wtf...
  * progressbar

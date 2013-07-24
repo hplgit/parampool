@@ -1,6 +1,6 @@
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from compute_drag_free_motion_plot_models import DragFreeMotionPlotForm
+from compute_drag_free_motion_plot_models import DragFreeMotionPlot, DragFreeMotionPlotForm
 from compute import compute_drag_free_motion_plot as compute_function
 
 def index(request):
