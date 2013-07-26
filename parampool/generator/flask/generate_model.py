@@ -1,7 +1,7 @@
 import os
 import parampool.utils
 
-def generate_model_menu(compute_function, classname, outfile, menu):
+def generate_model_menu(classname, outfile, menu):
     """
     Generate Flask form by iterating through
     leaf nodes in the given menu object.
@@ -166,7 +166,6 @@ class %(classname)s(wtf.Form):
     codedata.longest_name = 0
 
     # Find the longest name
-    # TODO: Try to find a simpler solution that avoids double traverse
     def longest_name_func(tree_path, level, item, user_data):
         if len(item.name) > user_data.longest_name:
             user_data.longest_name = len(item.name)
@@ -328,8 +327,7 @@ def generate_model(compute_func, classname, outfile, default_field,
             return None
 
     if menu is not None:
-        return generate_model_menu(
-            compute_func, classname, outfile, menu)
+        return generate_model_menu(classname, outfile, menu)
     else:
         return generate_model_inspect(
             compute_func, classname, outfile, default_field)

@@ -392,27 +392,32 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
             #raise ValueError(
             #    '%s: value not set.\ndefault=None so value must be set.' %
             #    self._signature())
-        return self._values
+        if self._assigned_value:
+            return self._values
+        elif 'default' in self.data:
+            return [self.data['default']]
+        else:
+            raise ValueError('DataItem "%s" has not default value and no assigned value' % self.name)
 
     def get_value(self, with_unit=False, fmt=None):
         """
         Return a single value set for this data item.
-        with_unit returns the value and the unit as a string, and
-        in that case fmt can be used to specify the formatting.
-        Without fmt the registered value is returned, with fmt
+        `with_unit` returns the value and the unit as a string, and
+        in that case `fmt` can be used to specify the formatting.
+        Without `fmt` the registered value is returned, with `fmt`
         given, the value is returned as a string formatted according
-        to fmt.
+        to `fmt`.
         """
         if fmt:
             value = fmt % self.get_values()[0]
         else:
-            value = '%s' % self.get_values()[0]
+            value = self.get_values()[0]
 
         if with_unit:
             if 'unit' in self.data:
                 return '%s %s' % (value, self.data['unit'])
             else:
-                return '%s (no unit)' % value
+                return value
         else:
             if fmt:
                 return value

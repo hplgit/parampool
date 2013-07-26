@@ -1,5 +1,6 @@
 """User interfaces for Menu."""
 from parampool.menu.Menu import Menu
+import sys, os, re
 
 class CommandLineOptions:
     def __init__(self, menu):
@@ -16,8 +17,11 @@ class CommandLineOptions:
             path.replace(' ', '_'): self.menu.paths2data_items[path]
             for path in self.menu.paths2data_items}
 
-    def set_values(self, args):
-        """Examine the command line (args) and set values in the menu."""
+    def set_values(self, args=sys.argv[1:], set_default=False):
+        """
+        Examine the command line (args) and set values in the menu.
+        if `set_default`, the default value (and not the value) is set.
+        """
         from parampool.tree.Tree import get_leaf
         for i, arg in enumerate(args):
             if arg.startswith('--'):
@@ -30,13 +34,75 @@ class CommandLineOptions:
                           ', '.join(['--' + opt
                                      for opt in
                                      self.options2data_items])))
-                data_item.set_value(args[i+1])
+                if i+1 >= len(args):
+                    raise ValueError('no value for command-line option %s'
+                                     % arg)
+                value = args[i+1]
+                if set_default:
+                    data_item.data['default'] = value
+                else:
+                    data_item.set_value(value)
 
 
-def interpret_value(value):
+def set_defaults_from_command_line(menu):
+    clo = CommandLineOptions(menu)
+    clo.set_values(set_default=True)
+    return menu
+
+def set_values_from_command_line(menu):
+    clo = CommandLineOptions(menu)
+    clo.set_values(set_default=False)
+    return menu
+
+def set_defaults_from_file(menu, command_line_option='--menufile'):
+    """Set default values in menu based on a file."""
+    if command_line_option not in sys.argv:
+        return menu
+    else:
+        i = sys.argv.index(command_line_option)
+        if i+1 >= len(sys.argv):
+            raise ValueError('missing value for command-line option %s'
+                             % command_line_option)
+        filename = sys.argv[i+1]
+        del sys.argv[i]
+        del sys.argv[i]
+
+        if os.path.isfile(filename):
+            return read_menufile(filename, menu, task='set defaults')
+        else:
+            raise IOError('file %s not found' % filename)
+
+def set_defaults_in_model_file(model_filename, menu):
+    """Change default values in a model file."""
+    if os.path.isfile(model_filename):
+        f = open(model_filename, 'r')
+        text = f.read()
+        f.close()
+    else:
+        raise IOError('filename %s does not exist' % model_filename)
+    if 'wtf.Form' in text:
+        # Flask model.py file
+        pattern = r'class (.+)\(wtf.Form\):'
+        m = re.search(pattern, text)
+        if m:
+            classname = m.group(1)
+            from parampool.generator.flask.generate_model import generate_model_menu
+            generate_model_menu(classname, model_filename, menu)
+    elif 'models.Model' in text:
+        # Flask model.py file
+        pattern = r'class (.+)\(wtf.Form\):'
+        m = re.search(pattern, text)
+        if m:
+            classname = m.group(1)
+            from parampool.generator.django.generate_models import generate_models_menu
+            generate_models_menu(classname, model_filename, menu)
+
+
+def _interpret_value(value):
     """
     Given the string `value`, try to convert it to bool, int,
-    float, or keep it as string.
+    float, or keep it as string. Used to guess right str2type
+    when initializing a menu from file.
     """
     # Do from math import * to local namespace
     # since DataItem has all math functions available
@@ -76,8 +142,27 @@ def interpret_value(value):
         str2type = str
         return str2type, str2type(value)
 
-def read_menufile(filename):
-    """Load menu tree from file."""
+def load_from_file(filename):
+    """
+    Create a new Menu object from a file definition. A typical
+    definition of a data item is::
+
+      name1 = value ! unit # help widget=...
+
+    Example::
+
+      submenu Main menu
+          rho = 1.2  ! kg/m**3  # Density. widget=float
+          submenu Numerical parameters
+              dt = 0.1 ! s # Time step (None: automatically set, otherwise float value). widget=textline
+          end
+      end
+    """
+    menu = Menu()
+    return read_menu_file(filename, menu, task='create')
+
+def read_menufile(filename, menu, task='create'):
+    """Read menu file and initialize a menu or set default values."""
     if isinstance(filename, basestring):
         f = open(filename, 'r')
         data = f.read()
@@ -85,7 +170,7 @@ def read_menufile(filename):
     elif hasattr(filename, 'read'):
         data = filename.read()
 
-    menu = Menu()
+    levels = []
     for line_no, line in enumerate(data.splitlines()):
         print line_no, line
         print menu
@@ -93,8 +178,10 @@ def read_menufile(filename):
         if line.startswith('submenu'):
             name = ' '.join(line.split()[1:])
             menu.submenu(name)
+            levels.append(name)
         elif line.startswith('end'):
             menu.submenu('..')
+            levels.pop()
         elif line.strip() == '':
             continue
         elif '=' in line:
@@ -118,23 +205,35 @@ def read_menufile(filename):
 
             data = {'name': name.strip()}
             if value:
-                str2type, value = interpret_value(value)
+                str2type, value = _interpret_value(value)
                 data['default'] = value
                 data['str2type'] = str2type
             if unit:
                 data['unit'] = unit
             if help:
+                if 'widget=' in help:
+                    help, widget = help.split('widget=')
+                    help = help.strip()
                 data['help'] = help
-            menu.add_data_item(**data)
+
+
+            if task == 'create':
+                menu.add_data_item(**data)
+            elif task == 'set defaults':
+                data_item = menu.get(TreePath(levels + [data['name']]).to_str())
+                data_item.data['default'] = data['default']
         else:
             # line contains just the name of a data item
             data = {'name': line.strip()}
-            menu.add_data_item(**data)
+            if task == 'create':
+                menu.add_data_item(**data)
+            else:
+                raise SyntaxError('Wrong syntax in menu file: no value\n%s' %
+                                  line)
     return menu
 
-
 def write_menufile(menu):
-    """Dump menu to file."""
+    """Return menu as a string which can be dumped to file."""
 
     def data_item_output(menu_path, level, data_item, outlines):
         indentation = '    '*level
@@ -150,6 +249,14 @@ def write_menufile(menu):
         try:
             help = data_item.get('help')
             s += '   # ' + help
+            has_help = True
+        except ValueError:
+            has_help = False
+        try:
+            widget = data_item.get('widget')
+            if not has_help:
+                s += '   #'
+            s += ' widget=' + widget
         except ValueError:
             pass
         outlines.append('%s%s' % (indentation, s))
@@ -268,7 +375,7 @@ sub menu "main" (level=0)
     assert_equal_text(str(m), reference)
     return m
 
-def test_read_menufile():
+def test_load_menu_from_file():
     import StringIO
     file_content = """
 submenu main
@@ -288,7 +395,7 @@ d
 C_D
 end
 """
-    m = read_menufile(StringIO.StringIO(file_content))
+    m = load_menu_from_file(StringIO.StringIO(file_content))
     print m
     reference = """\
 sub menu "main" (level=0)
@@ -337,6 +444,6 @@ def test_CommandLineOptions():
 
 
 if __name__ == '__main__':
-    test_read_menufile()
+    test_load_menu_from_file()
     test_listtree2Menu()
     test_CommandLineOptions()

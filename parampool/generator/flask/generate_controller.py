@@ -47,8 +47,17 @@ def generate_controller(compute_function, classname,
 
     code = '''\
 import os
-from flask import Flask, render_template, request, session
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
+''' % vars()
+    if menu:
+        code += '''
+# Menu object (must be imported before %(model_module)s
+from %(menu_function_file)s import %(menu_function_name)s as menu_function
+menu = menu_function()
+''' % vars()
+
+    code += '''
+from flask import Flask, render_template, request, session
 from %(model_module)s import %(classname)s
 ''' % vars()
 
@@ -59,13 +68,6 @@ from werkzeug import secure_filename
     code += '''
 # Application object
 app = Flask(__name__)
-''' % vars()
-
-    if menu:
-        code += '''
-# Menu object
-from %(menu_function_file)s import %(menu_function_name)s as menu_function
-menu = menu_function()
 ''' % vars()
 
     if file_upload:

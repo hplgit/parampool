@@ -532,9 +532,6 @@ def menu_definition_list2():  # Not used
         ]
     from parampool.menu.UI import listtree2Menu
     menu = listtree2Menu(menu)
-    # from parampool.menu.UI import load_values_from_file, load_values_from_command_line
-    #menu = load_values_from_file(menu, command_line_option='--menufile')
-    #menu = load_values_from_command_line(menu)
     return menu
 
 def menu_definition_api():
@@ -597,6 +594,27 @@ def menu_definition_api_with_separate_submenus():
     menu.change_submenu('..')
     menu = plot_menu(menu)
     menu.update()
+
+    from parampool.menu.UI import (
+        set_defaults_from_file,
+        set_defaults_from_command_line,
+        set_defaults_in_model_file,
+        write_menufile,
+        )
+    menu = set_defaults_from_file(menu, command_line_option='--menufile')
+    menu = set_defaults_from_command_line(menu)
+    flask_modelfile = 'model.py'
+    django_modelfile = os.path.join('motion_and_forces_with_menu', 'app',
+                                    'models.py')
+    if os.path.isfile(flask_modelfile):
+        set_defaults_in_model_file(flask_modelfile, menu)
+    elif os.path.isfile(django_modelfile):
+        set_defaults_in_model_file(django_modelfile, menu)
+
+    menufile = open('menu.dat', 'w')
+    menufile.write(write_menufile(menu))
+    menufile.close()
+
     return menu
 
 def motion_menu(menu, name='Initial motion data'):

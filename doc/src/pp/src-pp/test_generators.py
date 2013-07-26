@@ -109,14 +109,22 @@ def test_compute_motion_and_forces_with_menu():
     _flask_tester(func, menu_function)
     _django_tester(func, menu_function)
 
-    # Test setting menu values
+def test_setting_menu_values():
+    from compute import menu_definition_list as menu_function
     m = menu_function()
     m.set_value('Radius', '0.11*100 cm')
     v = m.get_value('Radius')
+    print v
+    assert v == 0.11, 'Wrong value %s, not 0.11' % v
+    m.set_value('Radius', '0.11*100*exp(0.0)/100/1000 km')
+    v = m.get_value('Radius')
+    print v
     assert v == 0.11, 'Wrong value %s, not 0.11' % v
 
 
 if __name__ == '__main__':
+    test_setting_menu_values()
+    import sys; sys.exit(0)
     test_compute_drag_free_landing()
     test_compute_drag_free_motion_plot()
     test_compute_motion_and_forces()

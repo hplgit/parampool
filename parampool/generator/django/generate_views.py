@@ -6,7 +6,7 @@ def generate_views(compute_function,
                    filename_models,
                    login):
 
-    filename_models = filename_models.strip(".py")
+    models_module = filename_models.strip(".py")
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
 
@@ -40,30 +40,30 @@ def generate_views(compute_function,
                 break
 
     code = '''\
+from %(compute_function_file)s import %(compute_function_name)s as compute_function
+''' % vars()
+    if menu:
+        code += '''
+# Menu object (must be imported before %(models_module)s
+from %(menu_function_file)s import %(menu_function_name)s as menu_function
+menu = menu_function()
+''' % vars()
+    code += '''
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from %(filename_models)s import %(classname)s, %(classname)sForm
+from %(models_module)s import %(classname)s, %(classname)sForm
 ''' % vars()
     if login:
         code += '''\
-from %(filename_models)s import %(classname)sUser
-from %(filename_models)s import %(classname)sUserForm
+from %(models_module)s import %(classname)sUser
+from %(models_module)s import %(classname)sUserForm
 from forms import CreateNewLoginForm, LoginForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 ''' % vars()
-    code += '''\
-from %(compute_function_file)s import %(compute_function_name)s as compute_function
-''' % vars()
 
-    if menu:
-        code += '''
-# Menu object
-from %(menu_function_file)s import %(menu_function_name)s as menu_function
-menu = menu_function()
-''' % vars()
 
     if file_upload:
         code += '''

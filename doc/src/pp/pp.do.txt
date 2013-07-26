@@ -623,6 +623,21 @@ Let us organize 10 input parameters into X submenus:
  * units and text fields: Done
  * menu list: no doc
  * menu API: add doc in `doc.html`, also show possibility to call
+ * Check if multiple answers are correctly handled in DataItem,
+   make `enable_multiple_answers(*args)` which turns all widgets into
+   textline (or those given as arguments), make multiple loop parameters,
+   can get them as list of dicts `menu.get_multiple_values(*args)`
+   (all if no argument, otherwise those params listed), let keys
+   be either full path or shortest possible path, can iterate over
+   this list, test in ball example by having a new function with
+   the multiple loop calling up `compute_motion_and_forces_plot`
+   with `new_plot=True` first time and false the next times.
+ * Let `w` be function, widget=texline, str2type can be StringFunction.
+   Can also invent a special syntax and translate to StringFunction or
+   just make a function.
+ * Let `w` be filename: upload a Python module with the w(t) function.
+ * Problem: non-unique data item names cause trouble for the model
+   class since just name is used as static variable...
 
 !bc
 from parampool.generator.flask.generate_template import \

@@ -1,6 +1,6 @@
 import parampool.utils
 
-def generate_models_menu(compute_function, classname, outfile, menu):
+def generate_models_menu(classname, outfile, menu):
     """
     Generate Django ModelForm by iterating through
     leaf nodes in the given menu object.
@@ -139,17 +139,23 @@ from parampool.html5.django.models import MinMaxFloat
 class %(classname)s(models.Model):
 ''' % vars()
 
-    import inspect
-    arg_names = inspect.getargspec(compute_function).args
-    longest_name = max(len(name) for name in arg_names)
-
     codedata = CodeData()
     codedata.code = code
-    codedata.longest_name = longest_name
+    codedata.longest_name = 0
 
+    # Find the longest name
+    def longest_name_func(tree_path, level, item, user_data):
+        if len(item.name) > user_data.longest_name:
+            user_data.longest_name = len(item.name)
+
+    menu.traverse(callback_leaf=longest_name_func,
+                  user_data=codedata,
+                  verbose=False)
+
+    # Generate all code
     menu.traverse(callback_leaf=leaf_func,
-                       user_data=codedata,
-                       verbose=False)
+                  user_data=codedata,
+                  verbose=False)
 
     code = codedata.code
     code += """
@@ -352,8 +358,7 @@ def generate_models(compute_func, classname, outfile, default_field,
     """
 
     if menu is not None:
-        generate_models_menu(
-            compute_func, classname, outfile, menu)
+        generate_models_menu(classname, outfile, menu)
     else:
         generate_models_inspect(
             compute_func, classname, outfile, default_field)
