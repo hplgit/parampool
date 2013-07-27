@@ -1,7 +1,8 @@
+from compute import compute_motion_and_forces as compute_function
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from compute_motion_and_forces_models import MotionAndForces, MotionAndForcesForm
-from compute import compute_motion_and_forces as compute_function
 
 def index(request):
     result = None

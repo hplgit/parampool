@@ -17,7 +17,7 @@
         <table>
           {% for field in form %}
             <tr><td>{{ field.name }}</td>
-                <td>{{ field }}</td>
+                <td>{{ field(size=20) }}</td>
                 <td>{% if field.errors %}
                   <ul class=errors>
                   {% for error in field.errors %}

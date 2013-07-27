@@ -491,47 +491,6 @@ def menu_definition_list():
         ]
     from parampool.menu.UI import listtree2Menu
     menu = listtree2Menu(menu)
-    # from parampool.menu.UI import load_values_from_file, load_values_from_command_line
-    #menu = load_values_from_file(menu, command_line_option='--menufile')
-    #menu = load_values_from_command_line(menu)
-    return menu
-
-def menu_definition_list2():  # Not used
-    menu = [
-        'Main menu', [
-            'Initial motion data', [
-                dict(name='Initial velocity', default=5.0),
-                dict(name='Initial angle', default=45,
-                     widget='range', minmax=[0,90], unit='deg'),
-                dict(name='Spinrate', default=50, widget='float',
-                     str2type=float, unit='1/s'),
-                ],
-            'Body and environment data', [
-                dict(name='Wind velocity', default=0.0,
-                     help='Wind velocity in positive x direction.'),
-                dict(name='Mass', default=0.1,
-                     help='Mass of body.', unit='kg'),
-                dict(name='Radius', default=0.11,
-                     help='Radius of spherical body.', unit='m'),
-                ],
-            'Numerical parameters', [
-                dict(name='Method', default='RK4',
-                     widget='select',
-                     options=['RK4', 'RK2', 'ForwardEuler'],
-                     help='Numerical solution method.'),
-                dict(name='Time step', default=None,
-                     widget='float', unit='s'),
-                ],
-            'Plot parameters', [
-                dict(name='Plot simplified motion', default=True,
-                     help='Plot motion without drag+lift forces.'),
-                dict(name='New plot', default=True,
-                     help='Erase all old curves.'),
-                ],
-            ],
-        ]
-    from parampool.menu.UI import listtree2Menu
-    menu = listtree2Menu(menu)
     return menu
 
 def menu_definition_api():
@@ -567,7 +526,7 @@ def menu_definition_api():
         help='Numerical solution method.')
     menu.add_data_item(
         name='Time step', default=None,
-        widget='float', unit='s')
+        widget='textline', unit='s')
 
     menu.submenu('../Plot parameters')
     menu.add_data_item(
@@ -593,17 +552,23 @@ def menu_definition_api_with_separate_submenus():
     menu = numerics_menu(menu)
     menu.change_submenu('..')
     menu = plot_menu(menu)
-    menu.update()
+    menu.update()  # finalize menu construction
 
     from parampool.menu.UI import (
+        set_data_item_attribute,
         set_defaults_from_file,
         set_defaults_from_command_line,
         set_defaults_in_model_file,
         write_menufile,
         )
+    # Let all widget sizes be 6, except for Time step
+    menu = set_data_item_attribute(menu, 'widget_size', 6)
+    menu.get('Time step').data['widget_size'] = 4
+
     menu = set_defaults_from_file(menu, command_line_option='--menufile')
     menu = set_defaults_from_command_line(menu)
     flask_modelfile = 'model.py'
+    print 'XXX', os.getcwd()
     django_modelfile = os.path.join('motion_and_forces_with_menu', 'app',
                                     'models.py')
     if os.path.isfile(flask_modelfile):
@@ -654,7 +619,7 @@ def numerics_menu(menu, name='Numerical parameters'):
         help='Numerical solution method.')
     menu.add_data_item(
         name='Time step', default=None, symbol=r'\Delta t',
-        widget='float', unit='s',
+        widget='textline', unit='s',
         help='None: ca 500 steps, otherwise specify float.')
     return menu
 

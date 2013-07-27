@@ -614,9 +614,72 @@ To exemplify the use of menus, we apply the
 Section ref{pp:flask4}):
 
 @@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
-Let us organize 10 input parameters into X submenus:
+Let us organize 10 input parameters into four submenus. At the top
+level we need a submenu, usually called "Main menu" or named after
+the application. Each submenu
+is here specified with a logical name of each parameter and the
+corresponding variable names in the compute function:
 
- * ...
+ * Main menu
+   * Initial motion data
+     * Initial velocity: `initial_velocity`
+     * Initial angle: `initial_angle`
+     * Spinrate: `spinrate`
+   * Body and environment data
+     * Wind velocity: `w`
+     * Mass: `m`
+     * Radius: `R`
+   * Numerical parameters
+     * Method: `method`
+     * Time step: `dt`
+   * Plot parameters
+     * Plot simplified motion: `plot_simplified_motion`
+     * New plot: `new_plot`
+
+With a menu we can give the parameters more readable logical names (not
+restricted to a valid variable name in Python), but we can also
+specify a lot other properties too, as will be explained.
+
+idx{submenu} idx{data item}
+
+A menu is a hierarchical *tree structure* with *submenus* and
+*data items*, where each data item describes an input parameter
+in the problem. The task now is to make a Python specification of
+the of submenus and data items in the menu tree.
+
+===== Specify a menu as a list =====
+
+The menu tree can be specified as a list of lists, strings, and dictionaries.
+Each list represents a submenu, each string the name of the submenu,
+and each dict is a data item. The menu must be return from some
+function, hereafter called the *menu function*. In our case, the
+menu function goes as follows:
+
+@@@CODE src-pp/compute.py fromto: def menu_definition_list@def menu_definition_api
+Actually, the menu function must return a `parampool.menu.Menu` object,
+so after the definition of the menu tree as a list we must make the
+shown conversion from a list to `Menu` object via the `listtree2Menu`
+function.
+
+Each data item has a name and preferably a default value, as in the
+case of "Initial velocity". More attributes can be added:
+
+ * 'widget' specifies the type of widget used in a graphical
+   user interface. Legal values are `integer`, `float`, `range`
+   (requires the `minmax` attribute), `integer_range` (requires
+   the `minmax` attribute), `textline`, `textarea` (for larger
+   multi-line texts), `checkbox` (for boolen variables), `select`
+   (list of options), `email`, `password`, `file` (for a filename
+   of a file to be uploaded, `url`, `hidden` (for an invisible field),
+   and `tel` (for a phone number).
+ * `minmax` is a 2-list or 2-tuple with lower and upper bound in
+   the interval of legal values of a number.
+ * `unit` specifies a unit, e.g., `deg` (for degrees, as opposed to
+   radians, `rad`), `kg/m**3`, or `1/s`.
+ * `help` adds a help string to explain more about the parameter and
+   how it can be set.
+
+
 
 2DO:
 
@@ -645,11 +708,14 @@ from parampool.generator.flask.generate_template import \
 doc = run_doconce_on_text(compute_function.__doc__)
 !ec
 
-===== Specify a menu as a list =====
 
 ===== Specify a menu using an API =====
 
 ===== Using LaTeX symbols in the menu =====
+
+===== Setting default values at run-time =====
+
+Use command-line args and a file.
 
 ===== Menu with other data structures =====
 
@@ -659,6 +725,8 @@ syntax, but convert to array in `str2type` after list is eval'ed.
 ======= Advanced topics =======
 
 ===== Login and archival of results =====
+
+===== Multiple values for setting up experiments =====
 
 ===== Animations =====
 

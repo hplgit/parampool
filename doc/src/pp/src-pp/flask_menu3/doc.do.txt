@@ -1,0 +1,41 @@
+This application computes the motion of a ball with radius $R$
+and mass $m$ under the influence of gravity, air drag and lift
+because of a given spinrate $\omega$. The motion starts with a
+prescribed initial velocity $v_0$ making an angle initial_angle
+$\theta$ with the ground. A wind velocity $w$, positive in
+positive $x$ direction, can also be given.
+
+The ordinary differential equation problem governing the
+motion reads
+
+!bt
+\begin{align*}
+m\frac{d^2\bm{r}}{dt^2} &= -mg\bm{j} -
+\frac{1}{2}C_D\varrho A v^2\bm{i}_t +
+\frac{1}{2}C_L\varrho A v^2\bm{i}_n\\
+\bm{r}(0) &= 0\bm{i} + 0\bm{j}\\
+\frac{d\bm{r}}{dt}(0) &= v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j},
+\end{align*}
+!et
+where $\bm{i}$ and $\bm{j}$ are unit vectors in the $x$ and $y$
+directions, respectively, $g$ is the acceleration of gravity,
+$A$ is the cross section area normal to the motion, $\bm{i}_t$
+is a unit tangent vector to the trajectory, $\bm{i}_n$ is
+a normal vector (pointing upwards) to the trajectory,
+$C_D$ and $C_L$ are lift coefficients, and $\varrho$ is the
+air density. For a ball, $C_D$ is taken as 0.45, while
+$C_L$ depends on the spinrate through $C_L=0.2\omega/500$.
+
+Many numerical methods can be used to solve the problem.
+In the menu one can choose between the simple
+`ForwardEuler` or the 2nd- and 4th-order Runge-Kutta methods,
+`RK2` and `RK4`. If the timestep `dt` is None, approximately
+500 steps are used, but `dt` can also be given a desired
+`float` value.
+
+The boolean variable `plot_simplified_motion` adds the curve
+of the motion without drag and lift (the standard parabolic
+trajectory). This curve helps illustrate the effect of drag
+and lift. When `new_plot` is `False` (unchecked), the new
+computed curves are added to the previous ones since last
+time `new_plot` was true.

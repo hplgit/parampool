@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Flask MotionAndForces app</title>
-  </head>
-  <body>
-  
+
 <!-- tocinfo
 {'highest level': 4, 'sections': []}
 end of tocinfo -->
@@ -33,8 +26,6 @@ MathJax.Hub.Config({
 
 <!-- ------------------- main content ---------------------- -->
 
-
-<p>
 This application computes the motion of a ball with radius \( R \)
 and mass \( m \) under the influence of gravity, air drag and lift
 because of a given spinrate \( \omega \). The motion starts with a
@@ -68,10 +59,11 @@ air density. For a ball, \( C_D \) is taken as 0.45, while
 
 <p>
 Many numerical methods can be used to solve the problem.
-Some legal names are <code>ForwardEuler</code>, <code>RK2</code>, <code>RK4</code>,
-and <code>Fehlberg</code> (adaptive Runge-Kutta 4/5 order).  If the
-timestep <code>dt</code> is None, approximately 500 steps are used, but
-<code>dt</code> can also be given a desired <code>float</code> value.
+In the menu one can choose between the simple
+<code>ForwardEuler</code> or the 2nd- and 4th-order Runge-Kutta methods,
+<code>RK2</code> and <code>RK4</code>. If the timestep <code>dt</code> is None, approximately
+500 steps are used, but <code>dt</code> can also be given a desired
+<code>float</code> value.
 
 <p>
 The boolean variable <code>plot_simplified_motion</code> adds the curve
@@ -81,43 +73,5 @@ and lift. When <code>new_plot</code> is <code>False</code> (unchecked), the new
 computed curves are added to the previous ones since last
 time <code>new_plot</code> was true.
 
-<p>
-<!-- (Doconce format) -->
-
 <!-- ------------------- end of main content --------------- -->
 
-
-
-  <!-- Input and Results are typeset as a two-column table -->
-  <table>
-  <tr>
-  <td valign="top">
-    <h2>Input:</h2>
-
-      <form method=post action="" enctype=multipart/form-data>
-        <table>
-          {% for field in form %}
-            <tr><td>{{ field.name }}</td>
-                <td>{{ field(size=20) }}</td>
-                <td>{% if field.errors %}
-                  <ul class=errors>
-                  {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                  {% endfor %}</ul>
-                {% endif %}</td></tr>
-          {% endfor %}
-        </table>
-        <p><input type=submit value=Compute>
-    </form></p>
-  </td>
-
-  <td valign="top">
-    {% if result != None %}
-      <h2>Results:</h2>
-        {{ result|safe }}
-    {% endif %}
-  </td>
-  </tr>
-  </table>
-  </body>
-</html>

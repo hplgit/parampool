@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, session
 from compute import compute_motion_and_forces as compute_function
+
+from flask import Flask, render_template, request, session
 from compute_motion_and_forces_model import MotionAndForces
 
 # Application object

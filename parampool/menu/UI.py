@@ -277,6 +277,15 @@ def write_menufile(menu):
         user_data=outlines)
     return '\n'.join(outlines)
 
+def set_data_item_attribute(menu, attribute_name, value):
+    """Set an attribute for all data items in the menu."""
+    attr = {attribute_name: value}
+    menu.traverse(
+        callback_leaf=lambda menu_path, level, data_item, attr: \
+                      data_item.data.update(attr),
+        user_data=attr)
+    return menu
+
 
 def listtree2Menu(menu_tree):
     """

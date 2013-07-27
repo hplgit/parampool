@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, session
 from compute import compute_average as compute_function
+
+from flask import Flask, render_template, request, session
 from compute_average_model import Average
 from werkzeug import secure_filename
 

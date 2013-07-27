@@ -9,33 +9,35 @@ class DataItem:
     and an optional set of attributes that describe the data item.
     Typical attributes are
 
-    ============== ==================================================
-    Name           Description
-    ============== ==================================================
-    ``name``       name (mandatory)
-    ``default``    default value
-    ``unit``       registered unit
-    ``help``       description of the data item
-    ``str2type``   object transforming a string to desired type,
-                   can be ``eval``, ``float``, ... Based on type
-                   of ``widget`` or ``default`` if not given.
-    ``convert``    boolean value that decides if str2type should be
-                   used. Defaults to True, and is automatically
-                   changed to False if a DataItem gets a value of
-                   the same type as its default value set.
-    ``value``      current value assigned in a user interface
-    ``minmax``     legal interval (2-list) of values
-    ``options``    legal list of values
-    ``namespace``  user's namespace for use when ``str2type=eval``
-    ``user_data``  meta data stored in this object
-    ``validate``   callable that can validate the value
-    ``symbol``     LaTex code for mathematical symbol
-    ``widget``     recommended widget in graphical user interfaces.
-                   Allowed types are: "integer", "float", "range",
-                   "integer_range", "textline", "textarea",
-                   "checkbox", "select", "email", "hidden",
-                   "password", "file", "url", "tel".
-    ============== ==================================================
+    =============== ==================================================
+    Name            Description
+    =============== ==================================================
+    ``name``        name (mandatory)
+    ``default``     default value
+    ``unit``        registered unit (e.g., km, h, 1/s, kg/m**3)
+    ``help``        description of the data item
+    ``str2type``    object transforming a string to desired type,
+                    can be ``eval``, ``float``, ... Based on type
+                    of ``widget`` or ``default`` if not given.
+    ``convert``     boolean value that decides if str2type should be
+                    used. Defaults to True, and is automatically
+                    changed to False if a DataItem gets a value of
+                    the same type as its default value set.
+    ``value``       current value assigned in a user interface
+    ``minmax``      legal interval (2-list) of values
+    ``options``     legal list of values
+    ``namespace``   user's namespace for use when ``str2type=eval``
+    ``user_data``   meta data stored in this object
+    ``validate``    callable that can validate the value
+    ``symbol``      LaTex code for mathematical symbol
+    ``widget``      recommended widget in graphical user interfaces;
+                    allowed types are: "integer", "float", "range",
+                    "integer_range", "textline", "textarea",
+                    "checkbox", "select", "email", "hidden",
+                    "password", "file", "url", "tel"
+    ``widget_size`` width of widget in graphical user interfaces
+                    (number of characters)
+    =============== ==================================================
 
     The ``str2type`` attribute should be explicitly set to have full
     control of how user input in form of strings (on the command line
@@ -71,7 +73,7 @@ class DataItem:
     is not given, it is set based on the unit used in the value, otherwise
     (unit specified) a unit conversion of the numerical value takes place.
     """
-    _legal_data = 'name default unit help value str2type convert minmax options widget validate namespace user_data symbol'.split()
+    _legal_data = 'name default unit help value str2type convert minmax options widget validate namespace user_data symbol widget_size'.split()
 
     def _signature(self):
         """Return output signature with "DataItem: name=..."."""

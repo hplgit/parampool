@@ -33,7 +33,7 @@ def _flask_tester(func, menu_function=None):
             os.path.join(test_dir, filename),
             os.path.join(reference_dir, filename),
             os.path.join(test_dir, filename),
-            msg='failure in test ' + func.__name__)
+            msg='failure in test %s, file %s' % (func.__name__, filename))
     shutil.rmtree(test_dir)
 
 def _django_tester(func, menu_function=None):
@@ -69,7 +69,7 @@ def _django_tester(func, menu_function=None):
             generated,
             original,
             generated,
-            msg='failure in test ' + func.__name__)
+            msg='failure in test %s, file %s' % (func.__name__, filename))
         # Test login.html, old.html, reg.html if they exist...
     shutil.rmtree(test_dir)
 
@@ -114,17 +114,14 @@ def test_setting_menu_values():
     m = menu_function()
     m.set_value('Radius', '0.11*100 cm')
     v = m.get_value('Radius')
-    print v
     assert v == 0.11, 'Wrong value %s, not 0.11' % v
     m.set_value('Radius', '0.11*100*exp(0.0)/100/1000 km')
     v = m.get_value('Radius')
-    print v
     assert v == 0.11, 'Wrong value %s, not 0.11' % v
 
 
 if __name__ == '__main__':
     test_setting_menu_values()
-    import sys; sys.exit(0)
     test_compute_drag_free_landing()
     test_compute_drag_free_motion_plot()
     test_compute_motion_and_forces()

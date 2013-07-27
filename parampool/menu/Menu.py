@@ -35,6 +35,8 @@ class Menu(Tree):
         Return ``DataItem`` object corresponding to `data_item_name`,
         which can be a unique valid abbreviation of the full name.
         """
+        if not hasattr(self, 'paths2data_items'):
+            raise ValueError('menu.get("%s") does not work because menu construction is not finalized with menu.update()' % data_item_name)
         try:
             return get_leaf(data_item_name, self.paths2data_items)
         except ValueError:

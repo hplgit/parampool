@@ -47,7 +47,7 @@ MathJax.Hub.Config({
         <table>
           {%% for field in form %%}
             <tr><td>{{ field.name }}</td>
-                <td>{{ field }}</td>
+                <td>{{ field(size=20) }}</td>
                 <td>{%% if field.errors %%}
                   <ul class=errors>
                   {%% for error in field.errors %%}
@@ -152,8 +152,12 @@ MathJax.Hub.Config({
         parent_id = user_data.parent_id[-1]
         name = item.name
         field_name = parampool.utils.legal_variable_name(name)
+        if item.data.get('widget', None) == 'select':
+            widget_size = ''  # no specification of size for option list
+        else:
+            widget_size = '(size=%s)' % item.get('widget_size', default=12)
         form = """\
-&nbsp; {{ form.%(field_name)s }} {%% if form.%(field_name)s.errors %%} \
+&nbsp; {{ form.%(field_name)s%(widget_size)s }} {%% if form.%(field_name)s.errors %%} \
 {%% for error in form.%(field_name)s.errors %%} <err> {{error}} </err> \
 {%% endfor %%}{%% endif %%} """ % vars()
 

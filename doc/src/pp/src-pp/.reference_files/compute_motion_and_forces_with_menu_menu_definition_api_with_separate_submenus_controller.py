@@ -1,14 +1,15 @@
 import os
-from flask import Flask, render_template, request, session
 from compute import compute_motion_and_forces_with_menu as compute_function
+
+# Menu object (must be imported before compute_motion_and_forces_with_menu_menu_definition_api_with_separate_submenus_model
+from compute import menu_definition_api_with_separate_submenus as menu_function
+menu = menu_function()
+
+from flask import Flask, render_template, request, session
 from compute_motion_and_forces_with_menu_menu_definition_api_with_separate_submenus_model import MotionAndForcesWithMenu
 
 # Application object
 app = Flask(__name__)
-
-# Menu object
-from compute import menu_definition_api_with_separate_submenus as menu_function
-menu = menu_function()
 
 # Path to the web application
 @app.route('/', methods=['GET', 'POST'])

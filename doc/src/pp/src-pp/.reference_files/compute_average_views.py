@@ -1,7 +1,8 @@
+from compute import compute_average as compute_function
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from compute_average_models import Average, AverageForm
-from compute import compute_average as compute_function
 
 import os
 UPLOAD_DIR = os.path.join(os.path.dirname(__file__), "uploads")

@@ -200,12 +200,18 @@ MathJax.Hub.Config({
         parent_id = user_data.parent_id[-1]
         name = item.name
         field_name = parampool.utils.legal_variable_name(name)
+        if item.data.get('widget', None) == 'select':
+            widget_size = ''  # no specification of size for option list
+        else:
+            widget_size = '(size=%s)' % item.get('widget_size', default=12)
         form = """\
-&nbsp; {%% spaceless %%} {{ form.%(field_name)s }} {%% endspaceless %%} \
+&nbsp; {%% spaceless %%} {{ form.%(field_name)s%(widget_size)s }} {%% endspaceless %%} \
 {%% if form.%(field_name)s.errors %%} \
 {%% for error in form.%(field_name)s.errors %%} \
 <err> {{error}} </err> \
 {%% endfor %%}{%% endif %%} """ % vars()
+        # (Note: need the spaceless trick to ensure that the resulting HTML
+        # code is on one line for select widgets in Django (strange behavior))
 
         if hasattr(user_data, 'pb'):
             user_data.pb.update(user_data.pbid)

@@ -1,11 +1,12 @@
+from compute import compute_motion_and_forces_with_menu as compute_function
+
+# Menu object (must be imported before compute_motion_and_forces_with_menu_menu_definition_api_with_separate_submenus_models
+from compute import menu_definition_api_with_separate_submenus as menu_function
+menu = menu_function()
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from compute_motion_and_forces_with_menu_menu_definition_api_with_separate_submenus_models import MotionAndForcesWithMenu, MotionAndForcesWithMenuForm
-from compute import compute_motion_and_forces_with_menu as compute_function
-
-# Menu object
-from compute import menu_definition_api_with_separate_submenus as menu_function
-menu = menu_function()
 
 def index(request):
     result = None
@@ -42,5 +43,5 @@ def compute(menu):
         result = compute_function(menu)
     else:
         raise TypeError('%s(%s) can only have one argument named "menu"'
-                        % (compute_function_name, ', '.join(arg_names)))
+                        % (compute_function.__name__, ', '.join(arg_names)))
     return result

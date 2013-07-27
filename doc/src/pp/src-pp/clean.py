@@ -1,6 +1,6 @@
 import os, shutil
 
-savefiles = ['generate.py', 'mydata.dat', 'doc.html']
+savefiles = ['generate.py', 'mydata.dat', 'doc.html', 'doc.do.txt']
 # Visit subdirs and clean
 for name in os.listdir(os.curdir):
     if os.path.isdir(name) and \

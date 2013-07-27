@@ -1,6 +1,7 @@
 import os
-from flask import Flask, render_template, request, session
 from compute import compute_drag_free_motion_plot as compute_function
+
+from flask import Flask, render_template, request, session
 from compute_drag_free_motion_plot_model import DragFreeMotionPlot
 
 # Application object
