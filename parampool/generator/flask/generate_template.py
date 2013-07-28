@@ -87,6 +87,8 @@ def generate_template_dtree(compute_function, classname,
     import inspect
     args = inspect.getargspec(compute_function).args
     compute_function_name = compute_function.__name__
+    from parampool.menu.DataItem import DataItem
+    default_widget_size = DataItem.defaults['widget_size']
 
     pre_code = """\
 <!DOCTYPE html>
@@ -156,7 +158,7 @@ MathJax.Hub.Config({
         if item.data.get('widget', None) == 'select':
             widget_size = ''  # no specification of size for option list
         else:
-            widget_size = '(size=%s)' % item.get('widget_size', default=7)
+            widget_size = '(size=%s)' % item.get('widget_size', default=default_widget_size)
         form = """\
 &nbsp; {{ form.%(field_name)s%(widget_size)s }} {%% if form.%(field_name)s.errors %%} \
 {%% for error in form.%(field_name)s.errors %%} <err> {{error}} </err> \
@@ -166,7 +168,7 @@ MathJax.Hub.Config({
             user_data.pb.update(user_data.pbid)
             user_data.pbid += 1
 
-        if item.data.has_key("symbol"):
+        if 'symbol' in item.data:
             symbol = item.data["symbol"]
         else:
             symbol = "\\mbox{%s}" % name

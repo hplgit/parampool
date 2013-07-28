@@ -1,6 +1,7 @@
 from wtforms.fields import FloatField as FlaskFloatField
 from wtforms.fields import IntegerField as FlaskIntegerField
 from wtforms.widgets import HTMLString, Input
+from parampool.menu.DataItem import DataItem
 
 class HTML5Input(Input):
     """
@@ -32,8 +33,12 @@ class FloatRangeField(FlaskFloatField):
     """
     widget = RangeInput()
 
-    def __init__(self, label=None, validators=None, step=None, min=-1,
-                 max=1, onchange="", size=20, unit=None, **kwargs):
+    def __init__(self, label=None, validators=None, step=None, min=None,
+                 max=None, onchange="", size=20, unit=None, **kwargs):
+        if min is None:
+            min = DataItem.defaults['minmax'][0]
+        if max is None:
+            min = DataItem.defaults['minmax'][1]
         if step is None:
             # Base step on 100 steps between min and max
             step = (max - min)/100.0
@@ -51,8 +56,12 @@ class IntegerRangeField(FlaskIntegerField):
     """
     widget = RangeInput()
 
-    def __init__(self, label=None, validators=None, step=None, min=-100000,
-                 max=100000, onchange="", size=20, unit=None, **kwargs):
+    def __init__(self, label=None, validators=None, step=None, min=None,
+                 max=None, onchange="", size=20, unit=None, **kwargs):
+        if min is None:
+            min = DataItem.defaults['minmax'][0]
+        if max is None:
+            min = DataItem.defaults['minmax'][1]
         if step is None:
             # Base step on 100 steps between min and max
             step = (max - min)/100.0
@@ -75,8 +84,16 @@ class FloatField(FlaskFloatField):
     widget = NumberInput()
 
     def __init__(self, label=None, validators=None,
-                 min=-1000, max=1000, size=20, step=1, unit=None,
+                 min=None, max=None, size=20, step=None, unit=None,
                  **kwargs):
+        if min is None:
+            min = DataItem.defaults['minmax'][0]
+        if max is None:
+            min = DataItem.defaults['minmax'][1]
+        if step is None:
+            # Base step on 20 steps between min and max
+            #step = (max - min)/20.0
+            step = 1
         self.step = step
         self.unit = unit
         self.min = min

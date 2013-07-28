@@ -166,7 +166,7 @@ def compute_drag_free_motion_plot2(
     html_text = '<img src="%s" width="400">' % filename
     return html_text
 
-def compute_motion_and_forces(
+def compute_motion_and_forces0(
     initial_velocity=5.0,
     initial_angle=45.0,
     spinrate=50.0,
@@ -274,7 +274,7 @@ def compute_motion_and_forces(
     return html_text
 
 # The following function has the same functionality as
-# compute_motion_and_forces above, but has true math in
+# compute_motion_and_forces0 above, but has true math in
 # the doc string and avoids plot files.
 
 def compute_motion_and_forces(
@@ -370,6 +370,7 @@ def compute_motion_and_forces(
         (latex_symbol(r'\omega'), spinrate),
         (latex_symbol('w'), w),
         (latex_symbol('m'), m),
+        (latex_symbol('R'), R),
         ('method', method),
         (latex_symbol(r'\Delta t'), dt),
         ('landing point', x[-1])]))
@@ -413,7 +414,6 @@ def compute_motion_and_forces(
         plt.figure(forces_fig_no)
     except NameError:
         forces_fig_no = plt.figure().number
-    print 'XXX before plt.plot(x,d/g)'
     plt.plot(x, d/np.abs(g), label='drag vs gravity')
     if spinrate != 0:
         plt.plot(x, l/np.abs(g), label='lift vs gravity')
@@ -446,7 +446,7 @@ def compute_motion_and_forces(
         table += '<tr>'
         for variable in case:
             if isinstance(case[variable], float):
-                table += '<td> %.3g </td>' % case[variable]
+                table += '<td align="right"> %.3g </td>' % case[variable]
             else:
                 table += '<td> %-10s </td>' % case[variable]
         table += '</tr>\n'
@@ -461,17 +461,17 @@ def menu_definition_list():
             'Initial motion data', [
                 dict(name='Initial velocity', default=5.0),
                 dict(name='Initial angle', default=45,
-                     widget='range', minmax=[0,90], unit='deg'),
+                     widget='range', minmax=[0,90]),
                 dict(name='Spinrate', default=50, widget='float',
-                     str2type=float, unit='1/s'),
+                     unit='1/s'),
                 ],
             'Body and environment data', [
                 dict(name='Wind velocity', default=0.0,
-                     help='Wind velocity in positive x direction.'),
-                dict(name='Mass', default=0.1,
-                     help='Mass of body.', unit='kg'),
-                dict(name='Radius', default=0.11,
-                     help='Radius of spherical body.', unit='m'),
+                     help='Wind velocity in positive x direction.',
+                     widget='float', str2type=float),
+                dict(name='Mass', default=0.1, unit='kg',
+                     validate=lambda data_item, value: value > 0),
+                dict(name='Radius', default=0.11, unit='m'),
                 ],
             'Numerical parameters', [
                 dict(name='Method', default='RK4',
@@ -479,87 +479,43 @@ def menu_definition_list():
                      options=['RK4', 'RK2', 'ForwardEuler'],
                      help='Numerical solution method.'),
                 dict(name='Time step', default=None,
-                     widget='float', unit='s'),
+                     widget='textline', unit='s'),
                 ],
             'Plot parameters', [
-                dict(name='Plot simplified motion', default=True,
-                     help='Plot motion without drag+lift forces.'),
-                dict(name='New plot', default=True,
-                     help='Erase all old curves.'),
+                dict(name='Plot simplified motion', default=True),
+                dict(name='New plot', default=True),
                 ],
             ],
         ]
     from parampool.menu.UI import listtree2Menu
     menu = listtree2Menu(menu)
-    # from parampool.menu.UI import load_values_from_file, load_values_from_command_line
-    #menu = load_values_from_file(menu, command_line_option='--menufile')
-    #menu = load_values_from_command_line(menu)
-    return menu
-
-def menu_definition_list2():  # Not used
-    menu = [
-        'Main', [
-            'Initial motion data', [
-                dict(name='Initial velocity', default=5.0),
-                dict(name='Initial angle', default=45,
-                     widget='range', minmax=[0,90], unit='deg'),
-                dict(name='Spinrate', default=50, widget='float',
-                     str2type=float, unit='1/s'),
-                ],
-            'Body and environment data', [
-                dict(name='Wind velocity', default=0.0,
-                     help='Wind velocity in positive x direction.'),
-                dict(name='Mass', default=0.1,
-                     help='Mass of body.', unit='kg'),
-                dict(name='Radius', default=0.11,
-                     help='Radius of spherical body.', unit='m'),
-                ],
-            'Numerical parameters', [
-                dict(name='Method', default='RK4',
-                     widget='select',
-                     options=['RK4', 'RK2', 'ForwardEuler'],
-                     help='Numerical solution method.'),
-                dict(name='Time step', default=None,
-                     widget='float', unit='s'),
-                ],
-            'Plot parameters', [
-                dict(name='Plot simplified motion', default=True,
-                     help='Plot motion without drag+lift forces.'),
-                dict(name='New plot', default=True,
-                     help='Erase all old curves.'),
-                ],
-            ],
-        ]
-    from parampool.menu.UI import listtree2Menu
-    menu = listtree2Menu(menu)
-    # from parampool.menu.UI import load_values_from_file, load_values_from_command_line
-    #menu = load_values_from_file(menu, command_line_option='--menufile')
-    #menu = load_values_from_command_line(menu)
+    import parampool.menu.DataItem
+    parampool.menu.DataItem.DataItem.defaults['widget_size'] = 25
     return menu
 
 def menu_definition_api():
     from parampool.menu.Menu import Menu
-    menu = Menu(root_name='Main')
+    menu = Menu()
+    menu.submenu('Main menu')
     menu.submenu('Initial motion data')
     menu.add_data_item(
         name='Initial velocity', default=5.0)
     menu.add_data_item(
         name='Initial angle', default=45,
-        widget='range', minmax=[0,90], unit='deg')
+        widget='range', minmax=[0,90])
     menu.add_data_item(
-        name='Spinrate', default=50, widget='float',
-        str2type=float, unit='1/s')
+        name='Spinrate', default=50, widget='float', unit='1/s')
 
     menu.submenu('../Body and environment data')
     menu.add_data_item(
         name='Wind velocity', default=0.0,
-        help='Wind velocity in positive x direction.')
+        help='Wind velocity in positive x direction.',
+        widget='float', str2type=float)
     menu.add_data_item(
-        name='Mass', default=0.1,
-        help='Mass of body.', unit='kg')
+        name='Mass', default=0.1, unit='kg',
+        validate=lambda data_item, value: value > 0)
     menu.add_data_item(
-        name='Radius', default=0.11,
-        help='Radius of spherical body.', unit='m')
+        name='Radius', default=0.11, unit='m')
 
     menu.submenu('../Numerical parameters')
     menu.add_data_item(
@@ -569,17 +525,14 @@ def menu_definition_api():
         help='Numerical solution method.')
     menu.add_data_item(
         name='Time step', default=None,
-        widget='float', unit='s')
+        widget='textline', unit='s')
 
     menu.submenu('../Plot parameters')
     menu.add_data_item(
-        name='Plot simplified motion', default=True,
-        help='Plot motion without drag and lift forces.')
+        name='Plot simplified motion', default=True)
     menu.add_data_item(
-        name='New plot', default=True,
-        help='Erase all old curves.')
+        name='New plot', default=True)
     menu.update()
-
     return menu
 
 # Another version where we have different functions for creating
@@ -587,7 +540,8 @@ def menu_definition_api():
 
 def menu_definition_api_with_separate_submenus():
     from parampool.menu.Menu import Menu
-    menu = Menu(root_name='Main')
+    menu = Menu()
+    menu.submenu('Main menu')
     menu = motion_menu(menu)
     menu.change_submenu('..')
     menu = body_and_envir_menu(menu)
@@ -595,33 +549,70 @@ def menu_definition_api_with_separate_submenus():
     menu = numerics_menu(menu)
     menu.change_submenu('..')
     menu = plot_menu(menu)
-    menu.update()
+    menu.update()  # finalize menu construction
+
+    from parampool.menu.UI import (
+        set_data_item_attribute,
+        set_defaults_from_file,
+        set_defaults_from_command_line,
+        set_defaults_in_model_file,
+        write_menufile,
+        )
+    # Let all widget sizes be 6, except for Time step
+    menu = set_data_item_attribute(menu, 'widget_size', 6)
+    menu.get('Time step').data['widget_size'] = 4
+
+    menu = set_defaults_from_file(menu, command_line_option='--menufile')
+    menu = set_defaults_from_command_line(menu)
+    flask_modelfile = 'model.py'
+    print 'XXX', os.getcwd()
+    django_modelfile = os.path.join('motion_and_forces_with_menu', 'app',
+                                    'models.py')
+    if os.path.isfile(flask_modelfile):
+        set_defaults_in_model_file(flask_modelfile, menu)
+    elif os.path.isfile(django_modelfile):
+        set_defaults_in_model_file(django_modelfile, menu)
+
+    menufile = open('menu.dat', 'w')
+    menufile.write(write_menufile(menu))
+    menufile.close()
+
     return menu
 
 def motion_menu(menu, name='Initial motion data'):
     menu.submenu(name)
     menu.add_data_item(
         name='Initial velocity', default=5.0, symbol='v_0',
-        unit='m/s')
+        unit='m/s', help='Initial velocity',
+        str2type=float, widget='float',
+        validate=lambda data_item, value: value > 0)
     menu.add_data_item(
         name='Initial angle', default=45, symbol=r'\theta',
-        widget='range', minmax=[0,90], unit='deg')
+        widget='range', minmax=[0,90], str2type=float,
+        help='Initial angle',
+        validate=lambda data_item, value: 0 < value <= 90)
     menu.add_data_item(
         name='Spinrate', default=50, symbol=r'\omega',
-        widget='float', str2type=float, unit='1/s')
+        widget='float', str2type=float, unit='1/s',
+        help='Spinrate')
     return menu
 
 def body_and_envir_menu(menu, name='Body and environment data'):
     menu.submenu(name)
     menu.add_data_item(
         name='Wind velocity', default=0.0, symbol='w',
-        help='Wind velocity in positive x direction.', unit='m/s')
+        help='Wind velocity in positive x direction.', unit='m/s',
+        widget='float', str2type=float)
     menu.add_data_item(
         name='Mass', default=0.1, symbol='m',
-        help='Mass of body.', unit='kg')
+        help='Mass of body.', unit='kg',
+        widget='float', str2type=float,
+        validate=lambda data_item, value: value > 0)
     menu.add_data_item(
         name='Radius', default=0.11, symbol='R',
-        help='Radius of spherical body.', unit='m')
+        help='Radius of spherical body.', unit='m',
+        widget='float', str2type=float,
+        validate=lambda data_item, value: value > 0)
     return menu
 
 def numerics_menu(menu, name='Numerical parameters'):
@@ -633,7 +624,8 @@ def numerics_menu(menu, name='Numerical parameters'):
         help='Numerical solution method.')
     menu.add_data_item(
         name='Time step', default=None, symbol=r'\Delta t',
-        widget='float', unit='s')
+        widget='textline', unit='s', str2type=eval,
+        help='None: ca 500 steps, otherwise specify float.')
     return menu
 
 def plot_menu(menu, name='Plot parameters'):

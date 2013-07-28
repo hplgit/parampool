@@ -1,13 +1,13 @@
 from django.forms.fields import IntegerField as DjangoIntegerField
 
-from html5.django.forms import NumberInput
+from parampool.html5.django.forms import NumberInput
 
 class IntegerField(DjangoIntegerField):
     widget = NumberInput
 
     def widget_attrs(self, widget):
         """
-        Given a Widget instance (*not* a Widget class), returns a dictionary of
+        Given a Widget instance (*not* a Widget class), return a dictionary of
         any HTML attributes that should be added to the Widget, based on this
         Field.
         """

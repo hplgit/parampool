@@ -25,6 +25,7 @@ setup(name='parampool',
                 'parampool.html5',
                 'parampool.html5.flask',
                 'parampool.html5.django',
+                'parampool.html5.django.forms',
                 'parampool.utils',
                 ],)
 

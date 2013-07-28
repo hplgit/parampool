@@ -70,6 +70,13 @@ class DataItem:
     """
     _legal_data = 'name default unit help value str2type minmax options widget validate namespace user_data symbol widget_size'.split()
 
+    # defaults are used by GUI generating software to get
+    # values of attributes that are not set. These defaults can
+    # be set in user code:
+    # import parampool.menu.DataItem
+    # parampool.menu.DataItem.DataItem.defaults['minmax'] = [-10000, 10000]
+    defaults = {'widget_size': 7, 'minmax': [-1000, 1000]}
+
     def _signature(self):
         """Return output signature with "DataItem: name=..."."""
         return 'DataItem "%s"' % self.name

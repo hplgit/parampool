@@ -5,6 +5,8 @@ def generate_models_menu(classname, outfile, menu):
     Generate Django ModelForm by iterating through
     leaf nodes in the given menu object.
     """
+    from parampool.menu.DataItem import DataItem
+    default_widget_size = DataItem.defaults['widget_size']
 
     class CodeData(object):
         """Object to hold output code through tree recursion."""
@@ -14,6 +16,7 @@ def generate_models_menu(classname, outfile, menu):
     def leaf_func(tree_path, level, item, user_data):
         name = item.name
         field_name = parampool.utils.legal_variable_name(name)
+        field_name_quoted = "'%s'" % field_name
         default = item.data["default"]
 
         # Make label
@@ -25,8 +28,11 @@ def generate_models_menu(classname, outfile, menu):
         if 'minmax' in item.data:
             minvalue = item.data['minmax'][0]
             maxvalue = item.data['minmax'][1]
+        else:
+            minvalue, maxvalue = DataItem.defaults['minmax']
 
         widget = item.data.get("widget")
+        widget_size = item.get("widget_size", default=default_widget_size)
 
         # TODO: Slider widgets for Django
         if widget in ("range", "integer_range"):
@@ -44,11 +50,14 @@ def generate_models_menu(classname, outfile, menu):
         default=%%(default)g)
 """ % user_data.longest_name % vars()
             # TODO: Minmax for integers
-            if item.data.has_key("minmax"):
+            if 'minmax' in item.data:
                 pass
 
+            user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': 1}),""" % user_data.longest_name % vars()
+
         elif widget == "float":
-            if item.data.has_key("minmax"):
+            if 'minmax' in item.data:
                 user_data.code += """\
 
     %%(field_name)-%ds = MinMaxFloat(
@@ -56,6 +65,10 @@ def generate_models_menu(classname, outfile, menu):
         default=%%(default)g,
         min_value=%%(minvalue)g, max_value=%%(maxvalue)g)
 """ % user_data.longest_name % vars()
+
+                user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: RangeInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': 1}),""" % user_data.longest_name % vars()
+
             else:
                 user_data.code += """\
 
@@ -63,6 +76,9 @@ def generate_models_menu(classname, outfile, menu):
         verbose_name='%%(verbose_name)s',
         default=%%(default)g)
 """ % user_data.longest_name % vars()
+
+                user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': 1}),""" % user_data.longest_name % vars()
 
         elif widget == "file":
             user_data.code += """\
@@ -72,8 +88,11 @@ def generate_models_menu(classname, outfile, menu):
         upload_to='uploads/')
 """ % user_data.longest_name % vars()
 
+            user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: TextInput(attrs={'size': %%(widget_size)d}),""" % user_data.longest_name % vars()
+
         elif widget == "select":
-            if item.data.has_key("options"):
+            if 'options' in item.data:
                 choices = item.data["options"]
                 if not isinstance(choices[0], (list, tuple)):
                     # Django requires choices to be two-tuples
@@ -86,10 +105,12 @@ def generate_models_menu(classname, outfile, menu):
         default='%%(default)s',
         choices=%%(choices)s)
 """ % user_data.longest_name % vars()
+
             else:
                 print "*** ERROR: Cannot use widget 'select' without any options."
                 import sys
                 sys.exit(1)
+            # No widget size spec for options
 
         elif widget == "checkbox":
             user_data.code += """\
@@ -108,6 +129,8 @@ def generate_models_menu(classname, outfile, menu):
         max_length=50)
 """ % user_data.longest_name % vars()
 
+            user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: TextInput(attrs={'size': %%(widget_size)d}),""" % user_data.longest_name % vars()
         else:
             not_supported = ("hidden", "password", "tel")
             if widget in not_supported:
@@ -115,18 +138,27 @@ def generate_models_menu(classname, outfile, menu):
                 import sys
                 sys.exit(1)
 
-            widget2field = {"textarea": "models.TextField",
-                            "email":    "models.EmailField",
-                            "url":      "models.URLField"}
+            widget2field = {
+                "textarea": "models.TextField",
+                "email":    "models.EmailField",
+                "url":      "models.URLField"}
+            widget2widget = {
+                "textarea": "Textarea",
+                "email":    "EmailInput",
+                "url":      "URLInput"}
 
             if widget in widget2field.keys():
                 field = widget2field[widget]
+                django_widget = widget2widget[widget]
                 user_data.code += """\
 
     %%(field_name)-%ds = %%(field)s(
         verbose_name='%%(verbose_name)s',
         default='%%(default)s')
 """ % user_data.longest_name % vars()
+
+                user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: %%(django_widget)s(attrs={'size': %%(widget_size)d}),""" % user_data.longest_name % vars()
             else:
                 raise TypeError("Widget '%s' not allowed" % widget)
 
@@ -135,12 +167,18 @@ def generate_models_menu(classname, outfile, menu):
 from django.db import models
 from django.forms import ModelForm
 from parampool.html5.django.models import MinMaxFloat
+from parampool.html5.django.forms.widgets import \\
+     TextInput, NumberInput, RangeInput, Textarea, EmailInput, URLInput
+
+# Note: The verbose_name attribute starts with a blank to avoid
+# that Django forces the first character to be upper case.
 
 class %(classname)s(models.Model):
 ''' % vars()
 
     codedata = CodeData()
     codedata.code = code
+    codedata.widget_specs = ''
     codedata.longest_name = 0
 
     # Find the longest name
@@ -158,10 +196,12 @@ class %(classname)s(models.Model):
                   verbose=False)
 
     code = codedata.code
+    widget_specs = codedata.widget_specs
     code += """
 class %(classname)sForm(ModelForm):
     class Meta:
         model = %(classname)s
+        widgets = {%(widget_specs)s}
 """ % vars()
 
     if outfile is None:

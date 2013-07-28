@@ -39,7 +39,7 @@ def generate_model_menu(classname, outfile, menu):
         default=%%(default)s,
         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
-            if item.data.has_key("minmax"):
+            if 'minmax' in item.data:
                 user_data.code += """,
                     wtf.validators.NumberRange(%(minvalue)g, %(maxvalue)g)],
         min=%(minvalue)g, max=%(maxvalue)g, step=1)
@@ -66,7 +66,7 @@ def generate_model_menu(classname, outfile, menu):
 
 
         elif widget == "range":
-            if not item.data.has_key("minmax"):
+            if not 'minmax' in item.data:
                 raise TypeError("Cannot create a range without min/max values")
             user_data.code += """\
 
@@ -81,7 +81,7 @@ def generate_model_menu(classname, outfile, menu):
 """ % user_data.longest_name % vars()
 
         elif widget == "integer_range":
-            if not item.data.has_key("minmax"):
+            if not 'minmax' in item.data:
                 raise TypeError("Cannot create a range without min/max values")
             user_data.code += """\
 
@@ -105,7 +105,7 @@ def generate_model_menu(classname, outfile, menu):
 """ % user_data.longest_name % vars()
 
         elif widget == "select":
-            if item.data.has_key("options"):
+            if 'options' in item.data:
                 choices = item.data["options"]
                 if not isinstance(choices[0], (list, tuple)):
                     # Flask requires choices to be two-tuples

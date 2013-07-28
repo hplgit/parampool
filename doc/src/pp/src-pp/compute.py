@@ -489,6 +489,8 @@ def menu_definition_list():
         ]
     from parampool.menu.UI import listtree2Menu
     menu = listtree2Menu(menu)
+    import parampool.menu.DataItem
+    parampool.menu.DataItem.DataItem.defaults['widget_size'] = 25
     return menu
 
 def menu_definition_api():

@@ -201,12 +201,8 @@ MathJax.Hub.Config({
         parent_id = user_data.parent_id[-1]
         name = item.name
         field_name = parampool.utils.legal_variable_name(name)
-        if item.data.get('widget', None) == 'select':
-            widget_size = ''  # no specification of size for option list
-        else:
-            widget_size = '(size=%s)' % item.get('widget_size', default=20)
         form = """\
-&nbsp; {%% spaceless %%} {{ form.%(field_name)s%(widget_size)s }} {%% endspaceless %%} \
+&nbsp; {%% spaceless %%} {{ form.%(field_name)s }} {%% endspaceless %%} \
 {%% if form.%(field_name)s.errors %%} \
 {%% for error in form.%(field_name)s.errors %%} \
 <err> {{error}} </err> \
@@ -218,7 +214,7 @@ MathJax.Hub.Config({
             user_data.pb.update(user_data.pbid)
             user_data.pbid += 1
 
-        if item.data.has_key("symbol"):
+        if 'symbol' in item.data:
             symbol = item.data["symbol"]
         else:
             symbol = "\\mbox{%s}" % name
