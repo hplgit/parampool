@@ -25,7 +25,10 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=120):
         global _contacted_latex_codecogs_com
         _contacted_latex_codecogs_com = True
     import urllib
-    code = urllib.urlopen(link).read()
+    try:
+        code = urllib.urlopen(link).read()
+    except IOError:
+        raise IOError('No Internet connection? Cannot open http://latex.codecogs.com/png.latex...')
     f = open(filename, 'wb')
     f.write(code)
     f.close()

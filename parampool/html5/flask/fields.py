@@ -1,3 +1,9 @@
+"""
+HTML5 widgets for wtforms and flask.
+See also the projects https://github.com/brutus/wtforms-html5
+and http://simonklee.org/pkg/flask-wtf.
+"""
+
 from wtforms.fields import FloatField as FlaskFloatField
 from wtforms.fields import IntegerField as FlaskIntegerField
 from wtforms.widgets import HTMLString, Input
@@ -38,10 +44,9 @@ class FloatRangeField(FlaskFloatField):
         if min is None:
             min = DataItem.defaults['minmax'][0]
         if max is None:
-            min = DataItem.defaults['minmax'][1]
+            max = DataItem.defaults['minmax'][1]
         if step is None:
-            # Base step on 100 steps between min and max
-            step = (max - min)/100.0
+            step = (max - min)/DataItem.defaults['range_steps']
         self.step = step
         self.min = min
         self.max = max
@@ -61,10 +66,9 @@ class IntegerRangeField(FlaskIntegerField):
         if min is None:
             min = DataItem.defaults['minmax'][0]
         if max is None:
-            min = DataItem.defaults['minmax'][1]
+            max = DataItem.defaults['minmax'][1]
         if step is None:
-            # Base step on 100 steps between min and max
-            step = (max - min)/100.0
+            step = (max - min)/DataItem.defaults['range_steps']
         self.step = step
         self.min = min
         self.max = max
@@ -89,11 +93,9 @@ class FloatField(FlaskFloatField):
         if min is None:
             min = DataItem.defaults['minmax'][0]
         if max is None:
-            min = DataItem.defaults['minmax'][1]
+            max = DataItem.defaults['minmax'][1]
         if step is None:
-            # Base step on 20 steps between min and max
-            #step = (max - min)/20.0
-            step = 1
+            step = DataItem.defaults['number_step']
         self.step = step
         self.unit = unit
         self.min = min

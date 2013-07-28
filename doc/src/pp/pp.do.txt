@@ -688,6 +688,10 @@ case of "Initial velocity". More attributes can be added:
    on the value of `str2type` or the type of the default value.
  * `minmax` is a 2-list or 2-tuple with lower and upper bound in
    the interval of legal values of a number.
+ * The `range_step` attribute, valid when `widget` is `range`,  specifies the
+   steps in the slider used to select the number.
+   Here we can select the "Initial angle" in unit steps between 0 and 90
+   degrees.
  * `unit` specifies a unit, e.g., `1/s` or `kg/m**3`, or `1/s`.
  * `help` adds a help string to explain more about the parameter and
    how it can be set.
@@ -698,6 +702,8 @@ case of "Initial velocity". More attributes can be added:
    This means that it is strictly not necessary to assign for the
    "Wind velocity" data item. With more complicated objects one can
    assign a user-given conversion function to `str2type` (shown later).
+ * `option` is a list of options for a `select` widget, here the
+   type of numerical solution methods that can be chosen.
  * `validate` holds a function that takes the value of the data item
    as argument and returns `True` or `False` depending on whether
    the value can be accepted or not.
@@ -706,7 +712,7 @@ case of "Initial velocity". More attributes can be added:
  * `widget_size` specifies the size (width) of fields in graphical
    user interfaces.
 
-=== Genering a user interface ===
+=== Generating a user interface ===
 
 With a menu function and a compute function at hand,
 it remains to make a new directory, copy the module(s) containing
@@ -732,7 +738,116 @@ Terminal> python controller.py
 Open the URL `http://127.0.0.1:5000` in a web broswer to see an interface
 as the one in Figure ref{pp:flask_menu1:fig1}.
 
-FIGURE: [fig-pp/flask_menu1.png, width=500] Web interface generated from a menu specification. label{pp:flask_menu1:fig1}
+FIGURE: [fig-pp/flask_menu1_closed.png, width=500] Web interface in closed form. label{pp:flask_menu1:fig1}
+
+=== Operating the user interface ===
+
+The menu tree is mapped onto a visual structure often used for
+directory trees. Clicking on *open all* at the top of the user interface
+expands all submenus so that all parameters (data items) become visible.
+Figure ref{pp:flask_menu1:fig2} displays the result.
+
+FIGURE: [fig-pp/flask_menu1_open.png, width=500] Web interface in fully expanded form. label{pp:flask_menu1:fig2}
+
+The following technical points must be mentioned.
+
+ o Data items whose widgets are specified as `float` or `integer`, or
+   where `str2type` is `float` or `int`, or where the default value is
+   a `float` or `int`, are shown using the HTML5 field called number.
+   The small (and not so useful) arrows can be used to adjust the number,
+   but usually typing in the number manually is faster and more precise.
+ o When the widget is `range`, an HTML5 range field is used, which is
+   usually rendered as a slider in browsers. The slider gets by default
+   100 steps (can be changed or specified individually for any data item).
+ o With the `select` widget we get a pull-down menu with the different
+   options.
+ o Any data item whose default value is `True` or `False` maps directly to
+   a checkbox for boolean parameters.
+ o Any data item with `unit` specified maps to an ordinary text field,
+   since input consists of a number with an optional text for the unit.
+   That is, if we choose to set `unit='m/s'` for the "Initial velocity"
+   data item, the input field will not the an HTML5 number field, but
+   a standard HTML text field.
+ o The names of the data items are typeset in LaTeX and shown as
+   PNG images.
+
+!bwarning
+The HTML5 number field used here has a minimum and maximum value
+specified,
+and the given value must be compatible with those numbers.
+Therefore, we strongly recommend to explicitly supply a `minmax` attribute
+for any `flota` or `int` data, unless a unit is specified, because then
+just a plain text field without any min/max-value information is used.
+!ewarning
+
+We can try out the interface:
+
+ o Set "Initial velocity" to 8.
+ o Move the slider for "Initial angle" to 55.
+ o Add a positive "Wind velocity" of -3.
+ o Specify "Mass" as the text `0.1*1000 g` (i.e., we use g rather
+   than the default kg as unit, but the value is still 0.1 kg).
+ o Choose `RK2` for "Method".
+ o Set "Time step" to 0.12.
+ o Uncheck the "Plot simplified motion" boolean value.
+ o Hold the mouse pointer over the
+   "Wind velocity" field to see the help string. Then point the mouse
+   to  "Mass" input field and the specified unit pops up.
+   A combination of help
+   and unit information is showed if both are given in the
+   data item definition.
+
+You should see something like Figure ref{pp:flask_menu1:fig3}.
+
+FIGURE: [fig-pp/flask_menu1_filled.png, width=500] Web interface with input parameters filled out. label{pp:flask_menu1:fig3}
+
+Now, press the *Compute* button. Figure ref{pp:flask_menu1:fig4} shows
+the resulting response. You can now play around and click the checkbox
+for "Plot simplified motion" and the recompute to see the effects
+of wind against the motion, drag, and lift (which are substantial in
+this example).
+
+FIGURE: [fig-pp/flask_menu1_filled.png, width=500] Web interface with input and results. label{pp:flask_menu1:fig4}
+
+Let us also experiment with wrong input:
+
+ o Write `abc` in the "Initial velocity" field and press the *Compute* button.
+   The error message "Please enter a number" pops up.
+ o Give a negative value for "Mass".
+   The "Mass" data item has a validation function provided by us.
+   DOES NOT WORK.
+
+
+===== Specify a menu using an API =====
+
+Instead of listing all the entries in the menu tree as strings, lists,
+and dicts in a nested data structure, you can use the
+Application Programming Interface (API) of the `parampool.menu` package.
+The menu defined above is alternatively programmed like this using
+the API:
+
+@@@CODE src-pp/compute.py fromto: def menu_definition_api@menu_definition_api_with_separate_submenus
+The API is in many ways easier to use than the nested data structure
+with lists, strings, and dicts. The API resembles moving around in
+a file tree. The rules are simple:
+
+ * `menu.submenu(path)` moves us to a submenu `path`, and creates
+   it first if it does not exist. This is similar to `cd path`
+   in a file tree, or `mkdir path; cd path`, if `path` does not
+   exist.
+ * The name of a submenu, `path`, follows the rule of file and
+   directory names in a file tree: a slash is used as delimiter
+   between submenus and data items. For example:
+
+     * `/Main menu/Initial motion data/Initial velocity` is the
+       full path to the "Initial velocity" data item.
+     * Standing in the "Initial motion data" submenu,
+       `..` is the parent submenu ("Main menu"), while
+       `../Numerical parameters` is the correct path to the
+       "Numerical parameters" submenu. That is, we can use
+       relative and absolute paths as in a file tree.
+ * A data item is appended to the current submenu by
+   calling `menu.add_data_item`.
 
 
 
@@ -756,6 +871,10 @@ FIGURE: [fig-pp/flask_menu1.png, width=500] Web interface generated from a menu 
  * Let `w` be filename: upload a Python module with the w(t) function.
  * Problem: non-unique data item names cause trouble for the model
    class since just name is used as static variable...
+ * Show auto edit of the HTML code, e.g., removing Input: and Result:,
+   this is easier than freezing the files and manually editing them.
+   Reason: if you add new data itmes or submenus to the menu,
+   it is convenient to be able to regenerate the whole setup.
 
 !bc
 from parampool.generator.flask.generate_template import \

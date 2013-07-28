@@ -6,6 +6,7 @@ def generate_model_menu(classname, outfile, menu):
     Generate Flask form by iterating through
     leaf nodes in the given menu object.
     """
+    from parampool.menu.DataItem import DataItem
 
     class CodeData(object):
         """Object to hold output code through tree recursion."""
@@ -22,15 +23,32 @@ def generate_model_menu(classname, outfile, menu):
         if 'name' in item.data:
             label += item.data['name']
 
+        widget = item.data.get("widget")
+
         if 'minmax' in item.data:
             minvalue = item.data['minmax'][0]
             maxvalue = item.data['minmax'][1]
+        else:
+            minvalue, maxvalue = DataItem.defaults['minmax']
+            if widget in ("range", "integer_range"):
+                raise TypeError("Cannot create a range without min/max values")
 
-        widget = item.data.get("widget")
+        if 'range_step' in item.data:
+            range_step = item.data['range_step']
+        else:
+            range_steps = DataItem.defaults['range_steps']
+            range_step = (maxvalue - minvalue)/range_steps
+        number_step = item.data.get('number_step',
+                                    DataItem.defaults['number_step'])
+
         # Not all widgets have a size attribute so we set size
         # in the template
 
         if widget == "integer":
+            # NOTE: Might be problem with resizing field since
+            # we do not specify min, max, and step - does this
+            # html5.IntegerField have those attributes? No, it
+            # gets its __init__ from wtforms.fields.Field
             user_data.code += """\
 
     %%(field_name)-%ds = html5.IntegerField(
@@ -54,20 +72,19 @@ def generate_model_menu(classname, outfile, menu):
         label=u'%%(label)s',
         description=u'%%(label)s',
         default=%%(default)g,
+        min=%%(minvalue)g, max=%%(maxvalue)g, step=%%(number_step)g,
         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
             if 'minmax' in item.data:
                 user_data.code += """,
                     wtf.validators.NumberRange(%(minvalue)g, %(maxvalue)g)],
-        min=%(minvalue)g, max=%(maxvalue)g, step=1)
+        min=%(minvalue)g, max=%(maxvalue)g, step=%%(number_step))
 """ % vars()
             else:
                 user_data.code += "])\n"
 
 
         elif widget == "range":
-            if not 'minmax' in item.data:
-                raise TypeError("Cannot create a range without min/max values")
             user_data.code += """\
 
     %%(field_name)-%ds = FloatRangeField(
@@ -75,14 +92,12 @@ def generate_model_menu(classname, outfile, menu):
         description=u'%%(label)s',
         default=%%(default)g,
         onchange="showValue(this.value)",
-        min=%%(minvalue)g, max=%%(maxvalue)g,
+        min=%%(minvalue)g, max=%%(maxvalue)g, step=%%(range_step)g,
         validators=[wtf.validators.InputRequired(),
                     wtf.validators.NumberRange(%%(minvalue)g, %%(maxvalue)g)])
 """ % user_data.longest_name % vars()
 
         elif widget == "integer_range":
-            if not 'minmax' in item.data:
-                raise TypeError("Cannot create a range without min/max values")
             user_data.code += """\
 
     %%(field_name)-%ds = IntegerRangeField(
@@ -90,7 +105,7 @@ def generate_model_menu(classname, outfile, menu):
         description=u'%%(label)s',
         default=%%(default)g,
         onchange="showValue(this.value)",
-        min=%%(minvalue)g, max=%%(maxvalue)g,
+        min=%%(minvalue)g, max=%%(maxvalue)g, step=%%(range_step)g,
         validators=[wtf.validators.InputRequired(),
                     wtf.validators.NumberRange(%%(minvalue)g, %%(maxvalue)g)])
 """ % user_data.longest_name % vars()

@@ -68,14 +68,15 @@ class DataItem:
     is not given, it is set based on the unit used in the value, otherwise
     (unit specified) a unit conversion of the numerical value takes place.
     """
-    _legal_data = 'name default unit help value str2type minmax options widget validate namespace user_data symbol widget_size'.split()
+    _legal_data = 'name default unit help value str2type minmax options widget validate namespace user_data symbol widget_size range_step number_step'.split()
 
     # defaults are used by GUI generating software to get
     # values of attributes that are not set. These defaults can
     # be set in user code:
     # import parampool.menu.DataItem
     # parampool.menu.DataItem.DataItem.defaults['minmax'] = [-10000, 10000]
-    defaults = {'widget_size': 7, 'minmax': [-1000, 1000]}
+    defaults = {'widget_size': 7, 'minmax': [-1000, 1000],
+                'range_steps': 100, 'number_step': 1}
 
     def _signature(self):
         """Return output signature with "DataItem: name=..."."""

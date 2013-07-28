@@ -25,24 +25,25 @@ def generate_models_menu(classname, outfile, menu):
             label += item.data['name']
         verbose_name = ' ' + label  # space avoids upper case first char
 
+        widget = item.data.get("widget")
+        widget_size = item.get("widget_size", default=default_widget_size)
+
         if 'minmax' in item.data:
             minvalue = item.data['minmax'][0]
             maxvalue = item.data['minmax'][1]
         else:
             minvalue, maxvalue = DataItem.defaults['minmax']
+            if widget in ("range", "integer_range"):
+                raise TypeError("Cannot create a range without min/max values")
+        if 'range_step' in item.data:
+            range_step = item.data['range_step']
+        else:
+            range_steps = DataItem.defaults['range_steps']
+            range_step = (maxvalue - minvalue)/range_steps
+        number_step = item.data.get('number_step',
+                                    DataItem.defaults['number_step'])
 
-        widget = item.data.get("widget")
-        widget_size = item.get("widget_size", default=default_widget_size)
-
-        # TODO: Slider widgets for Django
-        if widget in ("range", "integer_range"):
-            print "*** WARNING: widget '%s' not yet supported" % widget
-            mapping = {"range": "float",
-                       "integer_range": "integer"}
-            widget = mapping.get(widget)
-            print "    Using standard %s instead" % widget
-
-        if widget == "integer":
+        if widget in ("integer", "integer_range"):
             user_data.code += """\
 
     %%(field_name)-%ds = models.IntegerField(
@@ -53,10 +54,14 @@ def generate_models_menu(classname, outfile, menu):
             if 'minmax' in item.data:
                 pass
 
-            user_data.widget_specs += """
-            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': 1}),""" % user_data.longest_name % vars()
+            if widget == "integer":
+                user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(number_step)}),""" % user_data.longest_name % vars()
+            elif widget == "integer_range":
+                user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: RangeInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(range_step)g, 'onchange': 'showValue(this.value)'}),""" % user_data.longest_name % vars()
 
-        elif widget == "float":
+        elif widget in ("float", "range"):
             if 'minmax' in item.data:
                 user_data.code += """\
 
@@ -65,10 +70,6 @@ def generate_models_menu(classname, outfile, menu):
         default=%%(default)g,
         min_value=%%(minvalue)g, max_value=%%(maxvalue)g)
 """ % user_data.longest_name % vars()
-
-                user_data.widget_specs += """
-            %%(field_name_quoted)-%ds: RangeInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': 1}),""" % user_data.longest_name % vars()
-
             else:
                 user_data.code += """\
 
@@ -77,8 +78,12 @@ def generate_models_menu(classname, outfile, menu):
         default=%%(default)g)
 """ % user_data.longest_name % vars()
 
+            if widget == "range":
                 user_data.widget_specs += """
-            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': 1}),""" % user_data.longest_name % vars()
+            %%(field_name_quoted)-%ds: RangeInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(range_step)g, 'onchange': 'showValue(this.value)'}),""" % user_data.longest_name % vars()
+            elif widget == "float":
+                user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(number_step)}),""" % user_data.longest_name % vars()
 
         elif widget == "file":
             user_data.code += """\
