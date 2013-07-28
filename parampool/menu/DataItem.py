@@ -290,7 +290,7 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
         if 'minmax' in self.data:
             lo, hi = self.data['minmax']
             if not (lo <= value <= hi):
-                raise DataItmValueError(
+                raise DataItemValueError(
                     '%s: value=%s not in [%s, %s]' %
                     self._signature(), value, lo, hi)
 
@@ -389,7 +389,20 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
         validate = self.data.get('validate', DataItem._validate)
         for i in range(len(self._values)):
             value = self._process_value(self._values[i])
-            validate(self, value)
+
+            # Validate value
+            try:
+                valid = validate(self, value)
+            except DataItemValueError, e:
+                valid = None
+                raise e
+            if valid is not None:
+                # No exception was raised in the validate routine,
+                # raise it here
+                if not valid:
+                    raise DataItemValueError('%s = %s: validate function %s claims invalid value' % (self.name, value, validate.__name__))
+
+            # value is ok, assign it
             self._values[i] = value
 
         self._assigned_value = True

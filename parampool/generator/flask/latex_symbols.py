@@ -15,7 +15,10 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=120):
     if not os.path.isdir(symdir):
         os.makedirs(symdir)
 
-    name = symbol.replace(' ', '_').replace('mbox', '').strip('\\{}') + '.png'
+    name = symbol.replace(' ', '_').replace('mbox', '')
+    for c in '''$^[]!@#%+=|/<>,.`~"'\\{}''':
+        name = name.replace(c, '')
+    name += '.png'
     filename = os.path.join(symdir, name)
     link = 'http://latex.codecogs.com/png.latex?\dpi{%(dpi)d}&space;%(symbol)s' \
             % vars()

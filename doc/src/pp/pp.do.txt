@@ -711,6 +711,11 @@ case of "Initial velocity". More attributes can be added:
    in Flask or Django interfaces instead of the name of data item.
  * `widget_size` specifies the size (width) of fields in graphical
    user interfaces.
+ * `textline` must be used for default values that are `None`,
+   because another value or the text "None" can be written in
+   the field. In this case, `str2type` is automatically set to `eval`
+   and any valid Python expression is then essentially allowable,
+   but wrong objects will give errors in the compute function.
 
 === Generating a user interface ===
 
@@ -769,15 +774,21 @@ The following technical points must be mentioned.
    data item, the input field will not the an HTML5 number field, but
    a standard HTML text field.
  o The names of the data items are typeset in LaTeX and shown as
-   PNG images.
+   PNG images. This means that data item names may contain
+   mathematical expressions: `Spinrate $\omega$` for instance.
 
 !bwarning
-The HTML5 number field used here has a minimum and maximum value
-specified,
+The HTML5 number field used here has a hidden minimum and maximum value
+specified (-1000 and 1000 by default, but can be changed),
 and the given value must be compatible with those numbers.
-Therefore, we strongly recommend to explicitly supply a `minmax` attribute
-for any `flota` or `int` data, unless a unit is specified, because then
-just a plain text field without any min/max-value information is used.
+Therefore, we strongly recommend to explicitly supply a `minmax`
+attribute for any `float` or `int` data. The only exception is when
+a unit is specified,
+because then just a plain text field without any min/max-value
+information is used.  In larger applications this warning is seldom an
+issue since there will be a unit associated with all numbers with
+dimension, and the dimensionless ones can have `textline` specified as
+`widget` or `float` with `minmax`.
 !ewarning
 
 We can try out the interface:
@@ -815,7 +826,37 @@ Let us also experiment with wrong input:
    The error message "Please enter a number" pops up.
  o Give a negative value for "Mass".
    The "Mass" data item has a validation function provided by us.
-   DOES NOT WORK.
+   A `False` value returned from this function gives rise to a
+   `DataItemValueError` shown in the browser. It reads here
+   `Mass = -0.1: validate function <lambda> claims invalid value`.
+ o Write `abc` for "Radius". This is a text field so any
+   text is in principle valid, but `parampool` raises a `TypeError`
+   with the message `could not apply str2type=<type 'float'> to value abc <type 'str'>`.
+ o Give a list `[0.1, 0.2]` for "Time step". Since the default is `None`,
+   which causes `str2type=eval`, any Python expression is accepted in
+   the interface, but the compute function raises a `TypeError`
+   because `float(dt)` fails when `dt` is a list. A remedy is to
+   write a tailored `str2type` function.
+
+The `str2type` conversion function in the latter case should more
+carefully check the contents of the user-provided string. A possible
+solution is
+
+!bc pydoc
+def convert_time_step(data_item, value):
+    # Value must be None or a float
+    if value == 'None':
+        return None
+    else:
+        try:
+            return float(value)
+        except TypeError:
+            raise TypeError('%s: could not convert "%s" to float'
+                            % (data_item.name, value))
+!ec
+Setting `str2type=convert_time_step` for the "Time step" data item
+gives an informative error message if the answer is not as expected:
+`None` or a floating-point number.
 
 
 ===== Specify a menu using an API =====
@@ -886,6 +927,9 @@ doc = run_doconce_on_text(compute_function.__doc__)
 ===== Specify a menu using an API =====
 
 ===== Using LaTeX symbols in the menu =====
+
+The reason for symbol is to have a simple name instead of raw string with
+dollar and backslashes, but that is also possible.
 
 ===== Setting default values at run-time =====
 

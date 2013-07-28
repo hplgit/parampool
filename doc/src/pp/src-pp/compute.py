@@ -463,7 +463,7 @@ def menu_definition_list():
                 dict(name='Initial velocity', default=5.0),
                 dict(name='Initial angle', default=45,
                      widget='range', minmax=[0,90], range_step=1),
-                dict(name='Spinrate', default=50, widget='float',
+                dict(name=r'Spinrate', default=50, widget='float',
                      unit='1/s'),
                 ],
             'Body and environment data', [
