@@ -27,6 +27,8 @@ def generate_model_menu(classname, outfile, menu):
             maxvalue = item.data['minmax'][1]
 
         widget = item.data.get("widget")
+        # Not all widgets have a size attribute so we set size
+        # in the template
 
         if widget == "integer":
             user_data.code += """\
@@ -39,7 +41,8 @@ def generate_model_menu(classname, outfile, menu):
 """ % user_data.longest_name % vars()
             if item.data.has_key("minmax"):
                 user_data.code += """,
-                    wtf.validators.NumberRange(%(minvalue)g, %(maxvalue)g)]
+                    wtf.validators.NumberRange(%(minvalue)g, %(maxvalue)g)],
+        min=%(minvalue)g, max=%(maxvalue)g, step=1)
 """ % vars()
             else:
                 user_data.code += "])\n"
@@ -53,9 +56,10 @@ def generate_model_menu(classname, outfile, menu):
         default=%%(default)g,
         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
-            if item.data.has_key("minmax"):
+            if 'minmax' in item.data:
                 user_data.code += """,
-                    wtf.validators.NumberRange(%(minvalue)g, %(maxvalue)g)])
+                    wtf.validators.NumberRange(%(minvalue)g, %(maxvalue)g)],
+        min=%(minvalue)g, max=%(maxvalue)g, step=1)
 """ % vars()
             else:
                 user_data.code += "])\n"

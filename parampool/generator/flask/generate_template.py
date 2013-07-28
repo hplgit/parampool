@@ -86,13 +86,14 @@ def generate_template_dtree(compute_function, classname,
     from latex_symbols import get_symbol, symbols_same_size
     import inspect
     args = inspect.getargspec(compute_function).args
+    compute_function_name = compute_function.__name__
 
     pre_code = """\
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Flask %(classname)s app</title>
+    <title>Flask %(compute_function_name)s app</title>
     <link rel="StyleSheet" href="static/dtree.css" type="text/css" />
     <script type="text/javascript" src="static/dtree.js"></script>
   </head>
@@ -155,7 +156,7 @@ MathJax.Hub.Config({
         if item.data.get('widget', None) == 'select':
             widget_size = ''  # no specification of size for option list
         else:
-            widget_size = '(size=%s)' % item.get('widget_size', default=12)
+            widget_size = '(size=%s)' % item.get('widget_size', default=7)
         form = """\
 &nbsp; {{ form.%(field_name)s%(widget_size)s }} {%% if form.%(field_name)s.errors %%} \
 {%% for error in form.%(field_name)s.errors %%} <err> {{error}} </err> \

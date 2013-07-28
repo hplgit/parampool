@@ -5,3 +5,4 @@ from compute import compute_motion_and_forces_with_menu, \
 generate(compute_motion_and_forces_with_menu,
          menu_function=menu_definition_list,
          MathJax=True)
+

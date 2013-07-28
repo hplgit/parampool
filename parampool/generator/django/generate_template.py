@@ -111,13 +111,14 @@ def generate_template_dtree(compute_function, classname,
     args = inspect.getargspec(compute_function).args
     app_dir = outfile.split("templates")[0]
     static_dir = os.path.join(app_dir, "static")
+    compute_function_name = compute_function.__name__
 
     pre_code = """\
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Django %(classname)s app</title>
+    <title>Django %(compute_function_name)s app</title>
     <link rel="StyleSheet" href="static/dtree.css" type="text/css" />
     <script type="text/javascript" src="static/dtree.js"></script>
   </head>
@@ -203,7 +204,7 @@ MathJax.Hub.Config({
         if item.data.get('widget', None) == 'select':
             widget_size = ''  # no specification of size for option list
         else:
-            widget_size = '(size=%s)' % item.get('widget_size', default=12)
+            widget_size = '(size=%s)' % item.get('widget_size', default=20)
         form = """\
 &nbsp; {%% spaceless %%} {{ form.%(field_name)s%(widget_size)s }} {%% endspaceless %%} \
 {%% if form.%(field_name)s.errors %%} \

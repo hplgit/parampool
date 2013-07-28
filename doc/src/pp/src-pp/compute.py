@@ -461,17 +461,17 @@ def menu_definition_list():
             'Initial motion data', [
                 dict(name='Initial velocity', default=5.0),
                 dict(name='Initial angle', default=45,
-                     widget='range', minmax=[0,90], unit='deg'),
+                     widget='range', minmax=[0,90]),
                 dict(name='Spinrate', default=50, widget='float',
-                     str2type=float, unit='1/s'),
+                     unit='1/s'),
                 ],
             'Body and environment data', [
                 dict(name='Wind velocity', default=0.0,
-                     help='Wind velocity in positive x direction.'),
-                dict(name='Mass', default=0.1,
-                     help='Mass of body.', unit='kg'),
-                dict(name='Radius', default=0.11,
-                     help='Radius of spherical body.', unit='m'),
+                     help='Wind velocity in positive x direction.',
+                     widget='float', str2type=float),
+                dict(name='Mass', default=0.1, unit='kg',
+                     validate=lambda data_item, value: value > 0),
+                dict(name='Radius', default=0.11, unit='m'),
                 ],
             'Numerical parameters', [
                 dict(name='Method', default='RK4',
@@ -479,13 +479,11 @@ def menu_definition_list():
                      options=['RK4', 'RK2', 'ForwardEuler'],
                      help='Numerical solution method.'),
                 dict(name='Time step', default=None,
-                     widget='float', unit='s'),
+                     widget='textline', unit='s'),
                 ],
             'Plot parameters', [
-                dict(name='Plot simplified motion', default=True,
-                     help='Plot motion without drag+lift forces.'),
-                dict(name='New plot', default=True,
-                     help='Erase all old curves.'),
+                dict(name='Plot simplified motion', default=True),
+                dict(name='New plot', default=True),
                 ],
             ],
         ]
@@ -502,21 +500,20 @@ def menu_definition_api():
         name='Initial velocity', default=5.0)
     menu.add_data_item(
         name='Initial angle', default=45,
-        widget='range', minmax=[0,90], unit='deg')
+        widget='range', minmax=[0,90])
     menu.add_data_item(
-        name='Spinrate', default=50, widget='float',
-        str2type=float, unit='1/s')
+        name='Spinrate', default=50, widget='float', unit='1/s')
 
     menu.submenu('../Body and environment data')
     menu.add_data_item(
         name='Wind velocity', default=0.0,
-        help='Wind velocity in positive x direction.')
+        help='Wind velocity in positive x direction.',
+        widget='float', str2type=float)
     menu.add_data_item(
-        name='Mass', default=0.1,
-        help='Mass of body.', unit='kg')
+        name='Mass', default=0.1, unit='kg',
+        validate=lambda data_item, value: value > 0)
     menu.add_data_item(
-        name='Radius', default=0.11,
-        help='Radius of spherical body.', unit='m')
+        name='Radius', default=0.11, unit='m')
 
     menu.submenu('../Numerical parameters')
     menu.add_data_item(
@@ -530,11 +527,9 @@ def menu_definition_api():
 
     menu.submenu('../Plot parameters')
     menu.add_data_item(
-        name='Plot simplified motion', default=True,
-        help='Plot motion without drag and lift forces.')
+        name='Plot simplified motion', default=True)
     menu.add_data_item(
-        name='New plot', default=True,
-        help='Erase all old curves.')
+        name='New plot', default=True)
     menu.update()
     return menu
 
@@ -586,11 +581,14 @@ def motion_menu(menu, name='Initial motion data'):
     menu.submenu(name)
     menu.add_data_item(
         name='Initial velocity', default=5.0, symbol='v_0',
-        unit='m/s', help='Initial velocity')
+        unit='m/s', help='Initial velocity',
+        str2type=float, widget='float',
+        validate=lambda data_item, value: value > 0)
     menu.add_data_item(
         name='Initial angle', default=45, symbol=r'\theta',
-        widget='range', minmax=[0,90], unit='deg',
-        help='Initial angle')
+        widget='range', minmax=[0,90], str2type=float,
+        help='Initial angle',
+        validate=lambda data_item, value: 0 < value <= 90)
     menu.add_data_item(
         name='Spinrate', default=50, symbol=r'\omega',
         widget='float', str2type=float, unit='1/s',
@@ -601,13 +599,18 @@ def body_and_envir_menu(menu, name='Body and environment data'):
     menu.submenu(name)
     menu.add_data_item(
         name='Wind velocity', default=0.0, symbol='w',
-        help='Wind velocity in positive x direction.', unit='m/s')
+        help='Wind velocity in positive x direction.', unit='m/s',
+        widget='float', str2type=float)
     menu.add_data_item(
         name='Mass', default=0.1, symbol='m',
-        help='Mass of body.', unit='kg')
+        help='Mass of body.', unit='kg',
+        widget='float', str2type=float,
+        validate=lambda data_item, value: value > 0)
     menu.add_data_item(
         name='Radius', default=0.11, symbol='R',
-        help='Radius of spherical body.', unit='m')
+        help='Radius of spherical body.', unit='m',
+        widget='float', str2type=float,
+        validate=lambda data_item, value: value > 0)
     return menu
 
 def numerics_menu(menu, name='Numerical parameters'):
@@ -619,7 +622,7 @@ def numerics_menu(menu, name='Numerical parameters'):
         help='Numerical solution method.')
     menu.add_data_item(
         name='Time step', default=None, symbol=r'\Delta t',
-        widget='textline', unit='s',
+        widget='textline', unit='s', str2type=eval,
         help='None: ca 500 steps, otherwise specify float.')
     return menu
 

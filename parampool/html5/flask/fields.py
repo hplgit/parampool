@@ -10,35 +10,39 @@ class HTML5Input(Input):
         super(HTML5Input, self).__init__(input_type)
 
     def __call__(self, field, **kwargs):
+        """This is the method called from the template (form.field)."""
         kwargs.setdefault('id', field.id)
         kwargs.setdefault('type', self.input_type)
         if 'value' not in kwargs:
             kwargs['value'] = field._value()
-        if hasattr(field, 'min'):
-            kwargs['min'] = field.min
-        if hasattr(field, 'max'):
-            kwargs['max'] = field.max
-        if hasattr(field, 'onchange'):
-            kwargs['onchange'] = field.onchange
-        kwargs['step'] = field.step
-        return HTMLString('<input %s>' % self.html_params(name=field.name, **kwargs))
+
+        attrs = 'min', 'max', 'step', 'size', 'onchange'
+        for attr in attrs:
+            if attr not in kwargs and hasattr(field, attr):
+                kwargs[attr] = getattr(field, attr)
+        r = HTMLString('<input %s>' % self.html_params(name=field.name, **kwargs))
+        return r
 
 class RangeInput(HTML5Input):
     input_type = "range" # HTML5 input type
 
 class FloatRangeField(FlaskFloatField):
     """
-    HTML5 compatibal version of FloatField. Using slider input widget.
+    HTML5 compatible version of FloatField. Using slider input widget.
     """
     widget = RangeInput()
 
-    def __init__(self, label=None, validators=None, step=0.001, min=-1,
-                 max=1, onchange="", unit=None, **kwargs):
+    def __init__(self, label=None, validators=None, step=None, min=-1,
+                 max=1, onchange="", size=20, unit=None, **kwargs):
+        if step is None:
+            # Base step on 100 steps between min and max
+            step = (max - min)/100.0
         self.step = step
         self.min = min
         self.max = max
         self.unit = unit
         self.onchange = onchange
+        self.size = size
         super(FloatRangeField, self).__init__(label, validators, **kwargs)
 
 class IntegerRangeField(FlaskIntegerField):
@@ -47,13 +51,17 @@ class IntegerRangeField(FlaskIntegerField):
     """
     widget = RangeInput()
 
-    def __init__(self, label=None, validators=None, step=1, min=-1,
-                 max=1, onchange="", unit=None, **kwargs):
+    def __init__(self, label=None, validators=None, step=None, min=-100000,
+                 max=100000, onchange="", size=20, unit=None, **kwargs):
+        if step is None:
+            # Base step on 100 steps between min and max
+            step = (max - min)/100.0
         self.step = step
         self.min = min
         self.max = max
         self.unit = unit
         self.onchange = onchange
+        self.size = size
         super(IntegerRangeField, self).__init__(label, validators, **kwargs)
 
 class NumberInput(HTML5Input):
@@ -66,7 +74,14 @@ class FloatField(FlaskFloatField):
     """
     widget = NumberInput()
 
-    def __init__(self, label=None, validators=None, step="any", unit=None, **kwargs):
+    def __init__(self, label=None, validators=None,
+                 min=-1000, max=1000, size=20, step=1, unit=None,
+                 **kwargs):
         self.step = step
         self.unit = unit
+        self.min = min
+        self.max = max
+        self.size = size
+        # For size to work in the template (or from here),
+        # we must specify min, max, and step != 'any'
         super(FloatField, self).__init__(label, validators, **kwargs)

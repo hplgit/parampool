@@ -1,4 +1,3 @@
-from Scientific.Physics.PhysicalQuantities import PhysicalQuantity as PQ
 from collections import OrderedDict
 import re, inspect, numpy
 from math import *  # enable eval to work with math functions (str2type=eval)
@@ -19,10 +18,6 @@ class DataItem:
     ``str2type``    object transforming a string to desired type,
                     can be ``eval``, ``float``, ... Based on type
                     of ``widget`` or ``default`` if not given.
-    ``convert``     boolean value that decides if str2type should be
-                    used. Defaults to True, and is automatically
-                    changed to False if a DataItem gets a value of
-                    the same type as its default value set.
     ``value``       current value assigned in a user interface
     ``minmax``      legal interval (2-list) of values
     ``options``     legal list of values
@@ -73,7 +68,7 @@ class DataItem:
     is not given, it is set based on the unit used in the value, otherwise
     (unit specified) a unit conversion of the numerical value takes place.
     """
-    _legal_data = 'name default unit help value str2type convert minmax options widget validate namespace user_data symbol widget_size'.split()
+    _legal_data = 'name default unit help value str2type minmax options widget validate namespace user_data symbol widget_size'.split()
 
     def _signature(self):
         """Return output signature with "DataItem: name=..."."""
@@ -152,9 +147,7 @@ class DataItem:
             if 'widget' in self.data:
                 self.data['widget'] = 'textline'
 
-        # Can be changed to False if a value other than str of correct
-        # type is set. Thus no need to convert to the correct type.
-        self._use_str2type = self.data.get("convert", True)
+        self._use_str2type = True  # convert data to right type
 
         self._values = [self.data['default']]
         self._assigned_value = False  # True if value from UI
@@ -320,7 +313,13 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
         # Is value a number and a unit?
         number_with_unit = r'^\s*([Ee.0-9+-]+) +([A-Za-z0-9*/]+)\s*$'
         if re.search(number_with_unit, value):
-            q = PQ(value)  # quantity with unit
+            if not hasattr(self, 'PhysicalQuantity_class'):
+                # Must install the unit conversion tool (the first time
+                # we see the need for units)
+                from Scientific.Physics.PhysicalQuantities import \
+                     PhysicalQuantity
+                self.PhysicalQuantity_class = PhysicalQuantity
+            q = self.PhysicalQuantity_class(value)  # quantity with unit
             if 'unit' in self.data:
                 registered_unit = self.data['unit']
                 if registered_unit != q.getUnitName():
