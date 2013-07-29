@@ -10,11 +10,14 @@ class MotionAndForcesWithMenu(wtf.Form):
         default='5.0',
         validators=[wtf.validators.InputRequired()])
 
-    Initial_angle          = html5.TextField(
+    Initial_angle          = FloatRangeField(
         label=u'Initial angle',
         description=u'Initial angle',
-        default='45',
-        validators=[wtf.validators.InputRequired()])
+        default=45,
+        onchange="showValue(this.value)",
+        min=0, max=90, step=0,
+        validators=[wtf.validators.InputRequired(),
+                    wtf.validators.NumberRange(0, 90)])
 
     Spinrate               = html5.TextField(
         label=u'Spinrate',

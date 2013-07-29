@@ -8,13 +8,17 @@ class MotionAndForcesWithMenu(wtf.Form):
         label=u'Initial velocity',
         description=u'Initial velocity',
         default=5,
+        min=-1000, max=1000, step=1,
         validators=[wtf.validators.InputRequired()])
 
-    Initial_angle          = html5.TextField(
+    Initial_angle          = FloatRangeField(
         label=u'Initial angle',
         description=u'Initial angle',
-        default='45',
-        validators=[wtf.validators.InputRequired()])
+        default=45,
+        onchange="showValue(this.value)",
+        min=0, max=90, step=1,
+        validators=[wtf.validators.InputRequired(),
+                    wtf.validators.NumberRange(0, 90)])
 
     Spinrate               = html5.TextField(
         label=u'Spinrate',
@@ -26,6 +30,7 @@ class MotionAndForcesWithMenu(wtf.Form):
         label=u'Wind velocity',
         description=u'Wind velocity',
         default=0,
+        min=-1000, max=1000, step=1,
         validators=[wtf.validators.InputRequired()])
 
     Mass                   = html5.TextField(

@@ -492,6 +492,17 @@ def menu_definition_list():
     menu = listtree2Menu(menu)
     return menu
 
+def convert_time_step(data_item, value):
+    # Value must be None or a float
+    if value == 'None':
+        return None
+    else:
+        try:
+            return float(value)
+        except TypeError:
+            raise TypeError('%s: could not convert "%s" to float'
+                            % (data_item.name, value))
+
 def menu_definition_api():
     """Create and return menu using the parampool.menu API."""
     from parampool.menu.Menu import Menu
@@ -529,7 +540,7 @@ def menu_definition_api():
         help='Numerical solution method.')
     menu.add_data_item(
         name='Time step', default=None,
-        widget='textline', unit='s')
+        widget='textline', unit='s', str2type=convert_time_step)
 
     menu.submenu('../Plot parameters')
     menu.add_data_item(

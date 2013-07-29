@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Flask MotionAndForcesWithMenu app</title>
+    <title>Flask compute_motion_and_forces_with_menu app</title>
     <link rel="StyleSheet" href="static/dtree.css" type="text/css" />
     <script type="text/javascript" src="static/dtree.js"></script>
   </head>
@@ -23,7 +23,7 @@
                     d.add(0, -1, 'Main menu');
                     d.add(1, 0, 'Initial motion data');
                     d.add(2, 1, '&nbsp; {{ form.Initial_velocity(size=6) }} {% if form.Initial_velocity.errors %} {% for error in form.Initial_velocity.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Initial velocity Unit: m/s', '', 'static/latex/Main_menu/Initial_motion_data/v_0.png');
-                    d.add(3, 1, '&nbsp; {{ form.Initial_angle(size=6) }} {% if form.Initial_angle.errors %} {% for error in form.Initial_angle.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Initial angle Unit: deg', '', 'static/latex/Main_menu/Initial_motion_data/theta.png');
+                    d.add(3, 1, '&nbsp; {{ form.Initial_angle(size=6) }} {% if form.Initial_angle.errors %} {% for error in form.Initial_angle.errors %} <err> {{error}} </err> {% endfor %}{% endif %}  &nbsp; <span id="range"></span>', '#', 'Initial angle', '', 'static/latex/Main_menu/Initial_motion_data/theta.png');
                     d.add(4, 1, '&nbsp; {{ form.Spinrate(size=6) }} {% if form.Spinrate.errors %} {% for error in form.Spinrate.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Spinrate Unit: 1/s', '', 'static/latex/Main_menu/Initial_motion_data/omega.png');
                     d.add(5, 0, 'Body and environment data');
                     d.add(6, 5, '&nbsp; {{ form.Wind_velocity(size=6) }} {% if form.Wind_velocity.errors %} {% for error in form.Wind_velocity.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Wind velocity in positive x direction. Unit: m/s', '', 'static/latex/Main_menu/Body_and_environment_data/w.png');

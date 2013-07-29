@@ -1,6 +1,11 @@
 from django.db import models
 from django.forms import ModelForm
 from parampool.html5.django.models import MinMaxFloat
+from parampool.html5.django.forms.widgets import \
+     TextInput, NumberInput, RangeInput, Textarea, EmailInput, URLInput
+
+# Note: The verbose_name attribute starts with a blank to avoid
+# that Django forces the first character to be upper case.
 
 class MotionAndForcesWithMenu(models.Model):
 
@@ -8,10 +13,10 @@ class MotionAndForcesWithMenu(models.Model):
         verbose_name=' Initial velocity',
         default=5)
 
-    Initial_angle          = models.CharField(
+    Initial_angle          = MinMaxFloat(
         verbose_name=' Initial angle',
-        default='45',
-        max_length=50)
+        default=45,
+        min_value=0, max_value=90)
 
     Spinrate               = models.CharField(
         verbose_name=' Spinrate',
@@ -54,3 +59,11 @@ class MotionAndForcesWithMenu(models.Model):
 class MotionAndForcesWithMenuForm(ModelForm):
     class Meta:
         model = MotionAndForcesWithMenu
+        widgets = {
+            'Initial_velocity'    : NumberInput(attrs={'size': 7, 'min': -1000, 'max': 1000, 'step': 1}),
+            'Initial_angle'       : RangeInput(attrs={'size': 7, 'min': 0, 'max': 90, 'step': 0, 'onchange': 'showValue(this.value)'}),
+            'Spinrate'            : TextInput(attrs={'size': 7}),
+            'Wind_velocity'       : NumberInput(attrs={'size': 7, 'min': -1000, 'max': 1000, 'step': 1}),
+            'Mass'                : TextInput(attrs={'size': 7}),
+            'Radius'              : TextInput(attrs={'size': 7}),
+            'Time_step'           : TextInput(attrs={'size': 7}),}
