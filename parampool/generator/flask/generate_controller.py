@@ -4,7 +4,9 @@ from distutils.util import strtobool
 def generate_controller(compute_function, classname,
                         outfile, filename_template,
                         menu_function, overwrite,
-                        filename_model):
+                        filename_model, filename_forms=None,
+                        filename_db_models=None, app_file=None,
+                        login=False):
 
     if not overwrite and outfile is not None and os.path.isfile(outfile):
         if not strtobool(raw_input(
@@ -43,6 +45,15 @@ def generate_controller(compute_function, classname,
                 file_upload = True
                 break
 
+    if login:
+        forms_module = filename_forms.replace('.py', '')
+        db_models_module = filename_db_models.replace('.py', '')
+        app_module = app_file.replace('.py', '')
+    else:
+        pass
+    # Should be in the else-block, but that will lead
+    # to an error in the comment on line 65.
+    # See the TODO on line 67.
     model_module = filename_model.replace('.py', '')
 
     code = '''\
@@ -51,13 +62,26 @@ from %(compute_function_file)s import %(compute_function_name)s as compute_funct
 ''' % vars()
     if menu:
         code += '''
-# Menu object (must be imported before %(model_module)s
+# Menu object (must be imported before %(model_module)s)
+# AEJ: Why? With login we don't even have this file.
+# TODO: Find out the reason for this order of imports.
 from %(menu_function_file)s import %(menu_function_name)s as menu_function
 menu = menu_function()
 ''' % vars()
-
     code += '''
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request'''
+    if file_upload:
+        code += ', session'
+    if login:
+        code += ', redirect, url_for'
+        code += '''
+from %(forms_module)s import %(classname)sForm
+from %(db_models_module)s import db, User, %(classname)s
+from flask.ext.login import LoginManager, current_user, login_user, logout_user, login_required
+from %(app_module)s import app
+''' % vars()
+    else:
+        code += '''
 from %(model_module)s import %(classname)s
 ''' % vars()
 
@@ -65,13 +89,115 @@ from %(model_module)s import %(classname)s
         code += '''\
 from werkzeug import secure_filename
 '''
-    code += '''
+
+    if login:
+        if file_upload:
+            code += '''
+# Allowed file types for file upload
+ALLOWED_EXTENSIONS = set(['txt', 'dat', 'npy'])
+
+# Relative path of folder for uploaded files
+UPLOAD_DIR = 'uploads/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_DIR
+if not os.path.isdir(UPLOAD_DIR):
+    os.mkdir(UPLOAD_DIR)
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+'''
+
+        code += '''
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(User).get(user_id)
+
+# Path to the web application
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    result = None
+    user = current_user
+    form = %(classname)sForm(request.form)
+    if request.method == "POST":''' % vars()
+
+        if file_upload:
+            code += '''
+        if request.files:'''
+            if menu:
+                code += '''
+            for name, file in request.files.iteritems():
+                if allowed_file(file.filename):
+                    filename = secure_filename(file.filename)
+                    file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                    menu.set_value(name, filename)
+                else:
+                    raise TypeError("Illegal filename")
+'''
+            else:
+                code += '''
+            file = request.files[form.filename.name]
+            if file and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+                session["filename"] = filename
+            else:
+                session["filename"] = None
+        else:
+            session["filename"] = None
+'''
+        else:
+            code += '''
+        if form.validate():
+'''
+        if menu:
+            code += '''
+            # Send data to Menu object
+            for field in form:
+                if field.data:
+                    name = field.description
+                    value = field.data
+                    menu.set_value(name, value)
+
+            result = compute(menu)
+'''
+        else:
+                code += '''
+            result = compute(form)
+'''
+        code += '''
+            if user.is_authenticated():
+                object = %(classname)s()
+                form.populate_obj(object)
+                object.result = result
+                object.user = user
+''' % vars()
+        if file_upload:
+            code += '''\
+                object.filename = session["filename"]
+'''
+        code += '''\
+                db.session.add(object)
+                db.session.commit()
+    else:
+        if user.is_authenticated():
+            if user.%(classname)s.count() > 0:
+                instance = user.%(classname)s.order_by('-id').first()
+                result = instance.result
+                form = populate_form_from_instance(instance)
+
+    return render_template("%(filename_template)s", form=form, result=result, user=user)
+''' % vars()
+
+    else:
+        code += '''
 # Application object
 app = Flask(__name__)
 ''' % vars()
 
-    if file_upload:
-        code += '''
+        if file_upload:
+            code += '''
 # Allowed file types for file upload
 ALLOWED_EXTENSIONS = set(['txt', 'dat', 'npy'])
 
@@ -88,21 +214,21 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 ''' % vars()
 
-    code += '''
+        code += '''
 # Path to the web application
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = %(classname)s(request.form)
     if request.method == 'POST' and form.validate():
 ''' % vars()
-    if file_upload:
+        if file_upload:
         # Need to write custom validation for files
-        code = code.replace(" and form.validate()", "")
-        code += '''
+            code = code.replace(" and form.validate()", "")
+            code += '''
         # Save uploaded file if it exists and is valid
         if request.files:'''
-        if menu:
-            code += '''
+            if menu:
+                code += '''
             for name, file in request.files.iteritems():
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
@@ -111,8 +237,8 @@ def index():
                 else:
                     raise TypeError("Illegal filename")
 '''
-        else:
-            code += '''
+            else:
+                code += '''
             file = request.files[form.filename.name]
             if file and allowed_file(file.filename):
                 filename = secure_filename(file.filename)
@@ -124,8 +250,8 @@ def index():
             session["filename"] = None
 '''
 
-    if menu:
-        code += '''
+        if menu:
+            code += '''
         # Send data to Menu object
         for field in form:
             name = field.description
@@ -134,11 +260,11 @@ def index():
 
         result = compute(menu)
 '''
-    else:
-        code += '''
+        else:
+            code += '''
         result = compute(form)
 '''
-    code += '''\
+        code += '''\
 
     else:
         result = None
@@ -148,7 +274,7 @@ def index():
 ''' % vars()
 
     if menu:
-        code += '''\
+        code += '''
 def compute(menu):
     """
     Generic function for calling compute_function with values
@@ -164,11 +290,11 @@ def compute(menu):
         result = compute_function(menu)
     else:
         raise TypeError('%s(%s) can only have one argument named "menu"'
-                        % (compute_function_name, ', '.join(arg_names)))
+                        % (compute_function.__name__, ', '.join(arg_names)))
     return result
 '''
     else:
-        code += '''\
+        code += '''
 def compute(form):
     """
     Generic function for compute_function with arguments
@@ -255,7 +381,101 @@ def compute(form):
     result = compute_function(*form_data)
     return result
 '''
-    code += '''
+    if login:
+        code += '''
+def populate_form_from_instance(instance):
+    """Repopulate form with previous values"""
+    form = %(classname)sForm()
+    for field in form:
+        field.data = getattr(instance, field.name)
+    return form
+
+
+@app.route('/reg', methods=['GET', 'POST'])
+def create_login():
+    from %(forms_module)s import register_form
+    form = register_form(request.form)
+    if request.method == 'POST' and form.validate():
+        user = User()
+        form.populate_obj(user)
+        user.set_password(form.password.data)
+
+        db.session.add(user)
+        db.session.commit()
+
+        login_user(user)
+        return redirect(url_for('index'))
+    return render_template("reg.html", form=form)
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    from %(forms_module)s import login_form
+    form = login_form(request.form)
+    if request.method == 'POST' and form.validate():
+        user = form.get_user()
+        login_user(user)
+        return redirect(url_for('index'))
+    return render_template("login.html", form=form)
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
+
+@app.route('/old')
+@login_required
+def old():
+    data = []
+    user = current_user
+    if user.is_authenticated():
+        instances = user.%(classname)s.order_by('-id').all()
+        for instance in instances:
+            form = populate_form_from_instance(instance)
+
+            result = instance.result
+            if instance.comments:
+                result += "<h3>Comments</h3>" + instance.comments
+            data.append({'form':form, 'result':result, 'id':instance.id})
+
+    return render_template("old.html", data=data)
+
+@app.route('/add_comment', methods=['GET', 'POST'])
+@login_required
+def add_comment():
+    user = current_user
+    if request.method == 'POST' and user.is_authenticated():
+        instance = user.%(classname)s.order_by('-id').first()
+        instance.comments = request.form.get("comments", None)
+        db.session.commit()
+    return redirect(url_for('index'))
+
+@app.route('/delete/<id>', methods=['GET', 'POST'])
+@login_required
+def delete_post(id):
+    id = int(id)
+    user = current_user
+    if user.is_authenticated():
+        if id == -1:
+            instances = user.%(classname)s.delete()
+        else:
+            try:
+                instance = user.%(classname)s.filter_by(id=id).first()
+                db.session.delete(instance)
+            except:
+                pass
+
+        db.session.commit()
+    return redirect(url_for('old'))
+
+
+if __name__ == '__main__':
+    if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'sqlite.db')):
+        db.create_all()
+    app.run(debug=True)
+''' % vars()
+    else:
+        code += '''
 if __name__ == '__main__':
     app.run(debug=True)
 ''' % vars()
@@ -268,5 +488,17 @@ if __name__ == '__main__':
         f.close()
         print "Flask main application written to %s." % outfile
         print "Usage: python %s" % outfile
+
+    if login:
+        app = open(app_file, 'w')
+        app.write("""\
+import os
+from flask import Flask
+
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sqlite.db'
+app.secret_key = os.urandom(24)""")
+        app.close()
+
 
 # No tests

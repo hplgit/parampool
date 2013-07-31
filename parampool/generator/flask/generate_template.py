@@ -2,7 +2,7 @@ import os, sys, shutil, re
 from distutils.util import strtobool
 import parampool.utils
 
-def generate_template_std(classname, outfile, doc='', MathJax=False):
+def generate_template_std(classname, outfile, doc='', MathJax=False, login=False):
     """
     Generate a simple standard template with
     input form. Show result at the bottom of
@@ -32,7 +32,16 @@ MathJax.Hub.Config({
 </script>
 <!-- Fix slow MathJax rendering in IE8 -->
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
-
+'''
+    if login:
+        code += '''
+  {% if user.is_anonymous() %}
+  <p align="right"><a href="/login">Login</a> / <a href="/reg">Register</a></p>
+  {% else %}
+  <p align="right">Logged in as {{user.username}}<br>
+    <a href="/old">Previous simulations<a/><br>
+    <a href="/logout">Logout</a></p>
+  {% endif %}
 '''
     code += '''\
   %(doc)s
@@ -64,12 +73,25 @@ MathJax.Hub.Config({
     {%% if result != None %%}
       <h2>Results:</h2>
         {{ result|safe }}
-    {%% endif %%}
+''' % vars()
+
+    if login:
+        code +='''
+      {% if not user.is_anonymous() %}
+        <h3>Comments:</h3>
+        <form method=post action="/add_comment">
+            <textarea name="comments" rows="4" cols="40"></textarea>
+            <p><input type=submit value=Add>
+        </form>
+        {% endif %}
+'''
+    code += '''
+    {% endif %}
   </td>
   </tr>
   </table>
   </body>
-</html>''' % vars()
+</html>'''
 
     if outfile is None:
         return code
@@ -80,7 +102,7 @@ MathJax.Hub.Config({
 
 def generate_template_dtree(compute_function, classname,
                             menu, outfile, doc, align='left',
-                            MathJax=False):
+                            MathJax=False, login=False):
 
     # TODO: Support for right align in 'parent' functions
     from latex_symbols import get_symbol, symbols_same_size
@@ -116,8 +138,18 @@ MathJax.Hub.Config({
 </script>
 <!-- Fix slow MathJax rendering in IE8 -->
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
-
 '''
+    if login:
+        pre_code += """
+  {% if user.is_anonymous() %}
+  <p align="right"><a href="/login">Login</a> / <a href="/reg">Register</a></p>
+  {% else %}
+  <p align="right">Logged in as {{user.username}}<br>
+    <a href="/old">Previous simulations<a/><br>
+    <a href="/logout">Logout</a></p>
+  {% endif %}
+"""
+
     pre_code += """
   %(doc)s
 
@@ -132,6 +164,7 @@ MathJax.Hub.Config({
       <script type="text/javascript">
         d = new dTree('d');
 """ % vars()
+
     post_code = """\
         document.write(d);
       </script>
@@ -143,6 +176,18 @@ MathJax.Hub.Config({
       {% if result != None %}
         <h2>Result:</h2>
         {{ result|safe }}
+"""
+    if login:
+        post_code += """
+        {% if not user.is_anonymous() %}
+        <h3>Comments:</h3>
+        <form method=post action="/add_comment">
+            <textarea name="comments" rows="4" cols="40"></textarea>
+            <p><input type=submit value=Add>
+        </form>
+        {% endif %}
+"""
+    post_code += """
     {% endif %}
     </td>
     </tr>
@@ -250,6 +295,110 @@ MathJax.Hub.Config({
         f.write(code)
         f.close()
 
+def generate_login_templates(classname):
+    login_template = os.path.join("templates", "login.html")
+    reg_template = os.path.join("templates", "reg.html")
+    old_template = os.path.join("templates", "old.html")
+
+    header = '''\
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Flask %(classname)s app</title>
+  </head>
+  <body>
+''' % vars()
+
+    login = open(login_template, 'w')
+    login.write(header)
+    login.write('''\
+    <h2>Login:</h2>
+      <form method=post action="">
+        <table>
+          {% for field in form %}
+            <tr><td>{{ field.name }}</td>
+                <td>{{ field(size=20) }}</td>
+                <td>{% if field.errors %}
+                  <ul class=errors>
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}</ul>
+                {% endif %}</td></tr>
+          {% endfor %}
+        </table>
+        <p><input type=submit value=Login>
+    </form>
+  </body>
+</html>''')
+    login.close()
+
+    reg = open(reg_template, 'w')
+    reg.write(header)
+    reg.write('''\
+    <h2>Register:</h2>
+      <form method=post action="">
+        <table>
+          {% for field in form %}
+            <tr><td>{{ field.name }}</td>
+                <td>{{ field(size=20) }}</td>
+                <td>{% if field.errors %}
+                  <ul class=errors>
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}</ul>
+                {% endif %}</td></tr>
+          {% endfor %}
+        </table>
+        <p><input type=submit value=Register>
+    </form>
+  </body>
+</html>''')
+    reg.close()
+
+    old = open(old_template, 'w')
+    old.write(header)
+    old.write('''\
+    <h2>Previous simulations</h2>
+      <p align="right"><a href="/">Back to index</a></p>
+      {% if data %}
+        {% for post in data %}
+        <hr>
+        <table>
+            <tr>
+                <td valign="top" width="30%">
+                    <h3>Input</h3>
+                    <table>
+                    {% for field in post.form %}
+                      <tr><td>{{ field.name }}:&nbsp;</td>
+                        <td>{{ field.data }}</td></tr>
+                    {% endfor %}
+                    </table>
+                    </td><td valign="top" width="60%">
+                    <h3>Results</h3>
+                    {{ post.result|safe }}
+                    </td><td valign="top" width="10%">
+                    <p>
+                    <form method="POST" action="/delete/{{ post.id }}">
+                <input type=submit value="Delete" title="Delete this post from database">
+            </form>
+            </td></tr>
+        </table>
+        {% endfor %}
+        <hr>
+        <center>
+        <form method="POST" action="/delete/-1">
+            <input type=submit value="Delete all">
+        </form>
+        </center>
+      {% else %}
+          No previous simulations
+      {% endif %}
+  </body>
+</html>''')
+    old.close()
+
+
 def run_doconce_on_text(doc):
     if doc is None:
         return ''
@@ -292,7 +441,7 @@ def run_doconce_on_text(doc):
 
 def generate_template(compute_function, classname, outfile,
                       menu=None, overwrite=False, MathJax=False,
-                      doc=''):
+                      doc='', login=False):
     if doc == '':
         # Apply doc string as documentation
         doc = run_doconce_on_text(compute_function.__doc__)
@@ -311,9 +460,12 @@ def generate_template(compute_function, classname, outfile,
                 "The file %s already exists. Overwrite? [Y/N]: " % outfile)):
                 return None
 
+    if login:
+        generate_login_templates(classname)
+
     if menu is not None:
         return generate_template_dtree(
             compute_function, classname, menu, outfile, doc,
-            MathJax=MathJax)
+            MathJax=MathJax, login=login)
     else:
-        return generate_template_std(classname, outfile, doc, MathJax)
+        return generate_template_std(classname, outfile, doc, MathJax, login)
