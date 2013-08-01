@@ -60,10 +60,10 @@ class MotionAndForcesWithMenuForm(ModelForm):
     class Meta:
         model = MotionAndForcesWithMenu
         widgets = {
-            'Initial_velocity'    : NumberInput(attrs={'size': 7, 'min': -1000, 'max': 1000, 'step': 1}),
+            'Initial_velocity'    : NumberInput(attrs={'size': 4, 'min': -1000, 'max': 1000, 'step': 0.001}),
             'Initial_angle'       : RangeInput(attrs={'size': 7, 'min': 0, 'max': 90, 'step': 1, 'onchange': 'showValue(this.value)'}),
             'Spinrate'            : TextInput(attrs={'size': 7}),
-            'Wind_velocity'       : NumberInput(attrs={'size': 7, 'min': -1000, 'max': 1000, 'step': 1}),
+            'Wind_velocity'       : NumberInput(attrs={'size': 4, 'min': -1000, 'max': 1000, 'step': 0.001}),
             'Mass'                : TextInput(attrs={'size': 7}),
             'Radius'              : TextInput(attrs={'size': 7}),
             'Time_step'           : TextInput(attrs={'size': 7}),}

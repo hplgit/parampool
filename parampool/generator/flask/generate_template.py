@@ -200,10 +200,16 @@ MathJax.Hub.Config({
         parent_id = user_data.parent_id[-1]
         name = item.name
         field_name = parampool.utils.legal_variable_name(name)
+
+        widget_size = item.get('widget_size', default=default_widget_size)
+        if item.data.get('widget', None) == 'float':
+            number_of_step_decimals = 3 # TODO: does not work for number_step!=0.001
+            widget_size = widget_size - number_of_step_decimals
         if item.data.get('widget', None) == 'select':
             widget_size = ''  # no specification of size for option list
         else:
-            widget_size = '(size=%s)' % item.get('widget_size', default=default_widget_size)
+            widget_size = '(size=%s)' % widget_size
+
         form = """\
 &nbsp; {{ form.%(field_name)s%(widget_size)s }} {%% if form.%(field_name)s.errors %%} \
 {%% for error in form.%(field_name)s.errors %%} <err> {{error}} </err> \

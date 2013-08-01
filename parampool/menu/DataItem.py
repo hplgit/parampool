@@ -76,7 +76,7 @@ class DataItem:
     # import parampool.menu.DataItem
     # parampool.menu.DataItem.DataItem.defaults['minmax'] = [-10000, 10000]
     defaults = {'widget_size': 7, 'minmax': [-1000, 1000],
-                'range_steps': 100, 'number_step': 1}
+                'range_steps': 100, 'number_step': 0.001}
 
     def _signature(self):
         """Return output signature with "DataItem: name=..."."""
