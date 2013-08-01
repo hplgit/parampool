@@ -149,9 +149,15 @@ class register_form(wtf.Form):
         if not wtf.Form.validate(self):
             return False
 
+        if self.notify.data and not self.email.data:
+            self.notify.errors.append('\
+Cannot send notifications without a valid email address')
+            return False
+
         if db.session.query(User).filter_by(username=self.username.data).count() > 0:
             self.username.errors.append('User already exists')
             return False
+
         return True
 
 class login_form(wtf.Form):
@@ -171,6 +177,7 @@ class login_form(wtf.Form):
         if not user.check_password(self.password.data):
             self.password.errors.append('Invalid password')
             return False
+
         return True
 
     def get_user(self):
