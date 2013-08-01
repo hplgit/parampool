@@ -56,7 +56,7 @@ def generate_models_menu(classname, outfile, menu):
 
             if widget == "integer":
                 user_data.widget_specs += """
-            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(number_step)}),""" % user_data.longest_name % vars()
+            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(number_step)s}),""" % user_data.longest_name % vars()
             elif widget == "integer_range":
                 user_data.widget_specs += """
             %%(field_name_quoted)-%ds: RangeInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(range_step)g, 'onchange': 'showValue(this.value)'}),""" % user_data.longest_name % vars()

@@ -41,7 +41,7 @@ MathJax.Hub.Config({
   {% else %}
   <p align="right">Logged in as {{user}}<br><a href="/logout">Logout</a>
   {% endif %}
-''' % vars()
+'''
 
     code += '''\
   %(doc)s
