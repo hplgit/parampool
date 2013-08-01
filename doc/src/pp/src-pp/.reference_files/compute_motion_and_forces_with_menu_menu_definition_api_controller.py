@@ -1,11 +1,13 @@
 import os
 from compute import compute_motion_and_forces_with_menu as compute_function
 
-# Menu object (must be imported before compute_motion_and_forces_with_menu_menu_definition_api_model
+# Menu object (must be imported before compute_motion_and_forces_with_menu_menu_definition_api_model)
+# AEJ: Why? With login we don't even have this file.
+# TODO: Find out the reason for this order of imports.
 from compute import menu_definition_api as menu_function
 menu = menu_function()
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request
 from compute_motion_and_forces_with_menu_menu_definition_api_model import MotionAndForcesWithMenu
 
 # Application object
@@ -30,6 +32,7 @@ def index():
 
     return render_template("compute_motion_and_forces_with_menu_menu_definition_api_view.html", form=form, result=result)
 
+
 def compute(menu):
     """
     Generic function for calling compute_function with values
@@ -45,7 +48,7 @@ def compute(menu):
         result = compute_function(menu)
     else:
         raise TypeError('%s(%s) can only have one argument named "menu"'
-                        % (compute_function_name, ', '.join(arg_names)))
+                        % (compute_function.__name__, ', '.join(arg_names)))
     return result
 
 if __name__ == '__main__':

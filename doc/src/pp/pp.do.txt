@@ -764,8 +764,10 @@ The following technical points must be mentioned.
 
  o Data items whose widgets are specified as `float` or `integer`, or
    where `str2type` is `float` or `int`, or where the default value is
-   a `float` or `int`, are shown using the HTML5 field called number.
-   The small (and not so useful) arrows can be used to adjust the number,
+   a `float` or `int`, are shown using the "HTML5 input field":
+   "http://www.wufoo.com/html5/" called number.
+   This is recogned by the small (and not so useful) arrows that can be
+   used to adjust the number,
    but usually typing in the number manually is faster and more precise.
  o When the widget is `range`, an HTML5 range field is used, which is
    usually rendered as a slider in browsers. The slider gets by default
@@ -795,6 +797,12 @@ information is used.  In larger applications this warning is seldom an
 issue since there will be a unit associated with all numbers with
 dimension, and the dimensionless ones can have `textline` specified as
 `widget` or `float` with `minmax`.
+!ewarning
+
+!bwarning
+Firefox does not render the new HTML5 input fields different from
+a standard text field, so in that browser all
+input fields for numbers and text look the same.
 !ewarning
 
 We can try out the interface:

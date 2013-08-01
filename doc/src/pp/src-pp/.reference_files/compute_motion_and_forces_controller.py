@@ -1,7 +1,7 @@
 import os
 from compute import compute_motion_and_forces as compute_function
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request
 from compute_motion_and_forces_model import MotionAndForces
 
 # Application object
@@ -19,6 +19,7 @@ def index():
         result = None
 
     return render_template("compute_motion_and_forces_view.html", form=form, result=result)
+
 
 def compute(form):
     """

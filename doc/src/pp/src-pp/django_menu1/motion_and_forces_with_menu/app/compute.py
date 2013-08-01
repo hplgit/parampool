@@ -456,13 +456,14 @@ def compute_motion_and_forces(
 
 
 def menu_definition_list():
+    """Create and return menu defined through a nested list."""
     menu = [
         'Main', [
             'Initial motion data', [
                 dict(name='Initial velocity', default=5.0),
                 dict(name='Initial angle', default=45,
-                     widget='range', minmax=[0,90]),
-                dict(name='Spinrate', default=50, widget='float',
+                     widget='range', minmax=[0,90], range_step=1),
+                dict(name=r'Spinrate', default=50, widget='float',
                      unit='1/s'),
                 ],
             'Body and environment data', [
@@ -489,15 +490,27 @@ def menu_definition_list():
         ]
     from parampool.menu.UI import listtree2Menu
     menu = listtree2Menu(menu)
-    import parampool.menu.DataItem
-    parampool.menu.DataItem.DataItem.defaults['widget_size'] = 25
     return menu
 
+def convert_time_step(data_item, value):
+    # Value must be None or a float
+    if value == 'None':
+        return None
+    else:
+        try:
+            return float(value)
+        except TypeError:
+            raise TypeError('%s: could not convert "%s" to float'
+                            % (data_item.name, value))
+
 def menu_definition_api():
+    """Create and return menu using the parampool.menu API."""
     from parampool.menu.Menu import Menu
     menu = Menu()
+    # Go to a submenu, but create it if it does not exist
     menu.submenu('Main menu')
     menu.submenu('Initial motion data')
+    # Define data items for the current submenu
     menu.add_data_item(
         name='Initial velocity', default=5.0)
     menu.add_data_item(
@@ -506,7 +519,9 @@ def menu_definition_api():
     menu.add_data_item(
         name='Spinrate', default=50, widget='float', unit='1/s')
 
+    # Move to (and create) another submenu, as in a file tree
     menu.submenu('../Body and environment data')
+    # Add data items for the current submenu
     menu.add_data_item(
         name='Wind velocity', default=0.0,
         help='Wind velocity in positive x direction.',
@@ -525,7 +540,7 @@ def menu_definition_api():
         help='Numerical solution method.')
     menu.add_data_item(
         name='Time step', default=None,
-        widget='textline', unit='s')
+        widget='textline', unit='s', str2type=convert_time_step)
 
     menu.submenu('../Plot parameters')
     menu.add_data_item(
@@ -535,10 +550,13 @@ def menu_definition_api():
     menu.update()
     return menu
 
-# Another version where we have different functions for creating
-# submenus.
-
 def menu_definition_api_with_separate_submenus():
+    """
+    Create and return a menu by calling up other functions
+    for defining the submenus. Also demonstrate customization
+    of menu properties and inserting default values from file
+    or the command line.
+    """
     from parampool.menu.Menu import Menu
     menu = Menu()
     menu.submenu('Main menu')
@@ -558,6 +576,13 @@ def menu_definition_api_with_separate_submenus():
         set_defaults_in_model_file,
         write_menufile,
         )
+    # Change default values in the web GUI
+    import parampool.menu.DataItem
+    parampool.menu.DataItem.DataItem.defaults['minmax'] = [0, 100]
+    parampool.menu.DataItem.DataItem.defaults['range_steps'] = 500
+    # Can also change 'number_step' for the step in float fields
+    # and 'widget_size' for the width of widgets
+
     # Let all widget sizes be 6, except for Time step
     menu = set_data_item_attribute(menu, 'widget_size', 6)
     menu.get('Time step').data['widget_size'] = 4

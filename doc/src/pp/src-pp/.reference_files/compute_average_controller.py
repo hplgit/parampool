@@ -48,6 +48,7 @@ def index():
 
     return render_template("compute_average_view.html", form=form, result=result)
 
+
 def compute(form):
     """
     Generic function for compute_function with arguments

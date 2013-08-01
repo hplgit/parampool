@@ -1,7 +1,7 @@
 import os
 from compute import compute_drag_free_motion_plot as compute_function
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request
 from compute_drag_free_motion_plot_model import DragFreeMotionPlot
 
 # Application object
@@ -19,6 +19,7 @@ def index():
         result = None
 
     return render_template("compute_drag_free_motion_plot_view.html", form=form, result=result)
+
 
 def compute(form):
     """
