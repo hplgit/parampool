@@ -83,7 +83,7 @@ def generate_model_menu(classname, outfile, menu):
                 user_data.code += """],
         step='any',
         #min=%(minvalue)g, max=%%(maxvalue)g, step=%(number_step)g,
-        )\n" % vars()
+        )\n""" % vars()
 
 
         elif widget == "range":
