@@ -469,6 +469,7 @@ def menu_definition_list():
             'Body and environment data', [
                 dict(name='Wind velocity', default=0.0,
                      help='Wind velocity in positive x direction.',
+                     minmax=[-50, 50], number_step=0.5,
                      widget='float', str2type=float),
                 dict(name='Mass', default=0.1, unit='kg',
                      validate=lambda data_item, value: value > 0),
@@ -525,6 +526,7 @@ def menu_definition_api():
     menu.add_data_item(
         name='Wind velocity', default=0.0,
         help='Wind velocity in positive x direction.',
+        minmax=[-50, 50], number_step=0.5,
         widget='float', str2type=float)
     menu.add_data_item(
         name='Mass', default=0.1, unit='kg',
@@ -627,6 +629,7 @@ def body_and_envir_menu(menu, name='Body and environment data'):
     menu.add_data_item(
         name='Wind velocity', default=0.0, symbol='w',
         help='Wind velocity in positive x direction.', unit='m/s',
+        minmax=[-50, 50], number_step=0.5,
         widget='float', str2type=float)
     menu.add_data_item(
         name='Mass', default=0.1, symbol='m',

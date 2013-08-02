@@ -75,8 +75,12 @@ class DataItem:
     # be set in user code:
     # import parampool.menu.DataItem
     # parampool.menu.DataItem.DataItem.defaults['minmax'] = [-10000, 10000]
-    defaults = {'widget_size': 7, 'minmax': [-1000, 1000],
+    defaults = {'widget_size': 11, 'minmax': [-1000, 1000],
                 'range_steps': 100, 'number_step': 0.001}
+    # range_steps: how many steps in a range slider
+    # number_step: the increment in number when clicking on arrows
+    # in a number HTML5 field
+    # widget_size: width of input field
 
     def _signature(self):
         """Return output signature with "DataItem: name=..."."""
@@ -148,6 +152,28 @@ class DataItem:
             if self.data['str2type'] == bool:
                 self.data['str2type'] = str2bool
 
+        if not 'widget' in self.data:
+            if self.data['str2type'] == str2bool:
+                self.data['widget'] = 'checkbox'
+            elif self.data['str2type'] == float:
+                if 'minmax' in self.data:
+                    # min/max given, use HTML5 number widget
+                    self.data['widget'] = 'float'
+                else:
+                    # just use a plain text field
+                    self.data['widget'] = 'textline'
+            elif self.data['str2type'] == int:
+                if 'minmax' in self.data:
+                    # min/max given, use HTML5 number widget
+                    self.data['widget'] = 'integer'
+                else:
+                    # just use a plain text field
+                    self.data['widget'] = 'textline'
+            elif 'options' in self.data:
+                self.data['widget'] = 'select'
+            else:
+                self.data['widget'] = 'textline'
+
         self._check_validity_of_data()
 
         # Override widget if unit is given - then we need a text field
@@ -197,17 +223,6 @@ class DataItem:
             if not widget in allowed_widgets:
                 raise TypeError('%s: widget %s is not allowed. Plese select \
 from the following list: %s' % (self._signature(), widget, allowed_widgets))
-        else:
-            # Map str2type to widget
-            str2type2widget = {str:        "textline",
-                               type(1.0):  "float",
-                               type(1):    "integer",
-                               type(True): "checkbox",
-                               str2bool:   "checkbox"}
-            if self.data['str2type'] in str2type2widget.keys():
-                self.data['widget'] = str2type2widget[self.data['str2type']]
-            else:
-                self.data['widget'] = "textline" # default
 
         for attr in 'help', 'widget':
             if attr in self.data:

@@ -202,9 +202,6 @@ MathJax.Hub.Config({
         field_name = parampool.utils.legal_variable_name(name)
 
         widget_size = item.get('widget_size', default=default_widget_size)
-        if item.data.get('widget', None) == 'float':
-            number_of_step_decimals = 3 # TODO: does not work for number_step!=0.001
-            widget_size = widget_size - number_of_step_decimals
         if item.data.get('widget', None) == 'select':
             widget_size = ''  # no specification of size for option list
         else:

@@ -56,7 +56,9 @@ def generate_models_menu(classname, outfile, menu):
 
             if widget == "integer":
                 user_data.widget_specs += """
-            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(number_step)s}),""" % user_data.longest_name % vars()
+            #%%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(number_step)s}),""" % user_data.longest_name % vars()
+                user_data.widget_specs += """
+            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'step': 'any'}),""" % user_data.longest_name % vars()
             elif widget == "integer_range":
                 user_data.widget_specs += """
             %%(field_name_quoted)-%ds: RangeInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(range_step)g, 'onchange': 'showValue(this.value)'}),""" % user_data.longest_name % vars()
@@ -82,10 +84,10 @@ def generate_models_menu(classname, outfile, menu):
                 user_data.widget_specs += """
             %%(field_name_quoted)-%ds: RangeInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(range_step)g, 'onchange': 'showValue(this.value)'}),""" % user_data.longest_name % vars()
             elif widget == "float":
-                number_of_step_decimals = 3 # TODO: does not work for number_step!=0.001
-                adjusted_widget_size = widget_size - number_of_step_decimals
                 user_data.widget_specs += """
-            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(adjusted_widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(number_step)g}),""" % user_data.longest_name % vars()
+            %%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'min': %%(minvalue)s, 'max': %%(maxvalue)s, 'step': %%(number_step)g}),""" % user_data.longest_name % vars()
+                user_data.widget_specs += """
+            #%%(field_name_quoted)-%ds: NumberInput(attrs={'size': %%(widget_size)d, 'step': 'any'}),""" % user_data.longest_name % vars()
 
         elif widget == "file":
             user_data.code += """\

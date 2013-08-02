@@ -41,38 +41,50 @@ class FloatRangeField(FlaskFloatField):
 
     def __init__(self, label=None, validators=None, step=None, min=None,
                  max=None, onchange="", size=20, unit=None, **kwargs):
-        if min is None:
-            min = DataItem.defaults['minmax'][0]
-        if max is None:
-            max = DataItem.defaults['minmax'][1]
-        if step is None:
-            step = (max - min)/DataItem.defaults['range_steps']
-        self.step = step
-        self.min = min
-        self.max = max
-        self.unit = unit
+        if step is not None:
+            self.step = step
+        else:
+            self.step = "any"
+        if min is not None:
+            self.min = min
+        else:
+            raise ValueError('Must specify min and max in %s constructor'
+                             % self.__class__.__name__)
+        if max is not None:
+            self.max = max
+        else:
+            raise ValueError('Must specify min and max in %s constructor'
+                             % self.__class__.__name__)
+        if unit is not None:
+            self.unit = unit
         self.onchange = onchange
         self.size = size
         super(FloatRangeField, self).__init__(label, validators, **kwargs)
 
 class IntegerRangeField(FlaskIntegerField):
     """
-    HTML5 compatibal version of FloatField. Using slider input widget.
+    HTML5 compatible version of IntegerField. Using slider input widget.
     """
     widget = RangeInput()
 
     def __init__(self, label=None, validators=None, step=None, min=None,
                  max=None, onchange="", size=20, unit=None, **kwargs):
-        if min is None:
-            min = DataItem.defaults['minmax'][0]
-        if max is None:
-            max = DataItem.defaults['minmax'][1]
-        if step is None:
-            step = (max - min)/DataItem.defaults['range_steps']
-        self.step = step
-        self.min = min
-        self.max = max
-        self.unit = unit
+        if step is not None:
+            self.step = step
+        else:
+            self.step = "any"
+        if min is not None:
+            self.min = min
+        else:
+            raise ValueError('Must specify min and max in %s constructor'
+                             % self.__class__.__name__)
+        if max is not None:
+            self.max = max
+        else:
+            raise ValueError('Must specify min and max in %s constructor'
+                             % self.__class__.__name__)
+        if unit is not None:
+            self.unit = unit
         self.onchange = onchange
         self.size = size
         super(IntegerRangeField, self).__init__(label, validators, **kwargs)
@@ -80,7 +92,7 @@ class IntegerRangeField(FlaskIntegerField):
 class NumberInput(HTML5Input):
     input_type = "number" # HTML5 input type
 
-class FloatField(FlaskFloatField):
+class HTML5FloatField(FlaskFloatField):
     """
     HTML5 compatibal version of FloatField. Using number input widget.
     Erroneous input is ignored and will not be accepted as a value.
@@ -90,17 +102,19 @@ class FloatField(FlaskFloatField):
     def __init__(self, label=None, validators=None,
                  min=None, max=None, size=20, step=None, unit=None,
                  **kwargs):
-        if min is None:
-            min = DataItem.defaults['minmax'][0]
-        if max is None:
-            max = DataItem.defaults['minmax'][1]
-        if step is None:
-            step = DataItem.defaults['number_step']
-        self.step = step
-        self.unit = unit
+        if step is not None:
+            self.step = step
+        else:
+            self.step = "any"
+        if min is not None:
+            self.min = min
+        if max is not None:
+            self.max = max
+        if unit is not None:
+            self.unit = unit
         self.min = min
         self.max = max
         self.size = size
         # For size to work in the template (or from here),
         # we must specify min, max, and step != 'any'
-        super(FloatField, self).__init__(label, validators, **kwargs)
+        super(HTML5FloatField, self).__init__(label, validators, **kwargs)

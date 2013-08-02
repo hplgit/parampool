@@ -68,11 +68,10 @@ def generate_model_menu(classname, outfile, menu):
         elif widget == "float":
             user_data.code += """\
 
-    %%(field_name)-%ds = FloatField(
+    %%(field_name)-%ds = HTML5FloatField(
         label=u'%%(label)s',
         description=u'%%(label)s',
         default=%%(default)g,
-        min=%%(minvalue)g, max=%%(maxvalue)g, step=%%(number_step)g,
         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
             if 'minmax' in item.data:
@@ -81,7 +80,10 @@ def generate_model_menu(classname, outfile, menu):
         min=%(minvalue)g, max=%(maxvalue)g, step=%%(number_step))
 """ % vars()
             else:
-                user_data.code += "])\n"
+                user_data.code += """],
+        step='any',
+        #min=%(minvalue)g, max=%%(maxvalue)g, step=%(number_step)g,
+        )\n" % vars()
 
 
         elif widget == "range":
@@ -174,7 +176,7 @@ def generate_model_menu(classname, outfile, menu):
 
     code = '''\
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField, FloatRangeField, IntegerRangeField
+from parampool.html5.flask.fields import HTML5FloatField, FloatRangeField, IntegerRangeField
 import flask.ext.wtf.html5 as html5
 
 class %(classname)s(wtf.Form):
