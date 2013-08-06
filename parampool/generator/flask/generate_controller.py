@@ -144,6 +144,7 @@ def index():
                 session["filename"] = filename
             else:
                 session["filename"] = None
+
         else:
             session["filename"] = None
 '''
@@ -163,28 +164,40 @@ def index():
             result = compute(menu)
 '''
         else:
+            if file_upload:
                 code += '''
+        result = compute(form)
+
+        if user.is_authenticated():
+            object = %(classname)s()
+            form.populate_obj(object)
+            object.result = result
+            object.user = user
+            object.filename = session["filename"]
+            db.session.add(object)
+            db.session.commit()
+
+            # Send email notification
+            if user.notify and user.email:
+                send_email(user)
+''' % vars()
+            else:
+                code += '''
+
             result = compute(form)
-'''
-        code += '''
             if user.is_authenticated():
                 object = %(classname)s()
                 form.populate_obj(object)
                 object.result = result
                 object.user = user
-''' % vars()
-        if file_upload:
-            code += '''\
-                object.filename = session["filename"]
-'''
-        code += '''\
                 db.session.add(object)
                 db.session.commit()
 
                 # Send email notification
                 if user.notify and user.email:
                     send_email(user)
-
+''' % vars()
+        code += '''
     else:
         if user.is_authenticated():
             if user.%(classname)s.count() > 0:
