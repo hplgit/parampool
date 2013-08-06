@@ -96,10 +96,14 @@ class DataItem:
 
         if kwargs['default'] is None:
             # Override user's choice
-            kwargs['widget'] = 'textline'
-            if not 'str2type' in kwargs:
-                kwargs['str2type'] = eval
-            #print 'Data item "%s" has default value None and gets widget "textline" and str2type=eval' % self.name
+            # AEJ: This overrides e.g. FileField and PasswordField, which normally
+            # have None as default, to textline. I added an if-test here to avoid
+            # that issue.
+            if not kwargs['widget'] in ('file', 'password'):
+                kwargs['widget'] = 'textline'
+                if not 'str2type' in kwargs:
+                    kwargs['str2type'] = eval
+                #print 'Data item "%s" has default value None and gets widget "textline" and str2type=eval' % self.name
 
         # Check that all arguments are valid
         for arg in kwargs:

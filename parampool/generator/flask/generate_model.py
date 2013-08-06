@@ -77,7 +77,7 @@ def generate_model_menu(classname, outfile, menu):
             if 'minmax' in item.data:
                 user_data.code += """,
                     wtf.validators.NumberRange(%(minvalue)g, %(maxvalue)g)],
-        min=%(minvalue)g, max=%(maxvalue)g, step=%%(number_step))
+        min=%(minvalue)g, max=%(maxvalue)g, step=%(number_step)g)
 """ % vars()
             else:
                 user_data.code += """],
