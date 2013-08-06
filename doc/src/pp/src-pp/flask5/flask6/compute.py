@@ -466,6 +466,7 @@ Data from %s:
 <table border=1>
 <tr><td> mean    </td><td> %.3g </td></tr>
 <tr><td> st.dev. </td><td> %.3g </td></tr>
+</table></p>
 """ % (what, np.mean(data), np.std(data))
 
 if __name__ == '__main__':

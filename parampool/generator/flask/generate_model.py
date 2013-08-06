@@ -220,7 +220,7 @@ def generate_model_inspect(compute_function, classname, outfile, default_field):
 
     code = '''\
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField
+from parampool.html5.flask.fields import HTML5FloatField
 
 class %(classname)s(wtf.Form):
 ''' % vars()
