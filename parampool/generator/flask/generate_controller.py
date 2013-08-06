@@ -156,12 +156,30 @@ def index():
             code += '''
             # Send data to Menu object
             for field in form:
-                if field.data:
+                if field.name not in request.files:
                     name = field.description
                     value = field.data
                     menu.set_value(name, value)
 
             result = compute(menu)
+            if user.is_authenticated():
+                object = %(classname)s()
+                form.populate_obj(object)
+                object.result = result
+                object.user = user
+''' % vars()
+            if file_upload:
+                code += '''\
+                for name, file in request.files.iteritems():
+                    setattr(object, name, menu.get(name).get_value())
+'''
+            code += '''\
+                db.session.add(object)
+                db.session.commit()
+
+                # Send email notification
+                if user.notify and user.email:
+                    send_email(user)
 '''
         else:
             if file_upload:
@@ -272,9 +290,10 @@ def index():
             code += '''
         # Send data to Menu object
         for field in form:
-            name = field.description
-            value = field.data
-            data_item = menu.set_value(name, value)
+            if field.name not in request.files:
+                name = field.description
+                value = field.data
+                data_item = menu.set_value(name, value)
 
         result = compute(menu)
 '''
