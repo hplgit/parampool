@@ -678,8 +678,6 @@ def compute_motion_and_forces_with_menu(menu):
     dt = menu.get_value('Time step')
     plot_simplified_motion = menu.get_value('Plot simplified motion')
     new_plot = menu.get_value('New plot')
-    #from parampool.menu.UI import write_menu_to_file
-    #write_menu_to_file(menu, filename=...)
     return compute_motion_and_forces(
         initial_velocity, initial_angle, spinrate, w,
         m, R, method, dt, plot_simplified_motion,

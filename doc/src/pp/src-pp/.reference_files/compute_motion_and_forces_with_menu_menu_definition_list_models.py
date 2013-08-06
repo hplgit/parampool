@@ -9,9 +9,10 @@ from parampool.html5.django.forms.widgets import \
 
 class MotionAndForcesWithMenu(models.Model):
 
-    Initial_velocity       = models.FloatField(
+    Initial_velocity       = models.CharField(
         verbose_name=' Initial velocity',
-        default=5)
+        default='5.0',
+        max_length=50)
 
     Initial_angle          = MinMaxFloat(
         verbose_name=' Initial angle',
@@ -23,9 +24,10 @@ class MotionAndForcesWithMenu(models.Model):
         default='50',
         max_length=50)
 
-    Wind_velocity          = models.FloatField(
+    Wind_velocity          = MinMaxFloat(
         verbose_name=' Wind velocity',
-        default=0)
+        default=0,
+        min_value=-50, max_value=50)
 
     Mass                   = models.CharField(
         verbose_name=' Mass',
@@ -60,10 +62,11 @@ class MotionAndForcesWithMenuForm(ModelForm):
     class Meta:
         model = MotionAndForcesWithMenu
         widgets = {
-            'Initial_velocity'    : NumberInput(attrs={'size': 7, 'min': -1000, 'max': 1000, 'step': 1}),
-            'Initial_angle'       : RangeInput(attrs={'size': 7, 'min': 0, 'max': 90, 'step': 1, 'onchange': 'showValue(this.value)'}),
-            'Spinrate'            : TextInput(attrs={'size': 7}),
-            'Wind_velocity'       : NumberInput(attrs={'size': 7, 'min': -1000, 'max': 1000, 'step': 1}),
-            'Mass'                : TextInput(attrs={'size': 7}),
-            'Radius'              : TextInput(attrs={'size': 7}),
-            'Time_step'           : TextInput(attrs={'size': 7}),}
+            'Initial_velocity'    : TextInput(attrs={'size': 11}),
+            'Initial_angle'       : RangeInput(attrs={'size': 11, 'min': 0, 'max': 90, 'step': 1, 'onchange': 'showValue(this.value)'}),
+            'Spinrate'            : TextInput(attrs={'size': 11}),
+            'Wind_velocity'       : NumberInput(attrs={'size': 11, 'min': -50, 'max': 50, 'step': 0.5}),
+            #'Wind_velocity'       : NumberInput(attrs={'size': 11, 'step': 'any'}),
+            'Mass'                : TextInput(attrs={'size': 11}),
+            'Radius'              : TextInput(attrs={'size': 11}),
+            'Time_step'           : TextInput(attrs={'size': 11}),}

@@ -726,6 +726,31 @@ case of "Initial velocity". More attributes can be added:
    and any valid Python expression is then essentially allowable,
    but wrong objects will give errors in the compute function.
 
+=== The compute function ===
+
+When working with menus, the compute function is allowed to take *only
+one argument* called `menu`. This object is used to extract
+input data. Basically, the value of any data item `my parameter`
+in the menu is extracted by
+
+!bc pycod
+variable = menu.get_value('my parameter')
+!ec
+In case multiple data items have the same name, enough of the submenu path
+must be given, e.g.,
+
+!bc pycod
+variable = menu.get_value('My Submenu1/my parameter')
+!ec
+Our specific computing function is a wrapper for `compute_motion_and_forces`:
+
+@@@CODE src-pp/compute.py fromto: compute_motion_and_forces_with_menu@compute_average
+
+The assumption is that the menu object provides enough input data for
+the compute function. If this assumption does not hold, one can
+simply make a class, store extra data as attributes in the class,
+and let the compute function be a method in the class.
+
 === Generating a user interface ===
 
 With a menu function and a compute function at hand,
@@ -737,7 +762,8 @@ and write a `generate.py` file with the content
 
 The `generate` function will now use the information in the menu
 (and not the arguments in the compute function!) to generate
-a flexible user interface. After running
+a flexible user interface. Note that an Internet connection
+is required. After running
 
 !bc sys
 Terminal> python generate.py
@@ -759,7 +785,7 @@ FIGURE: [fig-pp/flask_menu1_closed.png, width=500] Web interface in closed form.
 The menu tree is mapped onto a visual structure often used for
 directory trees. Clicking on *open all* at the top of the user interface
 expands all submenus so that all parameters (data items) become visible.
-Figure ref{pp:flask_menu1:fig2} displays the result in the Chrome browser.
+Figure ref{pp:flask_1menu1:fig2} displays the result in the Chrome browser.
 
 FIGURE: [fig-pp/flask_menu1_open.png, width=500] Web interface in fully expanded form. label{pp:flask_menu1:fig2}
 
