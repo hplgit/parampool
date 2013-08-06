@@ -144,6 +144,7 @@ def index():
                 session["filename"] = filename
             else:
                 session["filename"] = None
+
         else:
             session["filename"] = None
 '''
@@ -155,36 +156,66 @@ def index():
             code += '''
             # Send data to Menu object
             for field in form:
-                if field.data:
+                if field.name not in request.files:
                     name = field.description
                     value = field.data
                     menu.set_value(name, value)
 
             result = compute(menu)
-'''
-        else:
-                code += '''
-            result = compute(form)
-'''
-        code += '''
             if user.is_authenticated():
                 object = %(classname)s()
                 form.populate_obj(object)
                 object.result = result
                 object.user = user
 ''' % vars()
-        if file_upload:
-            code += '''\
-                object.filename = session["filename"]
+            if file_upload:
+                code += '''\
+                for name, file in request.files.iteritems():
+                    setattr(object, name, menu.get(name).get_value())
 '''
-        code += '''\
+            code += '''\
                 db.session.add(object)
                 db.session.commit()
 
                 # Send email notification
                 if user.notify and user.email:
                     send_email(user)
+'''
+        else:
+            if file_upload:
+                code += '''
+        result = compute(form)
 
+        if user.is_authenticated():
+            object = %(classname)s()
+            form.populate_obj(object)
+            object.result = result
+            object.user = user
+            object.filename = session["filename"]
+            db.session.add(object)
+            db.session.commit()
+
+            # Send email notification
+            if user.notify and user.email:
+                send_email(user)
+''' % vars()
+            else:
+                code += '''
+
+            result = compute(form)
+            if user.is_authenticated():
+                object = %(classname)s()
+                form.populate_obj(object)
+                object.result = result
+                object.user = user
+                db.session.add(object)
+                db.session.commit()
+
+                # Send email notification
+                if user.notify and user.email:
+                    send_email(user)
+''' % vars()
+        code += '''
     else:
         if user.is_authenticated():
             if user.%(classname)s.count() > 0:
@@ -259,9 +290,10 @@ def index():
             code += '''
         # Send data to Menu object
         for field in form:
-            name = field.description
-            value = field.data
-            data_item = menu.set_value(name, value)
+            if field.name not in request.files:
+                name = field.description
+                value = field.data
+                data_item = menu.set_value(name, value)
 
         result = compute(menu)
 '''

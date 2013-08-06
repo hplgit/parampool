@@ -77,7 +77,7 @@ def generate_model_menu(classname, outfile, menu):
             if 'minmax' in item.data:
                 user_data.code += """,
                     wtf.validators.NumberRange(%(minvalue)g, %(maxvalue)g)],
-        min=%(minvalue)g, max=%(maxvalue)g, step=%%(number_step))
+        min=%(minvalue)g, max=%(maxvalue)g, step=%(number_step)g)
 """ % vars()
             else:
                 user_data.code += """],
@@ -220,7 +220,7 @@ def generate_model_inspect(compute_function, classname, outfile, default_field):
 
     code = '''\
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField
+from parampool.html5.flask.fields import HTML5FloatField
 
 class %(classname)s(wtf.Form):
 ''' % vars()
@@ -358,7 +358,7 @@ from parampool.utils import assert_equal_text
 def test_inspect():
     model_code = """\
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField
+from parampool.html5.flask.fields import HTML5FloatField
 
 class Test(wtf.Form):
     a        = FloatField(validators=[wtf.validators.InputRequired()])
@@ -387,7 +387,7 @@ def test_menu():
 
     model_code = """\
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField, FloatRangeField, IntegerRangeField
+from parampool.html5.flask.fields import HTML5FloatField, FloatRangeField, IntegerRangeField
 import flask.ext.wtf.html5 as html5
 
 class Test(wtf.Form):

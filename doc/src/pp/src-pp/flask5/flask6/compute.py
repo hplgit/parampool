@@ -3,7 +3,6 @@ import numpy as np
 from math import pi, sqrt, sin, cos
 import matplotlib.pyplot as plt
 import os
-import collections
 
 def aerodynamic_force(C, rho, A, v):
     return 0.5*C*rho*A*v**2
@@ -166,7 +165,7 @@ def compute_drag_free_motion_plot2(
     html_text = '<img src="%s" width="400">' % filename
     return html_text
 
-def compute_motion_and_forces0(
+def compute_motion_and_forces(
     initial_velocity=5.0,
     initial_angle=45.0,
     spinrate=50.0,
@@ -222,7 +221,6 @@ def compute_motion_and_forces0(
         plt.figure(motion_fig_no)
     except NameError:
         motion_fig_no = plt.figure().number
-        xmax = ymax = 0
     plt.plot(x, y, label='')
     xmax = max(xmax, x.max())
     ymax = max(ymax, y.max())
@@ -274,10 +272,10 @@ def compute_motion_and_forces0(
     return html_text
 
 # The following function has the same functionality as
-# compute_motion_and_forces0 above, but has true math in
+# compute_motion_and_forces, but has true math in
 # the doc string and avoids plot files.
 
-def compute_motion_and_forces(
+def compute_motion_and_forces2(
     initial_velocity=5.0,
     initial_angle=45.0,
     spinrate=50.0,
@@ -346,36 +344,16 @@ def compute_motion_and_forces(
     problem.set_initial_velocity(v_x0, v_y0)
     x, y, t, g, d, l = solver(problem, method, dt)
 
-    # Define global variables that can hold values from call to
-    # call of this function
-    global motion_fig_no, forces_fig_no, xmax, ymax, data
-
+    # Motion plot
+    global motion_fig_no, forces_fig_no, xmax, ymax
     if new_plot:
-        motion_fig_no = plt.figure().number  # make new figure and get its no
+        motion_fig_no = plt.figure().number
         forces_fig_no = plt.figure().number
         xmax = ymax = 0
-        data = []
     try:
-        plt.figure(motion_fig_no)            # set plt back to existing figure
+        plt.figure(motion_fig_no)
     except NameError:
         motion_fig_no = plt.figure().number
-        xmax = ymax = 0
-        data = []
-
-    # Record data for this run
-    latex_symbol = lambda symbol: r'\( %s \)' % symbol
-    data.append(collections.OrderedDict([
-        (latex_symbol('v_0'), initial_velocity),
-        (latex_symbol(r'\theta'), initial_angle),
-        (latex_symbol(r'\omega'), spinrate),
-        (latex_symbol('w'), w),
-        (latex_symbol('m'), m),
-        (latex_symbol('R'), R),
-        ('method', method),
-        (latex_symbol(r'\Delta t'), dt),
-        ('landing point', x[-1])]))
-
-    # Motion plot
     plt.plot(x, y, label='')
     xmax = max(xmax, x.max())
     ymax = max(ymax, y.max())
@@ -385,11 +363,12 @@ def compute_motion_and_forces(
         problem_simplified.set_initial_velocity(v_x0, v_y0)
         xs, ys, ts, dummy1, dummy2, dummy3 = \
             solver(problem_simplified, method, dt)
-        plt.plot(xs, ys, 'r--', label='')
+        plt.plot(xs, ys, 'r--')
         xmax = max(xmax, xs.max())
         ymax = max(ymax, ys.max())
     plt.axis([x[0], xmax, 0, 1.2*ymax])
     plt.title('Trajectory')
+    plt.legend(loc='upper left')
 
     # Avoid plot file: make PNG code as base64 coded string
     # embedded in the HTML image tag
@@ -432,257 +411,47 @@ def compute_motion_and_forces(
 </tr>
 </table>
 """ % vars()
-    # Add table of data for the runs so far in the plots
-    table = """
-<center>
-<table border=1>
-<tr>
-"""
-    for variable in data[0]:
-        table += '<td align="center"> %-10s </td>' % variable  # column headings
-    table += '\n</tr>\n'
-
-    for case in data:
-        table += '<tr>'
-        for variable in case:
-            if isinstance(case[variable], float):
-                table += '<td align="right"> %.3g </td>' % case[variable]
-            else:
-                table += '<td> %-10s </td>' % case[variable]
-        table += '</tr>\n'
-    table += '</table>\n</center>\n'
-    html_text += table
     return html_text
 
+def compute_motion(
+    initial_velocity=5.0,
+    initial_angle=45.0,
+    spinrate=50.0,
+    m=0.1,
+    R=0.11,
+    method='RK4'
+    ):
+    v_x0 = initial_velocity*cos(initial_angle*pi/180)
+    v_y0 = initial_velocity*sin(initial_angle*pi/180)
+    xmax = 0
+    ymax = 0
 
-def menu_definition_list():
-    """Create and return menu defined through a nested list."""
-    menu = [
-        'Main', [
-            'Initial motion data', [
-                dict(name='Initial velocity', default=5.0),
-                dict(name='Initial angle', default=45,
-                     widget='range', minmax=[0,90], range_step=1),
-                dict(name=r'Spinrate', default=50, widget='float',
-                     unit='1/s'),
-                ],
-            'Body and environment data', [
-                dict(name='Wind velocity', default=0.0,
-                     help='Wind velocity in positive x direction.',
-                     minmax=[-50, 50], number_step=0.5,
-                     widget='float', str2type=float),
-                dict(name='Mass', default=0.1, unit='kg',
-                     validate=lambda data_item, value: value > 0),
-                dict(name='Radius', default=0.11, unit='m'),
-                ],
-            'Numerical parameters', [
-                dict(name='Method', default='RK4',
-                     widget='select',
-                     options=['RK4', 'RK2', 'ForwardEuler'],
-                     help='Numerical solution method.'),
-                dict(name='Time step', default=None,
-                     widget='textline', unit='s'),
-                ],
-            'Plot parameters', [
-                dict(name='Plot simplified motion', default=True),
-                dict(name='New plot', default=True),
-                ],
-            ],
-        ]
-    from parampool.menu.UI import listtree2Menu
-    menu = listtree2Menu(menu)
-    return menu
-
-def convert_time_step(data_item, value):
-    # Value must be None or a float
-    if value == 'None':
-        return None
-    else:
-        try:
-            return float(value)
-        except TypeError:
-            raise TypeError('%s: could not convert "%s" to float'
-                            % (data_item.name, value))
-
-def menu_definition_api():
-    """Create and return menu using the parampool.menu API."""
-    from parampool.menu.Menu import Menu
-    menu = Menu()
-    # Go to a submenu, but create it if it does not exist
-    menu.submenu('Main menu')
-    menu.submenu('Initial motion data')
-    # Define data items for the current submenu
-    menu.add_data_item(
-        name='Initial velocity', default=5.0)
-    menu.add_data_item(
-        name='Initial angle', default=45,
-        widget='range', minmax=[0,90])
-    menu.add_data_item(
-        name='Spinrate', default=50, widget='float', unit='1/s')
-
-    # Move to (and create) another submenu, as in a file tree
-    menu.submenu('../Body and environment data')
-    # Add data items for the current submenu
-    menu.add_data_item(
-        name='Wind velocity', default=0.0,
-        help='Wind velocity in positive x direction.',
-        minmax=[-50, 50], number_step=0.5,
-        widget='float', str2type=float)
-    menu.add_data_item(
-        name='Mass', default=0.1, unit='kg',
-        validate=lambda data_item, value: value > 0)
-    menu.add_data_item(
-        name='Radius', default=0.11, unit='m')
-
-    menu.submenu('../Numerical parameters')
-    menu.add_data_item(
-        name='Method', default='RK4',
-        widget='select',
-        options=['RK4', 'RK2', 'ForwardEuler'],
-        help='Numerical solution method.')
-    menu.add_data_item(
-        name='Time step', default=None,
-        widget='textline', unit='s', str2type=convert_time_step)
-
-    menu.submenu('../Plot parameters')
-    menu.add_data_item(
-        name='Plot simplified motion', default=True)
-    menu.add_data_item(
-        name='New plot', default=True)
-    menu.update()
-    return menu
-
-def menu_definition_api_with_separate_submenus():
-    """
-    Create and return a menu by calling up other functions
-    for defining the submenus. Also demonstrate customization
-    of menu properties and inserting default values from file
-    or the command line.
-    """
-    from parampool.menu.Menu import Menu
-    menu = Menu()
-    menu.submenu('Main menu')
-    menu = motion_menu(menu)
-    menu.change_submenu('..')
-    menu = body_and_envir_menu(menu)
-    menu.change_submenu('..')
-    menu = numerics_menu(menu)
-    menu.change_submenu('..')
-    menu = plot_menu(menu)
-    menu.update()  # finalize menu construction
-
-    from parampool.menu.UI import (
-        set_data_item_attribute,
-        set_defaults_from_file,
-        set_defaults_from_command_line,
-        set_defaults_in_model_file,
-        write_menufile,
-        )
-    # Change default values in the web GUI
-    import parampool.menu.DataItem
-    parampool.menu.DataItem.DataItem.defaults['minmax'] = [0, 100]
-    parampool.menu.DataItem.DataItem.defaults['range_steps'] = 500
-    # Can also change 'number_step' for the step in float fields
-    # and 'widget_size' for the width of widgets
-
-    # Let all widget sizes be 6, except for Time step
-    menu = set_data_item_attribute(menu, 'widget_size', 6)
-    menu.get('Time step').data['widget_size'] = 4
-
-    menu = set_defaults_from_file(menu, command_line_option='--menufile')
-    menu = set_defaults_from_command_line(menu)
-    flask_modelfile = 'model.py'
-    print 'XXX', os.getcwd()
-    django_modelfile = os.path.join('motion_and_forces_with_menu', 'app',
-                                    'models.py')
-    if os.path.isfile(flask_modelfile):
-        set_defaults_in_model_file(flask_modelfile, menu)
-    elif os.path.isfile(django_modelfile):
-        set_defaults_in_model_file(django_modelfile, menu)
-
-    menufile = open('menu.dat', 'w')
-    menufile.write(write_menufile(menu))
-    menufile.close()
-
-    return menu
-
-def motion_menu(menu, name='Initial motion data'):
-    menu.submenu(name)
-    menu.add_data_item(
-        name='Initial velocity', default=5.0, symbol='v_0',
-        unit='m/s', help='Initial velocity',
-        str2type=float, widget='float',
-        validate=lambda data_item, value: value > 0)
-    menu.add_data_item(
-        name='Initial angle', default=45, symbol=r'\theta',
-        widget='range', minmax=[0,90], str2type=float,
-        help='Initial angle',
-        validate=lambda data_item, value: 0 < value <= 90)
-    menu.add_data_item(
-        name='Spinrate', default=50, symbol=r'\omega',
-        widget='float', str2type=float, unit='1/s',
-        help='Spinrate')
-    return menu
-
-def body_and_envir_menu(menu, name='Body and environment data'):
-    menu.submenu(name)
-    menu.add_data_item(
-        name='Wind velocity', default=0.0, symbol='w',
-        help='Wind velocity in positive x direction.', unit='m/s',
-        minmax=[-50, 50], number_step=0.5,
-        widget='float', str2type=float)
-    menu.add_data_item(
-        name='Mass', default=0.1, symbol='m',
-        help='Mass of body.', unit='kg',
-        widget='float', str2type=float,
-        validate=lambda data_item, value: value > 0)
-    menu.add_data_item(
-        name='Radius', default=0.11, symbol='R',
-        help='Radius of spherical body.', unit='m',
-        widget='float', str2type=float,
-        validate=lambda data_item, value: value > 0)
-    return menu
-
-def numerics_menu(menu, name='Numerical parameters'):
-    menu.submenu(name)
-    menu.add_data_item(
-        name='Method', default='RK4',
-        widget='select',
-        options=['RK4', 'RK2', 'ForwardEuler'],
-        help='Numerical solution method.')
-    menu.add_data_item(
-        name='Time step', default=None, symbol=r'\Delta t',
-        widget='textline', unit='s', str2type=eval,
-        help='None: ca 500 steps, otherwise specify float.')
-    return menu
-
-def plot_menu(menu, name='Plot parameters'):
-    menu.submenu(name)
-    menu.add_data_item(
-        name='Plot simplified motion', default=True,
-        help='Plot motion without drag and lift forces.')
-    menu.add_data_item(
-        name='New plot', default=True,
-        help='Erase all old curves.')
-    return menu
-
-
-def compute_motion_and_forces_with_menu(menu):
-    initial_velocity = menu.get_value('Initial velocity')
-    initial_angle = menu.get_value('Initial angle')
-    spinrate = menu.get_value('Spinrate')
-    w = menu.get_value('Wind velocity')
-    m = menu.get_value('Mass')
-    R = menu.get_value('Radius')
-    method = menu.get_value('Method')
-    dt = menu.get_value('Time step')
-    plot_simplified_motion = menu.get_value('Plot simplified motion')
-    new_plot = menu.get_value('New plot')
-    return compute_motion_and_forces(
-        initial_velocity, initial_angle, spinrate, w,
-        m, R, method, dt, plot_simplified_motion,
-        new_plot)
-
+    for dt in [0.02]:
+        #for method in ['ForwardEuler', 'RK2', 'RK4']:
+        for drag in [True, False]:
+            problem = Ball(m=m, R=R, drag=drag,
+                           spinrate=spinrate if drag else 0, w=0)
+            problem.set_initial_velocity(v_x0, v_y0)
+            x, y, t, g, d, l = solver(problem, method, dt)
+            plt.figure(1)
+            if drag:
+                plt.plot(x, y, label='%s' % ('w/drag' if drag else ''))
+            else:
+                plt.plot(x, y, 'r--')
+            if drag:
+                plt.figure(2)
+                plt.plot(x, d, label='drag force')
+                if spinrate:
+                    plt.plot(x, l, label='lift force')
+                plt.plot(x, np.abs(g), label='gravity force')
+            xmax = max(xmax, x.max())
+            ymax = max(ymax, y.max())
+    plt.figure(1)
+    plt.axis([x[0], xmax, 0, 1.2*ymax])
+    plt.legend()
+    plt.figure(2)
+    plt.legend()
+    plt.show()
 
 def compute_average(data_array=np.array([1]), filename=None):
     if filename is not None:
@@ -700,7 +469,6 @@ Data from %s:
 </table></p>
 """ % (what, np.mean(data), np.std(data))
 
-
 if __name__ == '__main__':
     print compute_drag_free_landing(5, 60)
-
+    compute_motion()
