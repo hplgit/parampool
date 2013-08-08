@@ -267,7 +267,7 @@ of code that may be needed.
     class_tp = Dummy()  # for user-defined types
     import numpy
     array_tp = numpy.arange(1)
-    type2form = {type(1.0):  'FloatField',
+    type2form = {type(1.0):  'HTML5FloatField',
                  type(1):    'wtf.IntegerField',
                  type(''):   'wtf.TextField',
                  type(True): 'wtf.BooleanField',
