@@ -98,7 +98,8 @@ def generate_models_menu(classname, outfile, menu):
 """ % user_data.longest_name % vars()
 
             user_data.widget_specs += """
-            %%(field_name_quoted)-%ds: TextInput(attrs={'size': %%(widget_size)d}),""" % user_data.longest_name % vars()
+            # AEJ: TextInput for File removes the 'Choose File' button.
+            #%%(field_name_quoted)-%ds: TextInput(attrs={'size': %%(widget_size)d}),""" % user_data.longest_name % vars()
 
         elif widget == "select":
             if 'options' in item.data:

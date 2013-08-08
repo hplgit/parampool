@@ -39,7 +39,7 @@ MathJax.Hub.Config({
   {% if user.is_anonymous %}
   <p align="right"><a href="/login">Login</a> / <a href="/reg">Register</a></p>
   {% else %}
-  <p align="right">Logged in as {{user}}<br><a href="/logout">Logout</a>
+  <p align="right">Logged in as {{user}}<br><a href="/old">Previous simulations</a><br><a href="/logout">Logout</a></p>
   {% endif %}
 '''
 

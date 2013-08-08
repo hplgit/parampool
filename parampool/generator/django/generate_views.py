@@ -91,9 +91,11 @@ def index(request):
         if request.user.is_authenticated():
             data = request.POST.copy()
             data['user'] = user.id
-            form = %(classname)sUserForm(data)
+            form = %(classname)sUserForm(data, request.FILES or None)
             if form.is_valid():
                 for field in form:
+                    if field.name in ("user", "result", "comments"):
+                        continue
                     name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
                     value = field.data
                     if field.name in request.FILES:
@@ -103,8 +105,7 @@ def index(request):
                             for chunk in field.data.chunks():
                                 destination.write(chunk)
                     else:
-                        if field.name not in ("user", "result", "comments"):
-                            data_item = menu.set_value(name, value)
+                        data_item = menu.set_value(name, value)
 
                 f = form.save(commit=False)
                 result = compute(menu)
@@ -191,7 +192,7 @@ register a new user and leave the email field blank.""")
         if request.user.is_authenticated():
             data = request.POST.copy()
             data['user'] = user.id
-            form = %(classname)sUserForm(data)
+            form = %(classname)sUserForm(data, request.FILES or None)
             if form.is_valid():
                 for field in form:
                     if field.name in request.FILES:
@@ -200,7 +201,7 @@ register a new user and leave the email field blank.""")
                             for chunk in field.data.chunks():
                                 destination.write(chunk)
                 f = form.save(commit=False)
-                result = compute(f)
+                result = compute(f, request)
                 if user.email:
                     user.email_user("%(classname)s Computations Complete", """\
 A simulation has been completed by the Django %(classname)s app. Please log in at
@@ -472,11 +473,15 @@ def compute(form):
 
     form_data = []
     for name in arg_names:
-        if name != "filename":
+        if name == "filename":
+            if request.user.is_authenticated():
+                filename = getattr(form, name).name
+                form_data.append(filename or None)
+            else:
+                form_data.append(request.session.get("filename"))
+        else:
             if hasattr(form, name):
                 form_data.append(getattr(form, name))
-        else:
-            form_data.append(request.session.get("filename"))
 '''
         else:
             code += '''
