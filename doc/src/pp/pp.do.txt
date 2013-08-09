@@ -678,7 +678,7 @@ so after the definition of the menu tree as a list we must make the
 shown conversion from a list to `Menu` object via the `listtree2Menu`
 function.
 
-=== Attributes in data items ===
+===== Attributes in data items =====
 
 Each data item has a name and preferably a default value, as in the
 case of "Initial velocity". More attributes can be added:
@@ -726,7 +726,7 @@ case of "Initial velocity". More attributes can be added:
    and any valid Python expression is then essentially allowable,
    but wrong objects will give errors in the compute function.
 
-=== The compute function ===
+===== The compute function =====
 
 When working with menus, the compute function is allowed to take *only
 one argument* called `menu`. This object is used to extract
@@ -751,7 +751,7 @@ the compute function. If this assumption does not hold, one can
 simply make a class, store extra data as attributes in the class,
 and let the compute function be a method in the class.
 
-=== Generating a user interface ===
+===== Generating a user interface =====
 
 With a menu function and a compute function at hand,
 it remains to make a new directory, copy the module(s) containing
@@ -780,12 +780,12 @@ as the one in Figure ref{pp:flask_menu1:fig1}.
 
 FIGURE: [fig-pp/flask_menu1_closed.png, width=500] Web interface in closed form. label{pp:flask_menu1:fig1}
 
-=== Operating the user interface ===
+===== Operating the user interface =====
 
 The menu tree is mapped onto a visual structure often used for
 directory trees. Clicking on *open all* at the top of the user interface
 expands all submenus so that all parameters (data items) become visible.
-Figure ref{pp:flask_1menu1:fig2} displays the result in the Chrome browser.
+Figure ref{pp:flask_1menu1:fig2} displays the result in the Opera browser.
 
 FIGURE: [fig-pp/flask_menu1_open.png, width=500] Web interface in fully expanded form. label{pp:flask_menu1:fig2}
 
@@ -864,7 +864,7 @@ this example).
 
 FIGURE: [fig-pp/flask_menu1_filled.png, width=500] Web interface with input and results. label{pp:flask_menu1:fig4}
 
-==== Detection of wrong input =====
+===== Detection of wrong input =====
 
 __Text in a number field.__
 Write `abc` in the "Initial velocity" field and press the *Compute* button.

@@ -58,6 +58,9 @@ def pydiff(text1, text2, text1_name='text1', text2_name='text2',
     filename_html  = prefix_diff_files + '.html'
 
     f = open(filename_plain, 'w')
+    # Need to add newlines despite doc saying that trailing newlines are
+    # inserted...
+    diff_plain = [line + '\n' for line in diff_plain]
     f.writelines(diff_plain)
     f.close()
 
