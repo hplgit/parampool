@@ -495,7 +495,7 @@ FIGURE: [fig-pp/flask4.png, width=850] Web interface with two graphs. label{pp:f
 Any doc string of the compute function is copied and typeset verbatim
 at the top of the web interface. However, if the text `# (Doconce
 format)` appears somewhere in the doc string, the text is taken as
-"Doconce": "http://code.google.com/p/doconce" source code and
+"Doconce": "https://github.com/hplgit/doconce" source code and
 translated to HTML, which enables typesetting of LaTeX mathematics and
 computer code snippets (with nice pygments formatting).
 
@@ -941,6 +941,8 @@ a file tree. The rules are simple:
 
 2DO:
 
+ * Lorenz demo as exercise, provide the compute function and graphics,
+   perhaps also good demo in web4sciapps.
  * units and text fields: Done
  * menu list: no doc
  * menu API: add doc in `doc.html`, also show possibility to call
