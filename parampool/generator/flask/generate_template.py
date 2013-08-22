@@ -419,24 +419,20 @@ def run_doconce_on_text(doc):
                 lines[i] = lines[i][4:]
         doc = '\n'.join(lines)
 
-        # Run doconce
-        print 'Found doc string in doconce format:'
-        filename = 'tmp_doc_string'
-        f = open(filename + '.do.txt', 'w')
-        f.write(doc)
-        f.close()
-        print 'Running doconce on help file', filename + '.do.txt'
-        failure = os.system('doconce format html %s' % filename)
-        if not failure:
-            f = open(filename + '.html', 'r')
-            doc = f.read()
-            f.close()
-            files = [filename + '.do.txt',
-                     filename + '.html',
-                     '.' + filename + '_html_file_collection']
+        # Run doconce using a lib version of the doconce format command
+        from doconce import doconce_format, DoconceSyntaxError
+        stem = 'tmp_doc_string'
+        try:
+            print 'Found doc string in doconce format:'
+            print 'Running doconce on help file', stem + '.do.txt'
+            doc = doconce_format('html', doc, filename_stem=stem)
+            files = [stem + '.do.txt',
+                     stem + '.html',
+                     '.' + stem + '_html_file_collection']
             #for name in files:
             #    os.remove(name)
-        else:
+        except DoconceSyntaxError, e:
+            print e
             doc = wrap_in_pre_tags(doc)
     else:
         doc = wrap_in_pre_tags(doc)
