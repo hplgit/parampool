@@ -31,7 +31,7 @@ class MotionAndForcesWithMenu(wtf.Form):
         default=0,
         validators=[wtf.validators.InputRequired(),
                     wtf.validators.NumberRange(-50, 50)],
-        min=-50, max=50, step=%(number_step))
+        min=-50, max=50, step=0.5)
 
     Mass                   = html5.TextField(
         label=u'Mass',

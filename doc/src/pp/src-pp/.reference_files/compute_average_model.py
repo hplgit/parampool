@@ -1,5 +1,5 @@
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField
+from parampool.html5.flask.fields import HTML5FloatField
 
 class Average(wtf.Form):
     data_array = wtf.TextField(default='[1]',

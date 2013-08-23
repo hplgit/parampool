@@ -21,9 +21,10 @@ def index():
 
         # Send data to Menu object
         for field in form:
-            name = field.description
-            value = field.data
-            data_item = menu.set_value(name, value)
+            if field.name not in request.files:
+                name = field.description
+                value = field.data
+                data_item = menu.set_value(name, value)
 
         result = compute(menu)
 

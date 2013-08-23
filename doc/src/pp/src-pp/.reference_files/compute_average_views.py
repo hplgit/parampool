@@ -48,11 +48,15 @@ def compute(form, request):
 
     form_data = []
     for name in arg_names:
-        if name != "filename":
+        if name == "filename":
+            if request.user.is_authenticated():
+                filename = getattr(form, name).name
+                form_data.append(filename or None)
+            else:
+                form_data.append(request.session.get("filename"))
+        else:
             if hasattr(form, name):
                 form_data.append(getattr(form, name))
-        else:
-            form_data.append(request.session.get("filename"))
 
     defaults  = inspect.getargspec(compute_function).defaults
 

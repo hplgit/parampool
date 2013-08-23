@@ -425,7 +425,8 @@ def run_doconce_on_text(doc):
         try:
             print 'Found doc string in doconce format:'
             print 'Running doconce on help file', stem + '.do.txt'
-            doc = doconce_format('html', doc, filename_stem=stem)
+            doc = doconce_format('html', doc, filename_stem=stem,
+                                 cleanup=False)
             files = [stem + '.do.txt',
                      stem + '.html',
                      '.' + stem + '_html_file_collection']

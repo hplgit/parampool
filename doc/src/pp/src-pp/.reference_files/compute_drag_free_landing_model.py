@@ -1,5 +1,5 @@
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField
+from parampool.html5.flask.fields import HTML5FloatField
 
 class DragFreeLanding(wtf.Form):
     initial_velocity = FloatField(validators=[wtf.validators.InputRequired()])
