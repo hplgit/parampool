@@ -1,4 +1,4 @@
-======= Parampool: Organization of Parameters in Trees =======
+======= Parampool: Handling a Pool of Input Parameters in Scientific Applications =======
 
 The `parampool` package is a tool administering a pool of parameters
 in scientific applications. The package contains
@@ -13,7 +13,7 @@ With `parampool` it is very easy to equip a scientific application with
 various kinds of user interfaces: graphical via web, command line,
 and file input.
 
-=== Killer demo: write your computational Python function ===
+===== Killer demo: write your computational Python function =====
 
 Here is a Python function taking some arguments, calling up computations,
 and returning the results as HTML code to be displayed in a browser
@@ -31,12 +31,12 @@ Running `python controller.py` and opening a web browser provide access
 to the user interface. You can fill in values, press *Compute*, and
 get results back.
 
-FIGURE: [doc/src/pp/fig-pp/flask4.png, width=850] Web interface with two graphs.
+FIGURE: [doc/src/pp/fig-pp/flask4.png, width=850]
 
 Replace "flask" by "django" and you get a Django-based user interface
 instead (!).
 
-=== Killer demo: make a menu tree ===
+===== Killer demo: make a menu tree =====
 
 The user interface above was based on inspecting a Python function and
 its keyword arguments and default values.
