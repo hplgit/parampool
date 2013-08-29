@@ -31,7 +31,10 @@ Running `python controller.py` and opening a web browser provide access
 to the user interface. You can fill in values, press *Compute*, and
 get results back.
 
-FIGURE: [doc/src/pp/fig-pp/flask1.png, width=600]
+FIGURE: [doc/src/pp/fig-pp/flask4.png, width=850] Web interface with two graphs.
+
+Replace "flask" by "django" and you get a Django-based user interface
+instead (!).
 
 === Killer demo: make a menu tree ===
 
@@ -66,6 +69,10 @@ with very few lines of code.
 
 FIGURE: [doc/src/pp/fig-pp/flask_menu1_filled.png, width=800]
 
+You can freely choose between a Flask or Django for realizing the
+user interface.
 
+A tutorial is in the writings (see `doc/src/pp`).
+You need the tutorial be able to use the package.
 
 
