@@ -1052,6 +1052,20 @@ On the main menu: damping can have radio buttons for linear b*u and
 quadratic b*u**2, F has list of different type of forces
 
 
+======= Problems =======
+
+===== Problem: Make a coin flipper =====
+file=coin_flipper
+
+Make a web application where we can set the number of coins to be
+flipped. Clicking on the *Submit* button (whose name should rather
+be *flip*) shows images of coins with heads and tails according to
+a random flip of each coin.
+
+!bhint
+See URL: "random.org/coins" for inspiration and images of coins.
+!ehint
+
 ======= Deployment =======
 
 The most obvious servers to deploy web applications on, like Google App Engine,
