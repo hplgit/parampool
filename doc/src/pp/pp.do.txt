@@ -7,7 +7,7 @@ DATE: today
 src_path = 'https://github.com/hplgit/parampool/blob/master/doc/src/pp/src-pp'
 %>
 
-__Summary.__ Parampool is a Python package for handling a potentially
+__Summary.__ Param1pool is a Python package for handling a potentially
 large pool of input parameters in scientific applications. The
 simplest use is to pass a Python function to Parampool and get back a
 web interface for setting the arguments to the function. More powerful
@@ -1024,10 +1024,48 @@ Describe input as
 # lorenz_with_login is an excellent exercise! Can provide the math and
 # compute.py in a form where plot files are generated but no HTML code
 
-===== Extra =====
+======= Exercises =======
 
-Can be exercises:
-Use `solver` from `bumpy` as main function.
+===== Exercise: Make a web app for integration =====
+
+The purpose of this exercise is to use Parampool to generate a
+simple web application for integrating functions: $\int_a^bf(x)dx$.
+Provide a symbolic expression for $f(x)$ and the limits $a$ and $b$
+as input. The application returns the integral of $\int_a^bf(x)dx$
+computed by some numerical integration rule (e.g., the Trapezoidal
+rule). Also try to integrate $f(x)$ symbolically with the aid
+`sympy` and write out the anti-derivative of $f(x)$ if the
+integration is successful.
+
+!bhint
+The relevant `sympy` code needs to turn the string expression
+for $f(x)$ into a valid symbolic expression via `eval`.
+This process requires import of the mathematical functions in `sympy`.
+Thereafter, the `integrate` functionality in `sympy` can be used
+to compute the integral.
+
+!bc pycod
+def symbolic_integration(f_str):
+    """
+    Return the LaTeX code of the anti-derivative of f(x),
+    where f_str holdes the formula for f(x) in a string.
+    Return None if sympy cannot compute the anti-derivative.
+    """
+    from sympy import Symbol, integrate, \
+      sin, cos, tan, log, asin, acos, atan, \
+      sinh, cosh, tanh, asinh, acosh, atanh, erf, erfc,
+    x = Symbol('x')
+    f = eval(f_str)
+    I = integrate(f, x)
+    if isinstance(I, Integral):
+        return None
+    else:
+        return latex(I)
+!ec
+
+======= Exercise: Make a web app for studying vibrations =======
+
+Download `bumpy`. Set up prms.
 
 !bt
 \begin{equation}
