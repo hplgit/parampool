@@ -263,7 +263,7 @@ number of seconds since the Epoch (January 1, 1970) as part of the filename,
 obtained by calling `time.time()`. In addition, the image file must
 reside in a subdirectory `static`. The appropriate code is displayed below.
 
-!bc pydoc
+!bc pycod
 import matplotlib.pyplot as plt
 ...
 def compute_drag_free_motion_plot(
@@ -428,7 +428,7 @@ mpl.use('Agg')
 import matplotlib.pyplot as plot
 !ec
 !enotice
-
+#[[[
 
 ===== More input parameters and results =====
 label{pp:flask4}
@@ -518,7 +518,7 @@ positive $x$ direction, can also be given.
 The ordinary differential equation problem governing the
 motion reads
 
-!bt
+|bt
 \begin{align*}
 m\frac{d^2\bm{r}}{dt^2} &= -mg\bm{j} -
 \frac{1}{2}C_D\varrho A v^2\bm{i}_t +
@@ -526,7 +526,7 @@ m\frac{d^2\bm{r}}{dt^2} &= -mg\bm{j} -
 \bm{r}(0) &= 0\bm{i} + 0\bm{j}\\
 \frac{d\bm{r}}{dt}(0) &= v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j},
 \end{align*}
-!et
+|et
 where $\bm{i}$ and $\bm{j}$ are unit vectors in the $x$ and $y$
 directions, respectively, $g$ is the acceleration of gravity,
 $A$ is the cross section area normal to the motion, $\bm{i}_t$
@@ -552,6 +552,7 @@ time `new_plot` was true.
 # (Doconce format)
 """
 !ec
+
 
 FIGURE: [fig-pp/flask4_doc.png, width=850] Web interface with documentation. label{pp:flask4:fig2}
 
@@ -780,6 +781,7 @@ as the one in Figure ref{pp:flask_menu1:fig1}.
 
 FIGURE: [fig-pp/flask_menu1_closed.png, width=500] Web interface in closed form. label{pp:flask_menu1:fig1}
 
+
 ===== Operating the user interface =====
 
 The menu tree is mapped onto a visual structure often used for
@@ -889,7 +891,7 @@ the interface, but the compute function raises a `TypeError`
 because `float(dt)` fails when `dt` is a list. A remedy is to
 write a tailored `str2type` function:
 
-!bc pydoc
+!bc pycod
 def convert_time_step(data_item, value):
     # Value must be None or a float
     if value == 'None':
@@ -898,8 +900,8 @@ def convert_time_step(data_item, value):
         try:
             return float(value)
         except TypeError:
-            raise TypeError('%s: could not convert "%s" to float'
-                            % (data_item.name, value))
+            raise TypeError('%s: could not convert "%s" to float' %
+	                    (data_item.name, value))
 !ec
 Setting `str2type=convert_time_step` for the "Time step" data item
 gives an informative error message if the answer is not as expected:
@@ -1062,6 +1064,7 @@ def symbolic_integration(f_str):
     else:
         return latex(I)
 !ec
+!ehint
 
 ======= Exercise: Make a web app for studying vibrations =======
 
@@ -1119,7 +1122,7 @@ of computing environments.  It does not allow users to deploy
 webservers that can be accessed by others. However, accessing a Flask
 server process running in Wakari is possible using SSH tunneling:
 
-!bc
+!bc sys
 wakari-terminal> python controller.py
 laptop-terminal> ssh -p [port] -f -N -L 5000:localhost:5000 \
                  [username]@[wakari-hostname].wakari.io
@@ -1208,7 +1211,7 @@ CGIHandler().run(app)
 Remember that all scripts and modules to be accessed from the web need to
 have permissions for everyone to read and execute. This can be done by, e.g.,
 
-!bc syst
+!bc sys
 Terminal> chmod 755 run_django.cgi
 !ec
 !enotice
