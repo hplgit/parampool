@@ -1,5 +1,5 @@
 TITLE: Parampool Tutorial
-AUTHOR: Hans Petter Langtangen at Center for Biomedical Computing, Simula Research Laboratory and Department of Informatics, University of Oslo
+AUTHOR: Hans Petter Langtangen at Center for Biomedical Computing, Simula Research Laboratory & Department of Informatics, University of Oslo
 AUTHOR: Anders Elstad Johansen at Center for Biomedical Computing, Simula Research Laboratory
 DATE: today
 
@@ -7,7 +7,22 @@ DATE: today
 src_path = 'https://github.com/hplgit/parampool/blob/master/doc/src/pp/src-pp'
 %>
 
-__Summary.__ Param1pool is a Python package for handling a potentially
+=== 2DO ===
+
+ * More links to additional material: (Read these when returning to
+   this work)
+   * "Quick Flask++ tutorial": "http://maximebf.com/blog/2012/10/building-websites-in-python-with-flask/#.UxV4jHVdXn4"
+   * "Quick overview of Bootstrap 3": "http://www.realpython.com/blog/design/getting-started-with-bootstrap-3/#.UxV8pHVdXn4", "another Bootstrap 3 tutorial": "http://www.w3resource.com/twitter-bootstrap/tutorial.php"
+   * "Flask and Boostrap intro": "http://pythonthusiast.pythonblogs.com/230_pythonthusiast/archive/1309_building_in_openshift_part_iv__application_layout_and_templating_using_bootstrap_3_and_jinja_2.html" ("sample app": "http://bio-ekowibowo.rhcloud.com/" has sign in functionality and bootstrap layout explained "here": "http://pythonthusiast.pythonblogs.com/230_pythonthusiast/archive/1317_building_python_flask_application_in_openshiftheroku_replacement_part_vii__adding_sign_in_form_using_bootstrap_3_and_login_feature_using_flask-login.html")
+   * "Flask, Heroku and Bootstrap": "http://www.shea.io/lightweight-python-apps-with-flask-twitter-bootstrap-and-heroku/" (this is a good recipe we can turn into building a science app)
+   * "Facebook login in Flask": "http://www.shea.io/facebook-authentication-for-flask-apps/"
+   * "Flask-Bootstrap": "https://github.com/mbr/flask-bootstrap" and its "doc": "http://pythonhosted.org/Flask-Bootstrap/", read in particular "basic usage": "http://pythonhosted.org/Flask-Bootstrap/basic-usage.html" and see the (only?) "example": "https://github.com/mbr/flask-bootstrap/blob/master/sample_application/__init__.py"
+   * "Bootstrap video intro": "http://www.lynda.com/Bootstrap-tutorials/Bootstrap-Adding-Interactivity-Your-Site/122456-2.html?utm_source=google&utm_medium=cpc&utm_campaign=Search-Dev-Bootstrap:%2BAdding%2BInteractivity%2Bto%2BYour%2BSite&utm_content=34118887386&utm_term=%2Bbootstrap%20%2Btutorial&gclid=CP7Mupaq-LwCFcPTcgodLxEA-A"
+ * "A complete modern Python project with virtualenv, testing, setup.py, etc.": "https://github.com/splaice/py-bootstrap"
+ * "Skulpt: Interactive Python in the browser": "http://www.skulpt.org/"
+ * "Python for computer games": "http://inventwithpython.com/"
+
+__Summary.__ Parampool is a Python package for handling a potentially
 large pool of input parameters in scientific applications. The
 simplest use is to pass a Python function to Parampool and get back a
 web interface for setting the arguments to the function. More powerful
