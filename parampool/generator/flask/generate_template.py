@@ -36,7 +36,8 @@ MathJax.Hub.Config({
     if login:
         code += '''
   {% if user.is_anonymous() %}
-  <p align="right"><a href="/login">Login</a> / <a href="/reg">Register</a></p>
+  <p align="right"><a href="/login">Login</a>
+  / <a href="/reg">Register</a></p>
   {% else %}
   <p align="right">Logged in as {{user.username}}<br>
     <a href="/old">Previous simulations<a/><br>
@@ -65,7 +66,7 @@ MathJax.Hub.Config({
                 {%% endif %%}</td></tr>
           {%% endfor %%}
         </table>
-        <p><input type=submit value=Compute>
+        <p><input type="submit" value="Compute">
     </form></p>
   </td>
 
@@ -81,7 +82,7 @@ MathJax.Hub.Config({
         <h3>Comments:</h3>
         <form method=post action="/add_comment">
             <textarea name="comments" rows="4" cols="40"></textarea>
-            <p><input type=submit value=Add>
+            <p><input type="submit" value="Add">
         </form>
         {% endif %}
 '''
@@ -129,20 +130,19 @@ def generate_template_dtree(compute_function, classname,
 MathJax.Hub.Config({
   TeX: {
      equationNumbers: {  autoNumber: "AMS"  },
-     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js"]
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js", "color.js"]
   }
 });
 </script>
 <script type="text/javascript"
  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-<!-- Fix slow MathJax rendering in IE8 -->
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 '''
     if login:
         pre_code += """
   {% if user.is_anonymous() %}
-  <p align="right"><a href="/login">Login</a> / <a href="/reg">Register</a></p>
+  <p align="right"><a href="/login">Login</a>
+  / <a href="/reg">Register</a></p>
   {% else %}
   <p align="right">Logged in as {{user.username}}<br>
     <a href="/old">Previous simulations<a/><br>
@@ -169,7 +169,10 @@ MathJax.Hub.Config({
         document.write(d);
       </script>
     </div>
-    <p><input type=submit value=Compute></form></p>
+    <p>
+    <input type="submit" value="Compute">
+    </form>
+    </p>
     </td>
 
     <td valign="top">
@@ -183,7 +186,7 @@ MathJax.Hub.Config({
         <h3>Comments:</h3>
         <form method=post action="/add_comment">
             <textarea name="comments" rows="4" cols="40"></textarea>
-            <p><input type=submit value=Add>
+            <p><input type="submit" value="Add">
         </form>
         {% endif %}
 """
@@ -320,7 +323,7 @@ def generate_login_templates(classname):
       <form method=post action="">
         <table>
           {% for field in form %}
-            <tr><td>{{ field.name }}</td>
+            <tr><td>{{ field.label }}</td>
                 <td>{{ field(size=20) }}</td>
                 <td>{% if field.errors %}
                   <ul class=errors>
@@ -330,7 +333,7 @@ def generate_login_templates(classname):
                 {% endif %}</td></tr>
           {% endfor %}
         </table>
-        <p><input type=submit value=Login>
+        <p><input type="submit" value="Login">
     </form>
   </body>
 </html>''')
@@ -339,65 +342,84 @@ def generate_login_templates(classname):
     reg = open(reg_template, 'w')
     reg.write(header)
     reg.write('''\
-    <h2>Register:</h2>
-      <form method=post action="">
-        <table>
-          {% for field in form %}
-            <tr><td>{{ field.name }}</td>
-                <td>{{ field(size=20) }}</td>
-                <td>{% if field.errors %}
-                  <ul class=errors>
-                  {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                  {% endfor %}</ul>
-                {% endif %}</td></tr>
-          {% endfor %}
-        </table>
-        <p><input type=submit value=Register>
-    </form>
-  </body>
+<h2>Register:</h2>
+  <form method=post action="">
+    <table>
+      {% for field in form %}
+        <tr><td>{{ field.label }}</td>
+            <td>{{ field(size=20) }}</td>
+            <td>
+            {% if field.errors %}
+              <ul class=errors>
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}</ul>
+            {% endif %}
+            </td>
+        </tr>
+      {% endfor %}
+    </table>
+    <p><input type="submit" value="Register">
+</form>
+</body>
 </html>''')
     reg.close()
 
     old = open(old_template, 'w')
     old.write(header)
+    old.write('''
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "AMS"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js", "color.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+''')
     old.write('''\
-    <h2>Previous simulations</h2>
-      <p align="right"><a href="/">Back to index</a></p>
-      {% if data %}
-        {% for post in data %}
-        <hr>
-        <table>
-            <tr>
-                <td valign="top" width="30%">
-                    <h3>Input</h3>
-                    <table>
-                    {% for field in post.form %}
-                      <tr><td>{{ field.name }}:&nbsp;</td>
-                        <td>{{ field.data }}</td></tr>
-                    {% endfor %}
-                    </table>
-                    </td><td valign="top" width="60%">
-                    <h3>Results</h3>
-                    {{ post.result|safe }}
-                    </td><td valign="top" width="10%">
-                    <p>
-                    <form method="POST" action="/delete/{{ post.id }}">
-                <input type=submit value="Delete" title="Delete this post from database">
-            </form>
-            </td></tr>
-        </table>
-        {% endfor %}
-        <hr>
-        <center>
-        <form method="POST" action="/delete/-1">
-            <input type=submit value="Delete all">
-        </form>
-        </center>
-      {% else %}
-          No previous simulations
-      {% endif %}
-  </body>
+<h2>Previous simulations</h2>
+<p align="right"><a href="/">Back to index</a></p>
+
+{% if data %}
+  {% for post in data %}
+  <hr>
+  <table>
+  <tr>
+    <td valign="top" width="30%">
+      <h3>Input</h3>
+      <table>
+      {% for field in post.form %}
+         <tr><td>{{ field.label }}:&nbsp;</td>
+             <td>{{ field.data }}</td></tr>
+      {% endfor %}
+      </table>
+    </td>
+    <td valign="top" width="60%">
+      <h3>Results</h3>
+      {{ post.result|safe }}
+    </td><td valign="top" width="10%">
+    <p>
+    <form method="POST" action="/delete/{{ post.id }}">
+      <input type="submit" value="Delete"
+       title="Delete this post from database">
+    </form>
+    </td></tr>
+  </table>
+  {% endfor %}
+  <hr>
+  <center>
+  <form method="POST" action="/delete/-1">
+      <input type="submit" value="Delete all">
+  </form>
+  </center>
+{% else %}
+    No previous simulations
+{% endif %}
+</body>
 </html>''')
     old.close()
 
@@ -420,7 +442,7 @@ def run_doconce_on_text(doc):
         doc = '\n'.join(lines)
 
         # Run doconce using a lib version of the doconce format command
-        from doconce import doconce_format, DoconceSyntaxError
+        from doconce import doconce_format, DocOnceSyntaxError
         stem = 'tmp_doc_string'
         try:
             print 'Found doc string in doconce format:'
@@ -432,7 +454,7 @@ def run_doconce_on_text(doc):
                      '.' + stem + '_html_file_collection']
             #for name in files:
             #    os.remove(name)
-        except DoconceSyntaxError, e:
+        except DocOnceSyntaxError, e:
             print e
             doc = wrap_in_pre_tags(doc)
     else:

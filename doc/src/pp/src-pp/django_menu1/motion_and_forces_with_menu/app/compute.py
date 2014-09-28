@@ -197,7 +197,7 @@ def compute_motion_and_forces0(
     curves are added to the previous ones since last time new_plot
     was true.
 
-    # (Doconce format)
+    # (DocOnce format)
     """
     v_x0 = initial_velocity*cos(initial_angle*pi/180)
     v_y0 = initial_velocity*sin(initial_angle*pi/180)
@@ -331,7 +331,7 @@ def compute_motion_and_forces(
     computed curves are added to the previous ones since last
     time `new_plot` was true.
 
-    # (Doconce format)
+    # (DocOnce format)
     """
     v_x0 = initial_velocity*cos(initial_angle*pi/180)
     v_y0 = initial_velocity*sin(initial_angle*pi/180)

@@ -255,10 +255,8 @@ of code that may be needed.
         defaults = ["none"]*len(arg_names)
     longest_name = max(len(name) for name in arg_names)
 
-    # Need to use wtforms for all fields except FloatField
-    if default_field != "FloatField":
-        if default_field[:4] != "wtf.":
-            default_field = "wtf." + default_field
+    if default_field[:4] != "wtf.":
+        default_field = "wtf." + default_field
 
     # Map type of default to right form field
     class Dummy:

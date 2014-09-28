@@ -40,7 +40,7 @@ def myfunc(a=1.2, b=2, c='some text', d=None,
     | `i`      | boolean     |
     |------------------------|
 
-    # (Doconce format)
+    # (DocOnce format)
     """
     r = '<!-- Special formatting of the data: -->\n'
     var = 1  # must be defined as variable before iterating over locals()

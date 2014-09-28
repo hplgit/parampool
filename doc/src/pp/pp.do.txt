@@ -493,15 +493,15 @@ of the returned HTML string can be found in the "`compute.py`":
 FIGURE: [fig-pp/flask4.png, width=850] Web interface with two graphs. label{pp:flask4:fig1}
 
 Any doc string of the compute function is copied and typeset verbatim
-at the top of the web interface. However, if the text `# (Doconce
+at the top of the web interface. However, if the text `# (DocOnce
 format)` appears somewhere in the doc string, the text is taken as
-"Doconce": "https://github.com/hplgit/doconce" source code and
+"DocOnce": "https://github.com/hplgit/doconce" source code and
 translated to HTML, which enables typesetting of LaTeX mathematics and
 computer code snippets (with nice pygments formatting).
 
 The documentation of the web interface can therefore be included as a
 doc string in the compute function. Here is descriptive doc string
-using Doconce syntax for LaTeX mathematics (equations inside `!bt` and
+using DocOnce syntax for LaTeX mathematics (equations inside `!bt` and
 `!et` commands)
 and monospace font for Python variables (names in backticks). The
 corresponding view in a browser is shown in Figure ref{pp:flask4:fig2}.
@@ -549,7 +549,7 @@ and lift. When `new_plot` is `False` (unchecked), the new
 computed curves are added to the previous ones since last
 time `new_plot` was true.
 
-# (Doconce format)
+# (DocOnce format)
 """
 !ec
 
@@ -573,7 +573,7 @@ in the heading line of the table with data.
 MathJax must be enabled in the HTML code for these symbols to be
 rendered correctly. This is specified by the `MathJax=True` argument
 to `generate`. (However, in this particular example MathJax is
-automatically turned on since we use Doconce syntax and mathematics
+automatically turned on since we use DocOnce syntax and mathematics
 in the doc string.)
 !ewarning
 
