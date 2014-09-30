@@ -1,0 +1,11 @@
+syntax:glob
+*.pyc
+*~
+.idea
+__pycache__
+*.backup
+*.swp
+*.gz
+tmp
+build
+*.orig

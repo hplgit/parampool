@@ -1,0 +1,27 @@
+* misc
+** {Python} Programming Language
+   key:       Python
+   url:       http://python.org
+   status:    published
+   sortkey:   Python
+   note:      \url{http://python.org}
+   entrytype: misc
+* reports
+** Introduction to computing with finite difference methods
+   key:         Langtangen:deq:decay
+   author:      H. P. Langtangen
+   year:        2013
+   institution: Simula Research Laboratory and University of Oslo
+   status:      published
+   entrytype:   techreport
+   url:         http://hplgit.github.com/INF5620/doc/notes/decay-sphinx/main_decay.html
+   type:        Web document
+** Using Web Frameworks for Scientific Web Applications
+   key:         Langtangen:web4sciapps
+   author:      H. P. Langtangen, A. E. Johansen
+   year:        2013
+   institution: Simula Research Laboratory and University of Oslo
+   status:      published
+   entrytype:   techreport
+   url:         http://hplgit.github.com/web4sciapps/doc/web/
+   type:        Web document

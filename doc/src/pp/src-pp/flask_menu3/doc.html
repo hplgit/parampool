@@ -1,0 +1,77 @@
+
+<!-- tocinfo
+{'highest level': 4, 'sections': []}
+end of tocinfo -->
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "AMS"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- Fix slow MathJax rendering in IE8 -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
+
+
+
+
+<!-- ------------------- main content ---------------------- -->
+
+This application computes the motion of a ball with radius \( R \)
+and mass \( m \) under the influence of gravity, air drag and lift
+because of a given spinrate \( \omega \). The motion starts with a
+prescribed initial velocity \( v_0 \) making an angle initial_angle
+\( \theta \) with the ground. A wind velocity \( w \), positive in
+positive \( x \) direction, can also be given.
+
+<p>
+The ordinary differential equation problem governing the
+motion reads
+
+<p>
+$$
+\begin{align*}
+m\frac{d^2\boldsymbol{r}}{dt^2} &= -mg\boldsymbol{j} -
+\frac{1}{2}C_D\varrho A v^2\boldsymbol{i}_t +
+\frac{1}{2}C_L\varrho A v^2\boldsymbol{i}_n\\
+\boldsymbol{r}(0) &= 0\boldsymbol{i} + 0\boldsymbol{j}\\
+\frac{d\boldsymbol{r}}{dt}(0) &= v_0\cos\theta\boldsymbol{i} + v_0\sin\theta\boldsymbol{j},
+\end{align*}
+$$
+
+where \( \boldsymbol{i} \) and \( \boldsymbol{j} \) are unit vectors in the \( x \) and \( y \)
+directions, respectively, \( g \) is the acceleration of gravity,
+\( A \) is the cross section area normal to the motion, \( \boldsymbol{i}_t \)
+is a unit tangent vector to the trajectory, \( \boldsymbol{i}_n \) is
+a normal vector (pointing upwards) to the trajectory,
+\( C_D \) and \( C_L \) are lift coefficients, and \( \varrho \) is the
+air density. For a ball, \( C_D \) is taken as 0.45, while
+\( C_L \) depends on the spinrate through \( C_L=0.2\omega/500 \).
+
+<p>
+Many numerical methods can be used to solve the problem.
+In the menu one can choose between the simple
+<code>ForwardEuler</code> or the 2nd- and 4th-order Runge-Kutta methods,
+<code>RK2</code> and <code>RK4</code>. If the timestep <code>dt</code> is None, approximately
+500 steps are used, but <code>dt</code> can also be given a desired
+<code>float</code> value.
+
+<p>
+The boolean variable <code>plot_simplified_motion</code> adds the curve
+of the motion without drag and lift (the standard parabolic
+trajectory). This curve helps illustrate the effect of drag
+and lift. When <code>new_plot</code> is <code>False</code> (unchecked), the new
+computed curves are added to the previous ones since last
+time <code>new_plot</code> was true.
+
+<!-- ------------------- end of main content --------------- -->
+

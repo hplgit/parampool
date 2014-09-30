@@ -1,0 +1,37 @@
+flask and django subdirectories contain specific examples used
+in the tutorial. The examples, 1, 2, 3, 4, 5, 6, menu1, menu2, menu3
+are constructed to have increasing complexity.
+
+1:
+Simple application with two input variables and one number as output.
+
+2:
+As 1, but output is a plot.
+
+3:
+As 2, but an extra input variable indicates whether new runs are to
+be shown in the same plot or not.
+
+4:
+Full application with many input parameters. The returned HTML code
+has two embedded plots and a table of results.
+
+5:
+Application with a list and filename as input to demonstrate flexible
+input of an array and uploading of files.
+
+6:
+As 4, but with login and account functionality as well as storing
+runs in a database.
+
+menu1:
+Example on using a menu, defined in terms of a nested list.
+
+menu2:
+As menu1, but the menu is defined through the parampool.menu.Menu
+API.
+
+menu3:
+As menu2, but the programming of the menu is distributed
+to different functions. Mathematical symbols for input variables
+are also defined as well as more help texts and unit specifications.

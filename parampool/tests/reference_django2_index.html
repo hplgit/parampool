@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Django Myfunc app</title>
+  </head>
+  <body>
+  
+<!-- tocinfo
+{'highest level': 4, 'sections': []}
+end of tocinfo -->
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "AMS"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js", "color.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+<!-- ------------------- main content ---------------------- -->
+
+
+<p>
+This function does not compute anything - it just returns the
+value of the input parameters as altered by the user.
+
+<p>
+However, inside the function we do calculate the heavy formula
+
+$$ Q = e^{-ab}\sin(\pi g_0),$$
+
+where \( g_0 \) is the first element in the <code>g</code> array.
+
+<p>
+The various input parameters are
+
+<p>
+<table border="1">
+<thead>
+<tr><th align="center">   variable   </th> <th align="center">                           type                          </th> </tr>
+</thead>
+<tbody>
+<tr><td align="left">   <code>a</code>    </td> <td align="left">   f                                                            </td> </tr>
+<tr><td align="left">   <code>b</code>    </td> <td align="left">   integer                                                      </td> </tr>
+<tr><td align="left">   <code>c</code>    </td> <td align="left">   text                                                         </td> </tr>
+<tr><td align="left">   <code>d</code>    </td> <td align="left">   anything                                                     </td> </tr>
+<tr><td align="left">   <code>e</code>    </td> <td align="left">   list                                                         </td> </tr>
+<tr><td align="left">   <code>f</code>    </td> <td align="left">   tuple                                                        </td> </tr>
+<tr><td align="left">   <code>g</code>    </td> <td align="left">   numpy array written with list syntax                         </td> </tr>
+<tr><td align="left">   <code>h</code>    </td> <td align="left">   user-defined instance of type <code>MySpecialClass</code>    </td> </tr>
+<tr><td align="left">   <code>i</code>    </td> <td align="left">   boolean                                                      </td> </tr>
+</tbody>
+</table>
+<p>
+<!-- (DocOnce format) -->
+
+<!-- ------------------- end of main content --------------- -->
+
+
+
+  <!-- Input and Results are typeset as a two-column table -->
+  <table>
+  <tr>
+  <td valign="top">
+    <h2>Input:</h2>
+
+      <form method=post action="" enctype="multipart/form-data">{% csrf_token %}
+        <table>
+          {% for field in form %}
+            <tr><td>{{ field.name }}</td>
+                <td>{{ field }}</td>
+                <td>{% if field.errors %}
+                  <ul class=errors>
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}</ul>
+                {% endif %}</td></tr>
+          {% endfor %}
+        </table>
+        <p><input type="submit" value="Compute">
+    </form></p>
+  </td>
+
+  <td valign="top">
+    {% if result != None %}
+      <h2>Results:</h2>
+        {{ result|safe }}
+
+    {% endif %}
+  </td>
+  </tr>
+  </table>
+  </body>
+</html>

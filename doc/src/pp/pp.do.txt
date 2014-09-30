@@ -1,0 +1,1245 @@
+TITLE: Parampool Tutorial
+AUTHOR: Hans Petter Langtangen at Center for Biomedical Computing, Simula Research Laboratory & Department of Informatics, University of Oslo
+AUTHOR: Anders Elstad Johansen at Center for Biomedical Computing, Simula Research Laboratory
+DATE: today
+
+<%
+src_path = 'https://github.com/hplgit/parampool/blob/master/doc/src/pp/src-pp'
+%>
+
+=== 2DO ===
+
+ * More links to additional material: (Read these when returning to
+   this work)
+   * "Quick Flask++ tutorial": "http://maximebf.com/blog/2012/10/building-websites-in-python-with-flask/#.UxV4jHVdXn4"
+   * "Quick overview of Bootstrap 3": "http://www.realpython.com/blog/design/getting-started-with-bootstrap-3/#.UxV8pHVdXn4", "another Bootstrap 3 tutorial": "http://www.w3resource.com/twitter-bootstrap/tutorial.php"
+   * "Flask and Boostrap intro": "http://pythonthusiast.pythonblogs.com/230_pythonthusiast/archive/1309_building_in_openshift_part_iv__application_layout_and_templating_using_bootstrap_3_and_jinja_2.html" ("sample app": "http://bio-ekowibowo.rhcloud.com/" has sign in functionality and bootstrap layout explained "here": "http://pythonthusiast.pythonblogs.com/230_pythonthusiast/archive/1317_building_python_flask_application_in_openshiftheroku_replacement_part_vii__adding_sign_in_form_using_bootstrap_3_and_login_feature_using_flask-login.html")
+   * "Flask, Heroku and Bootstrap": "http://www.shea.io/lightweight-python-apps-with-flask-twitter-bootstrap-and-heroku/" (this is a good recipe we can turn into building a science app)
+   * "Facebook login in Flask": "http://www.shea.io/facebook-authentication-for-flask-apps/"
+   * "Flask-Bootstrap": "https://github.com/mbr/flask-bootstrap" and its "doc": "http://pythonhosted.org/Flask-Bootstrap/", read in particular "basic usage": "http://pythonhosted.org/Flask-Bootstrap/basic-usage.html" and see the (only?) "example": "https://github.com/mbr/flask-bootstrap/blob/master/sample_application/__init__.py"
+   * "Bootstrap video intro": "http://www.lynda.com/Bootstrap-tutorials/Bootstrap-Adding-Interactivity-Your-Site/122456-2.html?utm_source=google&utm_medium=cpc&utm_campaign=Search-Dev-Bootstrap:%2BAdding%2BInteractivity%2Bto%2BYour%2BSite&utm_content=34118887386&utm_term=%2Bbootstrap%20%2Btutorial&gclid=CP7Mupaq-LwCFcPTcgodLxEA-A"
+ * "A complete modern Python project with virtualenv, testing, setup.py, etc.": "https://github.com/splaice/py-bootstrap"
+ * "Skulpt: Interactive Python in the browser": "http://www.skulpt.org/"
+ * "Python for computer games": "http://inventwithpython.com/"
+
+__Summary.__ Parampool is a Python package for handling a potentially
+large pool of input parameters in scientific applications. The
+simplest use is to pass a Python function to Parampool and get back a
+web interface for setting the arguments to the function. More powerful
+use consists in defining an input *menu*, which is a tree structure of
+input data, where data items (parameters) are organized hierarchically
+in submenus. Each data item is associated with a name, default value,
+unit, help text, widget type, validation information, etc. Different
+types of sophisticated user interfaces can then be automatically
+generated: a graphical web interface (via Flask or Django), a
+command-line interface, and a file-based interface.  The tutorial
+describes specific examples on how to to program Parampool to generate
+user interfaces and how to operate them.
+
+
+======= Simulation program =======
+
+We shall work with a sample application that takes a few variables as
+input and produces numbers and/or graphs as result.  Specifically, our
+application, later referred to as a *simulation program* or simply a
+*simulator*, concerns the simulation of a ball thrown through air.
+Given the initial velocity of the ball, and some other data like mass
+and radius, we can compute the trajectory of the ball until it hits
+the ground. The details of the calculations are not of interest here
+as our focus is on software for assigning input data and for
+displaying the results. However, the interested reader can consult the
+box below for the inner workings of the simulation program.
+
+#The various features of Parampool will be introduced in a series
+#of examples where the complexity of input and the results ranges
+#from very simple to quite advanced.
+
+!bnotice Mathematical model
+The motion of the mass center $\bm{r}$ of a body through a fluid is
+given by
+!bt
+\begin{equation}
+m\frac{d^2\bm{r}}{dt^2} = -m\bm{g} - \frac{1}{2}C_D\varrho A v^2\bm{i}_t
++ \frac{1}{2}C_L\varrho A v^2\bm{i}_n + \frac{1}{2}C_S\varrho A v^2(\bm{i}_t
+\times \bm{i}_n),
+label{pp:ballistic:eq1}
+\end{equation}
+!et
+where $m$ is the mass of the body, $\bm{g}$ is the acceleration of
+gravity vector, $C_D$ is a drag coefficient, $\varrho$ is the density
+of air, $A$ is the cross-section area of the body perpendicular to the motion,
+$v = |\bm{v}-\bm{w}|$ is the relative velocity between the body,
+$\bm{v}=d\bm{r}/dt$, and a given wind velocity $\bm{w}$, $C_L$
+is a lift coefficient, $C_S$ is a coefficient for the sidewind or lateral
+aerodynamic force, $\bm{i}_t$
+is a unit tangent vector of the body's path, while $\bm{i}_n$ is a unit
+vector normal to the path tilting upwards.
+The drag $C_D$ coefficient for a sphere is taken as 0.45. The lift coefficient
+$C_L$ depends on the spinrate $\omega$ (rad $\hbox{s}^{-1}$)
+of the body, and a simple linear relation often suffices:
+$C_L = 0.2\omega/500$. A negative $\omega$ gives a negative lift.
+
+We can simplify the model for a two-dimensional motion in an $xy$ plane
+with unit vectors $\bm{i}$ and $\bm{j}$ in the $x$ and $y$ directions,
+respectively.
+Then we skip the sidewind force ($C_S=0$). We also let gravity
+point downwards, $\bm{g}=-g\bm{j}$, and let the wind velocity be horizontal:
+$\bm{w}=-w\bm{i}$. Furthermore, we have that
+
+!bt
+\begin{align}
+\bm{i}_t &= \frac{\bm{v}}{\left|\bm{v}\right|} \equiv a\bm{i} + b\bm{j},
+\quad \bm{v} = \frac{d\bm{r}}{dt},\\
+\bm{i}_n &= -b\bm{i} + a\bm{j}\hbox{ if }a>0\hbox{ else }b\bm{i}-a\bm{j}
+\end{align}
+!et
+The initial conditions associated with
+(ref{pp:ballistic:eq1})
+express that the body starts at the
+origin with an initial velocity $v_0$ making an angle $\theta$ with
+the horizontal. In the two-dimensional case the conditions become
+
+!bt
+\[ \bm{r}(0) = 0\bm{i} + 0\bm{j},\quad \frac{d\bm{r}}{dt}(0)=\bm{v}(0)=
+v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j}.\]
+!et
+
+!enotice
+
+
+======= User interfaces for Python functions =======
+label{pp:GUI4functions}
+
+Parampool can automatically generate user interfaces for communicating
+with a given function.
+The usage of this functionality will be explained in problems
+of increasing complexity, using the trajectory of a ball as described
+above as application.
+
+===== Real numbers as input and output =====
+label{pp:real:inout}
+
+Suppose you have some function
+
+!bc pycod
+def compute_drag_free_landing(initial_velocity, initial_angle):
+    ...
+    return landing_point
+!ec
+This function returns the landing point on
+the ground (`landing_point`) of a ball that is initially thrown with a
+given velocity in magnitude (`initial_velocity`), making
+an angle (`initial_angle`) with the ground. There are two real input
+variables and one real output variable. The function must be available
+in some module, here the module is simply called `compute.py` and
+contains a lot of other functions for doing the mathematical computations.
+
+In the following we shall refer to functions like `compute_drag_free_landing`,
+for which we want to generate a web interface, as a *compute function*.
+
+=== Flask interface ===
+
+"Flask": "http://flask.pocoo.org/" is a tool that can be used to write
+a graphical user interface (GUI) to be operated in a web browser. Here
+we shall use Flask to create a GUI for our computed function, as
+displayed in Figure ref{pp:flask1:fig1}. To this end, simply create a
+Python file `generate.py` with the following lines:
+
+@@@CODE src-pp/flask1/generate.py
+
+The `generate` function grabs the arguments in our compute function and
+creates the necessary Flask files.
+
+!bwarning Tip
+We recommend to make a new directory for every web application.  Since
+you need access to the `compute` module you must copy `compute.py` to
+the directory or modify `PYTHONPATH` to contain the path to the
+directory where `compute.py` resides.
+!ewarning
+
+
+Since the `generate` tool has no idea
+about the type of variable of the two positional arguments in the
+compute function, it has to assume some type. By default this will
+be text, but we change that behavior to be floats by the setting the
+`default_field` argument to `FloatField`.
+This means that the generated interface
+will (only) accept float values for the input variables, which is
+sufficient in our case.
+
+A graphical Flask-based web interface is generated by running
+
+!bc sys
+Terminal> python generate.py
+!ec
+
+!bwarning
+A message is written in the terminal window, saying that
+with positional arguments in the compute function, one must normally
+invoke the generated `controller.py` file and do some explicit
+conversion of text read from the web interface to the actual variable
+type accepted by the compute function.  This potential manual work can
+be avoided by using keyword arguments only.
+!ewarning
+
+You can now view the generated web interface by running
+
+!bc sys
+Terminal> python controller.py
+!ec
+and open your web browser at the location
+`http://127.0.0.1:5000/`. Fill in values for the two input variables
+and press *Compute*. The page in the Chrome browser will now look like Figure
+ref{pp:flask1:fig1}. Other browsers (Firefox, for instance) may have a
+slightly different design of the input fields. All figures in this tutorial
+are made with the Chrome browser.
+
+FIGURE: [fig-pp/flask1.png, width=400] A simple web interface. label{pp:flask1:fig1}
+
+!bnotice Generated files:
+Readers with knowledge of Flask will notice
+that some files with Flask code have been generated:
+
+ * `model.py` with a definition of the forms in the web interface
+ * `controller.py` which glues the interface with the compute function
+ * `templates/view.html` which defines the design of the web interface
+
+You are of course free to tailor these files to your needs if you know
+about Flask programming. An introduction to Flask for scientific
+applications is provided in cite{Langtangen:web4sciapps}.
+A one-line Bash script, `clean.sh`, is also generated: it will remove
+all files that were generated by running `generate.py`.
+!enotice
+
+=== Django interface ===
+
+"Django": "https://www.djangoproject.com/" is a very widespread and popular
+programming environment for creating web applications.
+We can easily create our web application in Django too. Just replace `flask`
+by `django` in `generate.py`:
+
+@@@CODE src-pp/django1/generate.py
+
+The Django files are now in the directory tree `drag_free_landing`
+(same name as our compute function, except that any leading `compute_`
+word is removed). Run the application by
+
+!bc sys
+Terminal> python drag_free_landing/manage.py runserver
+!ec
+and open your browser at the location `http://127.0.0.1:8000/`.
+The interface looks the same and has the same behavior
+as in the Flask example above.
+
+!bnotice Generated files:
+Quite some files are needed for a Django application. These are
+found in the `drag_free_landing` directory tree. The most important
+ones are
+
+ * `models.py` with a definition of the forms in the web interface
+ * `views.py` which glues the interface with the compute function
+ * `templates/index.html` which defines the design of the web interface
+
+With some knowledge of basic Django programming you can edit these
+files to adjust the functionality.  Reference
+cite{Langtangen:web4sciapps} provides a basic introduction to Django
+for creating scientific applications.
+
+# Reference!
+!enotice
+
+===== A plot as output =====
+label{pp:plot:output}
+
+The result of the previous computation was just a number. Let us instead
+make a plot of the trajectory of a ball without any air resistance.
+The function
+
+!bc pycod
+def compute_drag_free_motion_plot(
+    initial_velocity=5.0,
+    initial_angle=45.0):
+    ...
+    return html_text
+!ec
+is now our compute function, in `compute.py`, which takes the same two
+input arguments as before, but returns the some HTML text that will display
+a plot in the browser window. This HTML text is basically the inclusion
+of the image file containing the plot,
+
+!bc
+<img src="X">
+!ec
+where `X` is the name of the file. However, if you do repeated
+computations, the name of the image file must change for the browser to
+update the plot. Inside the compute function we must therefore generate
+a unique name of each image file. For this purpose, we can use the
+number of seconds since the Epoch (January 1, 1970) as part of the filename,
+obtained by calling `time.time()`. In addition, the image file must
+reside in a subdirectory `static`. The appropriate code is displayed below.
+
+!bc pycod
+import matplotlib.pyplot as plt
+...
+def compute_drag_free_motion_plot(
+    initial_velocity=5.0,
+    initial_angle=45.0):
+    ...
+    plt.plot(x, y)
+    import time  # use time to make unique filenames
+    filename = 'tmp_%s.png' % time.time()
+    if not os.path.isdir('static'):
+        os.mkdir('static')
+    filename = os.path.join('static', filename)
+    plt.savefig(filename)
+    html_text = '<img src="%s" width="400">' % filename
+    return html_text
+!ec
+The string version of the object returned from the compute function
+is inserted as *Results* in the HTML file, to the right of the input.
+By returning the appropriate HTML text we can tailor the result
+part of the page to our needs.
+
+=== Flask application ===
+
+The `generate.py` file for this example is similar to what is shown above.
+Only the name of the compute function has changed:
+
+@@@CODE src-pp/flask2/generate.py
+
+!bnotice Tip
+This time we do not need to specify `default_field` because we have
+used keyword arguments with default values in the compute function.
+The `generate` function can then from the default values see the
+type of our arguments. Remember to use `float` default values
+(like 5.0)
+and not simply integers (like 5) if the variable is supposed to be a `float`.
+!enotice
+
+We run `python generator.py` to generate the Flask files and then
+`python controller.py` to start the web GUI. Now the default
+values appear in the input fields. These can ba altered, or you can
+just click *Compute*. The computations result in a plot as
+showed in Figure ref{pp:flask2:fig1}.
+
+FIGURE: [fig-pp/flask2.png, width=600] A web interface with graphics. label{pp:flask2:fig1}
+
+=== Django application ===
+
+The corresponding Django application is generated by the same
+`generator.py` code as above, except that tword `flask` is replaced
+by `django`. The Django files are
+now placed in the `drag_free_motion_plot` subdirectory, and the web GUI
+is started by running
+
+!bc sys
+Terminal> python drag_free_motion_plot/manage.py runserver
+!ec
+The functionality of the GUI is identical to that of the Flask
+version.
+
+=== Comparing graphs in the same plot ===
+
+With a little trick we can compare several trajectories in the
+same plot: inserting `plt.figure(X)` makes all `plt.plot` calls
+draw curves in the same figure (with figure number `X`).
+We introduce a boolean parameter
+`new_plot` reflecting whether we want a new fresh plot or not,
+
+!bc pycod
+def compute_drag_free_motion_plot2(
+    initial_velocity=5.0,
+    initial_angle=45.0,
+    new_plot=True):
+!ec
+and add the following code before the `plt.plot` call:
+
+!bc pycod
+global fig_no
+if new_plot:
+    fig_no = plt.figure().number
+else:
+    plt.figure(fig_no)
+plt.plot(x, y, label=r'$v=%g,\ \theta=%g$' %
+         (initial_velocity, initial_angle))
+plt.legend()
+!ec
+The `new_plot` parameter will turn up as a
+boolean variable in the web interface, and when checked, we create
+a new figure. Otherwise, we draw curves in the existing figure number
+`fig_no` which was initialized last time `new_plot` was true (with
+a global variable we ensure that the value of `fig_no` survives between
+the calls to the compute function).
+Figure ref{pp:flask3:fig1} displays an attempt to not check `new_plot`
+and compare the curves corresponding to three different parameters.
+
+FIGURE: [fig-pp/flask3.png, width=600] Plot with multiple curves. label{pp:flask3:fig1}
+
+!bwarning Caveat.
+If `new_plot` is unchecked before the first computation is carried out,
+`fig_no` is not defined when we do `plt.figure(fig_no)` and we get
+a `NameError` exception. A fool-proof
+solution is
+
+!bc pycod
+if new_plot:
+    fig_no = plt.figure().number
+else:
+    try:
+        plt.figure(fig_no)
+    except NameError:
+        fig_no = plt.figure().number
+!ec
+!ewarning
+
+!bnotice Avoiding plot files
+The compute function generates plot files with unique names, but we can
+avoid making files at all and just insert the PNG code of the plot,
+using base64 encoding,
+as a long string directly in the HTML image tag. The statements
+below sketches the idea:
+
+!bc pycod
+import matplotlib.pyplot as plot
+# make plot
+from StringIO import StringIO
+figfile = StringIO()
+plt.savefig(figfile, format='png')
+figfile.seek(0)  # rewind to beginning of file
+figdata_png = figfile.buf  # extract string
+import base64
+figdata_png = base64.b64encode(figdata_png)
+html_text = '<img src="data:image/png;base64,%s" width="400">' % \
+            figdata_png
+!ec
+
+There is a convenient function `parampool.utils.save_png_to_str`
+performing the statements above and returning the `html_text`
+string:
+
+!bc pycod
+from parampool.utils import save_png_to_str
+# make plot in plt (matplotlib.pyplot) object
+html_text = save_png_to_str(plt, plotwidth=400)
+!ec
+With this construction one can very easily avoid plot files and
+embed the plot directly in the HTML code.
+!enotice
+
+!bnotice Matplotlib without X server
+Matplotlib is by default configured to work with a graphical user interface
+which may require an X11 connection. When running applications on a web
+server there is a possibility that X11 is not enabled, and the user will get
+an error message. Matplotlib thus needs to be configured for use in such
+environments. The configuration depends on what kinds of images the user
+wants to generate, but in most cases it is sufficient to use the `Agg` backend.
+The `Agg` backend is created to make PNG files, but it also recognizes other
+formats like PDF, PS, EPS and SVG. The backend needs to be set before importing
+pyplot or pylab:
+
+!bc pycod
+import matplotlib as mpl
+mpl.use('Agg')
+import matplotlib.pyplot as plot
+!ec
+!enotice
+#[[[
+
+===== More input parameters and results =====
+label{pp:flask4}
+
+It is time to address a more complicated application: we want
+to compute the trajectory of a ball subject to air drag and lift
+and compare that trajectory to the one where
+drag and lift are omitted. We also want to visualize the
+relative importance between the three forces: gravity, drag, and lift.
+The lift is caused by spinning the ball.
+
+The function that performs the computations has the following signature:
+
+@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
+and returns a formatted string `html_text` with two plots organized
+as a table. The technique described in the
+*Avoiding plot files* box at the end of Section {pp:plot:output} is
+implemented to embed PNG images directly in the HTML code.
+Under the plots there is a table of input values and the landing point.
+Curves can be accumulated in the plots (`new_plot=True`), with
+the corresponding data added to the table.
+A rough sketch of the HTML code returned from the compute
+function goes as follows:
+
+!bc htmlcod
+<table>
+<tr>
+<td valign="top">
+<img src="data:image/png;base64,iVBORw0KGgoAAAA..." width="400">
+</td>
+<td valign="top">
+<img src="data:image/png;base64,iVBORw0KGgoAAAA..." width="400">
+</td>
+</tr>
+</table>
+
+<center>
+<table border=1>
+<tr>
+<td align="center"> \( v_0 \)  </td>
+<td align="center"> \( \theta \) </td>
+<td align="center"> \( \omega \) </td>
+<td align="center"> \( w \)    </td>
+<td align="center"> \( m \)    </td>
+<td align="center"> \( R \)    </td>
+<td align="center"> method     </td>
+<td align="center"> \( \Delta t \) </td>
+<td align="center"> landing point </td>
+</tr>
+<tr><td align="right"> 5 </td><td align="right"> 45 </td> ...</tr>
+<tr><td align="right"> 5 </td><td align="right"> 45 </td> ...</tr>
+<tr><td align="right"> 5 </td><td align="right"> 45 </td> ...</tr>
+</table>
+</center>
+!ec
+Note that we use MathJax syntax for having LaTeX mathematics
+in the table heading.
+All details about the computations and the construction
+of the returned HTML string can be found in the "`compute.py`":
+"${src_path}/compute.py" file.
+
+FIGURE: [fig-pp/flask4.png, width=850] Web interface with two graphs. label{pp:flask4:fig1}
+
+Any doc string of the compute function is copied and typeset verbatim
+at the top of the web interface. However, if the text `# (DocOnce
+format)` appears somewhere in the doc string, the text is taken as
+"DocOnce": "https://github.com/hplgit/doconce" source code and
+translated to HTML, which enables typesetting of LaTeX mathematics and
+computer code snippets (with nice pygments formatting).
+
+The documentation of the web interface can therefore be included as a
+doc string in the compute function. Here is descriptive doc string
+using DocOnce syntax for LaTeX mathematics (equations inside `!bt` and
+`!et` commands)
+and monospace font for Python variables (names in backticks). The
+corresponding view in a browser is shown in Figure ref{pp:flask4:fig2}.
+
+!bc
+"""
+This application computes the motion of a ball with radius $R$
+and mass $m$ under the influence of gravity, air drag and lift
+because of a given spinrate $\omega$. The motion starts with a
+prescribed initial velocity $v_0$ making an angle initial_angle
+$\theta$ with the ground. A wind velocity $w$, positive in
+positive $x$ direction, can also be given.
+
+The ordinary differential equation problem governing the
+motion reads
+
+|bt
+\begin{align*}
+m\frac{d^2\bm{r}}{dt^2} &= -mg\bm{j} -
+\frac{1}{2}C_D\varrho A v^2\bm{i}_t +
+\frac{1}{2}C_L\varrho A v^2\bm{i}_n\\
+\bm{r}(0) &= 0\bm{i} + 0\bm{j}\\
+\frac{d\bm{r}}{dt}(0) &= v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j},
+\end{align*}
+|et
+where $\bm{i}$ and $\bm{j}$ are unit vectors in the $x$ and $y$
+directions, respectively, $g$ is the acceleration of gravity,
+$A$ is the cross section area normal to the motion, $\bm{i}_t$
+is a unit tangent vector to the trajectory, $\bm{i}_n$ is
+a normal vector (pointing upwards) to the trajectory,
+$C_D$ and $C_L$ are lift coefficients, and $\varrho$ is the
+air density. For a ball, $C_D$ is taken as 0.45, while
+$C_L$ depends on the spinrate through $C_L=0.2\omega/500$.
+
+Many numerical methods can be used to solve the problem.
+Some legal names are `ForwardEuler`, `RK2`, `RK4`,
+and `Fehlberg` (adaptive Runge-Kutta 4/5 order).  If the
+timestep `dt` is None, approximately 500 steps are used, but
+`dt` can also be given a desired `float` value.
+
+The boolean variable `plot_simplified_motion` adds the curve
+of the motion without drag and lift (the standard parabolic
+trajectory). This curve helps illustrate the effect of drag
+and lift. When `new_plot` is `False` (unchecked), the new
+computed curves are added to the previous ones since last
+time `new_plot` was true.
+
+# (DocOnce format)
+"""
+!ec
+
+
+FIGURE: [fig-pp/flask4_doc.png, width=850] Web interface with documentation. label{pp:flask4:fig2}
+
+The `generate.py` code for creating the web GUI goes as in the other examples,
+
+@@@CODE src-pp/flask4/generate.py
+and we start the application as usual by `python controller.py`.  The
+resulting web interface appears in Figure ref{pp:flask4:fig1}.  The
+table shows the sequence of data we have given; starting with the
+default values, then turning off the `plot_simplified_motion` curve
+and `new_plot`, then running two cases with different values for the
+wind parameter `w`.  The plot clearly show the influence of drag and
+wind against the motion.
+
+!bwarning MathJax
+The `compute_motion_and_forces` function returns mathematical symbols
+in the heading line of the table with data.
+MathJax must be enabled in the HTML code for these symbols to be
+rendered correctly. This is specified by the `MathJax=True` argument
+to `generate`. (However, in this particular example MathJax is
+automatically turned on since we use DocOnce syntax and mathematics
+in the doc string.)
+!ewarning
+
+
+=== Django interface ===
+
+As before, the Django interface is generated by importing the function
+`generate` from `parampool.generator.django`.
+A subdirectory `motion_and_forces` contains the files, and the
+Django application is started as shown in previous examples and has the same
+functionality as the Flask application.
+
+
+===== Other types of function arguments =====
+
+The `generate` function will recognize the following different types
+of keyword arguments in the compute function:
+`float`, `int`, `bool`, `str`, `list`,
+`tuple`, `numpy.ndarray`, name of a file, as well as user-defined class types
+(a la `MySpecialClass`).
+Here is a minimalistic example on computing the mean and standard
+deviation of data either in an array or in a file (we use the
+file if the operator of the web interface assigns a file to `filename`):
+
+@@@CODE src-pp/compute.py fromto: def compute_average@if __name
+The output is simple, basically two numbers in a table and an intro line.
+
+We write a `generate.py` file as shown before, but with `compute_average`
+as the name of the compute function. For any argument containing
+the string `filename` it is assumed that the argument represents
+the name of a file. The web interface will then feature a button
+for uploading the file.
+
+When the applicatin runs, we have two data fields: one for setting an
+array with list syntax and one for uploading a file. Clicking on the
+latter and uploading an file `mydata.dat` containing just columns of
+numbers, results in the web page displayed in Figure
+ref{pp:flask5:fig1}. In this case, when a filename was assigned, we
+use the data in the file.  Alternatively, we can instead fill in the
+data array and click *Compute*, which then will compute the basic
+statistics of the assigned data array.
+
+FIGURE: [fig-pp/flask5.png, width=500] Web interface for uploading a file. label{pp:flask5:fig1}
+
+======= Working with a menu of input parameters =======
+
+Parampool's main focus is on scientific applications with lots of
+input data of different type, organized in a hierarchical tree fashion.
+The various input parameters are defined in terms of a *menu*.
+The menu can be defined as a nested list or through function
+application programming interface (known as an API, and here
+consisting of calls functionality in the `parampool.menu` package).
+
+To exemplify the use of menus, we apply the
+`compute_motion_and_forces` function (from
+Section ref{pp:flask4}):
+
+@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
+Let us organize 10 input parameters into four submenus. At the top
+level we need a submenu, usually called "Main menu" or named after
+the application. Each submenu
+is here specified with a logical name of each parameter and the
+corresponding variable names in the compute function:
+
+ * Main menu
+   * Initial motion data
+     * Initial velocity: `initial_velocity`
+     * Initial angle: `initial_angle`
+     * Spinrate: `spinrate`
+   * Body and environment data
+     * Wind velocity: `w`
+     * Mass: `m`
+     * Radius: `R`
+   * Numerical parameters
+     * Method: `method`
+     * Time step: `dt`
+   * Plot parameters
+     * Plot simplified motion: `plot_simplified_motion`
+     * New plot: `new_plot`
+
+With a menu we can give the parameters more readable logical names (not
+restricted to a valid variable name in Python), but we can also
+specify a lot other properties too, as will be explained.
+
+idx{submenu} idx{data item}
+
+A menu is a hierarchical *tree structure* with *submenus* and
+*data items*, where each data item describes an input parameter
+in the problem. The task now is to make a Python specification of
+the of submenus and data items in the menu tree.
+
+===== Specify a menu as a list =====
+
+The menu tree can be specified as a list of lists, strings, and dictionaries.
+Each list represents a submenu, each string the name of the submenu,
+and each dict is a data item. The menu must be return from some
+function, hereafter called the *menu function*. In our case, the
+menu function goes as follows:
+
+@@@CODE src-pp/compute.py fromto: def menu_definition_list@def convert_time_step
+Actually, the menu function must return a `parampool.menu.Menu` object,
+so after the definition of the menu tree as a list we must make the
+shown conversion from a list to `Menu` object via the `listtree2Menu`
+function.
+
+===== Attributes in data items =====
+
+Each data item has a name and preferably a default value, as in the
+case of "Initial velocity". More attributes can be added:
+
+ * 'widget' specifies the type of widget used in a graphical
+   user interface. Legal values are `integer`, `float`, `range`
+   (requires the `minmax` attribute), `integer_range` (requires
+   the `minmax` attribute), `textline`, `textarea` (for larger
+   multi-line texts), `checkbox` (for boolen variables), `select`
+   (list of options), `email`, `password`, `file` (for a filename
+   of a file to be uploaded, `url`, `hidden` (for an invisible field),
+   and `tel` (for a phone number). If not given, `widget` is based
+   on the value of `str2type` or the type of the default value.
+ * `minmax` is a 2-list or 2-tuple with lower and upper bound in
+   the interval of legal values of a number.
+ * The `range_steps` attribute, valid when `widget` is `range`,  specifies the
+   steps in the slider used to select the number.
+   Here we can select the "Initial angle" in unit steps between 0 and 90
+   degrees.
+ * `unit` specifies a unit, e.g., `1/s` or `kg/m**3`, or `1/s`.
+ * `help` adds a help string to explain more about the parameter and
+   how it can be set.
+ * `number_step` specifies the precision of `float` or `integer`
+   widgets if `minmax` is also specified (default 0.001), otherwise
+   the precision is arbitrary.
+ * `str2type` is a conversion function from a string (text given in
+   a user interface) to the right type for the parameter. A value
+   is automatically assigned if `widget` is given, otherwise one
+   applies the default value to find the right `str2type` function.
+   This means that it is strictly not necessary to assign for the
+   "Wind velocity" data item. With more complicated objects one can
+   assign a user-given conversion function to `str2type` (shown later).
+ * `option` is a list of options for a `select` widget, here the
+   type of numerical solution methods that can be chosen.
+ * `validate` holds a function that takes the value of the data item
+   as argument and returns `True` or `False` depending on whether
+   the value can be accepted or not.
+ * `symbol` contains a mathematical LaTeX symbol that will be used
+   in Flask or Django interfaces instead of the name of data item.
+ * `widget_size` specifies the size (width) of fields in graphical
+   user interfaces.
+ * `textline` must be used for default values that are `None`,
+   because another value or the text "None" can be written in
+   the field. In this case, `str2type` is automatically set to `eval`
+   and any valid Python expression is then essentially allowable,
+   but wrong objects will give errors in the compute function.
+
+===== The compute function =====
+
+When working with menus, the compute function is allowed to take *only
+one argument* called `menu`. This object is used to extract
+input data. Basically, the value of any data item `my parameter`
+in the menu is extracted by
+
+!bc pycod
+variable = menu.get_value('my parameter')
+!ec
+In case multiple data items have the same name, enough of the submenu path
+must be given, e.g.,
+
+!bc pycod
+variable = menu.get_value('My Submenu1/my parameter')
+!ec
+Our specific computing function is a wrapper for `compute_motion_and_forces`:
+
+@@@CODE src-pp/compute.py fromto: compute_motion_and_forces_with_menu@compute_average
+
+The assumption is that the menu object provides enough input data for
+the compute function. If this assumption does not hold, one can
+simply make a class, store extra data as attributes in the class,
+and let the compute function be a method in the class.
+
+===== Generating a user interface =====
+
+With a menu function and a compute function at hand,
+it remains to make a new directory, copy the module(s) containing
+the menu function and compute function to this directory,
+and write a `generate.py` file with the content
+
+@@@CODE src-pp/flask_menu1/generate.py
+
+The `generate` function will now use the information in the menu
+(and not the arguments in the compute function!) to generate
+a flexible user interface. Note that an Internet connection
+is required. After running
+
+!bc sys
+Terminal> python generate.py
+!ec
+several Flask files and directories are generated (`model.py`, `controller.py`,
+`templates`, `static`, and a simple clean-up script `clean.sh`).
+The user interface is started by
+
+!bc sys
+Terminal> python controller.py
+!ec
+Open the URL `http://127.0.0.1:5000` in a web broswer to see an interface
+as the one in Figure ref{pp:flask_menu1:fig1}.
+
+FIGURE: [fig-pp/flask_menu1_closed.png, width=500] Web interface in closed form. label{pp:flask_menu1:fig1}
+
+
+===== Operating the user interface =====
+
+The menu tree is mapped onto a visual structure often used for
+directory trees. Clicking on *open all* at the top of the user interface
+expands all submenus so that all parameters (data items) become visible.
+Figure ref{pp:flask_1menu1:fig2} displays the result in the Opera browser.
+
+FIGURE: [fig-pp/flask_menu1_open.png, width=500] Web interface in fully expanded form. label{pp:flask_menu1:fig2}
+
+The following technical points must be mentioned.
+
+ o A plain float or integer value gives a `textline` widget,
+   while if a `minmax`
+   range is specified, a `float` or `integer` widget
+   (HTML5 number field) is chosen. Choosing `float` or `integer`
+   explicitly as widget may lead to different width of the widget
+   in different browsers.
+
+ o Data items whose widgets are specified as `float` or `integer`, or
+   where this is implied because `str2type` is `float` or `int`, or
+   the default value is a `float` or `int` *and* the `minmax` attribute
+   is assign, are shown using the "HTML5 input field":
+   "http://www.wufoo.com/html5/" called number.
+   This is recogned by the small (and not so useful) arrows that can be
+   used to adjust the number,
+   but usually typing in the number manually is faster and more precise.
+   An extra attribute, `number_step` controls the stepping when clicking
+   on the arrows and also the allowed precision of a typed number
+   (same as `number_step`, which by default is 0.001).
+ o When the widget is `range`, an HTML5 range field is used, which is
+   usually rendered as a slider in browsers. The slider gets by default
+   100 steps (can be changed or specified individually for any data item).
+ o With the `select` widget we get a pull-down menu with the different
+   options.
+ o Any data item whose default value is `True` or `False` maps directly to
+   a checkbox for boolean parameters.
+ o Any data item with `unit` specified maps to an ordinary text field,
+   since input consists of a number with an optional text for the unit.
+   That is, if we choose to set `unit='m/s'` for the "Initial velocity"
+   data item, the input field will not the an HTML5 number field, but
+   a standard HTML text field.
+ o The names of the data items are typeset in LaTeX and shown as
+   PNG images. This means that data item names may contain
+   mathematical expressions: `Spinrate $\omega$` for instance.
+
+!bwarning
+The HTML5 number field is rendered differently in different browsers.
+This can lead to strange layout of the input fields. In such cases
+it is recommended to avoid the HTML5 number field. This is easiest
+accomplished by explicitly specifying `widget` to be `textline`.
+This is also the default widget type if you equip the number
+with a unit or do not specify any widget, just a float or integer
+default value.
+!ewarning
+
+We can try out the interface:
+
+ o Set "Initial velocity" to 8.
+ o Move the slider for "Initial angle" to 55.
+ o Add a positive "Wind velocity" of -3.
+ o Specify "Mass" as the text `0.1*1000 g` (i.e., we use g rather
+   than the default kg as unit, but the value is still 0.1 kg).
+ o Choose `RK2` for "Method".
+ o Set "Time step" to 0.12.
+ o Uncheck the "Plot simplified motion" boolean value.
+ o Hold the mouse pointer over the
+   "Wind velocity" field to see the help string. Then point the mouse
+   to  "Mass" input field and the specified unit pops up.
+   A combination of help
+   and unit information is showed if both are given in the
+   data item definition.
+
+You should see something like Figure ref{pp:flask_menu1:fig3}.
+
+FIGURE: [fig-pp/flask_menu1_filled.png, width=500] Web interface with input parameters filled out. label{pp:flask_menu1:fig3}
+
+Now, press the *Compute* button. Figure ref{pp:flask_menu1:fig4} shows
+the resulting response. You can now play around and click the checkbox
+for "Plot simplified motion" and the recompute to see the effects
+of wind against the motion, drag, and lift (which are substantial in
+this example).
+
+FIGURE: [fig-pp/flask_menu1_filled.png, width=500] Web interface with input and results. label{pp:flask_menu1:fig4}
+
+===== Detection of wrong input =====
+
+__Text in a number field.__
+Write `abc` in the "Initial velocity" field and press the *Compute* button.
+The error message "Please enter a number" pops up.
+
+__Failure of user-provided validate function.__
+Give a negative value for "Mass".
+The "Mass" data item has a validation function provided by us.
+A `False` value returned from this function gives rise to a
+`DataItemValueError` shown in the browser. It reads here
+`Mass = -0.1: validate function <lambda> claims invalid value`.
+
+__Failure of converting string to right type.__
+Write `abc` for "Radius". This is a text field so any
+text is in principle valid, but `parampool` raises a `TypeError`
+with the message `could not apply str2type=<type 'float'> to value abc <type 'str'>`.
+
+__Failure in the compute function.__
+Give a list `[0.1, 0.2]` for "Time step". Since the default is `None`,
+which causes `str2type=eval`, any Python expression is accepted in
+the interface, but the compute function raises a `TypeError`
+because `float(dt)` fails when `dt` is a list. A remedy is to
+write a tailored `str2type` function:
+
+!bc pycod
+def convert_time_step(data_item, value):
+    # Value must be None or a float
+    if value == 'None':
+        return None
+    else:
+        try:
+            return float(value)
+        except TypeError:
+            raise TypeError('%s: could not convert "%s" to float' %
+	                    (data_item.name, value))
+!ec
+Setting `str2type=convert_time_step` for the "Time step" data item
+gives an informative error message if the answer is not as expected:
+`None` or a floating-point number.
+
+
+===== Specify a menu using an API =====
+
+Instead of listing all the entries in the menu tree as strings, lists,
+and dicts in a nested data structure, you can use the
+Application Programming Interface (API) of the `parampool.menu` package.
+The menu defined above is alternatively programmed like this using
+the API:
+
+@@@CODE src-pp/compute.py fromto: def menu_definition_api@menu_definition_api_with_separate_submenus
+The API is in many ways easier to use than the nested data structure
+with lists, strings, and dicts. The API resembles moving around in
+a file tree. The rules are simple:
+
+ * `menu.submenu(path)` moves us to a submenu `path`, and creates
+   it first if it does not exist. This is similar to `cd path`
+   in a file tree, or `mkdir path; cd path`, if `path` does not
+   exist.
+ * The name of a submenu, `path`, follows the rule of file and
+   directory names in a file tree: a slash is used as delimiter
+   between submenus and data items. For example:
+
+     * `/Main menu/Initial motion data/Initial velocity` is the
+       full path to the "Initial velocity" data item.
+     * Standing in the "Initial motion data" submenu,
+       `..` is the parent submenu ("Main menu"), while
+       `../Numerical parameters` is the correct path to the
+       "Numerical parameters" submenu. That is, we can use
+       relative and absolute paths as in a file tree.
+ * A data item is appended to the current submenu by
+   calling `menu.add_data_item`.
+
+
+
+2DO:
+
+ * Lorenz demo as exercise, provide the compute function and graphics,
+   perhaps also good demo in web4sciapps.
+ * units and text fields: Done
+ * menu list: no doc
+ * menu API: add doc in `doc.html`, also show possibility to call
+ * Check if multiple answers are correctly handled in DataItem,
+   make `enable_multiple_answers(*args)` which turns all widgets into
+   textline (or those given as arguments), make multiple loop parameters,
+   can get them as list of dicts `menu.get_multiple_values(*args)`
+   (all if no argument, otherwise those params listed), let keys
+   be either full path or shortest possible path, can iterate over
+   this list, test in ball example by having a new function with
+   the multiple loop calling up `compute_motion_and_forces_plot`
+   with `new_plot=True` first time and false the next times.
+ * Let `w` be function, widget=texline, str2type can be StringFunction.
+   Can also invent a special syntax and translate to StringFunction or
+   just make a function.
+ * Let `w` be filename: upload a Python module with the w(t) function.
+ * Problem: non-unique data item names cause trouble for the model
+   class since just name is used as static variable...
+ * Show auto edit of the HTML code, e.g., removing Input: and Result:,
+   this is easier than freezing the files and manually editing them.
+   Reason: if you add new data itmes or submenus to the menu,
+   it is convenient to be able to regenerate the whole setup.
+
+!bc
+from parampool.generator.flask.generate_template import \
+     run_doconce_on_text
+doc = run_doconce_on_text(compute_function.__doc__)
+!ec
+
+
+===== Specify a menu using an API =====
+
+===== Using LaTeX symbols in the menu =====
+
+The reason for symbol is to have a simple name instead of raw string with
+dollar and backslashes, but that is also possible.
+
+===== Setting default values at run-time =====
+
+Use command-line args and a file.
+
+===== Menu with other data structures =====
+
+filename and text field with special `str2type` conversion. Allow list
+syntax, but convert to array in `str2type` after list is eval'ed.
+
+======= Advanced topics =======
+
+===== Login and archival of results =====
+
+===== Multiple values for setting up experiments =====
+
+===== Animations =====
+
+===== Python expressions as input =====
+
+This can only be done in menus unless the value of the parameter is a string (positional argument or default field as text, with explicit conversion).
+Treat menu only - drop implementation for inspection of compute function.
+
+Describe input as
+
+ * `sin(2.5)*exp(-1)` (need to specify py code to be included in the controller/views or add such code manually? or do from numpy import * always? an argument with pycode is probably smart, the menu needs something similar for running str2type=eval in the right namespaces, could just be an additional data item attr namespace that, if present, is used if str2type is eval - yes, that's the solution)
+
+ * `MySpecialObject(2,3,4)` (works)
+
+
+
+
+#What about w(t) like a w_0 + sin?
+
+#Could have an exercise with a missile, rho depending on height (see sports
+#book) rho_sea*exp(-0001036y) fra De Mestre, C_D dep on v see
+#http://en.wikipedia.org/wiki/Drag_equation (no the relevant C_D is probably
+#beyond the drag crisis and no need for C_D(Re))
+
+======= Enable users to log in and store data =======
+
+# existing example: lorenz_with_login, probably better to just adapt vib with login
+# lorenz_with_login is an excellent exercise! Can provide the math and
+# compute.py in a form where plot files are generated but no HTML code
+
+======= Exercises =======
+
+===== Exercise: Make a web app for integration =====
+
+The purpose of this exercise is to use Parampool to generate a
+simple web application for integrating functions: $\int_a^bf(x)dx$.
+Provide a symbolic expression for $f(x)$ and the limits $a$ and $b$
+as input. The application returns the integral of $\int_a^bf(x)dx$
+computed by some numerical integration rule (e.g., the Trapezoidal
+rule). Also try to integrate $f(x)$ symbolically with the aid
+`sympy` and write out the anti-derivative of $f(x)$ if the
+integration is successful.
+
+!bhint
+The relevant `sympy` code needs to turn the string expression
+for $f(x)$ into a valid symbolic expression via `eval`.
+This process requires import of the mathematical functions in `sympy`.
+Thereafter, the `integrate` functionality in `sympy` can be used
+to compute the integral.
+
+!bc pycod
+def symbolic_integration(f_str):
+    """
+    Return the LaTeX code of the anti-derivative of f(x),
+    where f_str holdes the formula for f(x) in a string.
+    Return None if sympy cannot compute the anti-derivative.
+    """
+    from sympy import Symbol, integrate, \
+      sin, cos, tan, log, asin, acos, atan, \
+      sinh, cosh, tanh, asinh, acosh, atanh, erf, erfc,
+    x = Symbol('x')
+    f = eval(f_str)
+    I = integrate(f, x)
+    if isinstance(I, Integral):
+        return None
+    else:
+        return latex(I)
+!ec
+!ehint
+
+======= Exercise: Make a web app for studying vibrations =======
+
+Download `bumpy`. Set up prms.
+
+!bt
+\begin{equation}
+mu'' + f(u') + s(u) = F(t),
+label{pp:model:eq1}
+\end{equation}
+!et
+
+Make an interface to
+it such that
+
+   * s=k*u, have k as parameter, linear damping, F=0, V=0
+   * F=A*sin(w*t), A and w are parameters
+   * damping with two values and radio buttons, b
+   * s is a text expression
+   * F is a filename (0 is default)
+   * there is a submenu for F with different models: filename,
+     A*sin(w*t) (submenu), white noise with intensity, formula of t
+   * another submenu for s models
+
+On the main menu: damping can have radio buttons for linear b*u and
+quadratic b*u**2, F has list of different type of forces
+
+
+======= Problems =======
+
+===== Problem: Make a coin flipper =====
+file=coin_flipper
+
+Make a web application where we can set the number of coins to be
+flipped. Clicking on the *Submit* button (whose name should rather
+be *flip*) shows images of coins with heads and tails according to
+a random flip of each coin.
+
+!bhint
+See URL: "random.org/coins" for inspiration and images of coins.
+!ehint
+
+======= Deployment =======
+
+The most obvious servers to deploy web applications on, like Google App Engine,
+only support very light weight Python. For heavier scientific applications
+we may need more tools; SSH access, a Fortran compiler, etc. Therefore we
+introduce two servers we recommend for the scientific computing usage.
+
+===== Wakari =====
+
+"Wakari":"https://www.wakari.io" is originally meant to be a Python
+data analysis environment for internet-accessible services and sharing
+of computing environments.  It does not allow users to deploy
+webservers that can be accessed by others. However, accessing a Flask
+server process running in Wakari is possible using SSH tunneling:
+
+!bc sys
+wakari-terminal> python controller.py
+laptop-terminal> ssh -p [port] -f -N -L 5000:localhost:5000 \
+                 [username]@[wakari-hostname].wakari.io
+!ec
+
+!bnotice Port, username and hostname
+
+Information about which port to forward, as well as username and
+wakari-hostname, is available under `SSH Access` at the user submeu in
+Wakari.  FIGURE: [fig-pp/wakari1.png, width=350] SSH access
+information. label{pp:wakari1:fig1} It is also necessary to add your
+public SSH key to Wakari
+"Settings":"https://www.wakari.io/settings/sshkeys".
+
+!enotice
+
+Now the application is available as usual at `http://127.0.0.1:5000/`
+on your laptop.
+
+Even though only Flask and not Django is pre-installed in Wakari, it
+is relatively straight-forward to download Django
+"source":"https://www.djangoproject.com/download/" and install it
+locally to your user. Also, if Gnuplot is to be installed and compiled
+with PNG support, the library `Pnglib` needs to be installed before
+Gnuplot is compiled. The script `install_on_wakari.sh` in the top
+directory of cbc-websolver accomplishes this.
+
+===== Uni Oslo =====
+
+The biggest downside with the Uni Oslo server is that you need to be a
+student or employee to access it. Nevertheless, the procedure
+described below for running web applications through a CGI script can
+be applied to any server.
+
+If only little traffic has to be handled, it is possible to run Flask
+and Django through a CGI script. The script imports and starts the
+application's wsgi handler and works as a gateway between the Internet
+and the Flask or Django server.
+
+The simplest example of a CGI script running Flask follows:
+
+!bc pycod
+#!/usr/bin/python
+from wsgiref.handlers import CGIHandler
+from controller import app
+
+CGIHandler().run(app)
+!ec
+
+This code assumes that the Python executive in `/usr/bin/` is available and
+up-to-date, and that all required Python modules are on the
+`PYTHONPATH` environment and are available to be run by others. As the
+Python version on the Uni Oslo server, version 2.5, is no longer
+supported by the Python web frameworks, we need to install a newer
+version locally and use the absolute path to its executive in the
+header of the CGI script.
+
+With a new Python installation we also need to (re)install all required modules
+and add them to `sys.path`. The script `install_on_uio.sh` in the top directory
+of cbc-websolver installs all required packages locally. Then we can
+add the location of these modules to `sys.path` in the CGI script:
+
+!bc pycod
+import sys
+sys.path += ['/path/to/local/installation/lib/python2.7/site-packages/']
+
+CGIHandler().run(app)
+!ec
+One also needs to assure that the location of controller.py is in sys.path,
+or the import of app will fail.
+
+The only difference between the CGI script for Flask and Django is that for
+Django one needs to add the directory containing the `settings.py` file to
+`sys.path` and set `os.environ['DJANGO_SETTINGS_MODULE']` to settings. Also,
+the import of the app is a bit different than before:
+
+!bc pycod
+sys.path += ['path/to/myproject'] # The folder containing settings.py
+os.environ['DJANGO_SETTINGS_MODULE'] = 'myproject.settings'
+
+app = django.core.handlers.wsgi.WSGIHandler()
+CGIHandler().run(app)
+!ec
+
+!bnotice Make CGI script accessible for others
+Remember that all scripts and modules to be accessed from the web need to
+have permissions for everyone to read and execute. This can be done by, e.g.,
+
+!bc sys
+Terminal> chmod 755 run_django.cgi
+!ec
+!enotice
+
+BIBFILE: papers.pub
+
+======= Appendix: Installation =======
+
+We need
+
+ * Flask: `sudo pip install Flask`
+ * Django (optional)
+ * wtf...
+ * progressbar
+ * Flask-WTF: `pip install Flask-WTF`
+ * ScientificPython for menu if units are used
