@@ -1,7 +1,7 @@
 import os
-from flask import Flask, render_template, request, session
-from werkzeug import secure_filename
 from compute import myfunc as compute_function
+
+from flask import Flask, render_template, request
 from model import Myfunc
 
 # Application object
@@ -13,13 +13,13 @@ def index():
     form = Myfunc(request.form)
     if request.method == 'POST' and form.validate():
 
-        # Compute result
         result = compute(form)
 
     else:
         result = None
 
     return render_template("view.html", form=form, result=result)
+
 
 def compute(form):
     """
@@ -34,6 +34,7 @@ def compute(form):
     # Extract values from form
     form_values = [getattr(form, name) for name in arg_names
                    if hasattr(form, name)]
+
     form_data = [value.data for value in form_values]
 
     defaults  = inspect.getargspec(compute_function).defaults

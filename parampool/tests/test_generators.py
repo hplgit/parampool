@@ -37,8 +37,10 @@ def test_generator_django1():
                        'reference_django1_views.py')
     assert_equal_files(os.path.join('mysimplefunc', 'app', 'templates', 'index.html'),
                        'reference_django1_index.html')
-    shutil.rmtree('mysimplefunc')
-    shutil.rmtree('static')
+    if os.path.isdir('mysimplefunc'):
+        shutil.rmtree('mysimplefunc')
+    if os.path.isdir('static'):
+        shutil.rmtree('static')
 
 # Test function with keyword arguments only
 
@@ -76,6 +78,7 @@ def test_generator_django2():
                        'reference_django2_views.py')
     assert_equal_files(os.path.join('myfunc', 'app', 'templates', 'index.html'),
                        'reference_django2_index.html')
-    shutil.rmtree('myfunc')
-    shutil.rmtree('static')
-
+    if os.path.isdir('myfunc'):
+        shutil.rmtree('myfunc')
+    if os.path.isdir('static'):
+        shutil.rmtree('static')

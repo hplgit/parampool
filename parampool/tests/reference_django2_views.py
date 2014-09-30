@@ -1,20 +1,23 @@
+from compute import myfunc as compute_function
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from models import MyfuncForm
-from compute import myfunc as compute_function
+from models import Myfunc, MyfuncForm
 
 def index(request):
     result = None
+
     form = MyfuncForm(request.POST or None)
     if request.method == 'POST' and form.is_valid():
         form = form.save(commit=False)
         result = compute(form)
-        form = MyfuncForm(request.POST)
+        form = MyfuncForm(request.POST or None)
 
     return render_to_response(
         "index.html",
         {"form": form,
-         "result": result},
+         "result": result,
+        },
         context_instance=RequestContext(request))
 
 def compute(form):

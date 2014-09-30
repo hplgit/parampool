@@ -1,8 +1,8 @@
 import wtforms as wtf
-from parampool.html5.flask.fields import FloatField
+from parampool.html5.flask.fields import HTML5FloatField
 
 class Myfunc(wtf.Form):
-    a = FloatField(default=1.2,
+    a = HTML5FloatField(default=1.2,
                              validators=[wtf.validators.InputRequired()])
     b = wtf.IntegerField(default=2,
                              validators=[wtf.validators.InputRequired()])

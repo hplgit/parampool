@@ -53,7 +53,7 @@ MathJax.Hub.Config({
   <td valign="top">
     <h2>Input:</h2>
 
-      <form method=post action="" enctype=multipart/form-data>
+      <form method=post action="" enctype="multipart/form-data">
         <table>
           {%% for field in form %%}
             <tr><td>{{ field.name }}</td>
@@ -160,7 +160,7 @@ MathJax.Hub.Config({
     <h2>Input:</h2>
     <div class="dtree">
     <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
-    <form method=post action="" enctype=multipart/form-data>
+    <form method=post action="" enctype="multipart/form-data">
       <script type="text/javascript">
         d = new dTree('d');
 """ % vars()
@@ -431,7 +431,7 @@ def run_doconce_on_text(doc):
     def wrap_in_pre_tags(text):
         return '<code><pre>\n%s\n</pre></code>\n' % text
 
-    if re.search(r'#\s*\(?[Dd]oconce', doc):
+    if re.search(r'#\s*\(?[Dd]oc[Oo]nce', doc):
         from doconce.common import fix_backslashes
         doc = fix_backslashes(doc)
         # Remove indentation

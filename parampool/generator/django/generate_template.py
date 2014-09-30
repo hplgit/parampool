@@ -52,7 +52,7 @@ MathJax.Hub.Config({
   <td valign="top">
     <h2>Input:</h2>
 
-      <form method=post action="" enctype=multipart/form-data>{%% csrf_token %%}
+      <form method=post action="" enctype="multipart/form-data">{%% csrf_token %%}
         <table>
           {%% for field in form %%}
             <tr><td>{{ field.name }}</td>
@@ -65,7 +65,7 @@ MathJax.Hub.Config({
                 {%% endif %%}</td></tr>
           {%% endfor %%}
         </table>
-        <p><input type=submit value=Compute>
+        <p><input type="submit" value="Compute">
     </form></p>
   </td>
 
@@ -81,7 +81,7 @@ MathJax.Hub.Config({
         <h3>Comments:</h3>
         <form method=post action="/add_comment/">{% csrf_token %}
             <textarea name="comments" rows="4" cols="40"></textarea>
-            <p><input type=submit value=Add>
+            <p><input type="submit" value="Add">
         </form>
         {% endif %}
 '''
@@ -160,7 +160,7 @@ MathJax.Hub.Config({
     <h2>Input:</h2>
     <div class="dtree">
     <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
-    <form method=post action="" enctype=multipart/form-data>{%% csrf_token %%}
+    <form method=post action="" enctype="multipart/form-data">{%% csrf_token %%}
       <script type="text/javascript">
         d = new dTree('d');
 """ % vars()
@@ -169,7 +169,7 @@ MathJax.Hub.Config({
         document.write(d);
       </script>
     </div>
-    <p><input type=submit value=Compute></form></p>
+    <p><input type="submit" value="Compute"></form></p>
     </td>
 
   <td valign="top">
@@ -184,7 +184,7 @@ MathJax.Hub.Config({
       <h3>Comments:</h3>
       <form method=post action="/add_comment/">{% csrf_token %}
         <textarea name="comments" rows="4" cols="40"></textarea>
-        <p><input type=submit value=Add>
+        <p><input type="submit" value="Add">
       </form>
       {% endif %}
 '''
@@ -359,7 +359,7 @@ def generate_form_templates(outfile):
                     </td><td valign="top" width="10%">
                     <p>
                     <form method="POST" action="/delete/{{ iterator.next }}/">{% csrf_token %}
-                <input type=submit value="Delete" title="Delete this post from database">
+                <input type="submit" value="Delete" title="Delete this post from database">
             </form>
             </td></tr>
         </table>
@@ -367,7 +367,7 @@ def generate_form_templates(outfile):
         <hr>
         <center>
         <form method="POST" action="/delete/-1/">{% csrf_token %}
-            <input type=submit value="Delete all">
+            <input type="submit" value="Delete all">
         </form>
         </center>
       {% else %}

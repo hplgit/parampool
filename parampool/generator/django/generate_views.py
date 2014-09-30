@@ -422,7 +422,7 @@ register a new user and leave the email field blank.""")
         code += '''\
          "user": user,
 '''
-    code += '''
+    code += '''\
         },
         context_instance=RequestContext(request))
 ''' % vars()
@@ -457,7 +457,7 @@ def compute(form, request):
             code += '''
 def compute(form):
 '''
-        code += '''
+        code += '''\
     """
     Generic function for compute_function with arguments
     taken from a form object (django.forms.ModelForm subclass).
@@ -485,7 +485,6 @@ def compute(form):
 '''
         else:
             code += '''
-
     # Extract values from form
     form_data = [getattr(form, name) for name in arg_names
                  if hasattr(form, name)]

@@ -18,16 +18,13 @@ end of tocinfo -->
 MathJax.Hub.Config({
   TeX: {
      equationNumbers: {  autoNumber: "AMS"  },
-     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js"]
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js", "color.js"]
   }
 });
 </script>
 <script type="text/javascript"
  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-<!-- Fix slow MathJax rendering in IE8 -->
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
-
 
 
 
@@ -41,7 +38,6 @@ value of the input parameters as altered by the user.
 <p>
 However, inside the function we do calculate the heavy formula
 
-<p>
 $$ Q = e^{-ab}\sin(\pi g_0),$$
 
 where \( g_0 \) is the first element in the <code>g</code> array.
@@ -51,19 +47,23 @@ The various input parameters are
 
 <p>
 <table border="1">
-<tr><td align="center"><b>                          variable                         </b></td> <td align="center"><b>                            type                           </b></td> </tr>
-<tr><td align="left">   <code>a</code>                                               </td> <td align="left">   f                                                            </td> </tr>
-<tr><td align="left">   <code>b</code>                                               </td> <td align="left">   integer                                                      </td> </tr>
-<tr><td align="left">   <code>c</code>                                               </td> <td align="left">   text                                                         </td> </tr>
-<tr><td align="left">   <code>d</code>                                               </td> <td align="left">   anything                                                     </td> </tr>
-<tr><td align="left">   <code>e</code>                                               </td> <td align="left">   list                                                         </td> </tr>
-<tr><td align="left">   <code>f</code>                                               </td> <td align="left">   tuple                                                        </td> </tr>
-<tr><td align="left">   <code>g</code>                                               </td> <td align="left">   numpy array written with list syntax                         </td> </tr>
-<tr><td align="left">   <code>h</code>                                               </td> <td align="left">   user-defined instance of type <code>MySpecialClass</code>    </td> </tr>
-<tr><td align="left">   <code>i</code>                                               </td> <td align="left">   boolean                                                      </td> </tr>
+<thead>
+<tr><th align="center">   variable   </th> <th align="center">                           type                          </th> </tr>
+</thead>
+<tbody>
+<tr><td align="left">   <code>a</code>    </td> <td align="left">   f                                                            </td> </tr>
+<tr><td align="left">   <code>b</code>    </td> <td align="left">   integer                                                      </td> </tr>
+<tr><td align="left">   <code>c</code>    </td> <td align="left">   text                                                         </td> </tr>
+<tr><td align="left">   <code>d</code>    </td> <td align="left">   anything                                                     </td> </tr>
+<tr><td align="left">   <code>e</code>    </td> <td align="left">   list                                                         </td> </tr>
+<tr><td align="left">   <code>f</code>    </td> <td align="left">   tuple                                                        </td> </tr>
+<tr><td align="left">   <code>g</code>    </td> <td align="left">   numpy array written with list syntax                         </td> </tr>
+<tr><td align="left">   <code>h</code>    </td> <td align="left">   user-defined instance of type <code>MySpecialClass</code>    </td> </tr>
+<tr><td align="left">   <code>i</code>    </td> <td align="left">   boolean                                                      </td> </tr>
+</tbody>
 </table>
 <p>
-<!-- (Doconce format) -->
+<!-- (DocOnce format) -->
 
 <!-- ------------------- end of main content --------------- -->
 
@@ -75,11 +75,11 @@ The various input parameters are
   <td valign="top">
     <h2>Input:</h2>
 
-      <form method=post action="" enctype=multipart/form-data>
+      <form method=post action="" enctype="multipart/form-data">
         <table>
           {% for field in form %}
             <tr><td>{{ field.name }}</td>
-                <td>{{ field }}</td>
+                <td>{{ field(size=20) }}</td>
                 <td>{% if field.errors %}
                   <ul class=errors>
                   {% for error in field.errors %}
@@ -88,7 +88,7 @@ The various input parameters are
                 {% endif %}</td></tr>
           {% endfor %}
         </table>
-        <p><input type=submit value=Compute>
+        <p><input type="submit" value="Compute">
     </form></p>
   </td>
 
@@ -96,6 +96,7 @@ The various input parameters are
     {% if result != None %}
       <h2>Results:</h2>
         {{ result|safe }}
+
     {% endif %}
   </td>
   </tr>
