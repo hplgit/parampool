@@ -103,6 +103,7 @@ if not os.path.isdir(UPLOAD_DIR):
     os.mkdir(UPLOAD_DIR)
 
 def allowed_file(filename):
+    """Does filename have the right extension?"""
     return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 '''
 
