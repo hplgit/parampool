@@ -180,8 +180,8 @@ the ground (<code>landing_point</code>) of a ball that is initially thrown with 
 given velocity in magnitude (<code>initial_velocity</code>), making
 an angle (<code>initial_angle</code>) with the ground. There are two real input
 variables and one real output variable. The function must be available
-in some module, here the module is simply called <code>compute.py</code> and
-contains a lot of other functions for doing the mathematical computations.
+in some module, here the module is simply called <code>compute.py</code> (and
+it also contains a lot of other functions for other examples).
 
 <p>
 In the following we shall refer to functions like <code>compute_drag_free_landing</code>,
@@ -192,7 +192,7 @@ for which we want to generate a web interface, as a <em>compute function</em>.
 <p>
 <a href="http://flask.pocoo.org/" target="_self">Flask</a> is a tool that can be used to write
 a graphical user interface (GUI) to be operated in a web browser. Here
-we shall use Flask to create a GUI for our computed function, as
+we shall use Flask to create a GUI for our compute function, as
 displayed in Figure <a href="#pp:flask1:fig1">1</a>. To this end, simply create a
 Python file <code>generate.py</code> with the following lines:
 
@@ -209,6 +209,13 @@ The <code>generate</code> function grabs the arguments in our compute function a
 creates the necessary Flask files.
 
 <p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 1:  A simple web interface. <div id="pp:flask1:fig1"></div> </p></center>
+<p><img src="fig-pp/flask1.png" align="bottom" width=400></p>
+</center>
+
+<p>
 <div class="alert alert-block alert-danger alert-text-normal"><b>Tip.</b>
 We recommend to make a new directory for every web application.  Since
 you need access to the <code>compute</code> module you must copy <code>compute.py</code> to
@@ -221,7 +228,7 @@ directory where <code>compute.py</code> resides.
 Since the <code>generate</code> tool has no idea
 about the type of variable of the two positional arguments in the
 compute function, it has to assume some type. By default this will
-be text, but we change that behavior to be floats by the setting the
+be text, but we can change that behavior to be floats by the setting the
 <code>default_field</code> argument to <code>FloatField</code>.
 This means that the generated interface
 will (only) accept float values for the input variables, which is
@@ -242,7 +249,8 @@ with positional arguments in the compute function, one must normally
 invoke the generated <code>controller.py</code> file and do some explicit
 conversion of text read from the web interface to the actual variable
 type accepted by the compute function.  This potential manual work can
-be avoided by using keyword arguments only.
+be avoided by using keyword arguments only, so the generator
+functionalty can see the variable type.
 </div>
 
 
@@ -261,13 +269,6 @@ and press <em>Compute</em>. The page in the Chrome browser will now look like Fi
 <a href="#pp:flask1:fig1">1</a>. Other browsers (Firefox, for instance) may have a
 slightly different design of the input fields. All figures in this tutorial
 are made with the Chrome browser.
-
-<p>
-<center> <!-- figure -->
-<hr class="figure">
-<center><p class="caption">Figure 1:  A simple web interface. <div id="pp:flask1:fig1"></div> </p></center>
-<p><img src="fig-pp/flask1.png" align="bottom" width=400></p>
-</center>
 
 <p>
 <div class="alert alert-block alert-success alert-text-normal"><b>Generated files:</b>
@@ -359,7 +360,7 @@ The function
 </pre></div>
 <p>
 is now our compute function, in <code>compute.py</code>, which takes the same two
-input arguments as before, but returns the some HTML text that will display
+input arguments as before, but returns some HTML text that will display
 a plot in the browser window. This HTML text is basically the inclusion
 of the image file containing the plot,
 
@@ -399,8 +400,8 @@ reside in a subdirectory <code>static</code>. The appropriate code is displayed 
 <p>
 The string version of the object returned from the compute function
 is inserted as <em>Results</em> in the HTML file, to the right of the input.
-By returning the appropriate HTML text we can tailor the result
-part of the page to our needs.
+By returning the appropriate HTML text the compute function
+can tailor the result part of the page to our needs.
 
 <h3 id="___sec7">Flask application </h3>
 
@@ -430,7 +431,7 @@ and not simply integers (like 5) if the variable is supposed to be a <code>float
 <p>
 We run <code>python generator.py</code> to generate the Flask files and then
 <code>python controller.py</code> to start the web GUI. Now the default
-values appear in the input fields. These can ba altered, or you can
+values appear in the input fields. These can be altered, or you can
 just click <em>Compute</em>. The computations result in a plot as
 showed in Figure <a href="#pp:flask2:fig1">2</a>.
 
