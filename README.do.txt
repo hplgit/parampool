@@ -1,6 +1,6 @@
 ======= Parampool: Handling a pool of input parameters in scientific applications =======
 
-The `parampool` package is a tool administering a pool of parameters
+The `parampool` package is a tool for administering a pool of parameters
 in scientific applications. The package contains
 
  * a general tree data structure in Python (subpackage `tree`),
