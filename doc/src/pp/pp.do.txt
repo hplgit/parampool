@@ -26,7 +26,7 @@ you can take a scientific application and equip it with a fancy GUI.
 
 __NOTE:__ This report is in a _very preliminary state_, but should be
 sufficient for exploring Parampool for creating web GUIs. Please send
-email to the first author for questions, reporting types and errors,
+email to the first author for questions, reporting typos and errors,
 request of more information, etc.
 
 TOC: on
@@ -1022,6 +1022,8 @@ syntax, but convert to array in `str2type` after list is eval'ed.
 
 !split
 ======= Advanced topics =======
+
+This functionality much in place, but still not documented.
 
 ===== Login and archival of results =====
 
