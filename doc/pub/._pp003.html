@@ -1,0 +1,886 @@
+<!--
+Automatically generated HTML file from DocOnce source
+(https://github.com/hplgit/doconce/)
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="DocOnce: https://github.com/hplgit/doconce/" />
+<meta name="description" content="Parampool Tutorial">
+<meta name="keywords" content="submenu,data item">
+
+<title>Parampool Tutorial</title>
+
+<!-- Bootstrap style: bootstrap_bluegray -->
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.rawgit.com/hplgit/doconce/master/bundled/html_styles/style_bootstrap/css/bootstrap_bluegray.css" rel="stylesheet">
+<!-- not necessary
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+-->
+
+<style type="text/css">
+/* Let inline verbatim have the same color as the surroundings */
+code { color: inherit; background-color: transparent; }
+</style>
+
+
+</head>
+
+<!-- tocinfo
+{'highest level': 1,
+ 'sections': [(' 2DO ', 3, None, '___sec0'),
+              (' Simulation program ', 1, None, '___sec1'),
+              (' User interfaces for Python functions ',
+               1,
+               'pp:GUI4functions',
+               'pp:GUI4functions'),
+              (' Real numbers as input and output ',
+               2,
+               'pp:real:inout',
+               'pp:real:inout'),
+              (' Flask interface ', 3, None, '___sec4'),
+              (' Django interface ', 3, None, '___sec5'),
+              (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
+              (' Flask application ', 3, None, '___sec7'),
+              (' Django application ', 3, None, '___sec8'),
+              (' Comparing graphs in the same plot ', 3, None, '___sec9'),
+              (' More input parameters and results ',
+               2,
+               'pp:flask4',
+               'pp:flask4'),
+              (' Django interface ', 3, None, '___sec11'),
+              (' Other types of function arguments ', 2, None, '___sec12'),
+              (' Working with a menu of input parameters ',
+               1,
+               None,
+               '___sec13'),
+              (' Specify a menu as a list ', 2, None, '___sec14'),
+              (' Attributes in data items ', 2, None, '___sec15'),
+              (' The compute function ', 2, None, '___sec16'),
+              (' Generating a user interface ', 2, None, '___sec17'),
+              (' Operating the user interface ', 2, None, '___sec18'),
+              (' Detection of wrong input ', 2, None, '___sec19'),
+              (' Specify a menu using an API ', 2, None, '___sec20'),
+              (' Specify a menu using an API ', 2, None, '___sec21'),
+              (' Using LaTeX symbols in the menu ', 2, None, '___sec22'),
+              (' Setting default values at run-time ', 2, None, '___sec23'),
+              (' Menu with other data structures ', 2, None, '___sec24'),
+              (' Advanced topics ', 1, None, '___sec25'),
+              (' Login and archival of results ', 2, None, '___sec26'),
+              (' Multiple values for setting up experiments ',
+               2,
+               None,
+               '___sec27'),
+              (' Animations ', 2, None, '___sec28'),
+              (' Python expressions as input ', 2, None, '___sec29'),
+              (' Enable users to log in and store data ',
+               1,
+               None,
+               '___sec30'),
+              (' Exercises ', 1, None, '___sec31'),
+              (' Exercise 1: Make a web app for integration ',
+               2,
+               None,
+               '___sec32'),
+              (' Exercise: Make a web app for studying vibrations ',
+               1,
+               None,
+               '___sec33'),
+              (' Problems ', 1, None, '___sec34'),
+              (' Problem 2: Make a coin flipper ', 2, None, '___sec35'),
+              (' Deployment ', 1, None, '___sec36'),
+              (' Wakari ', 2, None, '___sec37'),
+              (' Uni Oslo ', 2, None, '___sec38'),
+              (' Appendix: Installation ', 1, None, '___sec39')]}
+end of tocinfo -->
+
+<body>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "none"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js", "color.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+    
+<!-- Bootstrap navigation bar -->
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="pp.html">Parampool Tutorial</a>
+  </div>
+  <div class="navbar-collapse collapse navbar-responsive-collapse">
+    <ul class="nav navbar-nav navbar-right">
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+     <!-- navigation toc: --> <li><a href="._pp002.html#___sec1" style="font-size: 80%;">Simulation program</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
+     <!-- navigation toc: --> <li><a href="._pp004.html#___sec13" style="font-size: 80%;">Working with a menu of input parameters</a></li>
+     <!-- navigation toc: --> <li><a href="._pp005.html#___sec25" style="font-size: 80%;">Advanced topics</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec30" style="font-size: 80%;">Enable users to log in and store data</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec31" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec33" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec34" style="font-size: 80%;">Problems</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec36" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec39" style="font-size: 80%;">Appendix: Installation</a></li>
+
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+</div> <!-- end of navigation bar -->
+
+<div class="container">
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p> <!-- add vertical space -->
+
+<a name="part0003"></a>
+<!-- !split -->
+
+<h1 id="pp:GUI4functions">User interfaces for Python functions</h1>
+
+<p>
+Parampool can automatically generate user interfaces for communicating
+with a given function.
+The usage of this functionality will be explained in problems
+of increasing complexity, using the trajectory of a ball as described
+above as application.
+
+<h2 id="pp:real:inout">Real numbers as input and output</h2>
+
+<p>
+Suppose you have some function
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_drag_free_landing</span>(initial_velocity, initial_angle):
+    <span style="color: #666666">...</span>
+    <span style="color: #008000; font-weight: bold">return</span> landing_point
+</pre></div>
+<p>
+This function returns the landing point on
+the ground (<code>landing_point</code>) of a ball that is initially thrown with a
+given velocity in magnitude (<code>initial_velocity</code>), making
+an angle (<code>initial_angle</code>) with the ground. There are two real input
+variables and one real output variable. The function must be available
+in some module, here the module is simply called <code>compute.py</code> and
+contains a lot of other functions for doing the mathematical computations.
+
+<p>
+In the following we shall refer to functions like <code>compute_drag_free_landing</code>,
+for which we want to generate a web interface, as a <em>compute function</em>.
+
+<h3 id="___sec4">Flask interface </h3>
+
+<p>
+<a href="http://flask.pocoo.org/" target="_self">Flask</a> is a tool that can be used to write
+a graphical user interface (GUI) to be operated in a web browser. Here
+we shall use Flask to create a GUI for our computed function, as
+displayed in Figure <a href="#pp:flask1:fig1">1</a>. To this end, simply create a
+Python file <code>generate.py</code> with the following lines:
+
+<p>
+
+<!-- code=python (!bc pypro) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_drag_free_landing
+
+generate(compute_drag_free_landing, default_field<span style="color: #666666">=</span><span style="color: #BA2121">&#39;FloatField&#39;</span>)
+</pre></div>
+<p>
+The <code>generate</code> function grabs the arguments in our compute function and
+creates the necessary Flask files.
+
+<p>
+<div class="alert alert-block alert-danger alert-text-normal"><b>Tip.</b>
+We recommend to make a new directory for every web application.  Since
+you need access to the <code>compute</code> module you must copy <code>compute.py</code> to
+the directory or modify <code>PYTHONPATH</code> to contain the path to the
+directory where <code>compute.py</code> resides.
+</div>
+
+
+<p>
+Since the <code>generate</code> tool has no idea
+about the type of variable of the two positional arguments in the
+compute function, it has to assume some type. By default this will
+be text, but we change that behavior to be floats by the setting the
+<code>default_field</code> argument to <code>FloatField</code>.
+This means that the generated interface
+will (only) accept float values for the input variables, which is
+sufficient in our case.
+
+<p>
+A graphical Flask-based web interface is generated by running
+
+<p>
+
+<!-- code=text (!bc sys) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; python generate.py
+</pre></div>
+<p>
+<div class="alert alert-block alert-danger alert-text-normal"><b>Warning.</b>
+A message is written in the terminal window, saying that
+with positional arguments in the compute function, one must normally
+invoke the generated <code>controller.py</code> file and do some explicit
+conversion of text read from the web interface to the actual variable
+type accepted by the compute function.  This potential manual work can
+be avoided by using keyword arguments only.
+</div>
+
+
+<p>
+You can now view the generated web interface by running
+
+<p>
+
+<!-- code=text (!bc sys) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; python controller.py
+</pre></div>
+<p>
+and open your web browser at the location
+<code>http://127.0.0.1:5000/</code>. Fill in values for the two input variables
+and press <em>Compute</em>. The page in the Chrome browser will now look like Figure
+<a href="#pp:flask1:fig1">1</a>. Other browsers (Firefox, for instance) may have a
+slightly different design of the input fields. All figures in this tutorial
+are made with the Chrome browser.
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 1:  A simple web interface. <div id="pp:flask1:fig1"></div> </p></center>
+<p><img src="fig-pp/flask1.png" align="bottom" width=400></p>
+</center>
+
+<p>
+<div class="alert alert-block alert-success alert-text-normal"><b>Generated files:</b>
+Readers with knowledge of Flask will notice
+that some files with Flask code have been generated:
+
+<ul>
+ <li> <code>model.py</code> with a definition of the forms in the web interface</li>
+ <li> <code>controller.py</code> which glues the interface with the compute function</li>
+ <li> <code>templates/view.html</code> which defines the design of the web interface</li>
+</ul>
+
+You are of course free to tailor these files to your needs if you know
+about Flask programming. An introduction to Flask for scientific
+applications is provided in <a href="._pp007.html#Langtangen:web4sciapps">[1]</a>.
+A one-line Bash script, <code>clean.sh</code>, is also generated: it will remove
+all files that were generated by running <code>generate.py</code>.
+</div>
+
+
+<h3 id="___sec5">Django interface </h3>
+
+<p>
+<a href="https://www.djangoproject.com/" target="_self">Django</a> is a very widespread and popular
+programming environment for creating web applications.
+We can easily create our web application in Django too. Just replace <code>flask</code>
+by <code>django</code> in <code>generate.py</code>:
+
+<p>
+
+<!-- code=python (!bc pypro) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.django</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_drag_free_landing
+
+generate(compute_drag_free_landing, default_field<span style="color: #666666">=</span><span style="color: #BA2121">&#39;FloatField&#39;</span>)
+</pre></div>
+<p>
+The Django files are now in the directory tree <code>drag_free_landing</code>
+(same name as our compute function, except that any leading <code>compute_</code>
+word is removed). Run the application by
+
+<p>
+
+<!-- code=text (!bc sys) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; python drag_free_landing/manage.py runserver
+</pre></div>
+<p>
+and open your browser at the location <code>http://127.0.0.1:8000/</code>.
+The interface looks the same and has the same behavior
+as in the Flask example above.
+
+<p>
+<div class="alert alert-block alert-success alert-text-normal"><b>Generated files:</b>
+Quite some files are needed for a Django application. These are
+found in the <code>drag_free_landing</code> directory tree. The most important
+ones are
+
+<ul>
+ <li> <code>models.py</code> with a definition of the forms in the web interface</li>
+ <li> <code>views.py</code> which glues the interface with the compute function</li>
+ <li> <code>templates/index.html</code> which defines the design of the web interface</li>
+</ul>
+
+With some knowledge of basic Django programming you can edit these
+files to adjust the functionality.  Reference
+<a href="._pp007.html#Langtangen:web4sciapps">[1]</a> provides a basic introduction to Django
+for creating scientific applications.
+
+<p>
+<!-- Reference! -->
+</div>
+
+
+<h2 id="pp:plot:output">A plot as output</h2>
+
+<p>
+The result of the previous computation was just a number. Let us instead
+make a plot of the trajectory of a ball without any air resistance.
+The function
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_drag_free_motion_plot</span>(
+    initial_velocity<span style="color: #666666">=5.0</span>,
+    initial_angle<span style="color: #666666">=45.0</span>):
+    <span style="color: #666666">...</span>
+    <span style="color: #008000; font-weight: bold">return</span> html_text
+</pre></div>
+<p>
+is now our compute function, in <code>compute.py</code>, which takes the same two
+input arguments as before, but returns the some HTML text that will display
+a plot in the browser window. This HTML text is basically the inclusion
+of the image file containing the plot,
+
+<p>
+
+<!-- code=text typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">&lt;img src=&quot;X&quot;&gt;
+</pre></div>
+<p>
+where <code>X</code> is the name of the file. However, if you do repeated
+computations, the name of the image file must change for the browser to
+update the plot. Inside the compute function we must therefore generate
+a unique name of each image file. For this purpose, we can use the
+number of seconds since the Epoch (January 1, 1970) as part of the filename,
+obtained by calling <code>time.time()</code>. In addition, the image file must
+reside in a subdirectory <code>static</code>. The appropriate code is displayed below.
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib.pyplot</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">plt</span>
+<span style="color: #666666">...</span>
+<span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_drag_free_motion_plot</span>(
+    initial_velocity<span style="color: #666666">=5.0</span>,
+    initial_angle<span style="color: #666666">=45.0</span>):
+    <span style="color: #666666">...</span>
+    plt<span style="color: #666666">.</span>plot(x, y)
+    <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">time</span>  <span style="color: #408080; font-style: italic"># use time to make unique filenames</span>
+    filename <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;tmp_</span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">.png&#39;</span> <span style="color: #666666">%</span> time<span style="color: #666666">.</span>time()
+    <span style="color: #008000; font-weight: bold">if</span> <span style="color: #AA22FF; font-weight: bold">not</span> os<span style="color: #666666">.</span>path<span style="color: #666666">.</span>isdir(<span style="color: #BA2121">&#39;static&#39;</span>):
+        os<span style="color: #666666">.</span>mkdir(<span style="color: #BA2121">&#39;static&#39;</span>)
+    filename <span style="color: #666666">=</span> os<span style="color: #666666">.</span>path<span style="color: #666666">.</span>join(<span style="color: #BA2121">&#39;static&#39;</span>, filename)
+    plt<span style="color: #666666">.</span>savefig(filename)
+    html_text <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;&lt;img src=&quot;</span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">&quot; width=&quot;400&quot;&gt;&#39;</span> <span style="color: #666666">%</span> filename
+    <span style="color: #008000; font-weight: bold">return</span> html_text
+</pre></div>
+<p>
+The string version of the object returned from the compute function
+is inserted as <em>Results</em> in the HTML file, to the right of the input.
+By returning the appropriate HTML text we can tailor the result
+part of the page to our needs.
+
+<h3 id="___sec7">Flask application </h3>
+
+<p>
+The <code>generate.py</code> file for this example is similar to what is shown above.
+Only the name of the compute function has changed:
+
+<p>
+
+<!-- code=python (!bc pypro) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_drag_free_motion_plot
+
+generate(compute_drag_free_motion_plot)
+</pre></div>
+<p>
+<div class="alert alert-block alert-success alert-text-normal"><b>Tip.</b>
+This time we do not need to specify <code>default_field</code> because we have
+used keyword arguments with default values in the compute function.
+The <code>generate</code> function can then from the default values see the
+type of our arguments. Remember to use <code>float</code> default values
+(like 5.0)
+and not simply integers (like 5) if the variable is supposed to be a <code>float</code>.
+</div>
+
+
+<p>
+We run <code>python generator.py</code> to generate the Flask files and then
+<code>python controller.py</code> to start the web GUI. Now the default
+values appear in the input fields. These can ba altered, or you can
+just click <em>Compute</em>. The computations result in a plot as
+showed in Figure <a href="#pp:flask2:fig1">2</a>.
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 2:  A web interface with graphics. <div id="pp:flask2:fig1"></div> </p></center>
+<p><img src="fig-pp/flask2.png" align="bottom" width=600></p>
+</center>
+
+<h3 id="___sec8">Django application </h3>
+
+<p>
+The corresponding Django application is generated by the same
+<code>generator.py</code> code as above, except that tword <code>flask</code> is replaced
+by <code>django</code>. The Django files are
+now placed in the <code>drag_free_motion_plot</code> subdirectory, and the web GUI
+is started by running
+
+<p>
+
+<!-- code=text (!bc sys) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; python drag_free_motion_plot/manage.py runserver
+</pre></div>
+<p>
+The functionality of the GUI is identical to that of the Flask
+version.
+
+<h3 id="___sec9">Comparing graphs in the same plot </h3>
+
+<p>
+With a little trick we can compare several trajectories in the
+same plot: inserting <code>plt.figure(X)</code> makes all <code>plt.plot</code> calls
+draw curves in the same figure (with figure number <code>X</code>).
+We introduce a boolean parameter
+<code>new_plot</code> reflecting whether we want a new fresh plot or not,
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_drag_free_motion_plot2</span>(
+    initial_velocity<span style="color: #666666">=5.0</span>,
+    initial_angle<span style="color: #666666">=45.0</span>,
+    new_plot<span style="color: #666666">=</span><span style="color: #008000">True</span>):
+</pre></div>
+<p>
+and add the following code before the <code>plt.plot</code> call:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">global</span> fig_no
+<span style="color: #008000; font-weight: bold">if</span> new_plot:
+    fig_no <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>figure()<span style="color: #666666">.</span>number
+<span style="color: #008000; font-weight: bold">else</span>:
+    plt<span style="color: #666666">.</span>figure(fig_no)
+plt<span style="color: #666666">.</span>plot(x, y, label<span style="color: #666666">=</span><span style="color: #BA2121">r&#39;$v=</span><span style="color: #BB6688; font-weight: bold">%g</span><span style="color: #BA2121">,\ \theta=</span><span style="color: #BB6688; font-weight: bold">%g</span><span style="color: #BA2121">$&#39;</span> <span style="color: #666666">%</span>
+         (initial_velocity, initial_angle))
+plt<span style="color: #666666">.</span>legend()
+</pre></div>
+<p>
+The <code>new_plot</code> parameter will turn up as a
+boolean variable in the web interface, and when checked, we create
+a new figure. Otherwise, we draw curves in the existing figure number
+<code>fig_no</code> which was initialized last time <code>new_plot</code> was true (with
+a global variable we ensure that the value of <code>fig_no</code> survives between
+the calls to the compute function).
+Figure <a href="#pp:flask3:fig1">3</a> displays an attempt to not check <code>new_plot</code>
+and compare the curves corresponding to three different parameters.
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 3:  Plot with multiple curves. <div id="pp:flask3:fig1"></div> </p></center>
+<p><img src="fig-pp/flask3.png" align="bottom" width=600></p>
+</center>
+
+<p>
+<div class="alert alert-block alert-danger alert-text-normal"><b>Caveat.</b>
+If <code>new_plot</code> is unchecked before the first computation is carried out,
+<code>fig_no</code> is not defined when we do <code>plt.figure(fig_no)</code> and we get
+a <code>NameError</code> exception. A fool-proof
+solution is
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #ffffff"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">if</span> new_plot:
+    fig_no <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>figure()<span style="color: #666666">.</span>number
+<span style="color: #008000; font-weight: bold">else</span>:
+    <span style="color: #008000; font-weight: bold">try</span>:
+        plt<span style="color: #666666">.</span>figure(fig_no)
+    <span style="color: #008000; font-weight: bold">except</span> <span style="color: #D2413A; font-weight: bold">NameError</span>:
+        fig_no <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>figure()<span style="color: #666666">.</span>number
+</pre></div>
+<p>
+</div>
+
+
+<p>
+<div class="alert alert-block alert-success alert-text-normal"><b>Avoiding plot files.</b>
+The compute function generates plot files with unique names, but we can
+avoid making files at all and just insert the PNG code of the plot,
+using base64 encoding,
+as a long string directly in the HTML image tag. The statements
+below sketches the idea:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #ffffff"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib.pyplot</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">plot</span>
+<span style="color: #408080; font-style: italic"># make plot</span>
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">StringIO</span> <span style="color: #008000; font-weight: bold">import</span> StringIO
+figfile <span style="color: #666666">=</span> StringIO()
+plt<span style="color: #666666">.</span>savefig(figfile, format<span style="color: #666666">=</span><span style="color: #BA2121">&#39;png&#39;</span>)
+figfile<span style="color: #666666">.</span>seek(<span style="color: #666666">0</span>)  <span style="color: #408080; font-style: italic"># rewind to beginning of file</span>
+figdata_png <span style="color: #666666">=</span> figfile<span style="color: #666666">.</span>buf  <span style="color: #408080; font-style: italic"># extract string</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">base64</span>
+figdata_png <span style="color: #666666">=</span> base64<span style="color: #666666">.</span>b64encode(figdata_png)
+html_text <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;&lt;img src=&quot;data:image/png;base64,</span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">&quot; width=&quot;400&quot;&gt;&#39;</span> <span style="color: #666666">%</span> \ 
+            figdata_png
+</pre></div>
+<p>
+There is a convenient function <code>parampool.utils.save_png_to_str</code>
+performing the statements above and returning the <code>html_text</code>
+string:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #ffffff"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.utils</span> <span style="color: #008000; font-weight: bold">import</span> save_png_to_str
+<span style="color: #408080; font-style: italic"># make plot in plt (matplotlib.pyplot) object</span>
+html_text <span style="color: #666666">=</span> save_png_to_str(plt, plotwidth<span style="color: #666666">=400</span>)
+</pre></div>
+<p>
+With this construction one can very easily avoid plot files and
+embed the plot directly in the HTML code.
+</div>
+
+
+<p>
+<div class="alert alert-block alert-success alert-text-normal"><b>Matplotlib without X server.</b>
+Matplotlib is by default configured to work with a graphical user interface
+which may require an X11 connection. When running applications on a web
+server there is a possibility that X11 is not enabled, and the user will get
+an error message. Matplotlib thus needs to be configured for use in such
+environments. The configuration depends on what kinds of images the user
+wants to generate, but in most cases it is sufficient to use the <code>Agg</code> backend.
+The <code>Agg</code> backend is created to make PNG files, but it also recognizes other
+formats like PDF, PS, EPS and SVG. The backend needs to be set before importing
+pyplot or pylab:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #ffffff"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">mpl</span>
+mpl<span style="color: #666666">.</span>use(<span style="color: #BA2121">&#39;Agg&#39;</span>)
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib.pyplot</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">plot</span>
+</pre></div>
+<p>
+</div>
+
+<!-- [[[ -->
+
+<h2 id="pp:flask4">More input parameters and results</h2>
+
+<p>
+It is time to address a more complicated application: we want
+to compute the trajectory of a ball subject to air drag and lift
+and compare that trajectory to the one where
+drag and lift are omitted. We also want to visualize the
+relative importance between the three forces: gravity, drag, and lift.
+The lift is caused by spinning the ball.
+
+<p>
+The function that performs the computations has the following signature:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces0</span>(
+    initial_velocity<span style="color: #666666">=5.0</span>,
+    initial_angle<span style="color: #666666">=45.0</span>,
+    spinrate<span style="color: #666666">=50.0</span>,
+    w<span style="color: #666666">=0.0</span>,
+    m<span style="color: #666666">=0.1</span>,
+    R<span style="color: #666666">=0.11</span>,
+    method<span style="color: #666666">=</span><span style="color: #BA2121">&#39;RK4&#39;</span>,
+    dt<span style="color: #666666">=</span><span style="color: #008000">None</span>,
+    plot_simplified_motion<span style="color: #666666">=</span><span style="color: #008000">True</span>,
+    new_plot<span style="color: #666666">=</span><span style="color: #008000">True</span>
+    ):
+</pre></div>
+<p>
+and returns a formatted string <code>html_text</code> with two plots organized
+as a table. The technique described in the
+<em>Avoiding plot files</em> box at the end of Section {pp:plot:output} is
+implemented to embed PNG images directly in the HTML code.
+Under the plots there is a table of input values and the landing point.
+Curves can be accumulated in the plots (<code>new_plot=True</code>), with
+the corresponding data added to the table.
+A rough sketch of the HTML code returned from the compute
+function goes as follows:
+
+<p>
+
+<!-- code=html (!bc htmlcod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">&lt;table&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;tr&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">valign=</span><span style="color: #BA2121">&quot;top&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;img</span> <span style="color: #7D9029">src=</span><span style="color: #BA2121">&quot;data:image/png;base64,iVBORw0KGgoAAAA...&quot;</span> <span style="color: #7D9029">width=</span><span style="color: #BA2121">&quot;400&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">valign=</span><span style="color: #BA2121">&quot;top&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;img</span> <span style="color: #7D9029">src=</span><span style="color: #BA2121">&quot;data:image/png;base64,iVBORw0KGgoAAAA...&quot;</span> <span style="color: #7D9029">width=</span><span style="color: #BA2121">&quot;400&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;/table&gt;</span>
+
+<span style="color: #008000; font-weight: bold">&lt;center&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;table</span> <span style="color: #7D9029">border=</span><span style="color: #BA2121">1</span><span style="color: #008000; font-weight: bold">&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;tr&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> \( v_0 \)  <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> \( \theta \) <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> \( \omega \) <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> \( w \)    <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> \( m \)    <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> \( R \)    <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> method     <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> \( \Delta t \) <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;center&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> landing point <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;tr&gt;&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;right&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> 5 <span style="color: #008000; font-weight: bold">&lt;/td&gt;&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;right&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> 45 <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span> ...<span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;tr&gt;&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;right&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> 5 <span style="color: #008000; font-weight: bold">&lt;/td&gt;&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;right&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> 45 <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span> ...<span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;tr&gt;&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;right&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> 5 <span style="color: #008000; font-weight: bold">&lt;/td&gt;&lt;td</span> <span style="color: #7D9029">align=</span><span style="color: #BA2121">&quot;right&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span> 45 <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span> ...<span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;/table&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;/center&gt;</span>
+</pre></div>
+<p>
+Note that we use MathJax syntax for having LaTeX mathematics
+in the table heading.
+All details about the computations and the construction
+of the returned HTML string can be found in the <a href="https://github.com/hplgit/parampool/blob/master/doc/src/pp/src-pp/compute.py" target="_self"><tt>compute.py</tt></a> file.
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 4:  Web interface with two graphs. <div id="pp:flask4:fig1"></div> </p></center>
+<p><img src="fig-pp/flask4.png" align="bottom" width=850></p>
+</center>
+
+<p>
+Any doc string of the compute function is copied and typeset verbatim
+at the top of the web interface. However, if the text <code># (DocOnce
+format)</code> appears somewhere in the doc string, the text is taken as
+<a href="https://github.com/hplgit/doconce" target="_self">DocOnce</a> source code and
+translated to HTML, which enables typesetting of LaTeX mathematics and
+computer code snippets (with nice pygments formatting).
+
+<p>
+The documentation of the web interface can therefore be included as a
+doc string in the compute function. Here is descriptive doc string
+using DocOnce syntax for LaTeX mathematics (equations inside <code>!bt</code> and
+<code>!et</code> commands)
+and monospace font for Python variables (names in backticks). The
+corresponding view in a browser is shown in Figure <a href="#pp:flask4:fig2">5</a>.
+
+<p>
+
+<!-- code=text typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">&quot;&quot;&quot;
+This application computes the motion of a ball with radius $R$
+and mass $m$ under the influence of gravity, air drag and lift
+because of a given spinrate $\omega$. The motion starts with a
+prescribed initial velocity $v_0$ making an angle initial_angle
+$\theta$ with the ground. A wind velocity $w$, positive in
+positive $x$ direction, can also be given.
+
+The ordinary differential equation problem governing the
+motion reads
+
+!bt
+\begin{align*}
+m\frac{d^2\boldsymbol{r}}{dt^2} &amp;= -mg\boldsymbol{j} -
+\frac{1}{2}C_D\varrho A v^2\boldsymbol{i}_t +
+\frac{1}{2}C_L\varrho A v^2\boldsymbol{i}_n\\ 
+\boldsymbol{r}(0) &amp;= 0\boldsymbol{i} + 0\boldsymbol{j}\\ 
+\frac{d\boldsymbol{r}}{dt}(0) &amp;= v_0\cos\theta\boldsymbol{i} + v_0\sin\theta\boldsymbol{j},
+\end{align*}
+!et
+where $\boldsymbol{i}$ and $\boldsymbol{j}$ are unit vectors in the $x$ and $y$
+directions, respectively, $g$ is the acceleration of gravity,
+$A$ is the cross section area normal to the motion, $\boldsymbol{i}_t$
+is a unit tangent vector to the trajectory, $\boldsymbol{i}_n$ is
+a normal vector (pointing upwards) to the trajectory,
+$C_D$ and $C_L$ are lift coefficients, and $\varrho$ is the
+air density. For a ball, $C_D$ is taken as 0.45, while
+$C_L$ depends on the spinrate through $C_L=0.2\omega/500$.
+
+Many numerical methods can be used to solve the problem.
+Some legal names are `ForwardEuler`, `RK2`, `RK4`,
+and `Fehlberg` (adaptive Runge-Kutta 4/5 order).  If the
+timestep `dt` is None, approximately 500 steps are used, but
+`dt` can also be given a desired `float` value.
+
+The boolean variable `plot_simplified_motion` adds the curve
+of the motion without drag and lift (the standard parabolic
+trajectory). This curve helps illustrate the effect of drag
+and lift. When `new_plot` is `False` (unchecked), the new
+computed curves are added to the previous ones since last
+time `new_plot` was true.
+
+# (DocOnce format)
+&quot;&quot;&quot;
+</pre></div>
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 5:  Web interface with documentation. <div id="pp:flask4:fig2"></div> </p></center>
+<p><img src="fig-pp/flask4_doc.png" align="bottom" width=850></p>
+</center>
+
+<p>
+The <code>generate.py</code> code for creating the web GUI goes as in the other examples,
+
+<p>
+
+<!-- code=python (!bc pypro) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces
+
+generate(compute_motion_and_forces, MathJax<span style="color: #666666">=</span><span style="color: #008000">True</span>)
+</pre></div>
+<p>
+and we start the application as usual by <code>python controller.py</code>.  The
+resulting web interface appears in Figure <a href="#pp:flask4:fig1">4</a>.  The
+table shows the sequence of data we have given; starting with the
+default values, then turning off the <code>plot_simplified_motion</code> curve
+and <code>new_plot</code>, then running two cases with different values for the
+wind parameter <code>w</code>.  The plot clearly show the influence of drag and
+wind against the motion.
+
+<p>
+<div class="alert alert-block alert-danger alert-text-normal"><b>MathJax.</b>
+The <code>compute_motion_and_forces</code> function returns mathematical symbols
+in the heading line of the table with data.
+MathJax must be enabled in the HTML code for these symbols to be
+rendered correctly. This is specified by the <code>MathJax=True</code> argument
+to <code>generate</code>. (However, in this particular example MathJax is
+automatically turned on since we use DocOnce syntax and mathematics
+in the doc string.)
+</div>
+
+
+<h3 id="___sec11">Django interface </h3>
+
+<p>
+As before, the Django interface is generated by importing the function
+<code>generate</code> from <code>parampool.generator.django</code>.
+A subdirectory <code>motion_and_forces</code> contains the files, and the
+Django application is started as shown in previous examples and has the same
+functionality as the Flask application.
+
+<h2 id="___sec12">Other types of function arguments </h2>
+
+<p>
+The <code>generate</code> function will recognize the following different types
+of keyword arguments in the compute function:
+<code>float</code>, <code>int</code>, <code>bool</code>, <code>str</code>, <code>list</code>,
+<code>tuple</code>, <code>numpy.ndarray</code>, name of a file, as well as user-defined class types
+(a la <code>MySpecialClass</code>).
+Here is a minimalistic example on computing the mean and standard
+deviation of data either in an array or in a file (we use the
+file if the operator of the web interface assigns a file to <code>filename</code>):
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_average</span>(data_array<span style="color: #666666">=</span>np<span style="color: #666666">.</span>array([<span style="color: #666666">1</span>]), filename<span style="color: #666666">=</span><span style="color: #008000">None</span>):
+    <span style="color: #008000; font-weight: bold">if</span> filename <span style="color: #AA22FF; font-weight: bold">is</span> <span style="color: #AA22FF; font-weight: bold">not</span> <span style="color: #008000">None</span>:
+        data <span style="color: #666666">=</span> np<span style="color: #666666">.</span>loadtxt(os<span style="color: #666666">.</span>path<span style="color: #666666">.</span>join(<span style="color: #BA2121">&#39;uploads&#39;</span>, filename))
+        what <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;file </span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">&#39;</span> <span style="color: #666666">%</span> filename
+    <span style="color: #008000; font-weight: bold">else</span>:
+        data <span style="color: #666666">=</span> data_array
+        what <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;data_array&#39;</span>
+    <span style="color: #008000; font-weight: bold">return</span> <span style="color: #BA2121">&quot;&quot;&quot;</span>
+<span style="color: #BA2121">Data from </span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">:</span>
+<span style="color: #BA2121">&lt;p&gt;</span>
+<span style="color: #BA2121">&lt;table border=1&gt;</span>
+<span style="color: #BA2121">&lt;tr&gt;&lt;td&gt; mean    &lt;/td&gt;&lt;td&gt; </span><span style="color: #BB6688; font-weight: bold">%.3g</span><span style="color: #BA2121"> &lt;/td&gt;&lt;/tr&gt;</span>
+<span style="color: #BA2121">&lt;tr&gt;&lt;td&gt; st.dev. &lt;/td&gt;&lt;td&gt; </span><span style="color: #BB6688; font-weight: bold">%.3g</span><span style="color: #BA2121"> &lt;/td&gt;&lt;/tr&gt;</span>
+<span style="color: #BA2121">&lt;/table&gt;&lt;/p&gt;</span>
+<span style="color: #BA2121">&quot;&quot;&quot;</span> <span style="color: #666666">%</span> (what, np<span style="color: #666666">.</span>mean(data), np<span style="color: #666666">.</span>std(data))
+</pre></div>
+<p>
+The output is simple, basically two numbers in a table and an intro line.
+
+<p>
+We write a <code>generate.py</code> file as shown before, but with <code>compute_average</code>
+as the name of the compute function. For any argument containing
+the string <code>filename</code> it is assumed that the argument represents
+the name of a file. The web interface will then feature a button
+for uploading the file.
+
+<p>
+When the applicatin runs, we have two data fields: one for setting an
+array with list syntax and one for uploading a file. Clicking on the
+latter and uploading an file <code>mydata.dat</code> containing just columns of
+numbers, results in the web page displayed in Figure
+<a href="#pp:flask5:fig1">6</a>. In this case, when a filename was assigned, we
+use the data in the file.  Alternatively, we can instead fill in the
+data array and click <em>Compute</em>, which then will compute the basic
+statistics of the assigned data array.
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 6:  Web interface for uploading a file. <div id="pp:flask5:fig1"></div> </p></center>
+<p><img src="fig-pp/flask5.png" align="bottom" width=500></p>
+</center>
+
+<p>
+<p>
+<!-- navigation buttons at the bottom of the page -->
+<ul class="pagination">
+<li><a href="._pp002.html">&laquo;</a></li>
+  <li><a href="._pp000.html">1</a></li>
+  <li><a href="._pp001.html">2</a></li>
+  <li><a href="._pp002.html">3</a></li>
+  <li class="active"><a href="._pp003.html">4</a></li>
+  <li><a href="._pp004.html">5</a></li>
+  <li><a href="._pp005.html">6</a></li>
+  <li><a href="._pp006.html">7</a></li>
+  <li><a href="._pp007.html">8</a></li>
+  <li><a href="._pp004.html">&raquo;</a></li>
+</ul>
+<!-- ------------------- end of main content --------------- -->
+
+</div>  <!-- end container -->
+<!-- include javascript, jQuery *first* -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap footer
+<footer>
+<a href="http://..."><img width="250" align=right src="http://..."></a>
+</footer>
+-->
+
+
+</body>
+</html>
+    
+

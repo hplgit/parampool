@@ -1,0 +1,780 @@
+<!--
+Automatically generated HTML file from DocOnce source
+(https://github.com/hplgit/doconce/)
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="DocOnce: https://github.com/hplgit/doconce/" />
+<meta name="description" content="Parampool Tutorial">
+<meta name="keywords" content="submenu,data item">
+
+<title>Parampool Tutorial</title>
+
+<!-- Bootstrap style: bootstrap_bluegray -->
+<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.rawgit.com/hplgit/doconce/master/bundled/html_styles/style_bootstrap/css/bootstrap_bluegray.css" rel="stylesheet">
+<!-- not necessary
+<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+-->
+
+<style type="text/css">
+/* Let inline verbatim have the same color as the surroundings */
+code { color: inherit; background-color: transparent; }
+</style>
+
+
+</head>
+
+<!-- tocinfo
+{'highest level': 1,
+ 'sections': [(' 2DO ', 3, None, '___sec0'),
+              (' Simulation program ', 1, None, '___sec1'),
+              (' User interfaces for Python functions ',
+               1,
+               'pp:GUI4functions',
+               'pp:GUI4functions'),
+              (' Real numbers as input and output ',
+               2,
+               'pp:real:inout',
+               'pp:real:inout'),
+              (' Flask interface ', 3, None, '___sec4'),
+              (' Django interface ', 3, None, '___sec5'),
+              (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
+              (' Flask application ', 3, None, '___sec7'),
+              (' Django application ', 3, None, '___sec8'),
+              (' Comparing graphs in the same plot ', 3, None, '___sec9'),
+              (' More input parameters and results ',
+               2,
+               'pp:flask4',
+               'pp:flask4'),
+              (' Django interface ', 3, None, '___sec11'),
+              (' Other types of function arguments ', 2, None, '___sec12'),
+              (' Working with a menu of input parameters ',
+               1,
+               None,
+               '___sec13'),
+              (' Specify a menu as a list ', 2, None, '___sec14'),
+              (' Attributes in data items ', 2, None, '___sec15'),
+              (' The compute function ', 2, None, '___sec16'),
+              (' Generating a user interface ', 2, None, '___sec17'),
+              (' Operating the user interface ', 2, None, '___sec18'),
+              (' Detection of wrong input ', 2, None, '___sec19'),
+              (' Specify a menu using an API ', 2, None, '___sec20'),
+              (' Specify a menu using an API ', 2, None, '___sec21'),
+              (' Using LaTeX symbols in the menu ', 2, None, '___sec22'),
+              (' Setting default values at run-time ', 2, None, '___sec23'),
+              (' Menu with other data structures ', 2, None, '___sec24'),
+              (' Advanced topics ', 1, None, '___sec25'),
+              (' Login and archival of results ', 2, None, '___sec26'),
+              (' Multiple values for setting up experiments ',
+               2,
+               None,
+               '___sec27'),
+              (' Animations ', 2, None, '___sec28'),
+              (' Python expressions as input ', 2, None, '___sec29'),
+              (' Enable users to log in and store data ',
+               1,
+               None,
+               '___sec30'),
+              (' Exercises ', 1, None, '___sec31'),
+              (' Exercise 1: Make a web app for integration ',
+               2,
+               None,
+               '___sec32'),
+              (' Exercise: Make a web app for studying vibrations ',
+               1,
+               None,
+               '___sec33'),
+              (' Problems ', 1, None, '___sec34'),
+              (' Problem 2: Make a coin flipper ', 2, None, '___sec35'),
+              (' Deployment ', 1, None, '___sec36'),
+              (' Wakari ', 2, None, '___sec37'),
+              (' Uni Oslo ', 2, None, '___sec38'),
+              (' Appendix: Installation ', 1, None, '___sec39')]}
+end of tocinfo -->
+
+<body>
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: {
+     equationNumbers: {  autoNumber: "none"  },
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js", "color.js"]
+  }
+});
+</script>
+<script type="text/javascript"
+ src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+
+    
+<!-- Bootstrap navigation bar -->
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="pp.html">Parampool Tutorial</a>
+  </div>
+  <div class="navbar-collapse collapse navbar-responsive-collapse">
+    <ul class="nav navbar-nav navbar-right">
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+     <!-- navigation toc: --> <li><a href="._pp002.html#___sec1" style="font-size: 80%;">Simulation program</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec13" style="font-size: 80%;">Working with a menu of input parameters</a></li>
+     <!-- navigation toc: --> <li><a href="._pp005.html#___sec25" style="font-size: 80%;">Advanced topics</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec30" style="font-size: 80%;">Enable users to log in and store data</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec31" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec33" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec34" style="font-size: 80%;">Problems</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec36" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="._pp007.html#___sec39" style="font-size: 80%;">Appendix: Installation</a></li>
+
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+</div> <!-- end of navigation bar -->
+
+<div class="container">
+
+<p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p> <!-- add vertical space -->
+
+<a name="part0004"></a>
+<!-- !split -->
+
+<h1 id="___sec13">Working with a menu of input parameters </h1>
+
+<p>
+Parampool's main focus is on scientific applications with lots of
+input data of different type, organized in a hierarchical tree fashion.
+The various input parameters are defined in terms of a <em>menu</em>.
+The menu can be defined as a nested list or through function
+application programming interface (known as an API, and here
+consisting of calls functionality in the <code>parampool.menu</code> package).
+
+<p>
+To exemplify the use of menus, we apply the
+<code>compute_motion_and_forces</code> function (from
+the section <a href="._pp003.html#pp:flask4">More input parameters and results</a>):
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces0</span>(
+    initial_velocity<span style="color: #666666">=5.0</span>,
+    initial_angle<span style="color: #666666">=45.0</span>,
+    spinrate<span style="color: #666666">=50.0</span>,
+    w<span style="color: #666666">=0.0</span>,
+    m<span style="color: #666666">=0.1</span>,
+    R<span style="color: #666666">=0.11</span>,
+    method<span style="color: #666666">=</span><span style="color: #BA2121">&#39;RK4&#39;</span>,
+    dt<span style="color: #666666">=</span><span style="color: #008000">None</span>,
+    plot_simplified_motion<span style="color: #666666">=</span><span style="color: #008000">True</span>,
+    new_plot<span style="color: #666666">=</span><span style="color: #008000">True</span>
+    ):
+</pre></div>
+<p>
+Let us organize 10 input parameters into four submenus. At the top
+level we need a submenu, usually called "Main menu" or named after
+the application. Each submenu
+is here specified with a logical name of each parameter and the
+corresponding variable names in the compute function:
+
+<ul>
+ <li> Main menu</li>
+
+<ul>
+   <li> Initial motion data</li>
+
+<ul>
+     <li> Initial velocity: <code>initial_velocity</code></li>
+     <li> Initial angle: <code>initial_angle</code></li>
+     <li> Spinrate: <code>spinrate</code></li>
+</ul>
+
+   <li> Body and environment data</li>
+
+<ul>
+     <li> Wind velocity: <code>w</code></li>
+     <li> Mass: <code>m</code></li>
+     <li> Radius: <code>R</code></li>
+</ul>
+
+   <li> Numerical parameters</li>
+
+<ul>
+     <li> Method: <code>method</code></li>
+     <li> Time step: <code>dt</code></li>
+</ul>
+
+   <li> Plot parameters</li>
+
+<ul>
+     <li> Plot simplified motion: <code>plot_simplified_motion</code></li>
+     <li> New plot: <code>new_plot</code></li>
+</ul>
+
+</ul>
+
+</ul>
+
+With a menu we can give the parameters more readable logical names (not
+restricted to a valid variable name in Python), but we can also
+specify a lot other properties too, as will be explained.
+
+<p>
+A menu is a hierarchical <em>tree structure</em> with <em>submenus</em> and
+<em>data items</em>, where each data item describes an input parameter
+in the problem. The task now is to make a Python specification of
+the of submenus and data items in the menu tree.
+
+<h2 id="___sec14">Specify a menu as a list </h2>
+
+<p>
+The menu tree can be specified as a list of lists, strings, and dictionaries.
+Each list represents a submenu, each string the name of the submenu,
+and each dict is a data item. The menu must be return from some
+function, hereafter called the <em>menu function</em>. In our case, the
+menu function goes as follows:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">menu_definition_list</span>():
+    <span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create and return menu defined through a nested list.&quot;&quot;&quot;</span>
+    menu <span style="color: #666666">=</span> [
+        <span style="color: #BA2121">&#39;Main&#39;</span>, [
+            <span style="color: #BA2121">&#39;Initial motion data&#39;</span>, [
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Initial velocity&#39;</span>, default<span style="color: #666666">=5.0</span>),
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Initial angle&#39;</span>, default<span style="color: #666666">=45</span>,
+                     widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;range&#39;</span>, minmax<span style="color: #666666">=</span>[<span style="color: #666666">0</span>,<span style="color: #666666">90</span>], range_step<span style="color: #666666">=1</span>),
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">r&#39;Spinrate&#39;</span>, default<span style="color: #666666">=50</span>, widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;float&#39;</span>,
+                     unit<span style="color: #666666">=</span><span style="color: #BA2121">&#39;1/s&#39;</span>),
+                ],
+            <span style="color: #BA2121">&#39;Body and environment data&#39;</span>, [
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Wind velocity&#39;</span>, default<span style="color: #666666">=0.0</span>,
+                     help<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Wind velocity in positive x direction.&#39;</span>,
+                     minmax<span style="color: #666666">=</span>[<span style="color: #666666">-50</span>, <span style="color: #666666">50</span>], number_step<span style="color: #666666">=0.5</span>,
+                     widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;float&#39;</span>, str2type<span style="color: #666666">=</span><span style="color: #008000">float</span>),
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Mass&#39;</span>, default<span style="color: #666666">=0.1</span>, unit<span style="color: #666666">=</span><span style="color: #BA2121">&#39;kg&#39;</span>,
+                     validate<span style="color: #666666">=</span><span style="color: #008000; font-weight: bold">lambda</span> data_item, value: value <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span>),
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Radius&#39;</span>, default<span style="color: #666666">=0.11</span>, unit<span style="color: #666666">=</span><span style="color: #BA2121">&#39;m&#39;</span>),
+                ],
+            <span style="color: #BA2121">&#39;Numerical parameters&#39;</span>, [
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Method&#39;</span>, default<span style="color: #666666">=</span><span style="color: #BA2121">&#39;RK4&#39;</span>,
+                     widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;select&#39;</span>,
+                     options<span style="color: #666666">=</span>[<span style="color: #BA2121">&#39;RK4&#39;</span>, <span style="color: #BA2121">&#39;RK2&#39;</span>, <span style="color: #BA2121">&#39;ForwardEuler&#39;</span>],
+                     help<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Numerical solution method.&#39;</span>),
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Time step&#39;</span>, default<span style="color: #666666">=</span><span style="color: #008000">None</span>,
+                     widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;textline&#39;</span>, unit<span style="color: #666666">=</span><span style="color: #BA2121">&#39;s&#39;</span>),
+                ],
+            <span style="color: #BA2121">&#39;Plot parameters&#39;</span>, [
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Plot simplified motion&#39;</span>, default<span style="color: #666666">=</span><span style="color: #008000">True</span>),
+                <span style="color: #008000">dict</span>(name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;New plot&#39;</span>, default<span style="color: #666666">=</span><span style="color: #008000">True</span>),
+                ],
+            ],
+        ]
+    <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.menu.UI</span> <span style="color: #008000; font-weight: bold">import</span> listtree2Menu
+    menu <span style="color: #666666">=</span> listtree2Menu(menu)
+    <span style="color: #008000; font-weight: bold">return</span> menu
+</pre></div>
+<p>
+Actually, the menu function must return a <code>parampool.menu.Menu</code> object,
+so after the definition of the menu tree as a list we must make the
+shown conversion from a list to <code>Menu</code> object via the <code>listtree2Menu</code>
+function.
+
+<h2 id="___sec15">Attributes in data items </h2>
+
+<p>
+Each data item has a name and preferably a default value, as in the
+case of "Initial velocity". More attributes can be added:
+
+<ul>
+ <li> 'widget' specifies the type of widget used in a graphical
+   user interface. Legal values are <code>integer</code>, <code>float</code>, <code>range</code>
+   (requires the <code>minmax</code> attribute), <code>integer_range</code> (requires
+   the <code>minmax</code> attribute), <code>textline</code>, <code>textarea</code> (for larger
+   multi-line texts), <code>checkbox</code> (for boolen variables), <code>select</code>
+   (list of options), <code>email</code>, <code>password</code>, <code>file</code> (for a filename
+   of a file to be uploaded, <code>url</code>, <code>hidden</code> (for an invisible field),
+   and <code>tel</code> (for a phone number). If not given, <code>widget</code> is based
+   on the value of <code>str2type</code> or the type of the default value.</li>
+ <li> <code>minmax</code> is a 2-list or 2-tuple with lower and upper bound in
+   the interval of legal values of a number.</li>
+ <li> The <code>range_steps</code> attribute, valid when <code>widget</code> is <code>range</code>,  specifies the
+   steps in the slider used to select the number.
+   Here we can select the "Initial angle" in unit steps between 0 and 90
+   degrees.</li>
+ <li> <code>unit</code> specifies a unit, e.g., <code>1/s</code> or <code>kg/m**3</code>, or <code>1/s</code>.</li>
+ <li> <code>help</code> adds a help string to explain more about the parameter and
+   how it can be set.</li>
+ <li> <code>number_step</code> specifies the precision of <code>float</code> or <code>integer</code>
+   widgets if <code>minmax</code> is also specified (default 0.001), otherwise
+   the precision is arbitrary.</li>
+ <li> <code>str2type</code> is a conversion function from a string (text given in
+   a user interface) to the right type for the parameter. A value
+   is automatically assigned if <code>widget</code> is given, otherwise one
+   applies the default value to find the right <code>str2type</code> function.
+   This means that it is strictly not necessary to assign for the
+   "Wind velocity" data item. With more complicated objects one can
+   assign a user-given conversion function to <code>str2type</code> (shown later).</li>
+ <li> <code>option</code> is a list of options for a <code>select</code> widget, here the
+   type of numerical solution methods that can be chosen.</li>
+ <li> <code>validate</code> holds a function that takes the value of the data item
+   as argument and returns <code>True</code> or <code>False</code> depending on whether
+   the value can be accepted or not.</li>
+ <li> <code>symbol</code> contains a mathematical LaTeX symbol that will be used
+   in Flask or Django interfaces instead of the name of data item.</li>
+ <li> <code>widget_size</code> specifies the size (width) of fields in graphical
+   user interfaces.</li>
+ <li> <code>textline</code> must be used for default values that are <code>None</code>,
+   because another value or the text "None" can be written in
+   the field. In this case, <code>str2type</code> is automatically set to <code>eval</code>
+   and any valid Python expression is then essentially allowable,
+   but wrong objects will give errors in the compute function.</li>
+</ul>
+
+<h2 id="___sec16">The compute function </h2>
+
+<p>
+When working with menus, the compute function is allowed to take <em>only
+one argument</em> called <code>menu</code>. This object is used to extract
+input data. Basically, the value of any data item <code>my parameter</code>
+in the menu is extracted by
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">variable <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;my parameter&#39;</span>)
+</pre></div>
+<p>
+In case multiple data items have the same name, enough of the submenu path
+must be given, e.g.,
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">variable <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;My Submenu1/my parameter&#39;</span>)
+</pre></div>
+<p>
+Our specific computing function is a wrapper for <code>compute_motion_and_forces</code>:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces_with_menu</span>(menu):
+    initial_velocity <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Initial velocity&#39;</span>)
+    initial_angle <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Initial angle&#39;</span>)
+    spinrate <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Spinrate&#39;</span>)
+    w <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Wind velocity&#39;</span>)
+    m <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Mass&#39;</span>)
+    R <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Radius&#39;</span>)
+    method <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Method&#39;</span>)
+    dt <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Time step&#39;</span>)
+    plot_simplified_motion <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Plot simplified motion&#39;</span>)
+    new_plot <span style="color: #666666">=</span> menu<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;New plot&#39;</span>)
+    <span style="color: #008000; font-weight: bold">return</span> compute_motion_and_forces(
+        initial_velocity, initial_angle, spinrate, w,
+        m, R, method, dt, plot_simplified_motion,
+        new_plot)
+</pre></div>
+<p>
+The assumption is that the menu object provides enough input data for
+the compute function. If this assumption does not hold, one can
+simply make a class, store extra data as attributes in the class,
+and let the compute function be a method in the class.
+
+<h2 id="___sec17">Generating a user interface </h2>
+
+<p>
+With a menu function and a compute function at hand,
+it remains to make a new directory, copy the module(s) containing
+the menu function and compute function to this directory,
+and write a <code>generate.py</code> file with the content
+
+<p>
+
+<!-- code=python (!bc pypro) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces_with_menu, \
+     menu_definition_list
+
+generate(compute_motion_and_forces_with_menu,
+         menu_function<span style="color: #666666">=</span>menu_definition_list,
+         MathJax<span style="color: #666666">=</span><span style="color: #008000">True</span>)
+</pre></div>
+<p>
+The <code>generate</code> function will now use the information in the menu
+(and not the arguments in the compute function!) to generate
+a flexible user interface. Note that an Internet connection
+is required. After running
+
+<p>
+
+<!-- code=text (!bc sys) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; python generate.py
+</pre></div>
+<p>
+several Flask files and directories are generated (<code>model.py</code>, <code>controller.py</code>,
+<code>templates</code>, <code>static</code>, and a simple clean-up script <code>clean.sh</code>).
+The user interface is started by
+
+<p>
+
+<!-- code=text (!bc sys) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; python controller.py
+</pre></div>
+<p>
+Open the URL <code>http://127.0.0.1:5000</code> in a web broswer to see an interface
+as the one in Figure <a href="#pp:flask_menu1:fig1">7</a>.
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 7:  Web interface in closed form. <div id="pp:flask_menu1:fig1"></div> </p></center>
+<p><img src="fig-pp/flask_menu1_closed.png" align="bottom" width=500></p>
+</center>
+
+<h2 id="___sec18">Operating the user interface </h2>
+
+<p>
+The menu tree is mapped onto a visual structure often used for
+directory trees. Clicking on <em>open all</em> at the top of the user interface
+expands all submenus so that all parameters (data items) become visible.
+Figure <a href="#pp:flask_menu1:fig2">8</a> displays the result in the Opera browser.
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 8:  Web interface in fully expanded form. <div id="pp:flask_menu1:fig2"></div> </p></center>
+<p><img src="fig-pp/flask_menu1_open.png" align="bottom" width=500></p>
+</center>
+
+<p>
+The following technical points must be mentioned.
+
+<ol>
+<li> A plain float or integer value gives a <code>textline</code> widget,
+   while if a <code>minmax</code>
+   range is specified, a <code>float</code> or <code>integer</code> widget
+   (HTML5 number field) is chosen. Choosing <code>float</code> or <code>integer</code>
+   explicitly as widget may lead to different width of the widget
+   in different browsers.</li>
+<li> Data items whose widgets are specified as <code>float</code> or <code>integer</code>, or
+   where this is implied because <code>str2type</code> is <code>float</code> or <code>int</code>, or
+   the default value is a <code>float</code> or <code>int</code> <em>and</em> the <code>minmax</code> attribute
+   is assign, are shown using the <a href="http://www.wufoo.com/html5/" target="_self">HTML5 input field</a> called number.
+   This is recogned by the small (and not so useful) arrows that can be
+   used to adjust the number,
+   but usually typing in the number manually is faster and more precise.
+   An extra attribute, <code>number_step</code> controls the stepping when clicking
+   on the arrows and also the allowed precision of a typed number
+   (same as <code>number_step</code>, which by default is 0.001).</li>
+<li> When the widget is <code>range</code>, an HTML5 range field is used, which is
+   usually rendered as a slider in browsers. The slider gets by default
+   100 steps (can be changed or specified individually for any data item).</li>
+<li> With the <code>select</code> widget we get a pull-down menu with the different
+   options.</li>
+<li> Any data item whose default value is <code>True</code> or <code>False</code> maps directly to
+   a checkbox for boolean parameters.</li>
+<li> Any data item with <code>unit</code> specified maps to an ordinary text field,
+   since input consists of a number with an optional text for the unit.
+   That is, if we choose to set <code>unit='m/s'</code> for the "Initial velocity"
+   data item, the input field will not the an HTML5 number field, but
+   a standard HTML text field.</li>
+<li> The names of the data items are typeset in LaTeX and shown as
+   PNG images. This means that data item names may contain
+   mathematical expressions: <code>Spinrate $\omega$</code> for instance.</li>
+</ol>
+
+<div class="alert alert-block alert-danger alert-text-normal"><b>Warning.</b>
+The HTML5 number field is rendered differently in different browsers.
+This can lead to strange layout of the input fields. In such cases
+it is recommended to avoid the HTML5 number field. This is easiest
+accomplished by explicitly specifying <code>widget</code> to be <code>textline</code>.
+This is also the default widget type if you equip the number
+with a unit or do not specify any widget, just a float or integer
+default value.
+</div>
+
+
+<p>
+We can try out the interface:
+
+<ol>
+<li> Set "Initial velocity" to 8.</li>
+<li> Move the slider for "Initial angle" to 55.</li>
+<li> Add a positive "Wind velocity" of -3.</li>
+<li> Specify "Mass" as the text <code>0.1*1000 g</code> (i.e., we use g rather
+   than the default kg as unit, but the value is still 0.1 kg).</li>
+<li> Choose <code>RK2</code> for "Method".</li>
+<li> Set "Time step" to 0.12.</li>
+<li> Uncheck the "Plot simplified motion" boolean value.</li>
+<li> Hold the mouse pointer over the
+   "Wind velocity" field to see the help string. Then point the mouse
+   to  "Mass" input field and the specified unit pops up.
+   A combination of help
+   and unit information is showed if both are given in the
+   data item definition.</li>
+</ol>
+
+You should see something like Figure <a href="#pp:flask_menu1:fig3">9</a>.
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 9:  Web interface with input parameters filled out. <div id="pp:flask_menu1:fig3"></div> </p></center>
+<p><img src="fig-pp/flask_menu1_filled.png" align="bottom" width=500></p>
+</center>
+
+<p>
+Now, press the <em>Compute</em> button. Figure <a href="#pp:flask_menu1:fig4">10</a> shows
+the resulting response. You can now play around and click the checkbox
+for "Plot simplified motion" and the recompute to see the effects
+of wind against the motion, drag, and lift (which are substantial in
+this example).
+
+<p>
+<center> <!-- figure -->
+<hr class="figure">
+<center><p class="caption">Figure 10:  Web interface with input and results. <div id="pp:flask_menu1:fig4"></div> </p></center>
+<p><img src="fig-pp/flask_menu1_filled.png" align="bottom" width=500></p>
+</center>
+
+<h2 id="___sec19">Detection of wrong input </h2>
+
+<p>
+<b>Text in a number field.</b>
+Write <code>abc</code> in the "Initial velocity" field and press the <em>Compute</em> button.
+The error message "Please enter a number" pops up.
+
+<p>
+<b>Failure of user-provided validate function.</b>
+Give a negative value for "Mass".
+The "Mass" data item has a validation function provided by us.
+A <code>False</code> value returned from this function gives rise to a
+<code>DataItemValueError</code> shown in the browser. It reads here
+<code>Mass = -0.1: validate function &lt;lambda&gt; claims invalid value</code>.
+
+<p>
+<b>Failure of converting string to right type.</b>
+Write <code>abc</code> for "Radius". This is a text field so any
+text is in principle valid, but <code>parampool</code> raises a <code>TypeError</code>
+with the message <code>could not apply str2type=&lt;type 'float'&gt; to value abc &lt;type 'str'&gt;</code>.
+
+<p>
+<b>Failure in the compute function.</b>
+Give a list <code>[0.1, 0.2]</code> for "Time step". Since the default is <code>None</code>,
+which causes <code>str2type=eval</code>, any Python expression is accepted in
+the interface, but the compute function raises a <code>TypeError</code>
+because <code>float(dt)</code> fails when <code>dt</code> is a list. A remedy is to
+write a tailored <code>str2type</code> function:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">convert_time_step</span>(data_item, value):
+    <span style="color: #408080; font-style: italic"># Value must be None or a float</span>
+    <span style="color: #008000; font-weight: bold">if</span> value <span style="color: #666666">==</span> <span style="color: #BA2121">&#39;None&#39;</span>:
+        <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">None</span>
+    <span style="color: #008000; font-weight: bold">else</span>:
+        <span style="color: #008000; font-weight: bold">try</span>:
+            <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">float</span>(value)
+        <span style="color: #008000; font-weight: bold">except</span> <span style="color: #D2413A; font-weight: bold">TypeError</span>:
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #D2413A; font-weight: bold">TypeError</span>(<span style="color: #BA2121">&#39;</span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">: could not convert &quot;</span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">&quot; to float&#39;</span> <span style="color: #666666">%</span>
+	                    (data_item<span style="color: #666666">.</span>name, value))
+</pre></div>
+<p>
+Setting <code>str2type=convert_time_step</code> for the "Time step" data item
+gives an informative error message if the answer is not as expected:
+<code>None</code> or a floating-point number.
+
+<h2 id="___sec20">Specify a menu using an API </h2>
+
+<p>
+Instead of listing all the entries in the menu tree as strings, lists,
+and dicts in a nested data structure, you can use the
+Application Programming Interface (API) of the <code>parampool.menu</code> package.
+The menu defined above is alternatively programmed like this using
+the API:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">menu_definition_api</span>():
+    <span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create and return menu using the parampool.menu API.&quot;&quot;&quot;</span>
+    <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.menu.Menu</span> <span style="color: #008000; font-weight: bold">import</span> Menu
+    menu <span style="color: #666666">=</span> Menu()
+    <span style="color: #408080; font-style: italic"># Go to a submenu, but create it if it does not exist</span>
+    menu<span style="color: #666666">.</span>submenu(<span style="color: #BA2121">&#39;Main menu&#39;</span>)
+    menu<span style="color: #666666">.</span>submenu(<span style="color: #BA2121">&#39;Initial motion data&#39;</span>)
+    <span style="color: #408080; font-style: italic"># Define data items for the current submenu</span>
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Initial velocity&#39;</span>, default<span style="color: #666666">=5.0</span>)
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Initial angle&#39;</span>, default<span style="color: #666666">=45</span>,
+        widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;range&#39;</span>, minmax<span style="color: #666666">=</span>[<span style="color: #666666">0</span>,<span style="color: #666666">90</span>])
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Spinrate&#39;</span>, default<span style="color: #666666">=50</span>, widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;float&#39;</span>, unit<span style="color: #666666">=</span><span style="color: #BA2121">&#39;1/s&#39;</span>)
+
+    <span style="color: #408080; font-style: italic"># Move to (and create) another submenu, as in a file tree</span>
+    menu<span style="color: #666666">.</span>submenu(<span style="color: #BA2121">&#39;../Body and environment data&#39;</span>)
+    <span style="color: #408080; font-style: italic"># Add data items for the current submenu</span>
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Wind velocity&#39;</span>, default<span style="color: #666666">=0.0</span>,
+        help<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Wind velocity in positive x direction.&#39;</span>,
+        minmax<span style="color: #666666">=</span>[<span style="color: #666666">-50</span>, <span style="color: #666666">50</span>], number_step<span style="color: #666666">=0.5</span>,
+        widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;float&#39;</span>, str2type<span style="color: #666666">=</span><span style="color: #008000">float</span>)
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Mass&#39;</span>, default<span style="color: #666666">=0.1</span>, unit<span style="color: #666666">=</span><span style="color: #BA2121">&#39;kg&#39;</span>,
+        validate<span style="color: #666666">=</span><span style="color: #008000; font-weight: bold">lambda</span> data_item, value: value <span style="color: #666666">&gt;</span> <span style="color: #666666">0</span>)
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Radius&#39;</span>, default<span style="color: #666666">=0.11</span>, unit<span style="color: #666666">=</span><span style="color: #BA2121">&#39;m&#39;</span>)
+
+    menu<span style="color: #666666">.</span>submenu(<span style="color: #BA2121">&#39;../Numerical parameters&#39;</span>)
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Method&#39;</span>, default<span style="color: #666666">=</span><span style="color: #BA2121">&#39;RK4&#39;</span>,
+        widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;select&#39;</span>,
+        options<span style="color: #666666">=</span>[<span style="color: #BA2121">&#39;RK4&#39;</span>, <span style="color: #BA2121">&#39;RK2&#39;</span>, <span style="color: #BA2121">&#39;ForwardEuler&#39;</span>],
+        help<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Numerical solution method.&#39;</span>)
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Time step&#39;</span>, default<span style="color: #666666">=</span><span style="color: #008000">None</span>,
+        widget<span style="color: #666666">=</span><span style="color: #BA2121">&#39;textline&#39;</span>, unit<span style="color: #666666">=</span><span style="color: #BA2121">&#39;s&#39;</span>, str2type<span style="color: #666666">=</span>convert_time_step)
+
+    menu<span style="color: #666666">.</span>submenu(<span style="color: #BA2121">&#39;../Plot parameters&#39;</span>)
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;Plot simplified motion&#39;</span>, default<span style="color: #666666">=</span><span style="color: #008000">True</span>)
+    menu<span style="color: #666666">.</span>add_data_item(
+        name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;New plot&#39;</span>, default<span style="color: #666666">=</span><span style="color: #008000">True</span>)
+    menu<span style="color: #666666">.</span>update()
+    <span style="color: #008000; font-weight: bold">return</span> menu
+</pre></div>
+<p>
+The API is in many ways easier to use than the nested data structure
+with lists, strings, and dicts. The API resembles moving around in
+a file tree. The rules are simple:
+
+<ul>
+ <li> <code>menu.submenu(path)</code> moves us to a submenu <code>path</code>, and creates
+   it first if it does not exist. This is similar to <code>cd path</code>
+   in a file tree, or <code>mkdir path; cd path</code>, if <code>path</code> does not
+   exist.</li>
+ <li> The name of a submenu, <code>path</code>, follows the rule of file and
+   directory names in a file tree: a slash is used as delimiter
+   between submenus and data items. For example:</li>
+
+<ul>
+     <li> <code>/Main menu/Initial motion data/Initial velocity</code> is the
+       full path to the "Initial velocity" data item.</li>
+     <li> Standing in the "Initial motion data" submenu,
+       <code>..</code> is the parent submenu ("Main menu"), while
+       <code>../Numerical parameters</code> is the correct path to the
+       "Numerical parameters" submenu. That is, we can use
+       relative and absolute paths as in a file tree.</li>
+</ul>
+
+ <li> A data item is appended to the current submenu by
+   calling <code>menu.add_data_item</code>.</li>
+</ul>
+
+2DO:
+
+<ul>
+ <li> Lorenz demo as exercise, provide the compute function and graphics,
+   perhaps also good demo in web4sciapps.</li>
+ <li> units and text fields: Done</li>
+ <li> menu list: no doc</li>
+ <li> menu API: add doc in <code>doc.html</code>, also show possibility to call</li>
+ <li> Check if multiple answers are correctly handled in DataItem,
+   make <code>enable_multiple_answers(*args)</code> which turns all widgets into
+   textline (or those given as arguments), make multiple loop parameters,
+   can get them as list of dicts <code>menu.get_multiple_values(*args)</code>
+   (all if no argument, otherwise those params listed), let keys
+   be either full path or shortest possible path, can iterate over
+   this list, test in ball example by having a new function with
+   the multiple loop calling up <code>compute_motion_and_forces_plot</code>
+   with <code>new_plot=True</code> first time and false the next times.</li>
+ <li> Let <code>w</code> be function, widget=texline, str2type can be StringFunction.
+   Can also invent a special syntax and translate to StringFunction or
+   just make a function.</li>
+ <li> Let <code>w</code> be filename: upload a Python module with the w(t) function.</li>
+ <li> Problem: non-unique data item names cause trouble for the model
+   class since just name is used as static variable...</li>
+ <li> Show auto edit of the HTML code, e.g., removing Input: and Result:,
+   this is easier than freezing the files and manually editing them.
+   Reason: if you add new data itmes or submenus to the menu,
+   it is convenient to be able to regenerate the whole setup.</li>
+</ul>
+
+<p>
+
+<!-- code=text typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">from parampool.generator.flask.generate_template import \ 
+     run_doconce_on_text
+doc = run_doconce_on_text(compute_function.__doc__)
+</pre></div>
+
+<h2 id="___sec21">Specify a menu using an API </h2>
+
+<h2 id="___sec22">Using LaTeX symbols in the menu </h2>
+
+<p>
+The reason for symbol is to have a simple name instead of raw string with
+dollar and backslashes, but that is also possible.
+
+<h2 id="___sec23">Setting default values at run-time </h2>
+
+<p>
+Use command-line args and a file.
+
+<h2 id="___sec24">Menu with other data structures </h2>
+
+<p>
+filename and text field with special <code>str2type</code> conversion. Allow list
+syntax, but convert to array in <code>str2type</code> after list is eval'ed.
+
+<p>
+<p>
+<!-- navigation buttons at the bottom of the page -->
+<ul class="pagination">
+<li><a href="._pp003.html">&laquo;</a></li>
+  <li><a href="._pp000.html">1</a></li>
+  <li><a href="._pp001.html">2</a></li>
+  <li><a href="._pp002.html">3</a></li>
+  <li><a href="._pp003.html">4</a></li>
+  <li class="active"><a href="._pp004.html">5</a></li>
+  <li><a href="._pp005.html">6</a></li>
+  <li><a href="._pp006.html">7</a></li>
+  <li><a href="._pp007.html">8</a></li>
+  <li><a href="._pp005.html">&raquo;</a></li>
+</ul>
+<!-- ------------------- end of main content --------------- -->
+
+</div>  <!-- end container -->
+<!-- include javascript, jQuery *first* -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+
+<!-- Bootstrap footer
+<footer>
+<a href="http://..."><img width="250" align=right src="http://..."></a>
+</footer>
+-->
+
+
+</body>
+</html>
+    
+

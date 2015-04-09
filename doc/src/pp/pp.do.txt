@@ -1,11 +1,35 @@
 TITLE: Parampool Tutorial
-AUTHOR: Hans Petter Langtangen at Center for Biomedical Computing, Simula Research Laboratory & Department of Informatics, University of Oslo
+AUTHOR: Hans Petter Langtangen Email:hpl@simula.no at Center for Biomedical Computing, Simula Research Laboratory & Department of Informatics, University of Oslo
 AUTHOR: Anders Elstad Johansen at Center for Biomedical Computing, Simula Research Laboratory
 DATE: today
 
 <%
 src_path = 'https://github.com/hplgit/parampool/blob/master/doc/src/pp/src-pp'
 %>
+
+__Summary.__ Parampool is a Python package for handling a potentially
+large pool of input parameters in scientific applications. The
+simplest use is to pass a Python function to Parampool and get back a
+web interface for setting the arguments to the function. More powerful
+use consists in defining an input *menu*, which is a tree structure of
+input data, where data items (parameters) are organized hierarchically
+in submenus. Each data item is associated with a name, default value,
+unit, help text, widget type, validation information, etc. Different
+types of sophisticated user interfaces can then be automatically
+generated: a graphical web interface (via Flask or Django), a
+command-line interface, and a file-based interface.  The tutorial
+describes specific examples on how to to program Parampool to generate
+user interfaces and how to operate them. With very little efforts,
+you can take a scientific application and equip it with a fancy GUI.
+
+!split
+
+__NOTE:__ This report is in a _very preliminary state_, but should be
+sufficient for exploring Parampool for creating web GUIs. Please send
+email to the first author for questions, reporting types and errors,
+request of more information, etc.
+
+TOC: on
 
 === 2DO ===
 
@@ -22,21 +46,7 @@ src_path = 'https://github.com/hplgit/parampool/blob/master/doc/src/pp/src-pp'
  * "Skulpt: Interactive Python in the browser": "http://www.skulpt.org/"
  * "Python for computer games": "http://inventwithpython.com/"
 
-__Summary.__ Parampool is a Python package for handling a potentially
-large pool of input parameters in scientific applications. The
-simplest use is to pass a Python function to Parampool and get back a
-web interface for setting the arguments to the function. More powerful
-use consists in defining an input *menu*, which is a tree structure of
-input data, where data items (parameters) are organized hierarchically
-in submenus. Each data item is associated with a name, default value,
-unit, help text, widget type, validation information, etc. Different
-types of sophisticated user interfaces can then be automatically
-generated: a graphical web interface (via Flask or Django), a
-command-line interface, and a file-based interface.  The tutorial
-describes specific examples on how to to program Parampool to generate
-user interfaces and how to operate them.
-
-
+!split
 ======= Simulation program =======
 
 We shall work with a sample application that takes a few variables as
@@ -107,6 +117,7 @@ v_0\cos\theta\bm{i} + v_0\sin\theta\bm{j}.\]
 !enotice
 
 
+!split
 ======= User interfaces for Python functions =======
 label{pp:GUI4functions}
 
@@ -131,8 +142,8 @@ the ground (`landing_point`) of a ball that is initially thrown with a
 given velocity in magnitude (`initial_velocity`), making
 an angle (`initial_angle`) with the ground. There are two real input
 variables and one real output variable. The function must be available
-in some module, here the module is simply called `compute.py` and
-contains a lot of other functions for doing the mathematical computations.
+in some module, here the module is simply called `compute.py` (and
+it also contains a lot of other functions for other examples).
 
 In the following we shall refer to functions like `compute_drag_free_landing`,
 for which we want to generate a web interface, as a *compute function*.
@@ -141,7 +152,7 @@ for which we want to generate a web interface, as a *compute function*.
 
 "Flask": "http://flask.pocoo.org/" is a tool that can be used to write
 a graphical user interface (GUI) to be operated in a web browser. Here
-we shall use Flask to create a GUI for our computed function, as
+we shall use Flask to create a GUI for our compute function, as
 displayed in Figure ref{pp:flask1:fig1}. To this end, simply create a
 Python file `generate.py` with the following lines:
 
@@ -149,6 +160,9 @@ Python file `generate.py` with the following lines:
 
 The `generate` function grabs the arguments in our compute function and
 creates the necessary Flask files.
+
+FIGURE: [fig-pp/flask1.png, width=400] A simple web interface. label{pp:flask1:fig1}
+
 
 !bwarning Tip
 We recommend to make a new directory for every web application.  Since
@@ -161,7 +175,7 @@ directory where `compute.py` resides.
 Since the `generate` tool has no idea
 about the type of variable of the two positional arguments in the
 compute function, it has to assume some type. By default this will
-be text, but we change that behavior to be floats by the setting the
+be text, but we can change that behavior to be floats by the setting the
 `default_field` argument to `FloatField`.
 This means that the generated interface
 will (only) accept float values for the input variables, which is
@@ -179,7 +193,8 @@ with positional arguments in the compute function, one must normally
 invoke the generated `controller.py` file and do some explicit
 conversion of text read from the web interface to the actual variable
 type accepted by the compute function.  This potential manual work can
-be avoided by using keyword arguments only.
+be avoided by using keyword arguments only, so the generator
+functionalty can see the variable type.
 !ewarning
 
 You can now view the generated web interface by running
@@ -193,8 +208,6 @@ and press *Compute*. The page in the Chrome browser will now look like Figure
 ref{pp:flask1:fig1}. Other browsers (Firefox, for instance) may have a
 slightly different design of the input fields. All figures in this tutorial
 are made with the Chrome browser.
-
-FIGURE: [fig-pp/flask1.png, width=400] A simple web interface. label{pp:flask1:fig1}
 
 !bnotice Generated files:
 Readers with knowledge of Flask will notice
@@ -263,7 +276,7 @@ def compute_drag_free_motion_plot(
     return html_text
 !ec
 is now our compute function, in `compute.py`, which takes the same two
-input arguments as before, but returns the some HTML text that will display
+input arguments as before, but returns some HTML text that will display
 a plot in the browser window. This HTML text is basically the inclusion
 of the image file containing the plot,
 
@@ -297,8 +310,8 @@ def compute_drag_free_motion_plot(
 !ec
 The string version of the object returned from the compute function
 is inserted as *Results* in the HTML file, to the right of the input.
-By returning the appropriate HTML text we can tailor the result
-part of the page to our needs.
+By returning the appropriate HTML text the compute function
+can tailor the result part of the page to our needs.
 
 === Flask application ===
 
@@ -318,7 +331,7 @@ and not simply integers (like 5) if the variable is supposed to be a `float`.
 
 We run `python generator.py` to generate the Flask files and then
 `python controller.py` to start the web GUI. Now the default
-values appear in the input fields. These can ba altered, or you can
+values appear in the input fields. These can be altered, or you can
 just click *Compute*. The computations result in a plot as
 showed in Figure ref{pp:flask2:fig1}.
 
@@ -633,6 +646,7 @@ statistics of the assigned data array.
 
 FIGURE: [fig-pp/flask5.png, width=500] Web interface for uploading a file. label{pp:flask5:fig1}
 
+!split
 ======= Working with a menu of input parameters =======
 
 Parampool's main focus is on scientific applications with lots of
@@ -802,7 +816,7 @@ FIGURE: [fig-pp/flask_menu1_closed.png, width=500] Web interface in closed form.
 The menu tree is mapped onto a visual structure often used for
 directory trees. Clicking on *open all* at the top of the user interface
 expands all submenus so that all parameters (data items) become visible.
-Figure ref{pp:flask_1menu1:fig2} displays the result in the Opera browser.
+Figure ref{pp:flask_menu1:fig2} displays the result in the Opera browser.
 
 FIGURE: [fig-pp/flask_menu1_open.png, width=500] Web interface in fully expanded form. label{pp:flask_menu1:fig2}
 
@@ -1006,6 +1020,7 @@ Use command-line args and a file.
 filename and text field with special `str2type` conversion. Allow list
 syntax, but convert to array in `str2type` after list is eval'ed.
 
+!split
 ======= Advanced topics =======
 
 ===== Login and archival of results =====
@@ -1035,12 +1050,14 @@ Describe input as
 #http://en.wikipedia.org/wiki/Drag_equation (no the relevant C_D is probably
 #beyond the drag crisis and no need for C_D(Re))
 
+!split
 ======= Enable users to log in and store data =======
 
 # existing example: lorenz_with_login, probably better to just adapt vib with login
 # lorenz_with_login is an excellent exercise! Can provide the math and
 # compute.py in a form where plot files are generated but no HTML code
 
+!split
 ======= Exercises =======
 
 ===== Exercise: Make a web app for integration =====
@@ -1143,7 +1160,7 @@ laptop-terminal> ssh -p [port] -f -N -L 5000:localhost:5000 \
                  [username]@[wakari-hostname].wakari.io
 !ec
 
-!bnotice Port, username and hostname
+!bnotice Port - username - hostname
 
 Information about which port to forward, as well as username and
 wakari-hostname, is available under `SSH Access` at the user submeu in
