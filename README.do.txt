@@ -33,7 +33,7 @@ get results back.
 
 FIGURE: [doc/src/pp/fig-pp/flask4.png, width=850]
 
-Replace "flask" by "django" and you get a Django-based user interface
+Replace `flask` by `django` and you get a Django-based user interface
 instead (!).
 
 ===== Killer demo: make a menu tree =====
@@ -63,15 +63,16 @@ In Python, this may take the form
 
 @@@CODE doc/src/pp/src-pp/compute.py fromto: def menu_definition_list@def convert_time_step
 
-There is more to learn when specifying a menu, but you also get a lot fancier
+There is more  you to learn when specifying a menu (compared to just
+providing a compute function), but you also get a lot fancier
 web-based graphical user interface. The interface is automatically generated
 with very few lines of code.
 
 FIGURE: [doc/src/pp/fig-pp/flask_menu1_filled.png, width=800]
 
-You can freely choose between a Flask or Django for realizing the
+You can freely choose between a Flask or Django application for realizing the
 user interface.
 
-A "tutorial": "http://hplgit/github.io/parampool/doc/pub/pp.html"
+A "tutorial": "http://hplgit.github.io/parampool/doc/pub/pp.html"
 is in the writings, and
 you need the tutorial be able to use the package.
