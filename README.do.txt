@@ -1,4 +1,4 @@
-======= Parampool: Handling a Pool of Input Parameters in Scientific Applications =======
+======= Parampool: Handling a pool of input parameters in scientific applications =======
 
 The `parampool` package is a tool administering a pool of parameters
 in scientific applications. The package contains
@@ -72,7 +72,6 @@ FIGURE: [doc/src/pp/fig-pp/flask_menu1_filled.png, width=800]
 You can freely choose between a Flask or Django for realizing the
 user interface.
 
-A tutorial is in the writings (see `doc/src/pp`).
-You need the tutorial be able to use the package.
-
-
+A "tutorial": "http://hplgit/github.io/parampool/doc/pub/pp.html"
+is in the writings, and
+you need the tutorial be able to use the package.
