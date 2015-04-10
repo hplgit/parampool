@@ -152,7 +152,7 @@ def generate_model_menu(classname, outfile, menu):
 """ % user_data.longest_name % vars()
 
         else:
-            widget2field = {"textline": "html5.TextField",
+            widget2field = {"textline": "wtf.TextField",
                             "textarea": "wtf.TextAreaField",
                             "email":    "html5.EmailField",
                             "hidden":   "wtf.HiddenField",
@@ -389,7 +389,7 @@ from parampool.html5.flask.fields import HTML5FloatField, FloatRangeField, Integ
 import flask.ext.wtf.html5 as html5
 
 class Test(wtf.Form):
-     a     = html5.TextField(u'velocity of body (km/h)',
+     a     = wtf.TextField(u'velocity of body (km/h)',
                         default='120',
                         validators=[wtf.validators.InputRequired()])
      b     = FloatField(u'mass (kg)',
@@ -417,7 +417,7 @@ class Test(wtf.Form):
                         default='y',
                         validators=[wtf.validators.InputRequired()],
                         choices=[('y', 'y'), ('y3', 'y^3'), ('siny', 'sin(y)')])
-     test4 = html5.TextField(u'texttest',
+     test4 = wtf.TextField(u'texttest',
                         default='Test',
                         validators=[wtf.validators.InputRequired()])
      test5 = wtf.BooleanField(u'booltest', default=True)

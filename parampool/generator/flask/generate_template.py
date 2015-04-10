@@ -240,7 +240,7 @@ MathJax.Hub.Config({
         label = ' '.join(label)
 
         if align == "right":
-            line = '%(form)s<img src="%(imgsrc)s" />' % vars()
+            line = '%(form)s<img src="%(imgsrc)s" height="18" />' % vars()
             line += showvalue
             user_data.code += """\
                     d.add(%(id)i, %(parent_id)i, '%(line)s', '#', '%(label)s');

@@ -44,6 +44,8 @@ class CommandLineOptions:
                     data_item.set_value(value)
 
 
+# Simplified function-based API
+
 def set_defaults_from_command_line(menu):
     clo = CommandLineOptions(menu)
     clo.set_values(set_default=True)

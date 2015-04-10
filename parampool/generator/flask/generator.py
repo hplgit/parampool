@@ -13,6 +13,7 @@ def generate(compute_function,
              overwrite_controller=False,
              filename_model='model.py',
              overwrite_model=False,
+             doc='',
              MathJax=False,
              enable_login=False):
     """
@@ -93,7 +94,8 @@ def generate(compute_function,
         app_file = "app.py"
 
     generate_template(compute_function, classname, filename_template,
-                      menu, overwrite_template, MathJax, login=enable_login)
+                      menu, overwrite_template, MathJax,
+                      doc, login=enable_login)
 
     if enable_login:
         from generate_forms_and_models import generate_forms_and_models

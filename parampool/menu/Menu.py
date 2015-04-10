@@ -59,6 +59,21 @@ class Menu(Tree):
             else:
                 return default
 
+    def get_values(self, data_item_name, default=None):
+        """
+        Return all values set in ``DataItem`` object with name `data_item_name`.
+        If name is not found, an exception is raised if `default` is None,
+        otherwise `default` is returned.
+        """
+        try:
+            data_item = self.get(data_item_name)
+            return data_item.get_values()
+        except ValueError, e:
+            if default is None:
+                raise e
+            else:
+                return default
+
     def set_value(self, data_item_name, value):
         """
         Set value of ``DataItem`` object corresponding to `data_item_name`,

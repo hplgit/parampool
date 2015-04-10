@@ -468,6 +468,28 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
     def has_multiple_values(self):
         return len(self._values) > 1
 
+    def iterate_values(self, with_unit=False, fmt=None):
+        """
+        Let value no. 1 become no. 0 and displace all other elements
+        correspondingly in case of multiple values.
+        With this function, one can run through all combinations of
+        all data items::
+
+          for prm1 in dataitem1.iterate_values(with_unit, fmt):
+              for prm2 in dataitem2.iterate_values(with_unit, fmt):
+                  # Run case with prm1 and prm2
+        """
+        if self.has_multiple_values():
+            for counter in range(len(self._values)-1):
+                # Displace values to the left
+                tmp = self._values[0]
+                for i in range(len(self._values)-1):
+                    self._values[i] = self._values[i+1]
+                self._values[-1] = tmp
+                yield self.get_value(with_unit, fmt)
+        else:
+            yield self.get_value(with_unit, fmt)
+
     def __str__(self):
         """Return pretty print of this data item."""
         attribute_names = list(self.data.keys())

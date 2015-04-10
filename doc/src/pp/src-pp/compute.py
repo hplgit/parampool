@@ -472,8 +472,10 @@ def menu_definition_list():
                      minmax=[-50, 50], number_step=0.5,
                      widget='float', str2type=float),
                 dict(name='Mass', default=0.1, unit='kg',
-                     validate=lambda data_item, value: value > 0),
-                dict(name='Radius', default=0.11, unit='m'),
+                     validate=lambda data_item, value: value > 0,
+                     help='Mass of body.'),
+                dict(name='Radius', default=0.11, unit='m',
+                     help='Radius of spherical body.'),
                 ],
             'Numerical parameters', [
                 dict(name='Method', default='RK4',
@@ -484,8 +486,10 @@ def menu_definition_list():
                      widget='textline', unit='s'),
                 ],
             'Plot parameters', [
-                dict(name='Plot simplified motion', default=True),
-                dict(name='New plot', default=True),
+                dict(name='Plot simplified motion', default=True,
+                     help='Plot motion without drag+lift forces.'),
+                dict(name='New plot', default=True,
+                     help='Erase all old curves.'),
                 ],
             ],
         ]
@@ -530,9 +534,11 @@ def menu_definition_api():
         widget='float', str2type=float)
     menu.add_data_item(
         name='Mass', default=0.1, unit='kg',
-        validate=lambda data_item, value: value > 0)
+        validate=lambda data_item, value: value > 0,
+        help='Mass of body.')
     menu.add_data_item(
-        name='Radius', default=0.11, unit='m')
+        name='Radius', default=0.11, unit='m',
+        help='Radius of spherical body.')
 
     menu.submenu('../Numerical parameters')
     menu.add_data_item(
@@ -546,9 +552,11 @@ def menu_definition_api():
 
     menu.submenu('../Plot parameters')
     menu.add_data_item(
-        name='Plot simplified motion', default=True)
+        name='Plot simplified motion', default=True,
+        help='Plot motion without drag+lift forces.')
     menu.add_data_item(
-        name='New plot', default=True)
+        name='New plot', default=True,
+        help='Erase all old curves.')
     menu.update()
     return menu
 
@@ -592,7 +600,6 @@ def menu_definition_api_with_separate_submenus():
     menu = set_defaults_from_file(menu, command_line_option='--menufile')
     menu = set_defaults_from_command_line(menu)
     flask_modelfile = 'model.py'
-    print 'XXX', os.getcwd()
     django_modelfile = os.path.join('motion_and_forces_with_menu', 'app',
                                     'models.py')
     if os.path.isfile(flask_modelfile):
@@ -683,6 +690,25 @@ def compute_motion_and_forces_with_menu(menu):
         m, R, method, dt, plot_simplified_motion,
         new_plot)
 
+def compute_motion_and_forces_with_menu_loop(menu):
+    html = ''
+    initial_velocity = menu.get_value('Initial velocity')
+    m = menu.get_value('Mass')
+    R = menu.get_value('Radius')
+    method = menu.get_value('Method')
+    dt = menu.get_value('Time step')
+    plot_simplified_motion = menu.get_value('Plot simplified motion')
+    new_plot = menu.get_value('New plot')
+    initial_angle = menu.get_value('Initial angle')
+    w = menu.get_value('Wind velocity')
+    for spinrate in menu.get_values('Spinrate'):
+        print 'XXX', spinrate
+        html += compute_motion_and_forces(
+        initial_velocity, initial_angle, spinrate, w,
+        m, R, method, dt, plot_simplified_motion,
+        new_plot)
+    print 'XXX2', html
+    return html
 
 def compute_average(data_array=np.array([1]), filename=None):
     if filename is not None:
@@ -703,4 +729,3 @@ Data from %s:
 
 if __name__ == '__main__':
     print compute_drag_free_landing(5, 60)
-

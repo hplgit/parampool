@@ -1,8 +1,8 @@
-import os
+import os, re
 
 _contacted_latex_codecogs_com = False
 
-def get_symbol(symbol, static_dir='static', path=[], dpi=120):
+def get_symbol(symbol, static_dir='static', path=[], dpi=300):
     """Download a transparent LaTeX symbol."""
 
     static_dir = os.path.join(static_dir, "latex")
@@ -35,6 +35,10 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=120):
     f = open(filename, 'wb')
     f.write(code)
     f.close()
+    failure = os.system('convert %s -resize x15 %s' % (filename, filename))
+    if failure:
+        print 'Could not resize latex image', filename
+
     return filename
 
 def symbols_same_size(static_dir='static'):

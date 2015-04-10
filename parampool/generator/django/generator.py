@@ -15,6 +15,7 @@ def generate(compute_function,
              filename_template="index.html",
              filename_views="views.py",
              filename_models="models.py",
+             doc='',
              MathJax=False):
     """
     Given a function `compute_function` that takes a series of
@@ -106,7 +107,7 @@ def generate(compute_function,
     # the project subdirectory which can be easily removed
 
     generate_template(compute_function, classname, filename_template_path,
-                      menu, enable_login, MathJax)
+                      menu, enable_login, MathJax, doc)
     generate_models(compute_function, classname, filename_models_path,
                     default_field, menu, enable_login)
     generate_views(compute_function, classname, filename_views_path,

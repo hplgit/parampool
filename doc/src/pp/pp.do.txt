@@ -774,7 +774,7 @@ variable = menu.get_value('My Submenu1/my parameter')
 !ec
 Our specific computing function is a wrapper for `compute_motion_and_forces`:
 
-@@@CODE src-pp/compute.py fromto: compute_motion_and_forces_with_menu@compute_average
+@@@CODE src-pp/compute.py fromto: compute_motion_and_forces_with_menu\(@def compute_motion_and_forces_with_menu_loop\(
 
 The assumption is that the menu object provides enough input data for
 the compute function. If this assumption does not hold, one can
@@ -968,9 +968,15 @@ a file tree. The rules are simple:
  * A data item is appended to the current submenu by
    calling `menu.add_data_item`.
 
+===== Specify a menu using an alternative API =====
+
+There is an another syntax for defining submenus as well:
+
+@@@CODE src-pp/compute.py fromto: menu_definition_api_with_separate_submenus@def compute_motion_and_forces_with_menu
 
 
-2DO:
+
+===== 2DO =====
 
  * Lorenz demo as exercise, provide the compute function and graphics,
    perhaps also good demo in web4sciapps.
@@ -1257,8 +1263,13 @@ BIBFILE: papers.pub
 We need
 
  * Flask: `sudo pip install Flask`
- * Django (optional)
- * wtf...
- * progressbar
+ * Django (optional): `sudo pip install django`
+ * progressbar: `sudo pip install progressbar`
  * Flask-WTF: `pip install Flask-WTF`
  * ScientificPython for menu if units are used
+
+!bc sys
+Terminal> hg clone https://bitbucket.org/khinsen/scientificpython
+Terminal> cd scientificpython
+Terminal> sudo python setup.py install
+!ec
