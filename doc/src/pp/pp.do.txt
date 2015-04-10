@@ -978,11 +978,13 @@ directory).
 
 ===== Specifying a menu using an alternative API =====
 
-There is an another syntax for defining submenus as well:
+There is an another way of defining submenus as well: make a functions
+for defining each submenu.
 
 @@@CODE src-pp/compute.py fromto: menu_definition_api_with_separate_submenus@def compute_motion_and_forces_with_menu
 
-This code contains three important additional features:
+This application is used to illustrate three important additional features
+of Parampool:
 
  o documentation of the application is in an external file `doc.html`
  o the name of a parameter can be a mathematical symbol
