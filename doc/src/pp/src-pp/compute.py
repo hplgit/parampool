@@ -692,22 +692,20 @@ def compute_motion_and_forces_with_menu(menu):
 
 def compute_motion_and_forces_with_menu_loop(menu):
     html = ''
-    initial_velocity = menu.get_value('Initial velocity')
-    m = menu.get_value('Mass')
-    R = menu.get_value('Radius')
-    method = menu.get_value('Method')
-    dt = menu.get_value('Time step')
-    plot_simplified_motion = menu.get_value('Plot simplified motion')
-    new_plot = menu.get_value('New plot')
     initial_angle = menu.get_value('Initial angle')
-    w = menu.get_value('Wind velocity')
-    for spinrate in menu.get_values('Spinrate'):
-        print 'XXX', spinrate
-        html += compute_motion_and_forces(
-        initial_velocity, initial_angle, spinrate, w,
-        m, R, method, dt, plot_simplified_motion,
-        new_plot)
-    print 'XXX2', html
+    method = menu.get_value('Method')
+    new_plot = menu.get_value('New plot')  # should be True here
+    plot_simplified_motion = menu.get_value('Plot simplified motion')
+    for initial_velocity in menu.get_values('Initial velocity'):
+        for spinrate in menu.get_values('Spinrate'):
+            for m in menu.get_values('Mass'):
+                for R in menu.get_values('Radius'):
+                    for dt in menu.get_values('Time step'):
+                        for w in menu.get_values('Wind velocity'):
+                            html += compute_motion_and_forces(
+                                initial_velocity, initial_angle,
+                                spinrate, w, m, R, method, dt,
+                                plot_simplified_motion, new_plot)
     return html
 
 def compute_average(data_array=np.array([1]), filename=None):

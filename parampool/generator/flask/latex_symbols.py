@@ -1,4 +1,4 @@
-import os, re
+import os, shutil, subprocess
 
 _contacted_latex_codecogs_com = False
 
@@ -18,13 +18,14 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=300):
     name = symbol.replace(' ', '_').replace('mbox', '')
     for c in '''$^[]!@#%+=|/<>,.`~"'\\{}''':
         name = name.replace(c, '')
+    name_orig = name + '_orig'
     name += '.png'
     filename = os.path.join(symdir, name)
     link = 'http://latex.codecogs.com/png.latex?\dpi{%(dpi)d}&space;%(symbol)s' \
             % vars()
 
     if not _contacted_latex_codecogs_com:
-        print '....contacting http://latex.codecogs.com to convert latex symbols to png files\n'
+        print '....contacting http://latex.codecogs.com to convert latex text & symbols to png files\n'
         global _contacted_latex_codecogs_com
         _contacted_latex_codecogs_com = True
     import urllib
@@ -32,17 +33,20 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=300):
         code = urllib.urlopen(link).read()
     except IOError:
         raise IOError('No Internet connection? Cannot open http://latex.codecogs.com/png.latex...')
+
     f = open(filename, 'wb')
     f.write(code)
     f.close()
-    failure = os.system('convert %s -resize x15 %s' % (filename, filename))
+    cmd = 'convert %s -resize x15 -trim %s' % (filename, filename)
+    #print cmd
+    failure = os.system(cmd)
     if failure:
         print 'Could not resize latex image', filename
 
     return filename
 
 def symbols_same_size(static_dir='static'):
-    """Enforce the same dimensions on all symbols in each subdirectory."""
+    """Enforce the same dimensions on all symbols in each submenu."""
     from PIL import Image
     import commands
 

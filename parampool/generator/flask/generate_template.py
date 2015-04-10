@@ -103,7 +103,8 @@ MathJax.Hub.Config({
 
 def generate_template_dtree(compute_function, classname,
                             menu, outfile, doc, align='left',
-                            MathJax=False, login=False):
+                            MathJax=False, login=False,
+                            latex_name='text, symbol'):
 
     # TODO: Support for right align in 'parent' functions
     from latex_symbols import get_symbol, symbols_same_size
@@ -220,7 +221,10 @@ MathJax.Hub.Config({
             user_data.pbid += 1
 
         if 'symbol' in item.data:
-            symbol = item.data["symbol"]
+            if latex_name == 'symbol':
+                symbol = item.data["symbol"]
+            elif latex_name == 'text, symbol':
+                symbol = "\\mbox{%s}" % name + ',\\ ' + item.data["symbol"]
         else:
             symbol = "\\mbox{%s}" % name
         imgsrc = get_symbol(symbol, 'static', tree_path)
@@ -463,7 +467,7 @@ def run_doconce_on_text(doc):
 
 def generate_template(compute_function, classname, outfile,
                       menu=None, overwrite=False, MathJax=False,
-                      doc='', login=False):
+                      doc='', login=False, latex_name='text, symbol'):
     if doc == '':
         # Apply doc string as documentation
         doc = run_doconce_on_text(compute_function.__doc__)
@@ -488,6 +492,6 @@ def generate_template(compute_function, classname, outfile,
     if menu is not None:
         return generate_template_dtree(
             compute_function, classname, menu, outfile, doc,
-            MathJax=MathJax, login=login)
+            MathJax=MathJax, login=login, latex_name=latex_name)
     else:
         return generate_template_std(classname, outfile, doc, MathJax, login)

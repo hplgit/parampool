@@ -91,8 +91,8 @@ def set_defaults_in_model_file(model_filename, menu):
             from parampool.generator.flask.generate_model import generate_model_menu
             generate_model_menu(classname, model_filename, menu)
     elif 'models.Model' in text:
-        # Flask model.py file
-        pattern = r'class (.+)\(wtf.Form\):'
+        # Django model.py file
+        pattern = r'class (.+)\(models.Model\):'
         m = re.search(pattern, text)
         if m:
             classname = m.group(1)
@@ -161,7 +161,7 @@ def load_from_file(filename):
       end
     """
     menu = Menu()
-    return read_menu_file(filename, menu, task='create')
+    return read_menufile(filename, menu, task='create')
 
 def read_menufile(filename, menu, task='create'):
     """Read menu file and initialize a menu or set default values."""

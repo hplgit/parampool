@@ -15,7 +15,8 @@ def generate(compute_function,
              overwrite_model=False,
              doc='',
              MathJax=False,
-             enable_login=False):
+             enable_login=False,
+             latex_name='text, symbol'):
     """
     Given a function `compute_function` that takes a series of
     arguments, generate a Flask web form where
@@ -95,7 +96,7 @@ def generate(compute_function,
 
     generate_template(compute_function, classname, filename_template,
                       menu, overwrite_template, MathJax,
-                      doc, login=enable_login)
+                      doc, login=enable_login, latex_name=latex_name)
 
     if enable_login:
         from generate_forms_and_models import generate_forms_and_models
