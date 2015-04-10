@@ -892,11 +892,11 @@ FIGURE: [fig-pp/flask_menu1_filled.png, width=800] Web interface with input para
 
 Now, press the *Compute* button. Figure ref{pp:flask_menu1:fig4} shows
 the resulting response. You can now play around and click the checkbox
-for "Plot simplified motion" and the recompute to see the effects
+for *Plot simplified motion* and the recompute to see the effects
 of wind against the motion, drag, and lift (which are substantial in
 this example).
 
-FIGURE: [fig-pp/flask_menu1_filled.png, width=800] Web interface with input and results. label{pp:flask_menu1:fig4}
+FIGURE: [fig-pp/flask_menu1_result.png, width=800] Web interface with input and results. label{pp:flask_menu1:fig4}
 
 ===== Detection of wrong input =====
 
