@@ -161,7 +161,7 @@ Python file "`generate.py`": "https://github.com/hplgit/parampool/tree/master/do
 The `generate` function grabs the arguments in our compute function and
 creates the necessary Flask files.
 
-FIGURE: [fig-pp/flask1.png, width=400] A simple web interface. label{pp:flask1:fig1}
+FIGURE: [fig-pp/flask1.png, width=500] A simple web interface. label{pp:flask1:fig1}
 
 
 !bwarning Tip
@@ -335,7 +335,7 @@ values appear in the input fields. These can be altered, or you can
 just click *Compute*. The computations result in a plot as
 showed in Figure ref{pp:flask2:fig1}.
 
-FIGURE: [fig-pp/flask2.png, width=600] A web interface with graphics. label{pp:flask2:fig1}
+FIGURE: [fig-pp/flask2.png, width=800] A web interface with graphics. label{pp:flask2:fig1}
 
 === Django application ===
 
@@ -387,7 +387,7 @@ Figure ref{pp:flask3:fig1} displays an attempt to not check `new_plot`
 and compare the curves corresponding to three different parameters
 (the files are in the "`flask3": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask3" directory.
 
-FIGURE: [fig-pp/flask3.png, width=600] Plot with multiple curves. label{pp:flask3:fig1}
+FIGURE: [fig-pp/flask3.png, width=800] Plot with multiple curves. label{pp:flask3:fig1}
 
 !bwarning Caveat.
 If `new_plot` is unchecked before the first computation is carried out,
@@ -809,7 +809,7 @@ Terminal> python controller.py
 Open the URL `http://127.0.0.1:5000` in a web broswer to see an interface
 as the one in Figure ref{pp:flask_menu1:fig1}.
 
-FIGURE: [fig-pp/flask_menu1_closed.png, width=500] Web interface in closed form. label{pp:flask_menu1:fig1}
+FIGURE: [fig-pp/flask_menu1_closed.png, width=800] Web interface in closed form. label{pp:flask_menu1:fig1}
 
 
 ===== Operating the user interface =====
@@ -821,7 +821,7 @@ Figure ref{pp:flask_menu1:fig2} displays the result in the Opera browser.
 Note that in this type of user interface, the name of each data item
 is typeset in LaTeX and inserted as a picture.
 
-FIGURE: [fig-pp/flask_menu1_open.png, width=500] Web interface in fully expanded form. label{pp:flask_menu1:fig2}
+FIGURE: [fig-pp/flask_menu1_open.png, width=800] Web interface in fully expanded form. label{pp:flask_menu1:fig2}
 
 The following technical points must be mentioned.
 
@@ -888,7 +888,7 @@ We can try out the interface:
 
 You should see something like Figure ref{pp:flask_menu1:fig3}.
 
-FIGURE: [fig-pp/flask_menu1_filled.png, width=500] Web interface with input parameters filled out. label{pp:flask_menu1:fig3}
+FIGURE: [fig-pp/flask_menu1_filled.png, width=800] Web interface with input parameters filled out. label{pp:flask_menu1:fig3}
 
 Now, press the *Compute* button. Figure ref{pp:flask_menu1:fig4} shows
 the resulting response. You can now play around and click the checkbox
@@ -896,7 +896,7 @@ for "Plot simplified motion" and the recompute to see the effects
 of wind against the motion, drag, and lift (which are substantial in
 this example).
 
-FIGURE: [fig-pp/flask_menu1_filled.png, width=500] Web interface with input and results. label{pp:flask_menu1:fig4}
+FIGURE: [fig-pp/flask_menu1_filled.png, width=800] Web interface with input and results. label{pp:flask_menu1:fig4}
 
 ===== Detection of wrong input =====
 
@@ -1009,7 +1009,7 @@ The choice is set by the `latex_name` keyword argument in the
 
 @@@CODE src-pp/flask_menu3/generate.py
 The values of `latex_name` can be `'symbol'` (symbol only) or
-`'text, symbol'` (ordinar name followed by a comma and the symbol).
+`'text, symbol'` (ordinary name followed by a comma and the symbol).
 
 === Multiple input values for parameters ===
 
@@ -1077,6 +1077,9 @@ to override from command line. At the end of the `controller.py` script,
 dump menu to file again with `write_menufile(filename)`.
 (The filename is given on the command line: `--menufile filename`.)
 
+See the `...separate_submenus` function - it has almost
+all this functionality!
+
 
 
 ===== Menu with other data structures =====
@@ -1133,13 +1136,6 @@ Describe input as
 #book) rho_sea*exp(-0001036y) fra De Mestre, C_D dep on v see
 #http://en.wikipedia.org/wiki/Drag_equation (no the relevant C_D is probably
 #beyond the drag crisis and no need for C_D(Re))
-
-!split
-======= Enable users to log in and store data =======
-
-# existing example: lorenz_with_login, probably better to just adapt vib with login
-# lorenz_with_login is an excellent exercise! Can provide the math and
-# compute.py in a form where plot files are generated but no HTML code
 
 !split
 ======= Exercises =======
@@ -1209,8 +1205,6 @@ On the main menu: damping can have radio buttons for linear b*u and
 quadratic b*u**2, F has list of different type of forces
 
 
-======= Problems =======
-
 ===== Problem: Make a coin flipper =====
 file=coin_flipper
 
@@ -1248,8 +1242,11 @@ laptop-terminal> ssh -p [port] -f -N -L 5000:localhost:5000 \
 
 Information about which port to forward, as well as username and
 wakari-hostname, is available under `SSH Access` at the user submeu in
-Wakari.  FIGURE: [fig-pp/wakari1.png, width=350] SSH access
-information. label{pp:wakari1:fig1} It is also necessary to add your
+Wakari.
+
+FIGURE: [fig-pp/wakari1.png, width=350]
+
+It is also necessary to add your
 public SSH key to Wakari
 "Settings":"https://www.wakari.io/settings/sshkeys".
 
@@ -1263,8 +1260,10 @@ is relatively straight-forward to download Django
 "source":"https://www.djangoproject.com/download/" and install it
 locally to your user. Also, if Gnuplot is to be installed and compiled
 with PNG support, the library `Pnglib` needs to be installed before
-Gnuplot is compiled. The script `install_on_wakari.sh` in the top
-directory of cbc-websolver accomplishes this.
+Gnuplot is compiled.
+
+#The script `install_on_wakari.sh` in the top
+#directory of cbc-websolver accomplishes this.
 
 ===== Uni Oslo =====
 
