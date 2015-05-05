@@ -92,4 +92,3 @@ def assert_equal_files(file1, file2,
                       text1_name=file1, text2_name=file2,
                       prefix_diff_files=prefix_diff_files,
                       msg=msg)
-

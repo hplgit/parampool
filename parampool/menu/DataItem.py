@@ -343,8 +343,8 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
             if not hasattr(self, 'PhysicalQuantity_class'):
                 # Must install the unit conversion tool (the first time
                 # we see the need for units)
-                from Scientific.Physics.PhysicalQuantities import \
-                     PhysicalQuantity
+                #from Scientific.Physics.PhysicalQuantities import \
+                from PhysicalQuantities import PhysicalQuantity
                 self.PhysicalQuantity_class = PhysicalQuantity
             q = self.PhysicalQuantity_class(value)  # quantity with unit
             if 'unit' in self.data:
