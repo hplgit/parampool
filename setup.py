@@ -18,7 +18,7 @@ setup(name='parampool',
                     'parampool.generator.django': ['static.tar.gz',]},
       packages=['parampool',
                 'parampool.tree',
-                'parampool.menu',
+                'parampool.pool',
                 'parampool.generator',
                 'parampool.generator.flask',
                 'parampool.generator.django',
@@ -28,4 +28,3 @@ setup(name='parampool',
                 'parampool.html5.django.forms',
                 'parampool.utils',
                 ],)
-

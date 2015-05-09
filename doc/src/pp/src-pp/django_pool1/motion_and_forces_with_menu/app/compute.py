@@ -455,9 +455,9 @@ def compute_motion_and_forces(
     return html_text
 
 
-def menu_definition_list():
-    """Create and return menu defined through a nested list."""
-    menu = [
+def pool_definition_list():
+    """Create and return pool defined through a nested list."""
+    pool = [
         'Main', [
             'Initial motion data', [
                 dict(name='Initial velocity', default=5.0),
@@ -488,9 +488,9 @@ def menu_definition_list():
                 ],
             ],
         ]
-    from parampool.menu.UI import listtree2Menu
-    menu = listtree2Menu(menu)
-    return menu
+    from parampool.pool.UI import listtree2Pool
+    pool = listtree2Pool(pool)
+    return pool
 
 def convert_time_step(data_item, value):
     # Value must be None or a float
@@ -503,180 +503,180 @@ def convert_time_step(data_item, value):
             raise TypeError('%s: could not convert "%s" to float'
                             % (data_item.name, value))
 
-def menu_definition_api():
-    """Create and return menu using the parampool.menu API."""
-    from parampool.menu.Menu import Menu
-    menu = Menu()
-    # Go to a submenu, but create it if it does not exist
-    menu.submenu('Main menu')
-    menu.submenu('Initial motion data')
-    # Define data items for the current submenu
-    menu.add_data_item(
+def pool_definition_api():
+    """Create and return pool using the parampool.pool API."""
+    from parampool.pool.Pool import Pool
+    pool = Pool()
+    # Go to a subpool, but create it if it does not exist
+    pool.subpool('Main pool')
+    pool.subpool('Initial motion data')
+    # Define data items for the current subpool
+    pool.add_data_item(
         name='Initial velocity', default=5.0)
-    menu.add_data_item(
+    pool.add_data_item(
         name='Initial angle', default=45,
         widget='range', minmax=[0,90])
-    menu.add_data_item(
+    pool.add_data_item(
         name='Spinrate', default=50, widget='float', unit='1/s')
 
-    # Move to (and create) another submenu, as in a file tree
-    menu.submenu('../Body and environment data')
-    # Add data items for the current submenu
-    menu.add_data_item(
+    # Move to (and create) another subpool, as in a file tree
+    pool.subpool('../Body and environment data')
+    # Add data items for the current subpool
+    pool.add_data_item(
         name='Wind velocity', default=0.0,
         help='Wind velocity in positive x direction.',
         widget='float', str2type=float)
-    menu.add_data_item(
+    pool.add_data_item(
         name='Mass', default=0.1, unit='kg',
         validate=lambda data_item, value: value > 0)
-    menu.add_data_item(
+    pool.add_data_item(
         name='Radius', default=0.11, unit='m')
 
-    menu.submenu('../Numerical parameters')
-    menu.add_data_item(
+    pool.subpool('../Numerical parameters')
+    pool.add_data_item(
         name='Method', default='RK4',
         widget='select',
         options=['RK4', 'RK2', 'ForwardEuler'],
         help='Numerical solution method.')
-    menu.add_data_item(
+    pool.add_data_item(
         name='Time step', default=None,
         widget='textline', unit='s', str2type=convert_time_step)
 
-    menu.submenu('../Plot parameters')
-    menu.add_data_item(
+    pool.subpool('../Plot parameters')
+    pool.add_data_item(
         name='Plot simplified motion', default=True)
-    menu.add_data_item(
+    pool.add_data_item(
         name='New plot', default=True)
-    menu.update()
-    return menu
+    pool.update()
+    return pool
 
-def menu_definition_api_with_separate_submenus():
+def pool_definition_api_with_separate_subpools():
     """
-    Create and return a menu by calling up other functions
-    for defining the submenus. Also demonstrate customization
-    of menu properties and inserting default values from file
+    Create and return a pool by calling up other functions
+    for defining the subpools. Also demonstrate customization
+    of pool properties and inserting default values from file
     or the command line.
     """
-    from parampool.menu.Menu import Menu
-    menu = Menu()
-    menu.submenu('Main menu')
-    menu = motion_menu(menu)
-    menu.change_submenu('..')
-    menu = body_and_envir_menu(menu)
-    menu.change_submenu('..')
-    menu = numerics_menu(menu)
-    menu.change_submenu('..')
-    menu = plot_menu(menu)
-    menu.update()  # finalize menu construction
+    from parampool.pool.Pool import Pool
+    pool = Pool()
+    pool.subpool('Main pool')
+    pool = motion_pool(pool)
+    pool.change_subpool('..')
+    pool = body_and_envir_pool(pool)
+    pool.change_subpool('..')
+    pool = numerics_pool(pool)
+    pool.change_subpool('..')
+    pool = plot_pool(pool)
+    pool.update()  # finalize pool construction
 
-    from parampool.menu.UI import (
+    from parampool.pool.UI import (
         set_data_item_attribute,
         set_defaults_from_file,
         set_defaults_from_command_line,
         set_defaults_in_model_file,
-        write_menufile,
+        write_poolfile,
         )
     # Change default values in the web GUI
-    import parampool.menu.DataItem
-    parampool.menu.DataItem.DataItem.defaults['minmax'] = [0, 100]
-    parampool.menu.DataItem.DataItem.defaults['range_steps'] = 500
+    import parampool.pool.DataItem
+    parampool.pool.DataItem.DataItem.defaults['minmax'] = [0, 100]
+    parampool.pool.DataItem.DataItem.defaults['range_steps'] = 500
     # Can also change 'number_step' for the step in float fields
     # and 'widget_size' for the width of widgets
 
     # Let all widget sizes be 6, except for Time step
-    menu = set_data_item_attribute(menu, 'widget_size', 6)
-    menu.get('Time step').data['widget_size'] = 4
+    pool = set_data_item_attribute(pool, 'widget_size', 6)
+    pool.get('Time step').data['widget_size'] = 4
 
-    menu = set_defaults_from_file(menu, command_line_option='--menufile')
-    menu = set_defaults_from_command_line(menu)
+    pool = set_defaults_from_file(pool, command_line_option='--poolfile')
+    pool = set_defaults_from_command_line(pool)
     flask_modelfile = 'model.py'
     print 'XXX', os.getcwd()
-    django_modelfile = os.path.join('motion_and_forces_with_menu', 'app',
+    django_modelfile = os.path.join('motion_and_forces_with_pool', 'app',
                                     'models.py')
     if os.path.isfile(flask_modelfile):
-        set_defaults_in_model_file(flask_modelfile, menu)
+        set_defaults_in_model_file(flask_modelfile, pool)
     elif os.path.isfile(django_modelfile):
-        set_defaults_in_model_file(django_modelfile, menu)
+        set_defaults_in_model_file(django_modelfile, pool)
 
-    menufile = open('menu.dat', 'w')
-    menufile.write(write_menufile(menu))
-    menufile.close()
+    poolfile = open('pool.dat', 'w')
+    poolfile.write(write_poolfile(pool))
+    poolfile.close()
 
-    return menu
+    return pool
 
-def motion_menu(menu, name='Initial motion data'):
-    menu.submenu(name)
-    menu.add_data_item(
+def motion_pool(pool, name='Initial motion data'):
+    pool.subpool(name)
+    pool.add_data_item(
         name='Initial velocity', default=5.0, symbol='v_0',
         unit='m/s', help='Initial velocity',
         str2type=float, widget='float',
         validate=lambda data_item, value: value > 0)
-    menu.add_data_item(
+    pool.add_data_item(
         name='Initial angle', default=45, symbol=r'\theta',
         widget='range', minmax=[0,90], str2type=float,
         help='Initial angle',
         validate=lambda data_item, value: 0 < value <= 90)
-    menu.add_data_item(
+    pool.add_data_item(
         name='Spinrate', default=50, symbol=r'\omega',
         widget='float', str2type=float, unit='1/s',
         help='Spinrate')
-    return menu
+    return pool
 
-def body_and_envir_menu(menu, name='Body and environment data'):
-    menu.submenu(name)
-    menu.add_data_item(
+def body_and_envir_pool(pool, name='Body and environment data'):
+    pool.subpool(name)
+    pool.add_data_item(
         name='Wind velocity', default=0.0, symbol='w',
         help='Wind velocity in positive x direction.', unit='m/s',
         widget='float', str2type=float)
-    menu.add_data_item(
+    pool.add_data_item(
         name='Mass', default=0.1, symbol='m',
         help='Mass of body.', unit='kg',
         widget='float', str2type=float,
         validate=lambda data_item, value: value > 0)
-    menu.add_data_item(
+    pool.add_data_item(
         name='Radius', default=0.11, symbol='R',
         help='Radius of spherical body.', unit='m',
         widget='float', str2type=float,
         validate=lambda data_item, value: value > 0)
-    return menu
+    return pool
 
-def numerics_menu(menu, name='Numerical parameters'):
-    menu.submenu(name)
-    menu.add_data_item(
+def numerics_pool(pool, name='Numerical parameters'):
+    pool.subpool(name)
+    pool.add_data_item(
         name='Method', default='RK4',
         widget='select',
         options=['RK4', 'RK2', 'ForwardEuler'],
         help='Numerical solution method.')
-    menu.add_data_item(
+    pool.add_data_item(
         name='Time step', default=None, symbol=r'\Delta t',
         widget='textline', unit='s', str2type=eval,
         help='None: ca 500 steps, otherwise specify float.')
-    return menu
+    return pool
 
-def plot_menu(menu, name='Plot parameters'):
-    menu.submenu(name)
-    menu.add_data_item(
+def plot_pool(pool, name='Plot parameters'):
+    pool.subpool(name)
+    pool.add_data_item(
         name='Plot simplified motion', default=True,
         help='Plot motion without drag and lift forces.')
-    menu.add_data_item(
+    pool.add_data_item(
         name='New plot', default=True,
         help='Erase all old curves.')
-    return menu
+    return pool
 
 
-def compute_motion_and_forces_with_menu(menu):
-    initial_velocity = menu.get_value('Initial velocity')
-    initial_angle = menu.get_value('Initial angle')
-    spinrate = menu.get_value('Spinrate')
-    w = menu.get_value('Wind velocity')
-    m = menu.get_value('Mass')
-    R = menu.get_value('Radius')
-    method = menu.get_value('Method')
-    dt = menu.get_value('Time step')
-    plot_simplified_motion = menu.get_value('Plot simplified motion')
-    new_plot = menu.get_value('New plot')
-    #from parampool.menu.UI import write_menu_to_file
-    #write_menu_to_file(menu, filename=...)
+def compute_motion_and_forces_with_pool(pool):
+    initial_velocity = pool.get_value('Initial velocity')
+    initial_angle = pool.get_value('Initial angle')
+    spinrate = pool.get_value('Spinrate')
+    w = pool.get_value('Wind velocity')
+    m = pool.get_value('Mass')
+    R = pool.get_value('Radius')
+    method = pool.get_value('Method')
+    dt = pool.get_value('Time step')
+    plot_simplified_motion = pool.get_value('Plot simplified motion')
+    new_plot = pool.get_value('New plot')
+    #from parampool.pool.UI import write_pool_to_file
+    #write_pool_to_file(pool, filename=...)
     return compute_motion_and_forces(
         initial_velocity, initial_angle, spinrate, w,
         m, R, method, dt, plot_simplified_motion,

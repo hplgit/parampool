@@ -1,12 +1,12 @@
 import os
 import parampool.utils
 
-def generate_model_menu(classname, outfile, menu):
+def generate_model_pool(classname, outfile, pool):
     """
     Generate Flask form by iterating through
-    leaf nodes in the given menu object.
+    leaf nodes in the given pool object.
     """
-    from parampool.menu.DataItem import DataItem
+    from parampool.pool.DataItem import DataItem
 
     class CodeData(object):
         """Object to hold output code through tree recursion."""
@@ -191,12 +191,12 @@ class %(classname)s(wtf.Form):
         if len(item.name) > user_data.longest_name:
             user_data.longest_name = len(item.name)
 
-    menu.traverse(callback_leaf=longest_name_func,
+    pool.traverse(callback_leaf=longest_name_func,
                   user_data=codedata,
                   verbose=False)
 
     # Generate all code
-    menu.traverse(callback_leaf=leaf_func,
+    pool.traverse(callback_leaf=leaf_func,
                   user_data=codedata,
                   verbose=False)
 
@@ -333,9 +333,9 @@ of code that may be needed.
         f.close()
 
 def generate_model(compute_func, classname, outfile, default_field,
-                   menu=None, overwrite=False):
+                   pool=None, overwrite=False):
     """
-    Generate the Flask form using menu if given,
+    Generate the Flask form using pool if given,
     else use inspect on the compute function.
     """
 
@@ -345,8 +345,8 @@ def generate_model(compute_func, classname, outfile, default_field,
             "The file %s already exists. Overwrite? [Y/n]: " % outfile)):
             return None
 
-    if menu is not None:
-        return generate_model_menu(classname, outfile, menu)
+    if pool is not None:
+        return generate_model_pool(classname, outfile, pool)
     else:
         return generate_model_inspect(
             compute_func, classname, outfile, default_field)
@@ -379,9 +379,9 @@ class Test(wtf.Form):
                       'newly generated', 'reference result',
                       msg='Error in generated text!')
 
-def test_menu():
+def test_pool():
     from math import pi
-    from parampool.menu.UI import listtree2Menu
+    from parampool.pool.UI import listtree2Pool
 
     model_code = """\
 import wtforms as wtf
@@ -423,7 +423,7 @@ class Test(wtf.Form):
      test5 = wtf.BooleanField(u'booltest', default=True)
 """
 
-    menu_tree = [
+    pool_tree = [
         'main', [
             dict(name='a', default='120', unit='km/h',
                  help='velocity of body', str2type=eval),
@@ -446,16 +446,16 @@ class Test(wtf.Form):
             ],
         ]
 
-    menu = listtree2Menu(menu_tree)
+    pool = listtree2Pool(pool_tree)
     def compute_func(a, b, c, C_D, test1, test2, test3, test4):
         return None
 
     generated_code = generate_model(compute_func, "Test", outfile=None,
-                                    default_field="FloatField", menu=menu)
+                                    default_field="FloatField", pool=pool)
     assert_equal_text(generated_code, model_code,
                       'newly generated', 'reference result',
                       msg='Error in generated text!')
 
 if __name__ == '__main__':
     test_inspect()
-    test_menu()
+    test_pool()

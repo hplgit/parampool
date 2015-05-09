@@ -7,7 +7,7 @@ Automatically generated HTML file from DocOnce source
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="DocOnce: https://github.com/hplgit/doconce/" />
 <meta name="description" content="Parampool Tutorial">
-<meta name="keywords" content="submenu,data item">
+<meta name="keywords" content="subpool,data item">
 
 <title>Parampool Tutorial</title>
 
@@ -50,44 +50,44 @@ code { color: inherit; background-color: transparent; }
                'pp:flask4'),
               (' Django interface ', 3, None, '___sec11'),
               (' Other types of function arguments ', 2, None, '___sec12'),
-              (' Working with a menu of input parameters ',
+              (' Working with a pool of input parameters ',
                1,
-               'pp:flask_menu1',
-               'pp:flask_menu1'),
-              (' Specify a menu as a list ',
+               'pp:flask_pool1',
+               'pp:flask_pool1'),
+              (' Specify a pool as a list ',
                2,
-               'pp:flask_menu1:list',
-               'pp:flask_menu1:list'),
+               'pp:flask_pool1:list',
+               'pp:flask_pool1:list'),
               (' Attributes in data items ',
                2,
-               'pp:flask_menu1:dataitem',
-               'pp:flask_menu1:dataitem'),
+               'pp:flask_pool1:dataitem',
+               'pp:flask_pool1:dataitem'),
               (' The compute function ',
                2,
-               'pp:flask_menu1:compute',
-               'pp:flask_menu1:compute'),
+               'pp:flask_pool1:compute',
+               'pp:flask_pool1:compute'),
               (' A command-line and file interface ',
                2,
-               'pp:flask_menu1:cml_file',
-               'pp:flask_menu1:cml_file'),
+               'pp:flask_pool1:cml_file',
+               'pp:flask_pool1:cml_file'),
               (' Generating a web-based user interface ',
                2,
-               'pp:flask_menu1:GUI',
-               'pp:flask_menu1:GUI'),
+               'pp:flask_pool1:GUI',
+               'pp:flask_pool1:GUI'),
               (' Operating the user interface ',
                2,
-               'pp:flask_menu1:GUI_op',
-               'pp:flask_menu1:GUI_op'),
+               'pp:flask_pool1:GUI_op',
+               'pp:flask_pool1:GUI_op'),
               (' Detection of wrong input ',
                2,
-               'pp:flask_menu1:GUI_error',
-               'pp:flask_menu1:GUI_error'),
+               'pp:flask_pool1:GUI_error',
+               'pp:flask_pool1:GUI_error'),
               (' Loading parameters from file and the command line ',
                2,
-               'pp:flask_menu1:GUI_cml_file',
-               'pp:flask_menu1:GUI_cml_file'),
-              (' Specifying a menu using an API ', 2, None, '___sec22'),
-              (' Specifying a menu using an alternative API ',
+               'pp:flask_pool1:GUI_cml_file',
+               'pp:flask_pool1:GUI_cml_file'),
+              (' Specifying a pool using an API ', 2, None, '___sec22'),
+              (' Specifying a pool using an alternative API ',
                2,
                None,
                '___sec23'),
@@ -102,7 +102,7 @@ code { color: inherit; background-color: transparent; }
                2,
                None,
                '___sec28'),
-              (' Menu with other data structures ', 2, None, '___sec29'),
+              (' Pool with other data structures ', 2, None, '___sec29'),
               (' Advanced topics ', 1, None, '___sec30'),
               (' Login and archival of results ', 2, None, '___sec31'),
               (' Animations ', 2, None, '___sec32'),
@@ -159,7 +159,7 @@ MathJax.Hub.Config({
         <ul class="dropdown-menu">
      <!-- navigation toc: --> <li><a href="._pp002.html#___sec1" style="font-size: 80%;">Simulation program</a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
-     <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_menu1" style="font-size: 80%;">Working with a menu of input parameters</a></li>
+     <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
      <!-- navigation toc: --> <li><a href="#___sec30" style="font-size: 80%;">Advanced topics</a></li>
      <!-- navigation toc: --> <li><a href="._pp006.html#___sec34" style="font-size: 80%;">Exercises</a></li>
      <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
@@ -221,14 +221,14 @@ previous runs, there is a <em>Delete all</em> button that clears the database.
 <h2 id="___sec33">Python expressions as input </h2>
 
 <p>
-This can only be done in menus unless the value of the parameter is a string (positional argument or default field as text, with explicit conversion).
-Treat menu only - drop implementation for inspection of compute function.
+This can only be done in pools unless the value of the parameter is a string (positional argument or default field as text, with explicit conversion).
+Treat pool only - drop implementation for inspection of compute function.
 
 <p>
 Describe input as
 
 <ul>
- <li> <code>sin(2.5)*exp(-1)</code> (need to specify py code to be included in the controller/views or add such code manually? or do from numpy import * always? an argument with pycode is probably smart, the menu needs something similar for running str2type=eval in the right namespaces, could just be an additional data item attr namespace that, if present, is used if str2type is eval - yes, that's the solution)</li>
+ <li> <code>sin(2.5)*exp(-1)</code> (need to specify py code to be included in the controller/views or add such code manually? or do from numpy import * always? an argument with pycode is probably smart, the pool needs something similar for running str2type=eval in the right namespaces, could just be an additional data item attr namespace that, if present, is used if str2type is eval - yes, that's the solution)</li>
  <li> <code>MySpecialObject(2,3,4)</code> (works)
 <!-- What about w(t) like a w_0 + sin? -->
 <!-- Could have an exercise with a missile, rho depending on height (see sports -->

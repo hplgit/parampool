@@ -46,7 +46,7 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=300):
     return filename
 
 def symbols_same_size(static_dir='static'):
-    """Enforce the same dimensions on all symbols in each submenu."""
+    """Enforce the same dimensions on all symbols in each subpool."""
     from PIL import Image
     import commands
 

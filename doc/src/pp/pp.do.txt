@@ -11,16 +11,17 @@ __Summary.__ Parampool is a Python package for handling a potentially
 large pool of input parameters in scientific applications. The
 simplest use is to pass a Python function to Parampool and get back a
 web interface for setting the arguments to the function. More powerful
-use consists in defining an input *menu*, which is a tree structure of
-input data, where data items (parameters) are organized hierarchically
-in submenus. Each data item is associated with a name, default value,
-unit, help text, widget type, validation information, etc. Different
-types of sophisticated user interfaces can then be automatically
-generated: a graphical web interface (via Flask or Django), a
-command-line interface, and a file-based interface.  The tutorial
-describes specific examples on how to to program Parampool to generate
-user interfaces and how to operate them. With very little efforts,
-you can take a scientific application and equip it with a fancy GUI.
+use consists in defining a *pool* of input parameters, which is a tree
+structure of input data, where data items (parameters) are organized
+hierarchically in subpools. Each data item is associated with a name,
+default value, unit, help text, widget type, validation information,
+etc. Different types of sophisticated user interfaces can then be
+automatically generated: a graphical web interface (via Flask or
+Django), a command-line interface, and a file-based interface.  The
+tutorial describes specific examples on how to to program Parampool to
+generate user interfaces and how to operate them. With very little
+efforts, you can take a scientific application and equip it with a
+fancy GUI.
 
 !split
 
@@ -648,28 +649,28 @@ statistics of the assigned data array.
 FIGURE: [fig-pp/flask5.png, width=500] Web interface for uploading a file. label{pp:flask5:fig1}
 
 !split
-======= Working with a menu of input parameters =======
-label{pp:flask_menu1}
+======= Working with a pool of input parameters =======
+label{pp:flask_pool1}
 
 Parampool's main focus is on scientific applications with lots of
 input data of different type, organized in a hierarchical tree fashion.
-The various input parameters are defined in terms of a *menu*.
-The menu can be defined as a nested list or through function
+The various input parameters are defined in terms of a *pool*.
+The pool can be defined as a nested list or through function
 application programming interface (known as an API, and here
-consisting of calls functionality in the `parampool.menu` package).
+consisting of calls functionality in the `parampool.pool` package).
 
-To exemplify the use of menus, we apply the
+To exemplify the use of pools, we apply the
 `compute_motion_and_forces` function (from
 Section ref{pp:flask4}):
 
 @@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
-Let us organize 10 input parameters into four submenus. At the top
-level we need a submenu, usually called "Main menu" or named after
-the application. Each submenu
+Let us organize 10 input parameters into four subpools. At the top
+level we need a subpool, usually called "Main pool" or named after
+the application. Each subpool
 is here specified with a logical name of each parameter and the
 corresponding variable names in the compute function:
 
- * Main menu
+ * Main pool
    * Initial motion data
      * Initial velocity: `initial_velocity`
      * Initial angle: `initial_angle`
@@ -685,34 +686,34 @@ corresponding variable names in the compute function:
      * Plot simplified motion: `plot_simplified_motion`
      * New plot: `new_plot`
 
-With a menu we can give the parameters more readable logical names (not
+With a pool we can give the parameters more readable logical names (not
 restricted to a valid variable name in Python), but we can also
 specify a lot other properties too, as will be explained.
 
-idx{submenu} idx{data item}
+idx{subpool} idx{data item}
 
-A menu is a hierarchical *tree structure* with *submenus* and
+A pool is a hierarchical *tree structure* with *subpools* and
 *data items*, where each data item describes an input parameter
 in the problem. The task now is to make a Python specification of
-the of submenus and data items in the menu tree.
+the of subpools and data items in the pool tree.
 
-===== Specify a menu as a list =====
-label{pp:flask_menu1:list}
+===== Specify a pool as a list =====
+label{pp:flask_pool1:list}
 
-The menu tree can be specified as a list of lists, strings, and dictionaries.
-Each list represents a submenu, each string the name of the submenu,
-and each dict is a data item. The menu must be return from some
-function, hereafter called the *menu function*. In our case, the
-menu function goes as follows:
+The pool tree can be specified as a list of lists, strings, and dictionaries.
+Each list represents a subpool, each string the name of the subpool,
+and each dict is a data item. The pool must be return from some
+function, hereafter called the *pool function*. In our case, the
+pool function goes as follows:
 
-@@@CODE src-pp/compute.py fromto: def menu_definition_list@def convert_time_step
-Actually, the menu function must return a `parampool.menu.Menu` object,
-so after the definition of the menu tree as a list we must make the
-shown conversion from a list to `Menu` object via the `listtree2Menu`
+@@@CODE src-pp/compute.py fromto: def pool_definition_list@def convert_time_step
+Actually, the pool function must return a `parampool.pool.Pool` object,
+so after the definition of the pool tree as a list we must make the
+shown conversion from a list to `Pool` object via the `listtree2Pool`
 function.
 
 ===== Attributes in data items =====
-label{pp:flask_menu1:dataitem}
+label{pp:flask_pool1:dataitem}
 
 Each data item has a name and preferably a default value, as in the
 case of "Initial velocity". More attributes can be added:
@@ -764,98 +765,98 @@ case of "Initial velocity". More attributes can be added:
 If a default value is set to `5`, Parampool will interpret this as an
 integer and let `string2type` be `int` and force all input to be
 converted to integers. Normally, you want input to be real, so check
-that the default value is `5.0` unless the menu item is meant to be
+that the default value is `5.0` unless the pool item is meant to be
 an integer.
 !enotice
 
 ===== The compute function =====
-label{pp:flask_menu1:compute}
+label{pp:flask_pool1:compute}
 
-When working with menus, the compute function is allowed to take *only
-one argument* called `menu`. This object is used to extract
+When working with pools, the compute function is allowed to take *only
+one argument* called `pool`. This object is used to extract
 input data. Basically, the value of any data item `my parameter`
-in the menu is extracted by
+in the pool is extracted by
 
 !bc pycod
-variable = menu.get_value('my parameter')
+variable = pool.get_value('my parameter')
 !ec
-In case multiple data items have the same name, enough of the submenu path
+In case multiple data items have the same name, enough of the subpool path
 must be given, e.g.,
 
 !bc pycod
-variable = menu.get_value('My Submenu1/my parameter')
+variable = pool.get_value('My Subpool1/my parameter')
 !ec
 Our specific computing function is a wrapper for `compute_motion_and_forces`:
 
-@@@CODE src-pp/compute.py fromto: compute_motion_and_forces_with_menu\(@def compute_motion_and_forces_with_menu_loop\(
+@@@CODE src-pp/compute.py fromto: compute_motion_and_forces_with_pool\(@def compute_motion_and_forces_with_pool_loop\(
 
-The assumption is that the menu object provides enough input data for
+The assumption is that the pool object provides enough input data for
 the compute function. If this assumption does not hold, one can
 simply make a class, store extra data as attributes in the class,
 and let the compute function be a method in the class.
 
 ===== A command-line and file interface =====
-label{pp:flask_menu1:cml_file}
+label{pp:flask_pool1:cml_file}
 
-Having defined a menu, it is trivial to get a command-line interface
+Having defined a pool, it is trivial to get a command-line interface
 in the application. Just perform
 
 !bc pycod
-from parampool.menu.UI import set_values_from_command_line
-menu = set_values_from_command_line(menu)
+from parampool.pool.UI import set_values_from_command_line
+pool = set_values_from_command_line(pool)
 !ec
-Now `menu` has values loaded from the command line. The name of
-the command-line options follow the names in the menu, but with
+Now `pool` has values loaded from the command line. The name of
+the command-line options follow the names in the pool, but with
 underscore replacing whitespace: `--Initial_motion_data/Initial_angle`.
 However, in this case `--Initial_angle` also works since it is a
-unique name in the menu tree.
+unique name in the pool tree.
 
 One can also read data from a file with syntax
 
 !bc dat
-submenu Initial motion data
+subpool Initial motion data
   Initial angle = 45.5        # small perturbation
   Spinrate = 20
 end
-submenu Body and environment data
+subpool Body and environment data
   Wind velocity = -10  ! m/s  # units appear after ! (before #)
 end
 !ec
-Data from the file is loaded into the menu by
+Data from the file is loaded into the pool by
 
 !bc pycod
-from parampool.menu.UI import set_defaults_from_file
-menu = set_defaults_from_file(menu)
+from parampool.pool.UI import set_defaults_from_file
+pool = set_defaults_from_file(pool)
 !ec
 To activate reading from file `mydat.dat`, one must supply the
-command-line arguments `--menufile mydat.dat`.
+command-line arguments `--poolfile mydat.dat`.
 
 !bnotice Tip: autogenerate the file with default data
-The function `write_menufile(menu)` in `parampool.menu.UI`
-writes the current menu data to a file with the right syntax.
-This is a simple way of getting the complete menu in the file.
+The function `write_poolfile(pool)` in `parampool.pool.UI`
+writes the current pool data to a file with the right syntax.
+This is a simple way of getting the complete pool in the file.
 !enotice
 
 Often, an application will first load default values from file,
 then from the command line, and finally launch the graphical web
-interface for enabling interactive setting of values in the menu system.
+interface for enabling interactive setting of values in the pool system.
 Automatic generation of such interactive web interfaces constitutes
 the next topic. The lines above for loading parameters from file
 and command-line are automatically generated when a web interface
-is requested (see Section ref{pp:flask_menu1:GUI_cml_file}).
+is requested (see Section ref{pp:flask_pool1:GUI_cml_file}).
 
 
 ===== Generating a web-based user interface =====
-label{pp:flask_menu1:GUI}
+label{pp:flask_pool1:GUI}
 
-With a menu function and a compute function at hand,
+With a pool function and a compute function at hand,
 it remains to make a new directory, copy the module(s) containing
-the menu function and compute function to this directory,
-and write a "`generate.py`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_menu1" file with the content
+the pool function and compute function to this directory,
+and write a "`generate.py`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool1" file with the content
 
-@@@CODE src-pp/flask_menu1/generate.py
+@@@CODE src-pp/flask_pool1/generate.py
 
-The `generate` function will now use the information in the menu
+The `generate` function will now use the information in the pool
 (and not the arguments in the compute function!) to generate
 a flexible user interface. Note that an Internet connection
 is required. After running
@@ -871,22 +872,22 @@ The user interface is started by
 Terminal> python controller.py
 !ec
 Open the URL `http://127.0.0.1:5000` in a web broswer to see an interface
-as the one in Figure ref{pp:flask_menu1:fig1}.
+as the one in Figure ref{pp:flask_pool1:fig1}.
 
-FIGURE: [fig-pp/flask_menu1_closed.png, width=800] Web interface in closed form. label{pp:flask_menu1:fig1}
+FIGURE: [fig-pp/flask_pool1_closed.png, width=800] Web interface in closed form. label{pp:flask_pool1:fig1}
 
 
 ===== Operating the user interface =====
-label{pp:flask_menu1:GUI_op}
+label{pp:flask_pool1:GUI_op}
 
-The menu tree is mapped onto a visual structure often used for
+The pool tree is mapped onto a visual structure often used for
 directory trees. Clicking on *open all* at the top of the user interface
-expands all submenus so that all parameters (data items) become visible.
-Figure ref{pp:flask_menu1:fig2} displays the result in the Opera browser.
+expands all subpools so that all parameters (data items) become visible.
+Figure ref{pp:flask_pool1:fig2} displays the result in the Opera browser.
 Note that in this type of user interface, the name of each data item
 is typeset in LaTeX and inserted as a picture.
 
-FIGURE: [fig-pp/flask_menu1_open.png, width=800] Web interface in fully expanded form. label{pp:flask_menu1:fig2}
+FIGURE: [fig-pp/flask_pool1_open.png, width=800] Web interface in fully expanded form. label{pp:flask_pool1:fig2}
 
 The following technical points must be mentioned.
 
@@ -911,7 +912,7 @@ The following technical points must be mentioned.
  o When the widget is `range`, an HTML5 range field is used, which is
    usually rendered as a slider in browsers. The slider gets by default
    100 steps (can be changed or specified individually for any data item).
- o With the `select` widget we get a pull-down menu with the different
+ o With the `select` widget we get a pull-down pool with the different
    options.
  o Any data item whose default value is `True` or `False` maps directly to
    a checkbox for boolean parameters.
@@ -951,20 +952,20 @@ We can try out the interface:
    and unit information is showed if both are given in the
    data item definition.
 
-You should see something like Figure ref{pp:flask_menu1:fig3}.
+You should see something like Figure ref{pp:flask_pool1:fig3}.
 
-FIGURE: [fig-pp/flask_menu1_filled.png, width=800] Web interface with input parameters filled out. label{pp:flask_menu1:fig3}
+FIGURE: [fig-pp/flask_pool1_filled.png, width=800] Web interface with input parameters filled out. label{pp:flask_pool1:fig3}
 
-Now, press the *Compute* button. Figure ref{pp:flask_menu1:fig4} shows
+Now, press the *Compute* button. Figure ref{pp:flask_pool1:fig4} shows
 the resulting response. You can now play around and click the checkbox
 for *Plot simplified motion* and the recompute to see the effects
 of wind against the motion, drag, and lift (which are substantial in
 this example).
 
-FIGURE: [fig-pp/flask_menu1_result.png, width=800] Web interface with input and results. label{pp:flask_menu1:fig4}
+FIGURE: [fig-pp/flask_pool1_result.png, width=800] Web interface with input and results. label{pp:flask_pool1:fig4}
 
 ===== Detection of wrong input =====
-label{pp:flask_menu1:GUI_error}
+label{pp:flask_pool1:GUI_error}
 
 __Text in a number field.__
 Write `abc` in the "Initial velocity" field and press the *Compute* button.
@@ -1006,62 +1007,62 @@ gives an informative error message if the answer is not as expected:
 `None` or a floating-point number.
 
 ===== Loading parameters from file and the command line =====
-label{pp:flask_menu1:GUI_cml_file}
+label{pp:flask_pool1:GUI_cml_file}
 
 Parameters can be assigned default values in a file and then other
 values on the command line,
-see Section ref{pp:flask_menu1:cml_file},
+see Section ref{pp:flask_pool1:cml_file},
 before the web GUI is offered to the
 user. When autogenerating the web interface, the magic lines from
-Section ref{pp:flask_menu1:cml_file} are automatically inserted
+Section ref{pp:flask_pool1:cml_file} are automatically inserted
 in the `controller.py` file (for Flask or `views.py for Django).
 This means that when starting `python controller.py` we may add
-`--menufile name` and any set of command-line options for setting
+`--poolfile name` and any set of command-line options for setting
 individual parameters. This makes it easy to control which default
 values that will appear in the web GUI.
 
-===== Specifying a menu using an API =====
+===== Specifying a pool using an API =====
 
-Instead of listing all the entries in the menu tree as strings, lists,
+Instead of listing all the entries in the pool tree as strings, lists,
 and dicts in a nested data structure, you can use the
-Application Programming Interface (API) of the `parampool.menu` package.
-The menu defined above is alternatively programmed like this using
+Application Programming Interface (API) of the `parampool.pool` package.
+The pool defined above is alternatively programmed like this using
 the API:
 
-@@@CODE src-pp/compute.py fromto: def menu_definition_api@menu_definition_api_with_separate_submenus
+@@@CODE src-pp/compute.py fromto: def pool_definition_api@pool_definition_api_with_separate_subpools
 The API is in many ways easier to use than the nested data structure
 with lists, strings, and dicts. The API resembles moving around in
 a file tree. The rules are simple:
 
- * `menu.submenu(path)` moves us to a submenu `path`, and creates
+ * `pool.subpool(path)` moves us to a subpool `path`, and creates
    it first if it does not exist. This is similar to `cd path`
    in a file tree, or `mkdir path; cd path`, if `path` does not
    exist.
- * The name of a submenu, `path`, follows the rule of file and
+ * The name of a subpool, `path`, follows the rule of file and
    directory names in a file tree: a slash is used as delimiter
-   between submenus and data items. For example:
+   between subpools and data items. For example:
 
-     * `/Main menu/Initial motion data/Initial velocity` is the
+     * `/Main pool/Initial motion data/Initial velocity` is the
        full path to the "Initial velocity" data item.
-     * Standing in the "Initial motion data" submenu,
-       `..` is the parent submenu ("Main menu"), while
+     * Standing in the "Initial motion data" subpool,
+       `..` is the parent subpool ("Main pool"), while
        `../Numerical parameters` is the correct path to the
-       "Numerical parameters" submenu. That is, we can use
+       "Numerical parameters" subpool. That is, we can use
        relative and absolute paths as in a file tree.
- * A data item is appended to the current submenu by
-   calling `menu.add_data_item`.
+ * A data item is appended to the current subpool by
+   calling `pool.add_data_item`.
 
 The look and functionality
-of this GUI (found in the "`flask_menu2`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_menu2" directory) are
-the same as in the previous one (found in the "`flask_menu1`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_menu1"
+of this GUI (found in the "`flask_pool2`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool2" directory) are
+the same as in the previous one (found in the "`flask_pool1`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool1"
 directory).
 
-===== Specifying a menu using an alternative API =====
+===== Specifying a pool using an alternative API =====
 
-There is an another way of defining submenus as well: make a functions
-for defining each submenu.
+There is an another way of defining subpools as well: make a functions
+for defining each subpool.
 
-@@@CODE src-pp/compute.py fromto: menu_definition_api_with_separate_submenus@def compute_motion_and_forces_with_menu
+@@@CODE src-pp/compute.py fromto: pool_definition_api_with_separate_subpools@def compute_motion_and_forces_with_pool
 
 This application is used to illustrate three important additional features
 of Parampool:
@@ -1087,9 +1088,9 @@ LaTeX symbol for the parameter names (the `symbol` keyword argument).
 This symbol can either be displayed as the parameter's complete name,
 or the symbol can be added to the standard name of the parameter.
 The choice is set by the `latex_name` keyword argument in the
-`generate` call in "`generate.py`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_menu3":
+`generate` call in "`generate.py`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool3":
 
-@@@CODE src-pp/flask_menu3/generate.py
+@@@CODE src-pp/flask_pool3/generate.py
 The values of `latex_name` can be `'symbol'` (symbol only) or
 `'text, symbol'` (ordinary name followed by a comma and the symbol).
 
@@ -1098,22 +1099,22 @@ The values of `latex_name` can be `'symbol'` (symbol only) or
 We can specify multiple values for parameters whose input fields are
 pure text fields. For example, for the wind velocity ($w$) parameter
 we can assign two values separated by the `&` character: `0 & -8`.
-Calling `menu.get_values('Wind velocity')` will then return
+Calling `pool.get_values('Wind velocity')` will then return
 a list `[0, -8]` rather than one number. We can hence easily
 make a loop over the multiple values for each parameter where we
 use pure text as input. Our compute function looks in this case
 like this:
 
-@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces_with_menu_loop@def compute_average
+@@@CODE src-pp/compute.py fromto: def compute_motion_and_forces_with_pool_loop@def compute_average
 Note that we accumulate the HTML code returned from the
 `compute_motion_and_forces` function that runs the simulation
-and returns the results as HTML code. Figure ref{pp:flask_menu3:fig1}
+and returns the results as HTML code. Figure ref{pp:flask_pool3:fig1}
 mathematical description of the application, LaTeX symbols as parameter names, and two input values for two parameters, leading to $2\times 2=4$ runs,
 and hence four lines of plots. One realizes how easy it is to quickly
 perform parameter studies by simply 1) writing the compute function with
-loops and `menu.get_values`, 2) separating input values by `&` in the GUI.
+loops and `pool.get_values`, 2) separating input values by `&` in the GUI.
 
-FIGURE: [fig-pp/flask_menu3_results.png, width=800] Web interface with documentation, LaTeX symbols, and multiple input values. label{pp:flask_menu3:fig1}
+FIGURE: [fig-pp/flask_pool3_results.png, width=800] Web interface with documentation, LaTeX symbols, and multiple input values. label{pp:flask_pool3:fig1}
 
 
 ===== 2DO =====
@@ -1121,12 +1122,12 @@ FIGURE: [fig-pp/flask_menu3_results.png, width=800] Web interface with documenta
  * Lorenz demo as exercise, provide the compute function and graphics,
    perhaps also good demo in web4sciapps.
  * units and text fields: Done
- * menu list: no doc
- * menu API: add doc in `doc.html`, also show possibility to call
+ * pool list: no doc
+ * pool API: add doc in `doc.html`, also show possibility to call
  * Check if multiple answers are correctly handled in DataItem,
    make `enable_multiple_answers(*args)` which turns all widgets into
    textline (or those given as arguments), make multiple loop parameters,
-   can get them as list of dicts `menu.get_multiple_values(*args)`
+   can get them as list of dicts `pool.get_multiple_values(*args)`
    (all if no argument, otherwise those params listed), let keys
    be either full path or shortest possible path, can iterate over
    this list, test in ball example by having a new function with
@@ -1140,7 +1141,7 @@ FIGURE: [fig-pp/flask_menu3_results.png, width=800] Web interface with documenta
    class since just name is used as static variable...
  * Show auto edit of the HTML code, e.g., removing Input: and Result:,
    this is easier than freezing the files and manually editing them.
-   Reason: if you add new data itmes or submenus to the menu,
+   Reason: if you add new data itmes or subpools to the pool,
    it is convenient to be able to regenerate the whole setup.
 
 !bc
@@ -1153,18 +1154,18 @@ doc = run_doconce_on_text(compute_function.__doc__)
 ===== Reading default values from command line or file =====
 
 To be programmed:
-Insert `menu = set_defaults_from_file(menu)` after calling
-`menu_function`. Then call `set_values_from_command_line(menu)`
+Insert `pool = set_defaults_from_file(pool)` after calling
+`pool_function`. Then call `set_values_from_command_line(pool)`
 to override from command line. At the end of the `controller.py` script,
-dump menu to file again with `write_menufile(filename)`.
-(The filename is given on the command line: `--menufile filename`.)
+dump pool to file again with `write_poolfile(filename)`.
+(The filename is given on the command line: `--poolfile filename`.)
 
-See the `...separate_submenus` function - it has almost
+See the `...separate_subpools` function - it has almost
 all this functionality!
 
 
 
-===== Menu with other data structures =====
+===== Pool with other data structures =====
 
 Filename and text field with special `str2type` conversion. Allow list
 syntax, but convert to array in `str2type` after list is eval'ed.
@@ -1200,12 +1201,12 @@ previous runs, there is a *Delete all* button that clears the database.
 
 ===== Python expressions as input =====
 
-This can only be done in menus unless the value of the parameter is a string (positional argument or default field as text, with explicit conversion).
-Treat menu only - drop implementation for inspection of compute function.
+This can only be done in pools unless the value of the parameter is a string (positional argument or default field as text, with explicit conversion).
+Treat pool only - drop implementation for inspection of compute function.
 
 Describe input as
 
- * `sin(2.5)*exp(-1)` (need to specify py code to be included in the controller/views or add such code manually? or do from numpy import * always? an argument with pycode is probably smart, the menu needs something similar for running str2type=eval in the right namespaces, could just be an additional data item attr namespace that, if present, is used if str2type is eval - yes, that's the solution)
+ * `sin(2.5)*exp(-1)` (need to specify py code to be included in the controller/views or add such code manually? or do from numpy import * always? an argument with pycode is probably smart, the pool needs something similar for running str2type=eval in the right namespaces, could just be an additional data item attr namespace that, if present, is used if str2type is eval - yes, that's the solution)
 
  * `MySpecialObject(2,3,4)` (works)
 
@@ -1279,11 +1280,11 @@ it such that
    * damping with two values and radio buttons, b
    * s is a text expression
    * F is a filename (0 is default)
-   * there is a submenu for F with different models: filename,
-     A*sin(w*t) (submenu), white noise with intensity, formula of t
-   * another submenu for s models
+   * there is a subpool for F with different models: filename,
+     A*sin(w*t) (subpool), white noise with intensity, formula of t
+   * another subpool for s models
 
-On the main menu: damping can have radio buttons for linear b*u and
+On the main pool: damping can have radio buttons for linear b*u and
 quadratic b*u**2, F has list of different type of forces
 
 

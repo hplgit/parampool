@@ -1,6 +1,6 @@
 """
 Representation of a menu tree.
-class ``Menu`` wraps class ``Tree`` and makes that class more suitable
+class ``Pool`` wraps class ``Tree`` and makes that class more suitable
 for menus by renaming methods and adding functionality.
 """
 from parampool.tree.SubTree import SubTree
@@ -8,7 +8,7 @@ from parampool.menu.DataItem import DataItem
 from parampool.tree.Tree import Tree, hash_all_leaves, get_leaf
 from parampool.PhysicalQuantities import PhysicalQuantity as PQ
 
-class Menu(Tree):
+class Pool(Tree):
     def __init__(self, root=None, root_name='main'):
         Tree.__init__(self, root, root_name)
         for level in self.level_name:
@@ -24,8 +24,8 @@ class Menu(Tree):
         """
         self.add_leaf(DataItem(**data_item_attributes))
 
-    submenu = Tree.subtree
-    change_submenu = Tree.change_subtree
+    subpool = Tree.subtree
+    change_subpool = Tree.change_subtree
 
     def update(self):
         self.paths2data_items = hash_all_leaves(self)
@@ -112,60 +112,50 @@ class Menu(Tree):
             raise NameError('Cannot find DataItem object with name "%s"' %
                             data_item_name)
         if unit is None:
-            raise ValueError('Menu.get_value_unit: unit is not registered for "%s"' % data_item_name)
+            raise ValueError('Pool.get_value_unit: unit is not registered for "%s"' % data_item_name)
         return PQ('%g %s' % (value, unit))
 
 import nose.tools as nt
 from parampool.utils import assert_equal_text
 
-"""
-Not used:
-def make_test_menu_dummy():
-    return test_Menu()
+def test_Pool():
+    p = Pool()
+    p.add_data_item(name='item1', default=1.0)
+    nt.assert_equal(p.locator.name, 'main')
+    nt.assert_equal(p.locator.tree[-1].name, 'item1')
 
-def make_test_menu_drag():
-    import parampool.menu.UI
-    return parampool.menu.UI.test_listtree2Menu()
-"""
+    p.add_data_item(name='item2', default=2.0)
+    p.subtree('sub1')
+    nt.assert_equal(p.locator.name, 'sub1')
 
-def test_Menu():
-    m = Menu()
-    m.data_item(name='item1', default=1.0)
-    nt.assert_equal(m.locator.name, 'main')
-    nt.assert_equal(m.locator.tree[-1].name, 'item1')
+    p.add_data_item(name='item3', default=3)
+    nt.assert_equal(p.locator.name, 'sub1')
+    nt.assert_equal(p.locator.tree[-1].name, 'item3')
 
-    m.data_item(name='item2', default=2.0)
-    m.subtree('sub1')
-    nt.assert_equal(m.locator.name, 'sub1')
+    p.subtree('../sub2')
+    p.add_data_item(name='item4', default=4)
+    nt.assert_equal(p.locator.name, 'sub2')
+    nt.assert_equal(p.locator.tree[-1].name, 'item4')
+    nt.assert_equal(str(p.locator), '[DataItem "item4"]')
+    nt.assert_equal(p.locator.get_parent().name, 'main')
 
-    m.data_item(name='item3', default=3)
-    nt.assert_equal(m.locator.name, 'sub1')
-    nt.assert_equal(m.locator.tree[-1].name, 'item3')
+    p.subtree('sub3')
+    p.add_data_item(name='item5', default=5)
+    p.subtree('sub4')
+    p.add_data_item(name='item6', default=6)
+    p.add_data_item(name='item7', default=7)
+    p.add_data_item(name='item8', default=8)
+    p.add_data_item(name='item9', default=9)
+    p.subtree('..')
+    nt.assert_equal(p.locator.name, 'sub3')
 
-    m.subtree('../sub2')
-    m.data_item(name='item4', default=4)
-    nt.assert_equal(m.locator.name, 'sub2')
-    nt.assert_equal(m.locator.tree[-1].name, 'item4')
-    nt.assert_equal(str(m.locator), '[DataItem "item4"]')
-    nt.assert_equal(m.locator.get_parent().name, 'main')
-
-    m.subtree('sub3')
-    m.data_item(name='item5', default=5)
-    m.subtree('sub4')
-    m.data_item(name='item6', default=6)
-    m.data_item(name='item7', default=7)
-    m.data_item(name='item8', default=8)
-    m.data_item(name='item9', default=9)
-    m.subtree('..')
-    nt.assert_equal(m.locator.name, 'sub3')
-
-    m.data_item(name='item10', default=10)
-    m.subtree('sub4')
-    m.subtree('../../sub5')
-    m.data_item(name='item11', default=11)
-    m.subtree('/sub2/sub3/sub4')
-    m.data_item(name='item12', default=12)
-    m.update()
+    p.add_data_item(name='item10', default=10)
+    p.subtree('sub4')
+    p.subtree('../../sub5')
+    p.add_data_item(name='item11', default=11)
+    p.subtree('/sub2/sub3/sub4')
+    p.add_data_item(name='item12', default=12)
+    p.update()
 
     reference = """\
 item1
@@ -185,10 +175,10 @@ sub menu "sub2" (level=0)
         item10
     subsub menu "sub5" (level=1)
         item11"""
-    assert_equal_text(str(m), reference)
+    assert_equal_text(str(p), reference)
 
     # Test setting values
-    return m
+    return p
 
 if __name__ == '__main__':
-    test_Menu()
+    test_Pool()

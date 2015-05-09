@@ -3,7 +3,7 @@ from distutils.util import strtobool
 
 def generate_controller(compute_function, classname,
                         outfile, filename_template,
-                        menu_function, overwrite,
+                        pool_function, overwrite,
                         filename_model, filename_forms=None,
                         filename_db_models=None, app_file=None,
                         login=False):
@@ -16,12 +16,12 @@ def generate_controller(compute_function, classname,
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
 
-    if menu_function:
-        menu_function_name = menu_function.__name__
-        menu_function_file = menu_function.__module__
-        menu = True
+    if pool_function:
+        pool_function_name = pool_function.__name__
+        pool_function_file = pool_function.__module__
+        pool = True
     else:
-        menu = False
+        pool = False
 
     import inspect
     arg_names = inspect.getargspec(compute_function).args
@@ -30,13 +30,13 @@ def generate_controller(compute_function, classname,
     # Add code for file upload only if it is strictly needed
     file_upload = False
 
-    if menu:
+    if pool:
         # FIXME: This should be replaced by a good regex
         filetxt = ("widget='file'", 'widget="file"',
                    "widget = 'file'", 'widget = "file"')
-        menutxt = open(menu_function_file + ".py", 'r').read()
+        pooltxt = open(pool_function_file + ".py", 'r').read()
         for txt in filetxt:
-            if txt in menutxt:
+            if txt in pooltxt:
                 file_upload = True
                 break
     else:
@@ -60,20 +60,20 @@ def generate_controller(compute_function, classname,
 import os
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
 ''' % vars()
-    if menu:
+    if pool:
         code += '''
-# Menu object (must be imported before %(model_module)s)
+# Pool object (must be imported before %(model_module)s)
 # AEJ: Why? With login we don't even have this file.
 # TODO: Find out the reason for this order of imports.
-from %(menu_function_file)s import %(menu_function_name)s as menu_function
-menu = menu_function()
+from %(pool_function_file)s import %(pool_function_name)s as pool_function
+pool = pool_function()
 
-# Can define other default values in a file: --menufile name
-from parampool.menu.UI import set_defaults_from_file
-menu = set_defaults_from_file(menu)
+# Can define other default values in a file: --poolfile name
+from parampool.pool.UI import set_defaults_from_file
+pool = set_defaults_from_file(pool)
 # Can override default values on the command line
-from parampool.menu.UI import set_values_from_command_line
-menu = set_values_from_command_line(menu)
+from parampool.pool.UI import set_values_from_command_line
+pool = set_values_from_command_line(pool)
 ''' % vars()
     code += '''
 from flask import Flask, render_template, request'''
@@ -133,13 +133,13 @@ def index():
         if file_upload:
             code += '''
         if request.files:'''
-            if menu:
+            if pool:
                 code += '''
             for name, file in request.files.iteritems():
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                    menu.set_value(name, filename)
+                    pool.set_value(name, filename)
                 else:
                     raise TypeError("Illegal filename")
 '''
@@ -160,16 +160,16 @@ def index():
             code += '''
         if form.validate():
 '''
-        if menu:
+        if pool:
             code += '''
-            # Send data to Menu object
+            # Send data to Pool object
             for field in form:
                 if field.name not in request.files:
                     name = field.description
                     value = field.data
-                    menu.set_value(name, value)
+                    pool.set_value(name, value)
 
-            result = compute(menu)
+            result = compute(pool)
             if user.is_authenticated():
                 object = %(classname)s()
                 form.populate_obj(object)
@@ -179,7 +179,7 @@ def index():
             if file_upload:
                 code += '''\
                 for name, file in request.files.iteritems():
-                    setattr(object, name, menu.get(name).get_value())
+                    setattr(object, name, pool.get(name).get_value())
 '''
             code += '''\
                 db.session.add(object)
@@ -271,13 +271,13 @@ def index():
             code += '''
         # Save uploaded file if it exists and is valid
         if request.files:'''
-            if menu:
+            if pool:
                 code += '''
             for name, file in request.files.iteritems():
                 if allowed_file(file.filename):
                     filename = secure_filename(file.filename)
                     file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                    menu.set_value(name, filename)
+                    pool.set_value(name, filename)
                 else:
                     raise TypeError("Illegal filename")
 '''
@@ -294,16 +294,16 @@ def index():
             session["filename"] = None
 '''
 
-        if menu:
+        if pool:
             code += '''
-        # Send data to Menu object
+        # Send data to Pool object
         for field in form:
             if field.name not in request.files:
                 name = field.description
                 value = field.data
-                data_item = menu.set_value(name, value)
+                data_item = pool.set_value(name, value)
 
-        result = compute(menu)
+        result = compute(pool)
 '''
         else:
             code += '''
@@ -318,23 +318,23 @@ def index():
 
 ''' % vars()
 
-    if menu:
+    if pool:
         code += '''
-def compute(menu):
+def compute(pool):
     """
     Generic function for calling compute_function with values
-    taken from the menu object.
+    taken from the pool object.
     Return the output from the compute_function.
     """
 
     # compute_function must have only one positional argument
-    # named menu
+    # named pool
     import inspect
     arg_names = inspect.getargspec(compute_function).args
-    if len(arg_names) == 1 and arg_names[0] == "menu":
-        result = compute_function(menu)
+    if len(arg_names) == 1 and arg_names[0] == "pool":
+        result = compute_function(pool)
     else:
-        raise TypeError('%s(%s) can only have one argument named "menu"'
+        raise TypeError('%s(%s) can only have one argument named "pool"'
                         % (compute_function.__name__, ', '.join(arg_names)))
     return result
 '''
@@ -541,10 +541,10 @@ if __name__ == '__main__':
     app.run(debug=True)
 ''' % vars()
 
-    if menu:
+    if pool:
         code += """
-    from parampool.menu.UI import write_menufile
-    write_menufile(menu, '.tmp_menu.dat')
+    from parampool.pool.UI import write_poolfile
+    write_poolfile(pool, '.tmp_pool.dat')
 """
 
     if outfile is None:

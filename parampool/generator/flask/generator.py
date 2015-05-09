@@ -4,7 +4,7 @@ from generate_controller import generate_controller
 from generate_template import generate_template
 
 def generate(compute_function,
-             menu_function=None,
+             pool_function=None,
              classname=None,
              default_field='TextField',
              filename_template='view.html',
@@ -26,21 +26,21 @@ def generate(compute_function,
      * the return values from `compute_function` are presented.
 
     There are two basic ways to extract information about the input
-    arguments to `compute_function`. Either a `menu` of type `Menu`)
+    arguments to `compute_function`. Either a `pool` of type `Pool`)
     is specified, or the code can inspect the names of the arguments
     of the `compute_function`.
 
-    The `menu` object organizes a tree of input parameters, each with
+    The `pool` object organizes a tree of input parameters, each with
     at least two attribues: a name and a default value. Other
     attribures, such as widget (form) type, valid range of values,
-    help string, etc., can also be assigned.  The `menu` object is
+    help string, etc., can also be assigned.  The `pool` object is
     mapped to a web form and `compute_function` is called with keyword
     arguments, each argument consisting of the name of the parameter
-    in the menu and the value read from the web form. The names of the
+    in the pool and the value read from the web form. The names of the
     arguments in `compute_function` and the names of the parameters in
-    the `menu` object must correspond exactly.
+    the `pool` object must correspond exactly.
 
-    If no `menu` object is given, the names of the arguments in
+    If no `pool` object is given, the names of the arguments in
     `compute_function` are extracted and used in the web form.
     In the case where all arguments are positional (no default values),
     the web form consists of text fields for each argument, unless
@@ -63,14 +63,14 @@ def generate(compute_function,
         classname = ''.join([s.capitalize()
                              for s in _compute_function_name.split('_')])
 
-    if menu_function:
-        menu = menu_function()
+    if pool_function:
+        pool = pool_function()
     else:
-        menu = None
+        pool = None
 
     # Copy static files
     import os, shutil, tarfile
-    if menu is not None:
+    if pool is not None:
         shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
                     os.curdir)
         archive = tarfile.open('static.tar.gz')
@@ -95,27 +95,27 @@ def generate(compute_function,
         app_file = "app.py"
 
     generate_template(compute_function, classname, filename_template,
-                      menu, overwrite_template, MathJax,
+                      pool, overwrite_template, MathJax,
                       doc, login=enable_login, latex_name=latex_name)
 
     if enable_login:
         from generate_forms_and_models import generate_forms_and_models
         generate_forms_and_models(compute_function, classname,
-                                  default_field, menu,
+                                  default_field, pool,
                                   filename_forms,
                                   filename_db_models,
                                   app_file)
         generate_controller(compute_function, classname, filename_controller,
-                            filename_template, menu_function,
+                            filename_template, pool_function,
                             overwrite_controller, filename_model,
                             filename_forms, filename_db_models,
                             app_file, enable_login)
     else:
         from generate_model import generate_model
         generate_model(compute_function, classname, filename_model,
-                       default_field, menu, overwrite_model)
+                       default_field, pool, overwrite_model)
         generate_controller(compute_function, classname, filename_controller,
-                            filename_template, menu_function,
+                            filename_template, pool_function,
                             overwrite_controller, filename_model)
 
     # Generate clean-up script

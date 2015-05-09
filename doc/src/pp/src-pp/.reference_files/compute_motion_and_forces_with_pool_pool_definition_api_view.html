@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Flask compute_motion_and_forces_with_pool app</title>
+    <link rel="StyleSheet" href="static/dtree.css" type="text/css" />
+    <script type="text/javascript" src="static/dtree.js"></script>
+  </head>
+  <body>
+
+  
+
+  <!-- Input and Results are typeset as a two-column table -->
+  <table>
+  <tr>
+  <td valign="top">
+    <h2>Input:</h2>
+    <div class="dtree">
+    <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
+    <form method=post action="" enctype="multipart/form-data">
+      <script type="text/javascript">
+        d = new dTree('d');
+                    d.add(0, -1, 'Main pool');
+                    d.add(1, 0, 'Initial motion data');
+                    d.add(2, 1, '&nbsp; {{ form.Initial_velocity(size=11) }} {% if form.Initial_velocity.errors %} {% for error in form.Initial_velocity.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', '', '', 'static/latex/Main_pool/Initial_motion_data/Initial_velocity.png');
+                    d.add(3, 1, '&nbsp; {{ form.Initial_angle(size=11) }} {% if form.Initial_angle.errors %} {% for error in form.Initial_angle.errors %} <err> {{error}} </err> {% endfor %}{% endif %}  &nbsp; <span id="range"></span>', '#', '', '', 'static/latex/Main_pool/Initial_motion_data/Initial_angle.png');
+                    d.add(4, 1, '&nbsp; {{ form.Spinrate(size=11) }} {% if form.Spinrate.errors %} {% for error in form.Spinrate.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Unit: 1/s', '', 'static/latex/Main_pool/Initial_motion_data/Spinrate.png');
+                    d.add(5, 0, 'Body and environment data');
+                    d.add(6, 5, '&nbsp; {{ form.Wind_velocity(size=11) }} {% if form.Wind_velocity.errors %} {% for error in form.Wind_velocity.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Wind velocity in positive x direction.', '', 'static/latex/Main_pool/Body_and_environment_data/Wind_velocity.png');
+                    d.add(7, 5, '&nbsp; {{ form.Mass(size=11) }} {% if form.Mass.errors %} {% for error in form.Mass.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Mass of body. Unit: kg', '', 'static/latex/Main_pool/Body_and_environment_data/Mass.png');
+                    d.add(8, 5, '&nbsp; {{ form.Radius(size=11) }} {% if form.Radius.errors %} {% for error in form.Radius.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Radius of spherical body. Unit: m', '', 'static/latex/Main_pool/Body_and_environment_data/Radius.png');
+                    d.add(9, 0, 'Numerical parameters');
+                    d.add(10, 9, '&nbsp; {{ form.Method }} {% if form.Method.errors %} {% for error in form.Method.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Numerical solution method.', '', 'static/latex/Main_pool/Numerical_parameters/Method.png');
+                    d.add(11, 9, '&nbsp; {{ form.Time_step(size=11) }} {% if form.Time_step.errors %} {% for error in form.Time_step.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Unit: s', '', 'static/latex/Main_pool/Numerical_parameters/Time_step.png');
+                    d.add(12, 0, 'Plot parameters');
+                    d.add(13, 12, '&nbsp; {{ form.Plot_simplified_motion(size=11) }} {% if form.Plot_simplified_motion.errors %} {% for error in form.Plot_simplified_motion.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Plot motion without drag+lift forces.', '', 'static/latex/Main_pool/Plot_parameters/Plot_simplified_motion.png');
+                    d.add(14, 12, '&nbsp; {{ form.New_plot(size=11) }} {% if form.New_plot.errors %} {% for error in form.New_plot.errors %} <err> {{error}} </err> {% endfor %}{% endif %} ', '#', 'Erase all old curves.', '', 'static/latex/Main_pool/Plot_parameters/New_plot.png');
+        document.write(d);
+      </script>
+    </div>
+    <p>
+    <input type="submit" value="Compute">
+    </form>
+    </p>
+    </td>
+
+    <td valign="top">
+      {% if result != None %}
+        <h2>Result:</h2>
+        {{ result|safe }}
+
+    {% endif %}
+    </td>
+    </tr>
+    </table>
+  </body>
+</html>

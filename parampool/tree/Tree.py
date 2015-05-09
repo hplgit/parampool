@@ -32,11 +32,11 @@ class Tree:
                 new_subtree = SubTree(path.basename(),
                                       parent=self.locator)
             else:
-                if isinstance(subtree, Menu):
+                if isinstance(subtree, Pool):
                     subtree = subtree.root  # extract subtree
                 if not isinstance(subtree, tree.SubTree):
                     raise TypeError(
-                        'subtree must be Menu or submenu/SubTree, not %s'
+                        'subtree must be Pool or subpool/SubTree, not %s'
                         % type(subtree))
                 new_subtree = subtree
             self.locator.add(new_subtree)

@@ -7,7 +7,7 @@ Automatically generated HTML file from DocOnce source
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="DocOnce: https://github.com/hplgit/doconce/" />
 <meta name="description" content="Parampool Tutorial">
-<meta name="keywords" content="submenu,data item">
+<meta name="keywords" content="subpool,data item">
 
 <title>Parampool Tutorial</title>
 
@@ -50,44 +50,44 @@ code { color: inherit; background-color: transparent; }
                'pp:flask4'),
               (' Django interface ', 3, None, '___sec11'),
               (' Other types of function arguments ', 2, None, '___sec12'),
-              (' Working with a menu of input parameters ',
+              (' Working with a pool of input parameters ',
                1,
-               'pp:flask_menu1',
-               'pp:flask_menu1'),
-              (' Specify a menu as a list ',
+               'pp:flask_pool1',
+               'pp:flask_pool1'),
+              (' Specify a pool as a list ',
                2,
-               'pp:flask_menu1:list',
-               'pp:flask_menu1:list'),
+               'pp:flask_pool1:list',
+               'pp:flask_pool1:list'),
               (' Attributes in data items ',
                2,
-               'pp:flask_menu1:dataitem',
-               'pp:flask_menu1:dataitem'),
+               'pp:flask_pool1:dataitem',
+               'pp:flask_pool1:dataitem'),
               (' The compute function ',
                2,
-               'pp:flask_menu1:compute',
-               'pp:flask_menu1:compute'),
+               'pp:flask_pool1:compute',
+               'pp:flask_pool1:compute'),
               (' A command-line and file interface ',
                2,
-               'pp:flask_menu1:cml_file',
-               'pp:flask_menu1:cml_file'),
+               'pp:flask_pool1:cml_file',
+               'pp:flask_pool1:cml_file'),
               (' Generating a web-based user interface ',
                2,
-               'pp:flask_menu1:GUI',
-               'pp:flask_menu1:GUI'),
+               'pp:flask_pool1:GUI',
+               'pp:flask_pool1:GUI'),
               (' Operating the user interface ',
                2,
-               'pp:flask_menu1:GUI_op',
-               'pp:flask_menu1:GUI_op'),
+               'pp:flask_pool1:GUI_op',
+               'pp:flask_pool1:GUI_op'),
               (' Detection of wrong input ',
                2,
-               'pp:flask_menu1:GUI_error',
-               'pp:flask_menu1:GUI_error'),
+               'pp:flask_pool1:GUI_error',
+               'pp:flask_pool1:GUI_error'),
               (' Loading parameters from file and the command line ',
                2,
-               'pp:flask_menu1:GUI_cml_file',
-               'pp:flask_menu1:GUI_cml_file'),
-              (' Specifying a menu using an API ', 2, None, '___sec22'),
-              (' Specifying a menu using an alternative API ',
+               'pp:flask_pool1:GUI_cml_file',
+               'pp:flask_pool1:GUI_cml_file'),
+              (' Specifying a pool using an API ', 2, None, '___sec22'),
+              (' Specifying a pool using an alternative API ',
                2,
                None,
                '___sec23'),
@@ -102,7 +102,7 @@ code { color: inherit; background-color: transparent; }
                2,
                None,
                '___sec28'),
-              (' Menu with other data structures ', 2, None, '___sec29'),
+              (' Pool with other data structures ', 2, None, '___sec29'),
               (' Advanced topics ', 1, None, '___sec30'),
               (' Login and archival of results ', 2, None, '___sec31'),
               (' Animations ', 2, None, '___sec32'),
@@ -159,7 +159,7 @@ MathJax.Hub.Config({
         <ul class="dropdown-menu">
      <!-- navigation toc: --> <li><a href="._pp002.html#___sec1" style="font-size: 80%;">Simulation program</a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
-     <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_menu1" style="font-size: 80%;">Working with a menu of input parameters</a></li>
+     <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
      <!-- navigation toc: --> <li><a href="._pp005.html#___sec30" style="font-size: 80%;">Advanced topics</a></li>
      <!-- navigation toc: --> <li><a href="._pp006.html#___sec34" style="font-size: 80%;">Exercises</a></li>
      <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
@@ -202,22 +202,23 @@ MathJax.Hub.Config({
 <center>[1] <b>Center for Biomedical Computing, Simula Research Laboratory</b></center>
 <center>[2] <b>Department of Informatics, University of Oslo</b></center>
 <p>
-<center><h4>May 8, 2015</h4></center> <!-- date -->
+<center><h4>May 9, 2015</h4></center> <!-- date -->
 <p>
 <b>Summary.</b> Parampool is a Python package for handling a potentially
 large pool of input parameters in scientific applications. The
 simplest use is to pass a Python function to Parampool and get back a
 web interface for setting the arguments to the function. More powerful
-use consists in defining an input <em>menu</em>, which is a tree structure of
-input data, where data items (parameters) are organized hierarchically
-in submenus. Each data item is associated with a name, default value,
-unit, help text, widget type, validation information, etc. Different
-types of sophisticated user interfaces can then be automatically
-generated: a graphical web interface (via Flask or Django), a
-command-line interface, and a file-based interface.  The tutorial
-describes specific examples on how to to program Parampool to generate
-user interfaces and how to operate them. With very little efforts,
-you can take a scientific application and equip it with a fancy GUI.
+use consists in defining a <em>pool</em> of input parameters, which is a tree
+structure of input data, where data items (parameters) are organized
+hierarchically in subpools. Each data item is associated with a name,
+default value, unit, help text, widget type, validation information,
+etc. Different types of sophisticated user interfaces can then be
+automatically generated: a graphical web interface (via Flask or
+Django), a command-line interface, and a file-based interface.  The
+tutorial describes specific examples on how to to program Parampool to
+generate user interfaces and how to operate them. With very little
+efforts, you can take a scientific application and equip it with a
+fancy GUI.
 
 <p>
 

@@ -6,7 +6,7 @@ from generate_template import generate_template
 
 def generate(compute_function,
              classname=None,
-             menu=None,
+             pool=None,
              default_field='TextField',
              output_template='view.html',
              overwrite_template=False,
@@ -23,21 +23,21 @@ def generate(compute_function,
      * the return values from `compute_function` are presented.
 
     There are two basic ways to extract information about the input
-    arguments to `compute_function`. Either a `menu` of type `Menu`)
+    arguments to `compute_function`. Either a `pool` of type `Pool`)
     is specified, or the code can inspect the names of the arguments
     of the `compute_function`.
 
-    The `menu` object organizes a tree of input parameters, each with
+    The `pool` object organizes a tree of input parameters, each with
     at least two attribues: a name and a default value. Other
     attribures, such as widget (form) type, valid range of values,
-    help string, etc., can also be assigned.  The `menu` object is
+    help string, etc., can also be assigned.  The `pool` object is
     mapped to a web form and `compute_function` is called with keyword
     arguments, each argument consisting of the name of the parameter
-    in the menu and the value read from the web form. The names of the
+    in the pool and the value read from the web form. The names of the
     arguments in `compute_function` and the names of the parameters in
-    the `menu` object must correspond exactly.
+    the `pool` object must correspond exactly.
 
-    If no `menu` object is given, the names of the arguments in
+    If no `pool` object is given, the names of the arguments in
     `compute_function` are extracted and used in the web form.
     In the case where all arguments are positional (no default values),
     the web form consists of text fields for each argument, unless
@@ -64,7 +64,7 @@ def generate(compute_function,
     import os, shutil, tarfile
     shutil.copy(os.path.join(os.path.dirname(__file__), 'clean.sh'),
                 os.curdir)
-    if menu is not None:
+    if pool is not None:
         shutil.copy(os.path.join(os.path.dirname(__file__), 'static.tar.gz'),
                     os.curdir)
         archive = tarfile.open('static.tar.gz')
@@ -75,8 +75,8 @@ def generate(compute_function,
             os.mkdir('static')
 
     generate_template(compute_function, classname, output_template,
-                      menu, overwrite_template)
+                      pool, overwrite_template)
     generate_model(compute_function, classname, output_model,
-                   default_field, menu, overwrite_model)
+                   default_field, pool, overwrite_model)
     generate_controller(compute_function, classname, output_controller,
                         output_template, overwrite_controller)

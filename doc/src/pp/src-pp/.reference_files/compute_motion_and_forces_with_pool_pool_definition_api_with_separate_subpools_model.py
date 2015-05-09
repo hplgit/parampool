@@ -2,7 +2,7 @@ import wtforms as wtf
 from parampool.html5.flask.fields import HTML5FloatField, FloatRangeField, IntegerRangeField
 import flask.ext.wtf.html5 as html5
 
-class MotionAndForcesWithMenu(wtf.Form):
+class MotionAndForcesWithPool(wtf.Form):
 
     Initial_velocity       = wtf.TextField(
         label=u'Initial velocity',
@@ -25,13 +25,11 @@ class MotionAndForcesWithMenu(wtf.Form):
         default='50',
         validators=[wtf.validators.InputRequired()])
 
-    Wind_velocity          = HTML5FloatField(
+    Wind_velocity          = wtf.TextField(
         label=u'Wind velocity',
         description=u'Wind velocity',
-        default=0,
-        validators=[wtf.validators.InputRequired(),
-                    wtf.validators.NumberRange(-50, 50)],
-        min=-50, max=50, step=0.5)
+        default='0.0',
+        validators=[wtf.validators.InputRequired()])
 
     Mass                   = wtf.TextField(
         label=u'Mass',

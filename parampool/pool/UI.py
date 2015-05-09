@@ -1,26 +1,26 @@
-"""User interfaces for Menu."""
-from parampool.menu.Menu import Menu
+"""User interfaces for Pool."""
+from parampool.pool.Pool import Pool
 from parampool.tree.Tree import TreePath
 import sys, os, re
 
 class CommandLineOptions:
-    def __init__(self, menu):
-        self.menu = menu
+    def __init__(self, pool):
+        self.pool = pool
         self.update()
 
     def update(self):
         """Update the names of all command-line options."""
-        self.menu.update()
-        # Make a version of self.menu.paths2data_items where
+        self.pool.update()
+        # Make a version of self.pool.paths2data_items where
         # the paths have underscores for blanks (need to
         # search in this for short versions of options).
         self.options2data_items = {
-            path.replace(' ', '_'): self.menu.paths2data_items[path]
-            for path in self.menu.paths2data_items}
+            path.replace(' ', '_'): self.pool.paths2data_items[path]
+            for path in self.pool.paths2data_items}
 
     def set_values(self, args=sys.argv[1:], set_default=False):
         """
-        Examine the command line (args) and set values in the menu.
+        Examine the command line (args) and set values in the pool.
         if `set_default`, the default value (and not the value) is set.
         """
         from parampool.tree.Tree import get_leaf
@@ -47,20 +47,20 @@ class CommandLineOptions:
 
 # Simplified function-based API
 
-def set_defaults_from_command_line(menu):
-    clo = CommandLineOptions(menu)
+def set_defaults_from_command_line(pool):
+    clo = CommandLineOptions(pool)
     clo.set_values(set_default=True, args=sys.argv)
-    return menu
+    return pool
 
-def set_values_from_command_line(menu):
-    clo = CommandLineOptions(menu)
+def set_values_from_command_line(pool):
+    clo = CommandLineOptions(pool)
     clo.set_values(set_default=False, args=sys.argv)
-    return menu
+    return pool
 
-def set_defaults_from_file(menu, command_line_option='--menufile'):
-    """Set default values in menu based on a file."""
+def set_defaults_from_file(pool, command_line_option='--poolfile'):
+    """Set default values in pool based on a file."""
     if command_line_option not in sys.argv:
-        return menu
+        return pool
     else:
         i = sys.argv.index(command_line_option)
         if i+1 >= len(sys.argv):
@@ -71,11 +71,11 @@ def set_defaults_from_file(menu, command_line_option='--menufile'):
         del sys.argv[i]
 
         if os.path.isfile(filename):
-            return read_menufile(filename, menu, task='set defaults')
+            return read_poolfile(filename, pool, task='set defaults')
         else:
             raise IOError('file %s not found' % filename)
 
-def set_defaults_in_model_file(model_filename, menu):
+def set_defaults_in_model_file(model_filename, pool):
     """Change default values in a model file."""
     if os.path.isfile(model_filename):
         f = open(model_filename, 'r')
@@ -89,23 +89,23 @@ def set_defaults_in_model_file(model_filename, menu):
         m = re.search(pattern, text)
         if m:
             classname = m.group(1)
-            from parampool.generator.flask.generate_model import generate_model_menu
-            generate_model_menu(classname, model_filename, menu)
+            from parampool.generator.flask.generate_model import generate_model_pool
+            generate_model_pool(classname, model_filename, pool)
     elif 'models.Model' in text:
         # Django model.py file
         pattern = r'class (.+)\(models.Model\):'
         m = re.search(pattern, text)
         if m:
             classname = m.group(1)
-            from parampool.generator.django.generate_models import generate_models_menu
-            generate_models_menu(classname, model_filename, menu)
+            from parampool.generator.django.generate_models import generate_models_pool
+            generate_models_pool(classname, model_filename, pool)
 
 
 def _interpret_value(value):
     """
     Given the string `value`, try to convert it to bool, int,
     float, or keep it as string. Used to guess right str2type
-    when initializing a menu from file.
+    when initializing a pool from file.
     """
     # Do from math import * to local namespace
     # since DataItem has all math functions available
@@ -147,25 +147,25 @@ def _interpret_value(value):
 
 def load_from_file(filename):
     """
-    Create a new Menu object from a file definition. A typical
+    Create a new Pool object from a file definition. A typical
     definition of a data item is::
 
       name1 = value ! unit # help widget=...
 
     Example::
 
-      submenu Main menu
+      subpool Main pool
           rho = 1.2  ! kg/m**3  # Density. widget=float
-          submenu Numerical parameters
+          subpool Numerical parameters
               dt = 0.1 ! s # Time step (None: automatically set, otherwise float value). widget=textline
           end
       end
     """
-    menu = Menu()
-    return read_menufile(filename, menu, task='create')
+    pool = Pool()
+    return read_poolfile(filename, pool, task='create')
 
-def read_menufile(filename, menu, task='create'):
-    """Read menu file and initialize a menu or set default values."""
+def read_poolfile(filename, pool, task='create'):
+    """Read pool file and initialize a pool or set default values."""
     if isinstance(filename, basestring):
         f = open(filename, 'r')
         data = f.read()
@@ -176,14 +176,14 @@ def read_menufile(filename, menu, task='create'):
     levels = []
     for line_no, line in enumerate(data.splitlines()):
         #print line_no, line
-        #print menu
+        #print pool
 
-        if line.startswith('submenu'):
+        if line.startswith('subpool'):
             name = ' '.join(line.split()[1:])
-            menu.submenu(name)
+            pool.subpool(name)
             levels.append(name)
         elif line.startswith('end'):
-            menu.submenu('..')
+            pool.subpool('..')
             levels.pop()
         elif line.strip() == '':
             continue
@@ -222,9 +222,9 @@ def read_menufile(filename, menu, task='create'):
                         help, widget = help.split('widget=')
                         help = help.strip()
                     data['help'] = help
-                menu.add_data_item(**data)
+                pool.add_data_item(**data)
             elif task == 'set defaults':
-                data_item = menu.get(TreePath(levels + [data['name']]).to_str())
+                data_item = pool.get(TreePath(levels + [data['name']]).to_str())
                 if unit:
                     data_item.set_value('%s %s' % (value, unit))
                 else:
@@ -235,19 +235,19 @@ def read_menufile(filename, menu, task='create'):
             # line contains just the name of a data item
             data = {'name': line.strip()}
             if task == 'create':
-                menu.add_data_item(**data)
+                pool.add_data_item(**data)
             else:
-                raise SyntaxError('Wrong syntax in menu file: no value\n%s' %
+                raise SyntaxError('Wrong syntax in pool file: no value\n%s' %
                                   line)
-    return menu
+    return pool
 
-def write_menufile(menu, filename=None):
+def write_poolfile(pool, filename=None):
     """
-    Return menu as a string which can be dumped to file
+    Return pool as a string which can be dumped to file
     if filename is None, otherwise write the string to file.
     """
 
-    def data_item_output(menu_path, level, data_item, outlines):
+    def data_item_output(pool_path, level, data_item, outlines):
         indentation = '    '*level
         s = data_item.name
         if data_item.get_value() is not None:
@@ -273,19 +273,19 @@ def write_menufile(menu, filename=None):
             pass
         outlines.append('%s%s' % (indentation, s))
 
-    def submenu_start_output(menu_path, level, submenu, outlines):
+    def subpool_start_output(pool_path, level, subpool, outlines):
         indentation = '    '*level
-        outlines.append('%ssubmenu %s' % (indentation, menu_path[-1]))
+        outlines.append('%ssubpool %s' % (indentation, pool_path[-1]))
 
-    def submenu_end_output(menu_path, level, submenu, outlines):
+    def subpool_end_output(pool_path, level, subpool, outlines):
         indentation = '    '*level
         outlines.append('%send\n' % indentation)
 
     outlines = []   # list of strings (to be printed)
-    menu.traverse(
+    pool.traverse(
         callback_leaf=data_item_output,
-        callback_subtree_start=submenu_start_output,
-        callback_subtree_end=submenu_end_output,
+        callback_subtree_start=subpool_start_output,
+        callback_subtree_end=subpool_end_output,
         user_data=outlines)
     text = '\n'.join(outlines)
     if filename is not None:
@@ -294,24 +294,24 @@ def write_menufile(menu, filename=None):
         f.close()
     return text
 
-def set_data_item_attribute(menu, attribute_name, value):
-    """Set an attribute for all data items in the menu."""
+def set_data_item_attribute(pool, attribute_name, value):
+    """Set an attribute for all data items in the pool."""
     attr = {attribute_name: value}
-    menu.traverse(
-        callback_leaf=lambda menu_path, level, data_item, attr: \
+    pool.traverse(
+        callback_leaf=lambda pool_path, level, data_item, attr: \
                       data_item.data.update(attr),
         user_data=attr)
-    return menu
+    return pool
 
 
-def listtree2Menu(menu_tree):
+def listtree2Pool(pool_tree):
     """
-    Transform menu_tree, a nested list of strings and dicts,
-    to Menu representation.
+    Transform pool_tree, a nested list of strings and dicts,
+    to Pool representation.
 
     Example::
 
-    >>> menu_tree = [
+    >>> pool_tree = [
             'main', [
                 dict(name='print intermediate results', default=False),
                 dict(name='U', default=120, unit='km/h',
@@ -337,29 +337,29 @@ def listtree2Menu(menu_tree):
     """
 
     def make_data_item(
-        menu_path, level, data_item, menu):
-        menu.add_data_item(**data_item)
+        pool_path, level, data_item, pool):
+        pool.add_data_item(**data_item)
 
-    def make_submenu(
-        menu_path, level, submenu, menu):
-        path = TreePath(menu_path).to_str()
-        menu.submenu(path)
+    def make_subpool(
+        pool_path, level, subpool, pool):
+        path = TreePath(pool_path).to_str()
+        pool.subpool(path)
 
     from parampool.tree import list_tree
-    menu = Menu()
+    pool = Pool()
     list_tree.traverse_list_tree(
-        menu_tree,
+        pool_tree,
         callback_leaf=make_data_item,
-        callback_subtree_start=make_submenu,
-        user_data=menu)
-    menu.update()
-    return menu
+        callback_subtree_start=make_subpool,
+        user_data=pool)
+    pool.update()
+    return pool
 
 import nose.tools as nt
 from parampool.tree.Tree import dump
 from parampool.utils import assert_equal_text
 
-def test_listtree2Menu():
+def test_listtree2Pool():
     from math import pi
     tree = [
         'main', [
@@ -383,15 +383,15 @@ def test_listtree2Menu():
                 ],
             ],
         ]
-    m = listtree2Menu(tree)
+    m = listtree2Pool(tree)
     reference = """\
-sub menu "main" (level=0)
+sub pool "main" (level=0)
     print intermediate results
     U
-    subsub menu "fluid properties" (level=1)
+    subsub pool "fluid properties" (level=1)
         rho
         mu
-    subsub menu "body properties" (level=1)
+    subsub pool "body properties" (level=1)
         m
         V
         A
@@ -400,19 +400,19 @@ sub menu "main" (level=0)
     assert_equal_text(str(m), reference)
     return m
 
-def test_load_menu_from_file():
+def test_load_pool_from_file():
     import StringIO
     file_content = """
-submenu main
+subpool main
 print intermediate results
 U = 1.0      ! m/s  # velocity
 
-submenu fluid properties
+subpool fluid properties
 rho = 1.2    ! kg/m**3  # density
 mu = 5E.5
 end
 
-submenu body properties
+subpool body properties
 m = 3  ! kg  # mass
 V = 4  ! m/s
 A
@@ -420,16 +420,16 @@ d
 C_D
 end
 """
-    m = load_menu_from_file(StringIO.StringIO(file_content))
+    m = load_pool_from_file(StringIO.StringIO(file_content))
     print m
     reference = """\
-sub menu "main" (level=0)
+sub pool "main" (level=0)
     print intermediate results
     U
-    subsub menu "fluid properties" (level=1)
+    subsub pool "fluid properties" (level=1)
         rho
         mu
-    subsub menu "body properties" (level=1)
+    subsub pool "body properties" (level=1)
         m
         V
         A
@@ -438,15 +438,15 @@ sub menu "main" (level=0)
     assert_equal_text(str(m), reference)
 
     reference = """\
-submenu main
+subpool main
     print intermediate results
     U = 1.0   !  m/s     #  velocity
-    submenu fluid properties
+    subpool fluid properties
         rho = 1.2   !  kg/m**3     #  density
         mu =  5E.5
     end
 
-    submenu body properties
+    subpool body properties
         m = 3   !  kg     #  mass
         V = 4
         A
@@ -456,19 +456,19 @@ submenu main
 
 end
 """
-    assert_equal_text(write_menufile(m), reference)
+    assert_equal_text(write_poolfile(m), reference)
 
 def test_CommandLineOptions():
-    import parampool.menu.Menu as Menu
-    menu = Menu.make_test_menu_drag()
-    clo = CommandLineOptions(menu)
+    import parampool.pool.Pool as Pool
+    pool = Pool.make_test_pool_drag()
+    clo = CommandLineOptions(pool)
     clargs = '--/main/U 1.2 --rho 2.6 --mu 5.5E-5 '\
              '--/main/body_properties/d 0.2 --C_D 0.7'.split()
     clo.set_values(clargs)
-    print dump(menu)
+    print dump(pool)
 
 
 if __name__ == '__main__':
-    test_load_menu_from_file()
-    test_listtree2Menu()
+    test_load_pool_from_file()
+    test_listtree2Pool()
     test_CommandLineOptions()

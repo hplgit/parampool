@@ -1,7 +1,7 @@
 
 class SubTree:
     """
-    Representation of a submenu as a list of leaf
+    Representation of a subpool as a list of leaf
     and SubTree objects.
     """
     def __init__(self, name, parent=None, level=0):

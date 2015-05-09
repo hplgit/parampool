@@ -1,4 +1,4 @@
-# Define input data as a tree (menu and submenus)
+# Define input data as a tree (menu and subpools)
 # tree = list of (menu_name, menu_list_of_dicts)
 from math import pi
 

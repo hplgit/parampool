@@ -1,14 +1,14 @@
 import os
 from flask import Flask, render_template, request, session
 from compute import compute_motion_and_forces as compute_function
-from compute_motion_and_forces_menu_definition_list_model import MotionAndForces
+from compute_motion_and_forces_pool_definition_list_model import MotionAndForces
 
 # Application object
 app = Flask(__name__)
 
-# Menu object
-from compute import menu_definition_list as menu_function
-menu = menu_function()
+# Pool object
+from compute import pool_definition_list as pool_function
+pool = pool_function()
 
 # Path to the web application
 @app.route('/', methods=['GET', 'POST'])
@@ -16,34 +16,34 @@ def index():
     form = MotionAndForces(request.form)
     if request.method == 'POST' and form.validate():
 
-        # Send data to Menu object
+        # Send data to Pool object
         for field in form:
             name = field.description
             value = field.data
-            data_item = menu.set_value(name, value)
+            data_item = pool.set_value(name, value)
 
-        result = compute(menu)
+        result = compute(pool)
 
     else:
         result = None
 
-    return render_template("compute_motion_and_forces_menu_definition_list_view.html", form=form, result=result)
+    return render_template("compute_motion_and_forces_pool_definition_list_view.html", form=form, result=result)
 
-def compute(menu):
+def compute(pool):
     """
     Generic function for calling compute_function with values
-    taken from the menu object.
+    taken from the pool object.
     Return the output from the compute_function.
     """
 
     # compute_function must have only one positional argument
-    # named menu
+    # named pool
     import inspect
     arg_names = inspect.getargspec(compute_function).args
-    if len(arg_names) == 1 and arg_names[0] == "menu":
-        result = compute_function(menu)
+    if len(arg_names) == 1 and arg_names[0] == "pool":
+        result = compute_function(pool)
     else:
-        raise TypeError('%s(%s) can only have one argument named "menu"'
+        raise TypeError('%s(%s) can only have one argument named "pool"'
                         % (compute_function_name, ', '.join(arg_names)))
     return result
 

@@ -2,7 +2,7 @@ def generate_views(compute_function,
                    classname,
                    outfile,
                    filename_template,
-                   menu_function,
+                   pool_function,
                    filename_models,
                    login):
 
@@ -10,12 +10,12 @@ def generate_views(compute_function,
     compute_function_name = compute_function.__name__
     compute_function_file = compute_function.__module__
 
-    if menu_function:
-        menu_function_name = menu_function.__name__
-        menu_function_file = menu_function.__module__
-        menu = True
+    if pool_function:
+        pool_function_name = pool_function.__name__
+        pool_function_file = pool_function.__module__
+        pool = True
     else:
-        menu = False
+        pool = False
 
     import inspect
     arg_names = inspect.getargspec(compute_function).args
@@ -24,13 +24,13 @@ def generate_views(compute_function,
     # Add code for file upload only if it is strictly needed
     file_upload = False
 
-    if menu:
+    if pool:
         # FIXME: This should be replaced by a good regex
         filetxt = ("widget='file'", 'widget="file"',
                    "widget = 'file'", 'widget = "file"')
-        menutxt = open(menu_function_file + ".py", 'r').read()
+        pooltxt = open(pool_function_file + ".py", 'r').read()
         for txt in filetxt:
-            if txt in menutxt:
+            if txt in pooltxt:
                 file_upload = True
                 break
     else:
@@ -42,18 +42,18 @@ def generate_views(compute_function,
     code = '''\
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
 ''' % vars()
-    if menu:
+    if pool:
         code += '''
-# Menu object (must be imported before %(models_module)s
-from %(menu_function_file)s import %(menu_function_name)s as menu_function
-menu = menu_function()
+# Pool object (must be imported before %(models_module)s
+from %(pool_function_file)s import %(pool_function_name)s as pool_function
+pool = pool_function()
 
-# Can define other default values in a file: --menufile name
-from parampool.menu.UI import set_defaults_from_file
-menu = set_defaults_from_file(menu)
+# Can define other default values in a file: --poolfile name
+from parampool.pool.UI import set_defaults_from_file
+pool = set_defaults_from_file(pool)
 # Can override default values on the command line
-from parampool.menu.UI import set_values_from_command_line
-menu = set_values_from_command_line(menu)
+from parampool.pool.UI import set_values_from_command_line
+pool = set_values_from_command_line(pool)
 ''' % vars()
     code += '''
 from django.shortcuts import render_to_response
@@ -88,7 +88,7 @@ def index(request):
         code += '''\
     user = request.user
 '''
-    if file_upload and menu:
+    if file_upload and pool:
         if login:
             code += '''
     form = %(classname)sForm(request.POST or None, request.FILES or None)
@@ -107,15 +107,15 @@ def index(request):
                     value = field.data
                     if field.name in request.FILES:
                         filename = field.data.name
-                        data_item = menu.set_value(name, filename)
+                        data_item = pool.set_value(name, filename)
                         with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
                             for chunk in field.data.chunks():
                                 destination.write(chunk)
                     else:
-                        data_item = menu.set_value(name, value)
+                        data_item = pool.set_value(name, value)
 
                 f = form.save(commit=False)
-                result = compute(menu)
+                result = compute(pool)
                 if user.email:
                     user.email_user("%(classname)s Computations Complete", """\
 A simulation has been completed by the Django %(classname)s app. Please log in at
@@ -141,14 +141,14 @@ register a new user and leave the email field blank.""")
                     value = field.data
                     if field.name in request.FILES:
                         filename = field.data.name
-                        menu.set_value(name, filename)
+                        pool.set_value(name, filename)
                         with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
                             for chunk in field.data.chunks():
                                 destination.write(chunk)
                     else:
-                        menu.set_value(name, value)
+                        pool.set_value(name, value)
 
-                result = compute(menu)
+                result = compute(pool)
 
         form = %(classname)sForm(request.POST, request.FILES)
 
@@ -178,17 +178,17 @@ register a new user and leave the email field blank.""")
             value = field.data
             if field.name in request.FILES:
                 filename = field.data.name
-                menu.set_value(name, filename)
+                pool.set_value(name, filename)
                 with open(os.path.join(UPLOAD_DIR, filename), 'wb+') as destination:
                     for chunk in field.data.chunks():
                         destination.write(chunk)
             else:
-                menu.set_value(name, value)
-        result = compute(menu)
+                pool.set_value(name, value)
+        result = compute(pool)
         form = %(classname)sForm(request.POST, request.FILES)
 ''' % vars()
 
-    elif file_upload and not menu:
+    elif file_upload and not pool:
         if login:
             code += '''
     filename = None
@@ -277,7 +277,7 @@ register a new user and leave the email field blank.""")
         form = %(classname)sForm(request.POST, request.FILES)
 ''' % vars()
 
-    elif not file_upload and menu:
+    elif not file_upload and pool:
         if login:
             code += '''
     form = %(classname)sForm(request.POST or None)
@@ -293,9 +293,9 @@ register a new user and leave the email field blank.""")
                     if field.name not in ("user", "result", "comments"):
                         name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
                         value = field.data
-                        menu.set_value(name, value)
+                        pool.set_value(name, value)
                 f = form.save(commit=False)
-                result = compute(menu)
+                result = compute(pool)
                 if user.email:
                     user.email_user("%(classname)s Computations Complete", """\
 A simulation has been completed by the Django %(classname)s app. Please log in at
@@ -319,8 +319,8 @@ register a new user and leave the email field blank.""")
                 for field in form:
                     name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
                     value = field.data
-                    menu.set_value(name, value)
-                result = compute(menu)
+                    pool.set_value(name, value)
+                result = compute(pool)
 
         form = %(classname)sForm(request.POST, request.FILES)
 
@@ -349,8 +349,8 @@ register a new user and leave the email field blank.""")
         for field in form:
             name = %(classname)s._meta.get_field(field.name).verbose_name.strip()
             value = field.data
-            menu.set_value(name, value)
-        result = compute(menu)
+            pool.set_value(name, value)
+        result = compute(pool)
         form = %(classname)sForm(request.POST)
 ''' % vars()
 
@@ -434,23 +434,23 @@ register a new user and leave the email field blank.""")
         context_instance=RequestContext(request))
 ''' % vars()
 
-    if menu:
+    if pool:
         code += '''
-def compute(menu):
+def compute(pool):
     """
     Generic function for calling compute_function with values
-    taken from the menu object.
+    taken from the pool object.
     Return the output from the compute_function.
     """
 
     # compute_function must have only one positional argument
-    # named menu
+    # named pool
     import inspect
     arg_names = inspect.getargspec(compute_function).args
-    if len(arg_names) == 1 and arg_names[0] == "menu":
-        result = compute_function(menu)
+    if len(arg_names) == 1 and arg_names[0] == "pool":
+        result = compute_function(pool)
     else:
-        raise TypeError('%s(%s) can only have one argument named "menu"'
+        raise TypeError('%s(%s) can only have one argument named "pool"'
                         % (compute_function.__name__, ', '.join(arg_names)))
     return result
 '''
@@ -665,10 +665,10 @@ def delete(request, id):
     return HttpResponseRedirect('/old/')
 ''' % vars()
 
-    if menu:
+    if pool:
        code += """
-from parampool.menu.UI import write_menufile
-write_menufile(menu, '.tmp_menu.dat')
+from parampool.pool.UI import write_poolfile
+write_poolfile(pool, '.tmp_pool.dat')
 """
     if outfile is None:
         return code

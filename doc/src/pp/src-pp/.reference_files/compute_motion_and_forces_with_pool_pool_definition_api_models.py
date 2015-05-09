@@ -7,7 +7,7 @@ from parampool.html5.django.forms.widgets import \
 # Note: The verbose_name attribute starts with a blank to avoid
 # that Django forces the first character to be upper case.
 
-class MotionAndForcesWithMenu(models.Model):
+class MotionAndForcesWithPool(models.Model):
 
     Initial_velocity       = models.CharField(
         verbose_name=' Initial velocity',
@@ -58,9 +58,9 @@ class MotionAndForcesWithMenu(models.Model):
         verbose_name=' New plot',
         default=True)
 
-class MotionAndForcesWithMenuForm(ModelForm):
+class MotionAndForcesWithPoolForm(ModelForm):
     class Meta:
-        model = MotionAndForcesWithMenu
+        model = MotionAndForcesWithPool
         widgets = {
             'Initial_velocity'    : TextInput(attrs={'size': 11}),
             'Initial_angle'       : RangeInput(attrs={'size': 11, 'min': 0, 'max': 90, 'step': 0, 'onchange': 'showValue(this.value)'}),
