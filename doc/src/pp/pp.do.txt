@@ -841,7 +841,8 @@ then from the command line, and finally launch the graphical web
 interface for enabling interactive setting of values in the menu system.
 Automatic generation of such interactive web interfaces constitutes
 the next topic. The lines above for loading parameters from file
-and command-line must be put in the `controller.py`[[[
+and command-line are automatically generated when a web interface
+is requested (see Section ref{pp:flask_menu1:GUI_cml_file}).
 
 
 ===== Generating a web-based user interface =====
