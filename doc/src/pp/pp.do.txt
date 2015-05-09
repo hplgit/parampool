@@ -649,6 +649,7 @@ FIGURE: [fig-pp/flask5.png, width=500] Web interface for uploading a file. label
 
 !split
 ======= Working with a menu of input parameters =======
+label{pp:flask_menu1}
 
 Parampool's main focus is on scientific applications with lots of
 input data of different type, organized in a hierarchical tree fashion.
@@ -696,6 +697,7 @@ in the problem. The task now is to make a Python specification of
 the of submenus and data items in the menu tree.
 
 ===== Specify a menu as a list =====
+label{pp:flask_menu1:list}
 
 The menu tree can be specified as a list of lists, strings, and dictionaries.
 Each list represents a submenu, each string the name of the submenu,
@@ -710,6 +712,7 @@ shown conversion from a list to `Menu` object via the `listtree2Menu`
 function.
 
 ===== Attributes in data items =====
+label{pp:flask_menu1:dataitem}
 
 Each data item has a name and preferably a default value, as in the
 case of "Initial velocity". More attributes can be added:
@@ -757,7 +760,16 @@ case of "Initial velocity". More attributes can be added:
    and any valid Python expression is then essentially allowable,
    but wrong objects will give errors in the compute function.
 
+!bnotice Check that default values are real numbers
+If a default value is set to `5`, Parampool will interpret this as an
+integer and let `string2type` be `int` and force all input to be
+converted to integers. Normally, you want input to be real, so check
+that the default value is `5.0` unless the menu item is meant to be
+an integer.
+!enotice
+
 ===== The compute function =====
+label{pp:flask_menu1:compute}
 
 When working with menus, the compute function is allowed to take *only
 one argument* called `menu`. This object is used to extract
@@ -782,7 +794,58 @@ the compute function. If this assumption does not hold, one can
 simply make a class, store extra data as attributes in the class,
 and let the compute function be a method in the class.
 
-===== Generating a user interface =====
+===== A command-line and file interface =====
+label{pp:flask_menu1:cml_file}
+
+Having defined a menu, it is trivial to get a command-line interface
+in the application. Just perform
+
+!bc pycod
+from parampool.menu.UI import set_values_from_command_line
+menu = set_values_from_command_line(menu)
+!ec
+Now `menu` has values loaded from the command line. The name of
+the command-line options follow the names in the menu, but with
+underscore replacing whitespace: `--Initial_motion_data/Initial_angle`.
+However, in this case `--Initial_angle` also works since it is a
+unique name in the menu tree.
+
+One can also read data from a file with syntax
+
+!bc dat
+submenu Initial motion data
+  Initial angle = 45.5        # small perturbation
+  Spinrate = 20
+end
+submenu Body and environment data
+  Wind velocity = -10  ! m/s  # units appear after ! (before #)
+end
+!ec
+Data from the file is loaded into the menu by
+
+!bc pycod
+from parampool.menu.UI import set_defaults_from_file
+menu = set_defaults_from_file(menu)
+!ec
+To activate reading from file `mydat.dat`, one must supply the
+command-line arguments `--menufile mydat.dat`.
+
+!bnotice Tip: autogenerate the file with default data
+The function `write_menufile(menu)` in `parampool.menu.UI`
+writes the current menu data to a file with the right syntax.
+This is a simple way of getting the complete menu in the file.
+!enotice
+
+Often, an application will first load default values from file,
+then from the command line, and finally launch the graphical web
+interface for enabling interactive setting of values in the menu system.
+Automatic generation of such interactive web interfaces constitutes
+the next topic. The lines above for loading parameters from file
+and command-line must be put in the `controller.py`[[[
+
+
+===== Generating a web-based user interface =====
+label{pp:flask_menu1:GUI}
 
 With a menu function and a compute function at hand,
 it remains to make a new directory, copy the module(s) containing
@@ -813,6 +876,7 @@ FIGURE: [fig-pp/flask_menu1_closed.png, width=800] Web interface in closed form.
 
 
 ===== Operating the user interface =====
+label{pp:flask_menu1:GUI_op}
 
 The menu tree is mapped onto a visual structure often used for
 directory trees. Clicking on *open all* at the top of the user interface
@@ -899,6 +963,7 @@ this example).
 FIGURE: [fig-pp/flask_menu1_result.png, width=800] Web interface with input and results. label{pp:flask_menu1:fig4}
 
 ===== Detection of wrong input =====
+label{pp:flask_menu1:GUI_error}
 
 __Text in a number field.__
 Write `abc` in the "Initial velocity" field and press the *Compute* button.
@@ -939,6 +1004,20 @@ Setting `str2type=convert_time_step` for the "Time step" data item
 gives an informative error message if the answer is not as expected:
 `None` or a floating-point number.
 
+===== Loading parameters from file and the command line =====
+label{pp:flask_menu1:GUI_cml_file}
+
+Parameters can be assigned default values in a file and then other
+values on the command line,
+see Section ref{pp:flask_menu1:cml_file},
+before the web GUI is offered to the
+user. When autogenerating the web interface, the magic lines from
+Section ref{pp:flask_menu1:cml_file} are automatically inserted
+in the `controller.py` file (for Flask or `views.py for Django).
+This means that when starting `python controller.py` we may add
+`--menufile name` and any set of command-line options for setting
+individual parameters. This makes it easy to control which default
+values that will appear in the web GUI.
 
 ===== Specifying a menu using an API =====
 
@@ -1346,10 +1425,3 @@ We need
  * Flask-SQLAlchemy: `sudo pip install Flask-SQLAlchemy`
  * Flask-Login: `sudo pip install Flask-Login`
  * Flask-Mail: `sudo pip install Flask-Mail`
- * ScientificPython for menu if units are used
-
-!bc sys
-Terminal> hg clone https://bitbucket.org/khinsen/scientificpython
-Terminal> cd scientificpython
-Terminal> sudo python setup.py install
-!ec

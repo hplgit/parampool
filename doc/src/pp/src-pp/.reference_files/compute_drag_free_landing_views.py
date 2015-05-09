@@ -17,12 +17,10 @@ def index(request):
         "compute_drag_free_landing_index.html",
         {"form": form,
          "result": result,
-
         },
         context_instance=RequestContext(request))
 
 def compute(form):
-
     """
     Generic function for compute_function with arguments
     taken from a form object (django.forms.ModelForm subclass).
@@ -31,7 +29,6 @@ def compute(form):
     # Extract arguments to the compute function
     import inspect
     arg_names = inspect.getargspec(compute_function).args
-
 
     # Extract values from form
     form_data = [getattr(form, name) for name in arg_names

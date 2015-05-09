@@ -1,5 +1,6 @@
 """User interfaces for Menu."""
 from parampool.menu.Menu import Menu
+from parampool.tree.Tree import TreePath
 import sys, os, re
 
 class CommandLineOptions:
@@ -48,12 +49,12 @@ class CommandLineOptions:
 
 def set_defaults_from_command_line(menu):
     clo = CommandLineOptions(menu)
-    clo.set_values(set_default=True)
+    clo.set_values(set_default=True, args=sys.argv)
     return menu
 
 def set_values_from_command_line(menu):
     clo = CommandLineOptions(menu)
-    clo.set_values(set_default=False)
+    clo.set_values(set_default=False, args=sys.argv)
     return menu
 
 def set_defaults_from_file(menu, command_line_option='--menufile'):
@@ -174,8 +175,8 @@ def read_menufile(filename, menu, task='create'):
 
     levels = []
     for line_no, line in enumerate(data.splitlines()):
-        print line_no, line
-        print menu
+        #print line_no, line
+        #print menu
 
         if line.startswith('submenu'):
             name = ' '.join(line.split()[1:])
@@ -200,30 +201,36 @@ def read_menufile(filename, menu, task='create'):
                 value, rest = rest.split('!')
                 if '#' in rest:
                     unit, help = rest.split('#')
+                else:
+                    unit = rest
             elif '#' in rest:
                 value, help = rest.split('#')
             else:
                 value = rest
 
             data = {'name': name.strip()}
-            if value:
-                str2type, value = _interpret_value(value)
-                data['default'] = value
-                data['str2type'] = str2type
-            if unit:
-                data['unit'] = unit
-            if help:
-                if 'widget=' in help:
-                    help, widget = help.split('widget=')
-                    help = help.strip()
-                data['help'] = help
-
-
             if task == 'create':
+                if value:
+                    str2type, value = _interpret_value(value)
+                    data['default'] = value
+                    data['str2type'] = str2type
+
+                if unit:
+                    data['unit'] = unit
+                if help:
+                    if 'widget=' in help:
+                        help, widget = help.split('widget=')
+                        help = help.strip()
+                    data['help'] = help
                 menu.add_data_item(**data)
             elif task == 'set defaults':
                 data_item = menu.get(TreePath(levels + [data['name']]).to_str())
-                data_item.data['default'] = data['default']
+                if unit:
+                    data_item.set_value('%s %s' % (value, unit))
+                else:
+                    data_item.set_value(value)
+                value = data_item.get_value()
+                data_item.data['default'] = value # without unit
         else:
             # line contains just the name of a data item
             data = {'name': line.strip()}
@@ -234,8 +241,11 @@ def read_menufile(filename, menu, task='create'):
                                   line)
     return menu
 
-def write_menufile(menu):
-    """Return menu as a string which can be dumped to file."""
+def write_menufile(menu, filename=None):
+    """
+    Return menu as a string which can be dumped to file
+    if filename is None, otherwise write the string to file.
+    """
 
     def data_item_output(menu_path, level, data_item, outlines):
         indentation = '    '*level
@@ -277,7 +287,12 @@ def write_menufile(menu):
         callback_subtree_start=submenu_start_output,
         callback_subtree_end=submenu_end_output,
         user_data=outlines)
-    return '\n'.join(outlines)
+    text = '\n'.join(outlines)
+    if filename is not None:
+        f = open(filename, 'w')
+        f.write(text)
+        f.close()
+    return text
 
 def set_data_item_attribute(menu, attribute_name, value):
     """Set an attribute for all data items in the menu."""
@@ -320,7 +335,6 @@ def listtree2Menu(menu_tree):
             ]
 
     """
-    from parampool.tree.Tree import TreePath
 
     def make_data_item(
         menu_path, level, data_item, menu):

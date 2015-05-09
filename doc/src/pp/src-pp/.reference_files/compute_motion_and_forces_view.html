@@ -5,11 +5,9 @@
     <title>Flask MotionAndForces app</title>
   </head>
   <body>
-  
-<!-- tocinfo
+  <!-- tocinfo
 {'highest level': 4, 'sections': []}
 end of tocinfo -->
-
 
 
 
@@ -18,21 +16,18 @@ end of tocinfo -->
 MathJax.Hub.Config({
   TeX: {
      equationNumbers: {  autoNumber: "AMS"  },
-     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js"]
+     extensions: ["AMSmath.js", "AMSsymbols.js", "autobold.js", "color.js"]
   }
 });
 </script>
 <script type="text/javascript"
  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-<!-- Fix slow MathJax rendering in IE8 -->
-<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7">
 
 
 
-
+    
 <!-- ------------------- main content ---------------------- -->
-
 
 <p>
 This application computes the motion of a ball with radius \( R \)
@@ -46,7 +41,6 @@ positive \( x \) direction, can also be given.
 The ordinary differential equation problem governing the
 motion reads
 
-<p>
 $$
 \begin{align*}
 m\frac{d^2\boldsymbol{r}}{dt^2} &= -mg\boldsymbol{j} -
@@ -82,10 +76,9 @@ computed curves are added to the previous ones since last
 time <code>new_plot</code> was true.
 
 <p>
-<!-- (Doconce format) -->
+<!-- (DocOnce format) -->
 
 <!-- ------------------- end of main content --------------- -->
-
 
 
   <!-- Input and Results are typeset as a two-column table -->
@@ -94,7 +87,7 @@ time <code>new_plot</code> was true.
   <td valign="top">
     <h2>Input:</h2>
 
-      <form method=post action="" enctype=multipart/form-data>
+      <form method=post action="" enctype="multipart/form-data">
         <table>
           {% for field in form %}
             <tr><td>{{ field.name }}</td>
@@ -107,7 +100,7 @@ time <code>new_plot</code> was true.
                 {% endif %}</td></tr>
           {% endfor %}
         </table>
-        <p><input type=submit value=Compute>
+        <p><input type="submit" value="Compute">
     </form></p>
   </td>
 

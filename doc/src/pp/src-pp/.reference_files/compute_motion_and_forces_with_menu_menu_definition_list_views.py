@@ -4,6 +4,13 @@ from compute import compute_motion_and_forces_with_menu as compute_function
 from compute import menu_definition_list as menu_function
 menu = menu_function()
 
+# Can define other default values in a file: --menufile name
+from parampool.menu.UI import set_defaults_from_file
+menu = set_defaults_from_file(menu)
+# Can override default values on the command line
+from parampool.menu.UI import set_values_from_command_line
+menu = set_values_from_command_line(menu)
+
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from compute_motion_and_forces_with_menu_menu_definition_list_models import MotionAndForcesWithMenu, MotionAndForcesWithMenuForm
@@ -24,7 +31,6 @@ def index(request):
         "compute_motion_and_forces_with_menu_menu_definition_list_index.html",
         {"form": form,
          "result": result,
-
         },
         context_instance=RequestContext(request))
 
@@ -45,3 +51,6 @@ def compute(menu):
         raise TypeError('%s(%s) can only have one argument named "menu"'
                         % (compute_function.__name__, ', '.join(arg_names)))
     return result
+
+from parampool.menu.UI import write_menufile
+write_menufile(menu, '.tmp_menu.dat')

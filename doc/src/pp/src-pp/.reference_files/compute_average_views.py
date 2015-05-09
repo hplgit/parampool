@@ -30,12 +30,10 @@ def index(request):
         "compute_average_index.html",
         {"form": form,
          "result": result,
-
         },
         context_instance=RequestContext(request))
 
 def compute(form, request):
-
     """
     Generic function for compute_function with arguments
     taken from a form object (django.forms.ModelForm subclass).

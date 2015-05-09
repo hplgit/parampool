@@ -6,6 +6,7 @@ for menus by renaming methods and adding functionality.
 from parampool.tree.SubTree import SubTree
 from parampool.menu.DataItem import DataItem
 from parampool.tree.Tree import Tree, hash_all_leaves, get_leaf
+from parampool.PhysicalQuantities import PhysicalQuantity as PQ
 
 class Menu(Tree):
     def __init__(self, root=None, root_name='main'):
@@ -83,7 +84,36 @@ class Menu(Tree):
         data_item.set_value(value)
         return data_item  # for convenience
 
+    def get_unit(self, data_item_name):
+        """
+        Return unit set in ``DataItem`` object with name `data_item_name`,
+        if unit is registered, otherwise return None.
+        """
+        try:
+            data_item = self.get(data_item_name)
+            if 'unit' in data_item.data:
+                return data_item.data['unit']
+            else:
+                return None
+        except ValueError, e:
+            raise NameError('Cannot find DataItem object with name "%s"' %
+                            data_item_name)
 
+    def get_value_unit(self, data_item_name, default=None):
+        """
+        Return PhysicalQuantity object with value and unit for
+        the ``DataItem`` object with name `data_item_name`,
+        if unit is not registered, an exception is raised.
+        """
+        try:
+            value = self.get_value(data_item_name, default)
+            unit = self.get_unit(data_item_name)
+        except ValueError, e:
+            raise NameError('Cannot find DataItem object with name "%s"' %
+                            data_item_name)
+        if unit is None:
+            raise ValueError('Menu.get_value_unit: unit is not registered for "%s"' % data_item_name)
+        return PQ('%g %s' % (value, unit))
 
 import nose.tools as nt
 from parampool.utils import assert_equal_text

@@ -16,7 +16,7 @@
     <h2>Input:</h2>
     <div class="dtree">
     <p><a href="javascript: d.openAll();">open all</a> | <a href="javascript: d.closeAll();">close all</a></p>
-    <form method=post action="" enctype=multipart/form-data>{% csrf_token %}
+    <form method=post action="" enctype="multipart/form-data">{% csrf_token %}
       <script type="text/javascript">
         d = new dTree('d');
                     d.add(0, -1, 'Main menu');
@@ -37,7 +37,7 @@
         document.write(d);
       </script>
     </div>
-    <p><input type=submit value=Compute></form></p>
+    <p><input type="submit" value="Compute"></form></p>
     </td>
 
   <td valign="top">

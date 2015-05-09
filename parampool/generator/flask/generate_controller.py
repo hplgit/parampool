@@ -67,6 +67,13 @@ from %(compute_function_file)s import %(compute_function_name)s as compute_funct
 # TODO: Find out the reason for this order of imports.
 from %(menu_function_file)s import %(menu_function_name)s as menu_function
 menu = menu_function()
+
+# Can define other default values in a file: --menufile name
+from parampool.menu.UI import set_defaults_from_file
+menu = set_defaults_from_file(menu)
+# Can override default values on the command line
+from parampool.menu.UI import set_values_from_command_line
+menu = set_values_from_command_line(menu)
 ''' % vars()
     code += '''
 from flask import Flask, render_template, request'''
@@ -523,7 +530,6 @@ def delete_post(id):
         db.session.commit()
     return redirect(url_for('old'))
 
-
 if __name__ == '__main__':
     if not os.path.isfile(os.path.join(os.path.dirname(__file__), 'sqlite.db')):
         db.create_all()
@@ -534,6 +540,12 @@ if __name__ == '__main__':
 if __name__ == '__main__':
     app.run(debug=True)
 ''' % vars()
+
+    if menu:
+        code += """
+    from parampool.menu.UI import write_menufile
+    write_menufile(menu, '.tmp_menu.dat')
+"""
 
     if outfile is None:
         return code

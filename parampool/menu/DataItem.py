@@ -295,13 +295,19 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
                     try:
                         value = float(value)
                         if type(self.data['default']) == type(1):
-                            msg = 'str2type is int but should have been float, either specify str2type=float or set the default value to %d.0, not just %d (which makes str2type become int if not explicitly set).'
+                            msg = 'str2type is int but should have been float, since the input value %s is a float. Either specify str2type=float or set the default value to a real number, not an integer (which makes str2type become int if not explicitly set).' % value
+                            raise TypeError(msg)
+                        value = self.data['str2type'](value)
                     except:
-                        pass # cannot find out of this case
-                raise TypeError(
-                'could not apply str2type=%s to value %s %s\n%s\n'
-                'Python exception: %s' %
-                (self.data['str2type'], value, type(value), msg, e))
+                        raise TypeError(
+                            'could not apply str2type=%s to value %s %s\n%s\n'
+                            'Python exception: %s' %
+                            (self.data['str2type'], value, type(value), msg, e))
+                else:
+                    raise TypeError(
+                        'could not apply str2type=%s to value %s %s\n%s\n'
+                        'Python exception: %s' %
+                        (self.data['str2type'], value, type(value), msg, e))
 
         return value
 

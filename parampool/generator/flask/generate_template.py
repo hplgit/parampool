@@ -453,6 +453,12 @@ def run_doconce_on_text(doc):
             print 'Running doconce on help file', stem + '.do.txt'
             doc = doconce_format('html', doc, filename_stem=stem,
                                  cleanup=False)
+            # grab parts
+            pattern = r'(<!-- tocinfo.+------ end of main content ---.+?-->)'
+            m = re.search(pattern, doc, flags=re.DOTALL)
+            if m:
+                doc = m.group(1) + '\n'
+                doc = doc.replace('<body>\n', '')
             files = [stem + '.do.txt',
                      stem + '.html',
                      '.' + stem + '_html_file_collection']

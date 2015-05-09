@@ -7,6 +7,13 @@ from compute import compute_motion_and_forces_with_menu as compute_function
 from compute import menu_definition_api_with_separate_submenus as menu_function
 menu = menu_function()
 
+# Can define other default values in a file: --menufile name
+from parampool.menu.UI import set_defaults_from_file
+menu = set_defaults_from_file(menu)
+# Can override default values on the command line
+from parampool.menu.UI import set_values_from_command_line
+menu = set_values_from_command_line(menu)
+
 from flask import Flask, render_template, request
 from compute_motion_and_forces_with_menu_menu_definition_api_with_separate_submenus_model import MotionAndForcesWithMenu
 
@@ -54,3 +61,6 @@ def compute(menu):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+    from parampool.menu.UI import write_menufile
+    write_menufile(menu, '.tmp_menu.dat')

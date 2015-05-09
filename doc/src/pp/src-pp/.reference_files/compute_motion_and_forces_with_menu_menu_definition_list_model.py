@@ -4,7 +4,7 @@ import flask.ext.wtf.html5 as html5
 
 class MotionAndForcesWithMenu(wtf.Form):
 
-    Initial_velocity       = html5.TextField(
+    Initial_velocity       = wtf.TextField(
         label=u'Initial velocity',
         description=u'Initial velocity',
         default='5.0',
@@ -19,7 +19,7 @@ class MotionAndForcesWithMenu(wtf.Form):
         validators=[wtf.validators.InputRequired(),
                     wtf.validators.NumberRange(0, 90)])
 
-    Spinrate               = html5.TextField(
+    Spinrate               = wtf.TextField(
         label=u'Spinrate',
         description=u'Spinrate',
         default='50',
@@ -33,13 +33,13 @@ class MotionAndForcesWithMenu(wtf.Form):
                     wtf.validators.NumberRange(-50, 50)],
         min=-50, max=50, step=0.5)
 
-    Mass                   = html5.TextField(
+    Mass                   = wtf.TextField(
         label=u'Mass',
         description=u'Mass',
         default='0.1',
         validators=[wtf.validators.InputRequired()])
 
-    Radius                 = html5.TextField(
+    Radius                 = wtf.TextField(
         label=u'Radius',
         description=u'Radius',
         default='0.11',
@@ -52,7 +52,7 @@ class MotionAndForcesWithMenu(wtf.Form):
         validators=[wtf.validators.InputRequired()],
         choices=[('RK4', 'RK4'), ('RK2', 'RK2'), ('ForwardEuler', 'ForwardEuler')])
 
-    Time_step              = html5.TextField(
+    Time_step              = wtf.TextField(
         label=u'Time step',
         description=u'Time step',
         default='None',

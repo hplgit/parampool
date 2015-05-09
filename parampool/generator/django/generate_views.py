@@ -47,6 +47,13 @@ from %(compute_function_file)s import %(compute_function_name)s as compute_funct
 # Menu object (must be imported before %(models_module)s
 from %(menu_function_file)s import %(menu_function_name)s as menu_function
 menu = menu_function()
+
+# Can define other default values in a file: --menufile name
+from parampool.menu.UI import set_defaults_from_file
+menu = set_defaults_from_file(menu)
+# Can override default values on the command line
+from parampool.menu.UI import set_values_from_command_line
+menu = set_values_from_command_line(menu)
 ''' % vars()
     code += '''
 from django.shortcuts import render_to_response
@@ -658,6 +665,11 @@ def delete(request, id):
     return HttpResponseRedirect('/old/')
 ''' % vars()
 
+    if menu:
+       code += """
+from parampool.menu.UI import write_menufile
+write_menufile(menu, '.tmp_menu.dat')
+"""
     if outfile is None:
         return code
     else:
