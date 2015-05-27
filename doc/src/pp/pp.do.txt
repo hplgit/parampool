@@ -1224,42 +1224,59 @@ Describe input as
 ======= Exercises =======
 
 ===== Exercise: Make a web app for integration =====
+label{pp:exer:integrate}
+file=integrate
 
 The purpose of this exercise is to use Parampool to generate a
 simple web application for integrating functions: $\int_a^bf(x)dx$.
 Provide a symbolic expression for $f(x)$ and the limits $a$ and $b$
-as input. The application returns the integral of $\int_a^bf(x)dx$
-computed by some numerical integration rule (e.g., the Trapezoidal
-rule). Also try to integrate $f(x)$ symbolically with the aid
-`sympy` and write out the anti-derivative of $f(x)$ if the
-integration is successful.
+as input. The application first attempts to
+compute the integral $\int_a^bf(x)dx$ symbolically using `sympy`,
+without limits.
+If that does not succeed, it computes it numerically by the, e.g.,
+Trapezoidal rule using the $a$ and $b$ limits.
 
 !bhint
 The relevant `sympy` code needs to turn the string expression
-for $f(x)$ into a valid symbolic expression via `eval`.
-This process requires import of the mathematical functions in `sympy`.
-Thereafter, the `integrate` functionality in `sympy` can be used
-to compute the integral.
+for $f(x)$ into a valid Python function. This can be done with
+the `sympify` and `lamdify` utilities. Given some string `s`
+containing an expression, e.g., s = 'x*sin(x)', the following code
+makes a `sympy` expression and a valid Python function `f(x): return x*sin(x)`:
 
 !bc pycod
-def symbolic_integration(f_str):
-    """
-    Return the LaTeX code of the anti-derivative of f(x),
-    where f_str holdes the formula for f(x) in a string.
-    Return None if sympy cannot compute the anti-derivative.
-    """
-    from sympy import Symbol, integrate, \
-      sin, cos, tan, log, asin, acos, atan, \
-      sinh, cosh, tanh, asinh, acosh, atanh, erf, erfc,
-    x = Symbol('x')
-    f = eval(f_str)
-    I = integrate(f, x)
-    if isinstance(I, Integral):
-        return None
+import sympy as sym
+expr = sym.sympify(s)
+x = sym.Symbol('x')
+f = sym.lambdify([x], expr)
+!ec
+Using these constructions, the following function
+tries to integrate symbolically and then numerically if necessary:
+
+!bc pycod
+def integrate(string_expression, a, b):
+    assert isinstance(string_expression, str)
+    import sympy as sym
+    expr = sym.sympify(string_expression)
+    x = sym.Symbol('x')
+    I = sym.integrate(expr, x)
+    if isinstance(I, sym.Integral):
+        # Did not succeed to integrate symbolically
+        f = sym.lambdify([x], expr)  # Python function
+	I = trapezoidal(f, a, b, n=100)
     else:
-        return latex(I)
+        I = sym.latex(I)  # make LaTeX expression
+    return expr, I  # str if symbolic, float if numerical integr.
 !ec
 !ehint
+
+===== Exercise: Make a web app for plotting data =====
+label{pp:exer:integrate}
+file=upload_and_plot
+
+Make a web app with the `parampool.pool.Pool` functionality
+for uploading a file with columns of data and plotting
+columns 2, 3, and so forth against column 1. Use `numpy.loadtxt`
+to load the data from file.
 
 ======= Exercise: Make a web app for studying vibrations =======
 

@@ -4,6 +4,9 @@ _contacted_latex_codecogs_com = False
 
 def get_symbol(symbol, static_dir='static', path=[], dpi=300):
     """Download a transparent LaTeX symbol."""
+    method = 'dpi120'  # two methods, dpi=300 and resize or just dpi=120
+    # Problem with dpi=300 and resize via convert: different sizes
+    # in the text in the images, better to use dpi120
 
     static_dir = os.path.join(static_dir, "latex")
 
@@ -21,6 +24,10 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=300):
     name_orig = name + '_orig'
     name += '.png'
     filename = os.path.join(symdir, name)
+    if method == 'dpi120':
+        dpi = 120
+    else:
+        dpi = 300
     link = 'http://latex.codecogs.com/png.latex?\dpi{%(dpi)d}&space;%(symbol)s' \
             % vars()
 
@@ -37,11 +44,12 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=300):
     f = open(filename, 'wb')
     f.write(code)
     f.close()
-    cmd = 'convert %s -resize x15 -trim %s' % (filename, filename)
-    #print cmd
-    failure = os.system(cmd)
-    if failure:
-        print 'Could not resize latex image', filename
+    if method != 'dpi120':
+        cmd = 'convert %s -resize x15 -trim %s' % (filename, filename)
+        print cmd
+        failure = os.system(cmd)
+        if failure:
+            print 'Could not resize latex image', filename
 
     return filename
 
