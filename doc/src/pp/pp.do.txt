@@ -415,7 +415,7 @@ as a long string directly in the HTML image tag. The statements
 below sketches the idea:
 
 !bc pycod
-import matplotlib.pyplot as plot
+import matplotlib.pyplot as plt
 # make plot
 from StringIO import StringIO
 figfile = StringIO()
