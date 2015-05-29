@@ -28,8 +28,7 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [(' 2DO ', 3, None, '___sec0'),
-              (' Simulation program ', 1, None, '___sec1'),
+ 'sections': [(' Simulation program used as sample app ', 1, None, '___sec0'),
               (' User interfaces for Python functions ',
                1,
                'pp:GUI4functions',
@@ -38,23 +37,26 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:real:inout',
                'pp:real:inout'),
-              (' Flask interface ', 3, None, '___sec4'),
-              (' Django interface ', 3, None, '___sec5'),
+              (' Flask interface ', 3, None, '___sec3'),
+              (' Django interface ', 3, None, '___sec4'),
               (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
-              (' Flask application ', 3, None, '___sec7'),
-              (' Django application ', 3, None, '___sec8'),
-              (' Comparing graphs in the same plot ', 3, None, '___sec9'),
+              (' Flask application ', 3, None, '___sec6'),
+              (' Django application ', 3, None, '___sec7'),
+              (' Comparing graphs in the same plot ', 3, None, '___sec8'),
               (' More input parameters and results ',
                2,
                'pp:flask4',
                'pp:flask4'),
-              (' Django interface ', 3, None, '___sec11'),
-              (' Other types of function arguments ', 2, None, '___sec12'),
+              (' The returned HTML code ', 3, None, '___sec10'),
+              (' Documentation of the application ', 3, None, '___sec11'),
+              (' Django interface ', 3, None, '___sec12'),
+              (' Other types of input data ', 2, None, '___sec13'),
+              (' Uploading a file ', 3, None, '___sec14'),
               (' Working with a pool of input parameters ',
                1,
                'pp:flask_pool1',
                'pp:flask_pool1'),
-              (' Specify a pool as a list ',
+              (' Specifying a pool as a list ',
                2,
                'pp:flask_pool1:list',
                'pp:flask_pool1:list'),
@@ -86,41 +88,45 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:flask_pool1:GUI_cml_file',
                'pp:flask_pool1:GUI_cml_file'),
-              (' Specifying a pool using an API ', 2, None, '___sec22'),
+              (' Specifying a pool using an API ', 2, None, '___sec24'),
               (' Specifying a pool using an alternative API ',
                2,
                None,
-               '___sec23'),
+               '___sec25'),
               (' File with documentation of the application ',
                3,
                None,
-               '___sec24'),
-              (' LaTeX symbol as parameter name ', 3, None, '___sec25'),
-              (' Multiple input values for parameters ', 3, None, '___sec26'),
-              (' 2DO ', 2, None, '___sec27'),
+               '___sec26'),
+              (' LaTeX symbol as parameter name ', 3, None, '___sec27'),
+              (' Multiple input values for parameters ', 3, None, '___sec28'),
+              (' 2DO ', 2, None, '___sec29'),
               (' Reading default values from command line or file ',
                2,
                None,
-               '___sec28'),
-              (' Pool with other data structures ', 2, None, '___sec29'),
-              (' Advanced topics ', 1, None, '___sec30'),
-              (' Login and archival of results ', 2, None, '___sec31'),
-              (' Animations ', 2, None, '___sec32'),
-              (' Python expressions as input ', 2, None, '___sec33'),
-              (' Exercises ', 1, None, '___sec34'),
+               '___sec30'),
+              (' Pool with other data structures ', 2, None, '___sec31'),
+              (' Advanced topics ', 1, None, '___sec32'),
+              (' Login and archival of results ', 2, None, '___sec33'),
+              (' Animations ', 2, None, '___sec34'),
+              (' Python expressions as input ', 2, None, '___sec35'),
+              (' Exercises ', 1, None, '___sec36'),
               (' Exercise 1: Make a web app for integration ',
                2,
-               None,
-               '___sec35'),
+               'pp:exer:integrate',
+               'pp:exer:integrate'),
+              (' Exercise 2: Make a web app for plotting data ',
+               2,
+               'pp:exer:integrate',
+               'pp:exer:integrate'),
               (' Exercise: Make a web app for studying vibrations ',
                1,
                None,
-               '___sec36'),
-              (' Problem 2: Make a coin flipper ', 2, None, '___sec37'),
-              (' Deployment ', 1, None, '___sec38'),
-              (' Wakari ', 2, None, '___sec39'),
-              (' Uni Oslo ', 2, None, '___sec40'),
-              (' Appendix: Installation ', 1, None, '___sec41')]}
+               '___sec39'),
+              (' Problem 3: Make a coin flipper ', 2, None, '___sec40'),
+              (' Deployment ', 1, None, '___sec41'),
+              (' Wakari ', 2, None, '___sec42'),
+              (' Uni Oslo ', 2, None, '___sec43'),
+              (' Appendix: Installation ', 1, None, '___sec44')]}
 end of tocinfo -->
 
 <body>
@@ -157,14 +163,14 @@ MathJax.Hub.Config({
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
-     <!-- navigation toc: --> <li><a href="#___sec1" style="font-size: 80%;">Simulation program</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec0" style="font-size: 80%;">Simulation program used as sample app</a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
      <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
-     <!-- navigation toc: --> <li><a href="._pp005.html#___sec30" style="font-size: 80%;">Advanced topics</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec34" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec38" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Appendix: Installation</a></li>
+     <!-- navigation toc: --> <li><a href="._pp005.html#___sec32" style="font-size: 80%;">Advanced topics</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec44" style="font-size: 80%;">Appendix: Installation</a></li>
 
         </ul>
       </li>
@@ -180,7 +186,7 @@ MathJax.Hub.Config({
 <a name="part0002"></a>
 <!-- !split -->
 
-<h1 id="___sec1">Simulation program </h1>
+<h1 id="___sec0">Simulation program used as sample app </h1>
 
 <p>
 We shall work with a sample application that takes a few variables as
@@ -212,27 +218,39 @@ m\frac{d^2\boldsymbol{r}}{dt^2} = -m\boldsymbol{g} - \frac{1}{2}C_D\varrho A v^2
 \end{equation}
 $$
 
-where \( m \) is the mass of the body, \( \boldsymbol{g} \) is the acceleration of
-gravity vector, \( C_D \) is a drag coefficient, \( \varrho \) is the density
-of air, \( A \) is the cross-section area of the body perpendicular to the motion,
-\( v = |\boldsymbol{v}-\boldsymbol{w}| \) is the relative velocity between the body,
-\( \boldsymbol{v}=d\boldsymbol{r}/dt \), and a given wind velocity \( \boldsymbol{w} \), \( C_L \)
-is a lift coefficient, \( C_S \) is a coefficient for the sidewind or lateral
-aerodynamic force, \( \boldsymbol{i}_t \)
-is a unit tangent vector of the body's path, while \( \boldsymbol{i}_n \) is a unit
-vector normal to the path tilting upwards.
-The drag \( C_D \) coefficient for a sphere is taken as 0.45. The lift coefficient
-\( C_L \) depends on the spinrate \( \omega \) (rad \( \hbox{s}^{-1} \))
-of the body, and a simple linear relation often suffices:
-\( C_L = 0.2\omega/500 \). A negative \( \omega \) gives a negative lift.
+where
+
+<ul>
+ <li> \( m \) is the mass of the body,</li>
+ <li> \( \boldsymbol{g} \) is the acceleration of
+   gravity vector,</li>
+ <li> \( C_D \) is a drag coefficient,</li>
+ <li> \( \varrho \) is the density of air,</li>
+ <li> \( A \) is the cross-section area of the body perpendicular to the
+   motion,</li>
+ <li> \( \boldsymbol{v}=d\boldsymbol{r}/dt \) is the velocity of the body,</li>
+ <li> \( \boldsymbol{w} \) is a given wind velocity,</li>
+ <li> \( v = |\boldsymbol{v}-\boldsymbol{w}| \) is the relative velocity between the
+   body and the wind,</li>
+ <li> \( C_L \) is a lift coefficient,</li>
+ <li> \( C_S \) is a coefficient for the sidewind or lateral aerodynamic force,</li>
+ <li> \( \boldsymbol{i}_t \) is a unit tangent vector of the body's path, while</li>
+ <li> \( \boldsymbol{i}_n \) is a unit vector normal to the path tilting upwards.</li>
+</ul>
+
+The drag \( C_D \) coefficient for a sphere is taken as 0.45. The lift
+coefficient \( C_L \) depends on the spinrate \( \omega \) (rad
+\( \hbox{s}^{-1} \)) of the body, and a simple linear relation often
+suffices: \( C_L = 0.2\omega/500 \). A negative \( \omega \) gives a negative
+lift.
 
 <p>
-We can simplify the model for a two-dimensional motion in an \( xy \) plane
-with unit vectors \( \boldsymbol{i} \) and \( \boldsymbol{j} \) in the \( x \) and \( y \) directions,
-respectively.
-Then we skip the sidewind force (\( C_S=0 \)). We also let gravity
-point downwards, \( \boldsymbol{g}=-g\boldsymbol{j} \), and let the wind velocity be horizontal:
-\( \boldsymbol{w}=-w\boldsymbol{i} \). Furthermore, we have that
+We can simplify the model for a two-dimensional motion in an \( xy \)
+plane with unit vectors \( \boldsymbol{i} \) and \( \boldsymbol{j} \) in the \( x \) and \( y \)
+directions, respectively.  Then we skip the sidewind force
+(\( C_S=0 \)). We also let gravity point downwards, \( \boldsymbol{g}=-g\boldsymbol{j} \), and
+let the wind velocity be horizontal: \( \boldsymbol{w}=-w\boldsymbol{i} \). Furthermore,
+we have that
 
 $$
 \begin{align}
@@ -242,11 +260,10 @@ $$
 \end{align}
 $$
 
-The initial conditions associated with
-<a href="#mjx-eqn-1">(1)</a>
-express that the body starts at the
-origin with an initial velocity \( v_0 \) making an angle \( \theta \) with
-the horizontal. In the two-dimensional case the conditions become
+The initial conditions associated with <a href="#mjx-eqn-1">(1)</a> express
+that the body starts at the origin with an initial velocity \( v_0 \)
+making an angle \( \theta \) with the horizontal. In the two-dimensional
+case the conditions become
 
 $$ \boldsymbol{r}(0) = 0\boldsymbol{i} + 0\boldsymbol{j},\quad \frac{d\boldsymbol{r}}{dt}(0)=\boldsymbol{v}(0)=
 v_0\cos\theta\boldsymbol{i} + v_0\sin\theta\boldsymbol{j}.$$

@@ -1,0 +1,24 @@
+subpool Main pool
+    subpool Initial motion data
+        Initial velocity = 5.0   ! m/s   # Initial velocity widget=textline
+        Initial angle = 45   ! deg   # Initial angle widget=textline
+        Spinrate = 50   ! 1/s   # Spinrate widget=textline
+    end
+
+    subpool Body and environment data
+        Wind velocity = 0.0   ! m/s   # Wind velocity in positive x direction. widget=textline
+        Mass = 0.1   ! kg   # Mass of body. widget=textline
+        Radius = 0.11   ! m   # Radius of spherical body. widget=textline
+    end
+
+    subpool Numerical parameters
+        Method = RK4   # Numerical solution method. widget=select
+        Time step   ! s   # None: ca 500 steps, otherwise specify float. widget=textline
+    end
+
+    subpool Plot parameters
+        Plot simplified motion = True   # Plot motion without drag and lift forces. widget=checkbox
+        New plot = True   # Erase all old curves. widget=checkbox
+    end
+
+end

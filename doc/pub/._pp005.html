@@ -28,8 +28,7 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [(' 2DO ', 3, None, '___sec0'),
-              (' Simulation program ', 1, None, '___sec1'),
+ 'sections': [(' Simulation program used as sample app ', 1, None, '___sec0'),
               (' User interfaces for Python functions ',
                1,
                'pp:GUI4functions',
@@ -38,23 +37,26 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:real:inout',
                'pp:real:inout'),
-              (' Flask interface ', 3, None, '___sec4'),
-              (' Django interface ', 3, None, '___sec5'),
+              (' Flask interface ', 3, None, '___sec3'),
+              (' Django interface ', 3, None, '___sec4'),
               (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
-              (' Flask application ', 3, None, '___sec7'),
-              (' Django application ', 3, None, '___sec8'),
-              (' Comparing graphs in the same plot ', 3, None, '___sec9'),
+              (' Flask application ', 3, None, '___sec6'),
+              (' Django application ', 3, None, '___sec7'),
+              (' Comparing graphs in the same plot ', 3, None, '___sec8'),
               (' More input parameters and results ',
                2,
                'pp:flask4',
                'pp:flask4'),
-              (' Django interface ', 3, None, '___sec11'),
-              (' Other types of function arguments ', 2, None, '___sec12'),
+              (' The returned HTML code ', 3, None, '___sec10'),
+              (' Documentation of the application ', 3, None, '___sec11'),
+              (' Django interface ', 3, None, '___sec12'),
+              (' Other types of input data ', 2, None, '___sec13'),
+              (' Uploading a file ', 3, None, '___sec14'),
               (' Working with a pool of input parameters ',
                1,
                'pp:flask_pool1',
                'pp:flask_pool1'),
-              (' Specify a pool as a list ',
+              (' Specifying a pool as a list ',
                2,
                'pp:flask_pool1:list',
                'pp:flask_pool1:list'),
@@ -86,41 +88,45 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:flask_pool1:GUI_cml_file',
                'pp:flask_pool1:GUI_cml_file'),
-              (' Specifying a pool using an API ', 2, None, '___sec22'),
+              (' Specifying a pool using an API ', 2, None, '___sec24'),
               (' Specifying a pool using an alternative API ',
                2,
                None,
-               '___sec23'),
+               '___sec25'),
               (' File with documentation of the application ',
                3,
                None,
-               '___sec24'),
-              (' LaTeX symbol as parameter name ', 3, None, '___sec25'),
-              (' Multiple input values for parameters ', 3, None, '___sec26'),
-              (' 2DO ', 2, None, '___sec27'),
+               '___sec26'),
+              (' LaTeX symbol as parameter name ', 3, None, '___sec27'),
+              (' Multiple input values for parameters ', 3, None, '___sec28'),
+              (' 2DO ', 2, None, '___sec29'),
               (' Reading default values from command line or file ',
                2,
                None,
-               '___sec28'),
-              (' Pool with other data structures ', 2, None, '___sec29'),
-              (' Advanced topics ', 1, None, '___sec30'),
-              (' Login and archival of results ', 2, None, '___sec31'),
-              (' Animations ', 2, None, '___sec32'),
-              (' Python expressions as input ', 2, None, '___sec33'),
-              (' Exercises ', 1, None, '___sec34'),
+               '___sec30'),
+              (' Pool with other data structures ', 2, None, '___sec31'),
+              (' Advanced topics ', 1, None, '___sec32'),
+              (' Login and archival of results ', 2, None, '___sec33'),
+              (' Animations ', 2, None, '___sec34'),
+              (' Python expressions as input ', 2, None, '___sec35'),
+              (' Exercises ', 1, None, '___sec36'),
               (' Exercise 1: Make a web app for integration ',
                2,
-               None,
-               '___sec35'),
+               'pp:exer:integrate',
+               'pp:exer:integrate'),
+              (' Exercise 2: Make a web app for plotting data ',
+               2,
+               'pp:exer:integrate',
+               'pp:exer:integrate'),
               (' Exercise: Make a web app for studying vibrations ',
                1,
                None,
-               '___sec36'),
-              (' Problem 2: Make a coin flipper ', 2, None, '___sec37'),
-              (' Deployment ', 1, None, '___sec38'),
-              (' Wakari ', 2, None, '___sec39'),
-              (' Uni Oslo ', 2, None, '___sec40'),
-              (' Appendix: Installation ', 1, None, '___sec41')]}
+               '___sec39'),
+              (' Problem 3: Make a coin flipper ', 2, None, '___sec40'),
+              (' Deployment ', 1, None, '___sec41'),
+              (' Wakari ', 2, None, '___sec42'),
+              (' Uni Oslo ', 2, None, '___sec43'),
+              (' Appendix: Installation ', 1, None, '___sec44')]}
 end of tocinfo -->
 
 <body>
@@ -157,14 +163,14 @@ MathJax.Hub.Config({
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
-     <!-- navigation toc: --> <li><a href="._pp002.html#___sec1" style="font-size: 80%;">Simulation program</a></li>
+     <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;">Simulation program used as sample app</a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
      <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
-     <!-- navigation toc: --> <li><a href="#___sec30" style="font-size: 80%;">Advanced topics</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec34" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec38" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Appendix: Installation</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec32" style="font-size: 80%;">Advanced topics</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec44" style="font-size: 80%;">Appendix: Installation</a></li>
 
         </ul>
       </li>
@@ -180,12 +186,12 @@ MathJax.Hub.Config({
 <a name="part0005"></a>
 <!-- !split -->
 
-<h1 id="___sec30">Advanced topics </h1>
+<h1 id="___sec32">Advanced topics </h1>
 
 <p>
 This functionality much in place, but still not documented.
 
-<h2 id="___sec31">Login and archival of results </h2>
+<h2 id="___sec33">Login and archival of results </h2>
 
 <p>
 A user can create an account, log in, and save the results.
@@ -216,9 +222,9 @@ right corner has a link <em>Previous simulations</em> which gives access to
 previous results in the database. At the bottom of the page with
 previous runs, there is a <em>Delete all</em> button that clears the database.
 
-<h2 id="___sec32">Animations </h2>
+<h2 id="___sec34">Animations </h2>
 
-<h2 id="___sec33">Python expressions as input </h2>
+<h2 id="___sec35">Python expressions as input </h2>
 
 <p>
 This can only be done in pools unless the value of the parameter is a string (positional argument or default field as text, with explicit conversion).

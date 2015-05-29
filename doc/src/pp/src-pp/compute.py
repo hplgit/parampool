@@ -579,13 +579,7 @@ def pool_definition_api_with_separate_subpools():
     pool = plot_pool(pool)
     pool.update()  # finalize pool construction
 
-    from parampool.pool.UI import (
-        set_data_item_attribute,
-        set_defaults_from_file,
-        set_defaults_from_command_line,
-        set_defaults_in_model_file,
-        write_poolfile,
-        )
+    from parampool.pool.UI import set_data_item_attribute
     # Change default values in the web GUI
     import parampool.pool.DataItem
     parampool.pool.DataItem.DataItem.defaults['minmax'] = [0, 100]
@@ -597,19 +591,17 @@ def pool_definition_api_with_separate_subpools():
     pool = set_data_item_attribute(pool, 'widget_size', 6)
     pool.get('Time step').data['widget_size'] = 4
 
-    pool = set_defaults_from_file(pool, command_line_option='--poolfile')
-    pool = set_defaults_from_command_line(pool)
+    # Example on editing hardcoded defaults in the model files
+    # (not necessary, but a possible technique along with
+    # setting defaults in the pool, in a file, or on the command line)
+    from parampool.pool.UI import set_defaults_in_model_file
     flask_modelfile = 'model.py'
-    django_modelfile = os.path.join('motion_and_forces_with_pool', 'app',
-                                    'models.py')
+    django_modelfile = os.path.join(
+        'motion_and_forces_with_pool', 'app', 'models.py')
     if os.path.isfile(flask_modelfile):
         set_defaults_in_model_file(flask_modelfile, pool)
     elif os.path.isfile(django_modelfile):
         set_defaults_in_model_file(django_modelfile, pool)
-
-    poolfile = open('pool.dat', 'w')
-    poolfile.write(write_poolfile(pool))
-    poolfile.close()
 
     return pool
 

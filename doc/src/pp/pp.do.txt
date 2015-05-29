@@ -25,30 +25,10 @@ fancy GUI.
 
 !split
 
-__NOTE:__ This report is in a _very preliminary state_, but should be
-sufficient for exploring Parampool for creating web GUIs. Please send
-email to the first author for questions, reporting typos and errors,
-request of more information, etc.
-
 TOC: on
 
-=== 2DO ===
-
- * More links to additional material: (Read these when returning to
-   this work)
-   * "Quick Flask++ tutorial": "http://maximebf.com/blog/2012/10/building-websites-in-python-with-flask/#.UxV4jHVdXn4"
-   * "Quick overview of Bootstrap 3": "http://www.realpython.com/blog/design/getting-started-with-bootstrap-3/#.UxV8pHVdXn4", "another Bootstrap 3 tutorial": "http://www.w3resource.com/twitter-bootstrap/tutorial.php"
-   * "Flask and Boostrap intro": "http://pythonthusiast.pythonblogs.com/230_pythonthusiast/archive/1309_building_in_openshift_part_iv__application_layout_and_templating_using_bootstrap_3_and_jinja_2.html" ("sample app": "http://bio-ekowibowo.rhcloud.com/" has sign in functionality and bootstrap layout explained "here": "http://pythonthusiast.pythonblogs.com/230_pythonthusiast/archive/1317_building_python_flask_application_in_openshiftheroku_replacement_part_vii__adding_sign_in_form_using_bootstrap_3_and_login_feature_using_flask-login.html")
-   * "Flask, Heroku and Bootstrap": "http://www.shea.io/lightweight-python-apps-with-flask-twitter-bootstrap-and-heroku/" (this is a good recipe we can turn into building a science app)
-   * "Facebook login in Flask": "http://www.shea.io/facebook-authentication-for-flask-apps/"
-   * "Flask-Bootstrap": "https://github.com/mbr/flask-bootstrap" and its "doc": "http://pythonhosted.org/Flask-Bootstrap/", read in particular "basic usage": "http://pythonhosted.org/Flask-Bootstrap/basic-usage.html" and see the (only?) "example": "https://github.com/mbr/flask-bootstrap/blob/master/sample_application/__init__.py"
-   * "Bootstrap video intro": "http://www.lynda.com/Bootstrap-tutorials/Bootstrap-Adding-Interactivity-Your-Site/122456-2.html?utm_source=google&utm_medium=cpc&utm_campaign=Search-Dev-Bootstrap:%2BAdding%2BInteractivity%2Bto%2BYour%2BSite&utm_content=34118887386&utm_term=%2Bbootstrap%20%2Btutorial&gclid=CP7Mupaq-LwCFcPTcgodLxEA-A"
- * "A complete modern Python project with virtualenv, testing, setup.py, etc.": "https://github.com/splaice/py-bootstrap"
- * "Skulpt: Interactive Python in the browser": "http://www.skulpt.org/"
- * "Python for computer games": "http://inventwithpython.com/"
-
 !split
-======= Simulation program =======
+======= Simulation program used as sample app =======
 
 We shall work with a sample application that takes a few variables as
 input and produces numbers and/or graphs as result.  Specifically, our
@@ -76,26 +56,36 @@ m\frac{d^2\bm{r}}{dt^2} = -m\bm{g} - \frac{1}{2}C_D\varrho A v^2\bm{i}_t
 label{pp:ballistic:eq1}
 \end{equation}
 !et
-where $m$ is the mass of the body, $\bm{g}$ is the acceleration of
-gravity vector, $C_D$ is a drag coefficient, $\varrho$ is the density
-of air, $A$ is the cross-section area of the body perpendicular to the motion,
-$v = |\bm{v}-\bm{w}|$ is the relative velocity between the body,
-$\bm{v}=d\bm{r}/dt$, and a given wind velocity $\bm{w}$, $C_L$
-is a lift coefficient, $C_S$ is a coefficient for the sidewind or lateral
-aerodynamic force, $\bm{i}_t$
-is a unit tangent vector of the body's path, while $\bm{i}_n$ is a unit
-vector normal to the path tilting upwards.
-The drag $C_D$ coefficient for a sphere is taken as 0.45. The lift coefficient
-$C_L$ depends on the spinrate $\omega$ (rad $\hbox{s}^{-1}$)
-of the body, and a simple linear relation often suffices:
-$C_L = 0.2\omega/500$. A negative $\omega$ gives a negative lift.
+where
 
-We can simplify the model for a two-dimensional motion in an $xy$ plane
-with unit vectors $\bm{i}$ and $\bm{j}$ in the $x$ and $y$ directions,
-respectively.
-Then we skip the sidewind force ($C_S=0$). We also let gravity
-point downwards, $\bm{g}=-g\bm{j}$, and let the wind velocity be horizontal:
-$\bm{w}=-w\bm{i}$. Furthermore, we have that
+ * $m$ is the mass of the body,
+ * $\bm{g}$ is the acceleration of
+   gravity vector,
+ * $C_D$ is a drag coefficient,
+ * $\varrho$ is the density of air,
+ * $A$ is the cross-section area of the body perpendicular to the
+   motion,
+ * $\bm{v}=d\bm{r}/dt$ is the velocity of the body,
+ * $\bm{w}$ is a given wind velocity,
+ * $v = |\bm{v}-\bm{w}|$ is the relative velocity between the
+   body and the wind,
+ * $C_L$ is a lift coefficient,
+ * $C_S$ is a coefficient for the sidewind or lateral aerodynamic force,
+ * $\bm{i}_t$ is a unit tangent vector of the body's path, while
+ * $\bm{i}_n$ is a unit vector normal to the path tilting upwards.
+
+The drag $C_D$ coefficient for a sphere is taken as 0.45. The lift
+coefficient $C_L$ depends on the spinrate $\omega$ (rad
+$\hbox{s}^{-1}$) of the body, and a simple linear relation often
+suffices: $C_L = 0.2\omega/500$. A negative $\omega$ gives a negative
+lift.
+
+We can simplify the model for a two-dimensional motion in an $xy$
+plane with unit vectors $\bm{i}$ and $\bm{j}$ in the $x$ and $y$
+directions, respectively.  Then we skip the sidewind force
+($C_S=0$). We also let gravity point downwards, $\bm{g}=-g\bm{j}$, and
+let the wind velocity be horizontal: $\bm{w}=-w\bm{i}$. Furthermore,
+we have that
 
 !bt
 \begin{align}
@@ -104,11 +94,10 @@ $\bm{w}=-w\bm{i}$. Furthermore, we have that
 \bm{i}_n &= -b\bm{i} + a\bm{j}\hbox{ if }a>0\hbox{ else }b\bm{i}-a\bm{j}
 \end{align}
 !et
-The initial conditions associated with
-(ref{pp:ballistic:eq1})
-express that the body starts at the
-origin with an initial velocity $v_0$ making an angle $\theta$ with
-the horizontal. In the two-dimensional case the conditions become
+The initial conditions associated with (ref{pp:ballistic:eq1}) express
+that the body starts at the origin with an initial velocity $v_0$
+making an angle $\theta$ with the horizontal. In the two-dimensional
+case the conditions become
 
 !bt
 \[ \bm{r}(0) = 0\bm{i} + 0\bm{j},\quad \frac{d\bm{r}}{dt}(0)=\bm{v}(0)=
@@ -143,7 +132,8 @@ the ground (`landing_point`) of a ball that is initially thrown with a
 given velocity in magnitude (`initial_velocity`), making
 an angle (`initial_angle`) with the ground. There are two real input
 variables and one real output variable. The function must be available
-in some module, here the module is simply called `compute.py` (and
+in some module, here the module is simply called "`compute.py`":
+"${src_path}/compute.py" (and
 it also contains a lot of other functions for other examples).
 
 In the following we shall refer to functions like `compute_drag_free_landing`,
@@ -162,7 +152,7 @@ Python file "`generate.py`": "https://github.com/hplgit/parampool/tree/master/do
 The `generate` function grabs the arguments in our compute function and
 creates the necessary Flask files.
 
-FIGURE: [fig-pp/flask1.png, width=500] A simple web interface. label{pp:flask1:fig1}
+FIGURE: [fig-pp/flask1.png, width=500 frac=0.6] A simple web interface. label{pp:flask1:fig1}
 
 
 !bwarning Tip
@@ -207,8 +197,8 @@ and open your web browser at the location
 `http://127.0.0.1:5000/`. Fill in values for the two input variables
 and press *Compute*. The page in the Chrome browser will now look like Figure
 ref{pp:flask1:fig1}. Other browsers (Firefox, for instance) may have a
-slightly different design of the input fields. All figures in this tutorial
-are made with the Chrome browser.
+slightly different design of the input fields. The figures in this tutorial
+were made with the Chrome and Opera browsers.
 
 !bnotice Generated files:
 Readers with knowledge of Flask will notice
@@ -276,7 +266,8 @@ def compute_drag_free_motion_plot(
     ...
     return html_text
 !ec
-is now our compute function, in `compute.py`, which takes the same two
+is now our compute function, in "`compute.py`":
+"${src_path}/compute.py", which takes the same two
 input arguments as before, but returns some HTML text that will display
 a plot in the browser window. This HTML text is basically the inclusion
 of the image file containing the plot,
@@ -331,7 +322,7 @@ and not simply integers (like 5) if the variable is supposed to be a `float`.
 !enotice
 
 We run `python generator.py` to generate the Flask files and then
-`python controller.py` to start the web GUI. Now the default
+just writing `python controller.py` starts the web GUI. Now the default
 values appear in the input fields. These can be altered, or you can
 just click *Compute*. The computations result in a plot as
 showed in Figure ref{pp:flask2:fig1}.
@@ -341,7 +332,7 @@ FIGURE: [fig-pp/flask2.png, width=800] A web interface with graphics. label{pp:f
 === Django application ===
 
 The corresponding Django application is generated by the same
-"`generator.py`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/django2" code as above, except that tword `flask` is replaced
+"`generator.py`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/django2" code as above, except that the word `flask` is replaced
 by `django`. The Django files are
 now placed in the `drag_free_motion_plot` subdirectory, and the web GUI
 is started by running
@@ -386,7 +377,7 @@ a global variable we ensure that the value of `fig_no` survives between
 the calls to the compute function).
 Figure ref{pp:flask3:fig1} displays an attempt to not check `new_plot`
 and compare the curves corresponding to three different parameters
-(the files are in the "`flask3": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask3" directory.
+(the files are in the "`flask3`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask3" directory.
 
 FIGURE: [fig-pp/flask3.png, width=800] Plot with multiple curves. label{pp:flask3:fig1}
 
@@ -438,7 +429,11 @@ from parampool.utils import save_png_to_str
 html_text = save_png_to_str(plt, plotwidth=400)
 !ec
 With this construction one can very easily avoid plot files and
-embed the plot directly in the HTML code.
+embed the plot directly in the HTML code `html_text`:
+
+!bc htmlcod
+<img src="data:image/png;base64,..." width="...">
+!ec
 !enotice
 
 !bnotice Matplotlib without X server
@@ -474,8 +469,12 @@ The function that performs the computations has the following signature:
 
 @@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
 and returns a formatted string `html_text` with two plots organized
-as a table. The technique described in the
-*Avoiding plot files* box at the end of Section {pp:plot:output} is
+in an HTML table.
+
+=== The returned HTML code ===
+
+The technique described in the
+*Avoiding plot files* box at the end of Section ref{pp:plot:output} is
 implemented to embed PNG images directly in the HTML code.
 Under the plots there is a table of input values and the landing point.
 Curves can be accumulated in the plots (`new_plot=True`), with
@@ -522,7 +521,10 @@ of the returned HTML string can be found in the "`compute.py`":
 
 FIGURE: [fig-pp/flask4.png, width=850] Web interface with two graphs. label{pp:flask4:fig1}
 
-Any doc string of the compute function is copied and typeset verbatim
+=== Documentation of the application ===
+
+The Parampool `generate` function applies the convention that
+any doc string of the compute function is copied and typeset verbatim
 at the top of the web interface. However, if the text `# (DocOnce
 format)` appears somewhere in the doc string, the text is taken as
 "DocOnce": "https://github.com/hplgit/doconce" source code and
@@ -617,16 +619,20 @@ Django application is started as shown in previous examples and has the same
 functionality as the Flask application.
 
 
-===== Other types of function arguments =====
+===== Other types of input data =====
 
 The `generate` function will recognize the following different types
 of keyword arguments in the compute function:
 `float`, `int`, `bool`, `str`, `list`,
 `tuple`, `numpy.ndarray`, name of a file, as well as user-defined class types
-(a la `MySpecialClass`).
+(a la `MyClass`).
+
+=== Uploading a file ===
+
 Here is a minimalistic example on computing the mean and standard
 deviation of data either in an array or in a file (we use the
-file if the operator of the web interface assigns a file to `filename`):
+file if the operator of the web interface assigns a name
+in the ``filename'' entry):
 
 @@@CODE src-pp/compute.py fromto: def compute_average@if __name
 The output is simple, basically two numbers in a table and an intro line.
@@ -639,7 +645,7 @@ for uploading the file.
 
 When the application runs, we have two data fields: one for setting an
 array with list syntax and one for uploading a file. Clicking on the
-latter and uploading an file `mydata.dat` containing just columns of
+latter and uploading a file `mydata.dat` containing just columns of
 numbers, results in the web page displayed in Figure
 ref{pp:flask5:fig1}. In this case, when a filename was assigned, we
 use the data in the file.  Alternatively, we can instead fill in the
@@ -655,7 +661,7 @@ label{pp:flask_pool1}
 Parampool's main focus is on scientific applications with lots of
 input data of different type, organized in a hierarchical tree fashion.
 The various input parameters are defined in terms of a *pool*.
-The pool can be defined as a nested list or through function
+The pool can be defined as a nested list or through a function
 application programming interface (known as an API, and here
 consisting of calls functionality in the `parampool.pool` package).
 
@@ -664,11 +670,11 @@ To exemplify the use of pools, we apply the
 Section ref{pp:flask4}):
 
 @@@CODE src-pp/compute.py fromto: def compute_motion_and_forces@"""
-Let us organize 10 input parameters into four subpools. At the top
+Let us organize the 10 input parameters into four subpools. At the top
 level we need a subpool, usually called "Main pool" or named after
 the application. Each subpool
 is here specified with a logical name of each parameter and the
-corresponding variable names in the compute function:
+corresponding variable name in the compute function:
 
  * Main pool
    * Initial motion data
@@ -697,7 +703,7 @@ A pool is a hierarchical *tree structure* with *subpools* and
 in the problem. The task now is to make a Python specification of
 the of subpools and data items in the pool tree.
 
-===== Specify a pool as a list =====
+===== Specifying a pool as a list =====
 label{pp:flask_pool1:list}
 
 The pool tree can be specified as a list of lists, strings, and dictionaries.
@@ -709,31 +715,38 @@ pool function goes as follows:
 @@@CODE src-pp/compute.py fromto: def pool_definition_list@def convert_time_step
 Actually, the pool function must return a `parampool.pool.Pool` object,
 so after the definition of the pool tree as a list we must make the
-shown conversion from a list to `Pool` object via the `listtree2Pool`
+shown conversion from a list to a `Pool` object via the `listtree2Pool`
 function.
 
 ===== Attributes in data items =====
 label{pp:flask_pool1:dataitem}
 
 Each data item has a name and preferably a default value, as in the
-case of "Initial velocity". More attributes can be added:
+case of ``Initial velocity''. More attributes can be added:
 
- * 'widget' specifies the type of widget used in a graphical
+ * `widget` specifies the type of widget used in a graphical
    user interface. Legal values are `integer`, `float`, `range`
-   (requires the `minmax` attribute), `integer_range` (requires
-   the `minmax` attribute), `textline`, `textarea` (for larger
+   (requires the `minmax` attribute too), `integer_range` (requires
+   the `minmax` attribute too), `textline`, `textarea` (for larger
    multi-line texts), `checkbox` (for boolen variables), `select`
    (list of options), `email`, `password`, `file` (for a filename
    of a file to be uploaded, `url`, `hidden` (for an invisible field),
    and `tel` (for a phone number). If not given, `widget` is based
-   on the value of `str2type` or the type of the default value.
+   on the value of the `str2type` attribute or the type of the default value.
  * `minmax` is a 2-list or 2-tuple with lower and upper bound in
    the interval of legal values of a number.
  * The `range_steps` attribute, valid when `widget` is `range`,  specifies the
    steps in the slider used to select the number.
-   Here we can select the "Initial angle" in unit steps between 0 and 90
+   In our example,
+   we can select the ``Initial angle'' in unit steps between 0 and 90
    degrees.
- * `unit` specifies a unit, e.g., `1/s` or `kg/m**3`, or `1/s`.
+ * `unit` specifies a unit, e.g., `1/s` or `kg/m**3`.
+   If the input contains another unit, e.g., `4 1/h`, the value will
+   be automatically converted to the registered unit ($4/3600$ 1/s
+   if 1/s is the registered unit).
+   (Parampool applies the the `PhysicalQuantity` object from the
+   ScientificPython package to perform computations with units.
+   A copy of this object is bundled with Parampool.)
  * `help` adds a help string to explain more about the parameter and
    how it can be set.
  * `number_step` specifies the precision of `float` or `integer`
@@ -741,13 +754,15 @@ case of "Initial velocity". More attributes can be added:
    the precision is arbitrary.
  * `str2type` is a conversion function from a string (text given in
    a user interface) to the right type for the parameter. A value
-   is automatically assigned if `widget` is given, otherwise one
-   applies the default value to find the right `str2type` function.
-   This means that it is strictly not necessary to assign for the
-   "Wind velocity" data item. With more complicated objects one can
+   of `str2typ2` is automatically assigned if `widget` is given, otherwise
+   Parampool applies the default value to find the right `str2type` function.
+   This means that it is strictly not necessary to assign `str2type` for the
+   ``Wind velocity'' data item since the default value `0.0` implies
+   `str2type=float`. With more complicated objects one can
    assign a user-given conversion function to `str2type` (shown later).
- * `option` is a list of options for a `select` widget, here the
-   type of numerical solution methods that can be chosen.
+ * `option` is a list of options for a `select` widget. The ``Method''
+   data item (for the name of the numerical solution method)
+   provides an example of this widget type.
  * `validate` holds a function that takes the value of the data item
    as argument and returns `True` or `False` depending on whether
    the value can be accepted or not.
@@ -755,17 +770,17 @@ case of "Initial velocity". More attributes can be added:
    in Flask or Django interfaces instead of the name of data item.
  * `widget_size` specifies the size (width) of fields in graphical
    user interfaces.
- * `textline` must be used for default values that are `None`,
-   because another value or the text "None" can be written in
+ * The `textline` widget must be used for default values that are `None`,
+   because another value or the text `None` can be written in
    the field. In this case, `str2type` is automatically set to `eval`
    and any valid Python expression is then essentially allowable,
-   but wrong objects will give errors in the compute function.
+   but wrong object types may give errors in the compute function.
 
 !bnotice Check that default values are real numbers
 If a default value is set to `5`, Parampool will interpret this as an
 integer and let `string2type` be `int` and force all input to be
 converted to integers. Normally, you want input to be real, so check
-that the default value is `5.0` unless the pool item is meant to be
+that the default value is `5.0` unless the pool item is really meant to be
 an integer.
 !enotice
 
@@ -780,18 +795,19 @@ in the pool is extracted by
 !bc pycod
 variable = pool.get_value('my parameter')
 !ec
-In case multiple data items have the same name, enough of the subpool path
-must be given, e.g.,
+In case multiple data items have the same name, a sufficient part
+of the subpool path must be given, e.g.,
 
 !bc pycod
 variable = pool.get_value('My Subpool1/my parameter')
 !ec
-Our specific computing function is a wrapper for `compute_motion_and_forces`:
+Our specific compute function is a wrapper for `compute_motion_and_forces`:
 
 @@@CODE src-pp/compute.py fromto: compute_motion_and_forces_with_pool\(@def compute_motion_and_forces_with_pool_loop\(
 
 The assumption is that the pool object provides enough input data for
-the compute function. If this assumption does not hold, one can
+the compute function. If this assumption does not hold and extra
+information is needed, one can
 simply make a class, store extra data as attributes in the class,
 and let the compute function be a method in the class.
 
@@ -799,7 +815,7 @@ and let the compute function be a method in the class.
 label{pp:flask_pool1:cml_file}
 
 Having defined a pool, it is trivial to get a command-line interface
-in the application. Just perform
+in the application. Just write
 
 !bc pycod
 from parampool.pool.UI import set_values_from_command_line
@@ -808,8 +824,9 @@ pool = set_values_from_command_line(pool)
 Now `pool` has values loaded from the command line. The name of
 the command-line options follow the names in the pool, but with
 underscore replacing whitespace: `--Initial_motion_data/Initial_angle`.
-However, in this case `--Initial_angle` also works since it is a
-unique name in the pool tree.
+However, in this case just writing `--Initial_angle` also works since it is a
+unique name in the pool tree, and then we do not need the complete
+path with the subpool name.
 
 One can also read data from a file with syntax
 
@@ -842,8 +859,8 @@ then from the command line, and finally launch the graphical web
 interface for enabling interactive setting of values in the pool system.
 Automatic generation of such interactive web interfaces constitutes
 the next topic. The lines above for loading parameters from file
-and command-line are automatically generated when a web interface
-is requested (see Section ref{pp:flask_pool1:GUI_cml_file}).
+and command line are automatically generated when a web interface
+is requested (see also comments in Section ref{pp:flask_pool1:GUI_cml_file}).
 
 
 ===== Generating a web-based user interface =====
@@ -881,11 +898,15 @@ FIGURE: [fig-pp/flask_pool1_closed.png, width=800] Web interface in closed form.
 label{pp:flask_pool1:GUI_op}
 
 The pool tree is mapped onto a visual structure often used for
-directory trees. Clicking on *open all* at the top of the user interface
+directory trees. The look and feel resemble that of the Windows
+Explorer application in the Windows operating system.
+
+Clicking on *open all* at the top of the user interface
 expands all subpools so that all parameters (data items) become visible.
 Figure ref{pp:flask_pool1:fig2} displays the result in the Opera browser.
 Note that in this type of user interface, the name of each data item
-is typeset in LaTeX and inserted as a picture.
+is automatically typeset in LaTeX and inserted as a picture (the
+URL: "http://latex.codecogs.com" utility is used).
 
 FIGURE: [fig-pp/flask_pool1_open.png, width=800] Web interface in fully expanded form. label{pp:flask_pool1:fig2}
 
@@ -894,9 +915,7 @@ The following technical points must be mentioned.
  o A plain float or integer value gives a `textline` widget,
    while if a `minmax`
    range is specified, a `float` or `integer` widget
-   (HTML5 number field) is chosen. Choosing `float` or `integer`
-   explicitly as widget may lead to different width of the widget
-   in different browsers.
+   (so-called HTML5 number field) is chosen.
 
  o Data items whose widgets are specified as `float` or `integer`, or
    where this is implied because `str2type` is `float` or `int`, or
@@ -912,13 +931,13 @@ The following technical points must be mentioned.
  o When the widget is `range`, an HTML5 range field is used, which is
    usually rendered as a slider in browsers. The slider gets by default
    100 steps (can be changed or specified individually for any data item).
- o With the `select` widget we get a pull-down pool with the different
+ o With the `select` widget we get a pull-down menu with the different
    options.
  o Any data item whose default value is `True` or `False` maps directly to
    a checkbox for boolean parameters.
  o Any data item with `unit` specified maps to an ordinary text field,
    since input consists of a number with an optional text for the unit.
-   That is, if we choose to set `unit='m/s'` for the "Initial velocity"
+   That is, if we choose to set `unit='m/s'` for the ``Initial velocity''
    data item, the input field will not the an HTML5 number field, but
    a standard HTML text field.
  o The names of the data items are typeset in LaTeX and shown as
@@ -937,17 +956,17 @@ default value.
 
 We can try out the interface:
 
- o Set "Initial velocity" to 8.
- o Move the slider for "Initial angle" to 55.
- o Add a positive "Wind velocity" of -3.
- o Specify "Mass" as the text `0.1*1000 g` (i.e., we use g rather
+ o Set ``Initial velocity'' to 8.
+ o Move the slider for ``Initial angle'' to 55.
+ o Add a positive ``Wind velocity'' of -3.
+ o Specify ``Mass''as the text `0.1*1000 g` (i.e., we use g rather
    than the default kg as unit, but the value is still 0.1 kg).
- o Choose `RK2` for "Method".
- o Set "Time step" to 0.12.
- o Uncheck the "Plot simplified motion" boolean value.
+ o Choose `RK2` for ``Method''.
+ o Set ``Time step'' to 0.12.
+ o Uncheck the ``Plot simplified motion'' boolean value.
  o Hold the mouse pointer over the
-   "Wind velocity" field to see the help string. Then point the mouse
-   to  "Mass" input field and the specified unit pops up.
+   ``Wind velocity'' field to see the help string. Then point the mouse
+   to  ``Mass'' input field and the specified unit pops up.
    A combination of help
    and unit information is showed if both are given in the
    data item definition.
@@ -968,30 +987,38 @@ FIGURE: [fig-pp/flask_pool1_result.png, width=800] Web interface with input and 
 label{pp:flask_pool1:GUI_error}
 
 __Text in a number field.__
-Write `abc` in the "Initial velocity" field and press the *Compute* button.
-The error message "Please enter a number" pops up.
+Write `abc` in the ``Initial velocity'' field and press the *Compute* button.
+The error message ``Please enter a number'' pops up.
 
 __Failure of user-provided validate function.__
-Give a negative value for "Mass".
-The "Mass" data item has a validation function provided by us.
+Give a negative value for ``Mass''.
+The ``Mass''data item has a validation function provided by us.
 A `False` value returned from this function gives rise to a
 `DataItemValueError` shown in the browser. It reads here
-`Mass = -0.1: validate function <lambda> claims invalid value`.
+
+!bc
+Mass = -0.1: validate function <lambda> claims invalid value.
+!ec
 
 __Failure of converting string to right type.__
-Write `abc` for "Radius". This is a text field so any
-text is in principle valid, but `parampool` raises a `TypeError`
-with the message `could not apply str2type=<type 'float'> to value abc <type 'str'>`.
+Write `abc` for ``Radius''. This is a text field so any
+text is in principle valid, but Parampool raises a `TypeError`
+with the message
+
+!bc
+could not apply str2type=<type 'float'> to value abc <type 'str'>
+!ec
 
 __Failure in the compute function.__
-Give a list `[0.1, 0.2]` for "Time step". Since the default is `None`,
+Give a list `[0.1, 0.2]` for ``Time step''. Since the default is `None`,
 which causes `str2type=eval`, any Python expression is accepted in
-the interface, but the compute function raises a `TypeError`
-because `float(dt)` fails when `dt` is a list. A remedy is to
-write a tailored `str2type` function:
+the interface, but the compute function used in our example
+in this tutorial will raise a `TypeError`
+because `float(dt)` fails when `dt` is a list. One could think
+of providing a tailored `str2type` function in this case:
 
 !bc pycod
-def convert_time_step(data_item, value):
+def convert_time_step(value):
     # Value must be None or a float
     if value == 'None':
         return None
@@ -999,10 +1026,11 @@ def convert_time_step(data_item, value):
         try:
             return float(value)
         except TypeError:
-            raise TypeError('%s: could not convert "%s" to float' %
-	                    (data_item.name, value))
+            raise TypeError(
+	    'Time step: could not convert "%s" to float, '
+	    'must be None or float' % value)
 !ec
-Setting `str2type=convert_time_step` for the "Time step" data item
+Setting `str2type=convert_time_step` for the ``Time step'' data item
 gives an informative error message if the answer is not as expected:
 `None` or a floating-point number.
 
@@ -1015,7 +1043,7 @@ see Section ref{pp:flask_pool1:cml_file},
 before the web GUI is offered to the
 user. When autogenerating the web interface, the magic lines from
 Section ref{pp:flask_pool1:cml_file} are automatically inserted
-in the `controller.py` file (for Flask or `views.py for Django).
+in the `controller.py` file (for Flask or `views.py` for Django).
 This means that when starting `python controller.py` we may add
 `--poolfile name` and any set of command-line options for setting
 individual parameters. This makes it easy to control which default
@@ -1043,11 +1071,11 @@ a file tree. The rules are simple:
    between subpools and data items. For example:
 
      * `/Main pool/Initial motion data/Initial velocity` is the
-       full path to the "Initial velocity" data item.
-     * Standing in the "Initial motion data" subpool,
-       `..` is the parent subpool ("Main pool"), while
+       full path to the ``Initial velocity'' data item.
+     * Standing in the ``Initial motion data'' subpool,
+       `..` is the parent subpool (``Main pool''), while
        `../Numerical parameters` is the correct path to the
-       "Numerical parameters" subpool. That is, we can use
+       ``Numerical parameters'' subpool. That is, we can use
        relative and absolute paths as in a file tree.
  * A data item is appended to the current subpool by
    calling `pool.add_data_item`.
@@ -1059,12 +1087,15 @@ directory).
 
 ===== Specifying a pool using an alternative API =====
 
-There is an another way of defining subpools as well: make a functions
+There is an another way of defining subpools as well: make a function
 for defining each subpool.
 
 @@@CODE src-pp/compute.py fromto: pool_definition_api_with_separate_subpools@def compute_motion_and_forces_with_pool
 
-This application is used to illustrate three important additional features
+This application, found in the directory
+"`flask_pool3`": "https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool3" (with a corresponding "Django counterpart":
+"https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/django_pool3"),
+will now be used to illustrate three important additional features
 of Parampool:
 
  o documentation of the application is in an external file `doc.html`
@@ -1211,14 +1242,13 @@ Describe input as
  * `MySpecialObject(2,3,4)` (works)
 
 
-
-
 #What about w(t) like a w_0 + sin?
 
 #Could have an exercise with a missile, rho depending on height (see sports
 #book) rho_sea*exp(-0001036y) fra De Mestre, C_D dep on v see
 #http://en.wikipedia.org/wiki/Drag_equation (no the relevant C_D is probably
 #beyond the drag crisis and no need for C_D(Re))
+
 
 !split
 ======= Exercises =======
@@ -1231,10 +1261,13 @@ The purpose of this exercise is to use Parampool to generate a
 simple web application for integrating functions: $\int_a^bf(x)dx$.
 Provide a symbolic expression for $f(x)$ and the limits $a$ and $b$
 as input. The application first attempts to
-compute the integral $\int_a^bf(x)dx$ symbolically using `sympy`,
+compute the integral $\int f(x)dx$ symbolically using `sympy`,
 without limits.
-If that does not succeed, it computes it numerically by the, e.g.,
-Trapezoidal rule using the $a$ and $b$ limits.
+If that does not succeed, it computes $\int_a^b f(x)dx$
+numerically by the, e.g., Trapezoidal rule.
+The compute function should return nicely typeset formula for
+the integrand (use `sympy.latex`) and also the result in case of
+symbolic integration.
 
 !bhint
 The relevant `sympy` code needs to turn the string expression
@@ -1275,24 +1308,36 @@ file=upload_and_plot
 
 Make a web app with the `parampool.pool.Pool` functionality
 for uploading a file with columns of data and plotting
-columns 2, 3, and so forth against column 1. Use `numpy.loadtxt`
-to load the data from file.
+columns 2, 3, and so forth against column 1.
+
+!bhint
+Use the `file` widget to provide the name of the data file in the
+input. Use `numpy.loadtxt`
+to easily load the data from file.
+!ehint
 
 ======= Exercise: Make a web app for studying vibrations =======
 
-Download `bumpy`. Set up prms.
+Download the "bumpy": "https://github.com/hplgit/bumpy" for
+simulating vibrating mechanical systems governed by the
+differential equation
 
 !bt
 \begin{equation}
-mu'' + f(u') + s(u) = F(t),
+mu'' + f(u') + s(u) = F(t).
 label{pp:model:eq1}
 \end{equation}
 !et
 
-Make an interface to
-it such that
+Make an interface to the bumpy application where the user can set
+the following items:
 
-   * s=k*u, have k as parameter, linear damping, F=0, V=0
+   * an option list for selected formulas for the spring $s(u)$:
+     * $s(u)= ku$ (linear spring)
+     * $s(u)= ku( + \frac{1}{6}x^3)$ (first two Taylor-series terms
+       for $k\sin u$)
+     * $s(u) = k\sin u$ (pendulum ``spring'' caused by gravity)
+     [[[
    * F=A*sin(w*t), A and w are parameters
    * damping with two values and radio buttons, b
    * s is a text expression

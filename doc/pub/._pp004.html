@@ -28,8 +28,7 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [(' 2DO ', 3, None, '___sec0'),
-              (' Simulation program ', 1, None, '___sec1'),
+ 'sections': [(' Simulation program used as sample app ', 1, None, '___sec0'),
               (' User interfaces for Python functions ',
                1,
                'pp:GUI4functions',
@@ -38,23 +37,26 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:real:inout',
                'pp:real:inout'),
-              (' Flask interface ', 3, None, '___sec4'),
-              (' Django interface ', 3, None, '___sec5'),
+              (' Flask interface ', 3, None, '___sec3'),
+              (' Django interface ', 3, None, '___sec4'),
               (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
-              (' Flask application ', 3, None, '___sec7'),
-              (' Django application ', 3, None, '___sec8'),
-              (' Comparing graphs in the same plot ', 3, None, '___sec9'),
+              (' Flask application ', 3, None, '___sec6'),
+              (' Django application ', 3, None, '___sec7'),
+              (' Comparing graphs in the same plot ', 3, None, '___sec8'),
               (' More input parameters and results ',
                2,
                'pp:flask4',
                'pp:flask4'),
-              (' Django interface ', 3, None, '___sec11'),
-              (' Other types of function arguments ', 2, None, '___sec12'),
+              (' The returned HTML code ', 3, None, '___sec10'),
+              (' Documentation of the application ', 3, None, '___sec11'),
+              (' Django interface ', 3, None, '___sec12'),
+              (' Other types of input data ', 2, None, '___sec13'),
+              (' Uploading a file ', 3, None, '___sec14'),
               (' Working with a pool of input parameters ',
                1,
                'pp:flask_pool1',
                'pp:flask_pool1'),
-              (' Specify a pool as a list ',
+              (' Specifying a pool as a list ',
                2,
                'pp:flask_pool1:list',
                'pp:flask_pool1:list'),
@@ -86,41 +88,45 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:flask_pool1:GUI_cml_file',
                'pp:flask_pool1:GUI_cml_file'),
-              (' Specifying a pool using an API ', 2, None, '___sec22'),
+              (' Specifying a pool using an API ', 2, None, '___sec24'),
               (' Specifying a pool using an alternative API ',
                2,
                None,
-               '___sec23'),
+               '___sec25'),
               (' File with documentation of the application ',
                3,
                None,
-               '___sec24'),
-              (' LaTeX symbol as parameter name ', 3, None, '___sec25'),
-              (' Multiple input values for parameters ', 3, None, '___sec26'),
-              (' 2DO ', 2, None, '___sec27'),
+               '___sec26'),
+              (' LaTeX symbol as parameter name ', 3, None, '___sec27'),
+              (' Multiple input values for parameters ', 3, None, '___sec28'),
+              (' 2DO ', 2, None, '___sec29'),
               (' Reading default values from command line or file ',
                2,
                None,
-               '___sec28'),
-              (' Pool with other data structures ', 2, None, '___sec29'),
-              (' Advanced topics ', 1, None, '___sec30'),
-              (' Login and archival of results ', 2, None, '___sec31'),
-              (' Animations ', 2, None, '___sec32'),
-              (' Python expressions as input ', 2, None, '___sec33'),
-              (' Exercises ', 1, None, '___sec34'),
+               '___sec30'),
+              (' Pool with other data structures ', 2, None, '___sec31'),
+              (' Advanced topics ', 1, None, '___sec32'),
+              (' Login and archival of results ', 2, None, '___sec33'),
+              (' Animations ', 2, None, '___sec34'),
+              (' Python expressions as input ', 2, None, '___sec35'),
+              (' Exercises ', 1, None, '___sec36'),
               (' Exercise 1: Make a web app for integration ',
                2,
-               None,
-               '___sec35'),
+               'pp:exer:integrate',
+               'pp:exer:integrate'),
+              (' Exercise 2: Make a web app for plotting data ',
+               2,
+               'pp:exer:integrate',
+               'pp:exer:integrate'),
               (' Exercise: Make a web app for studying vibrations ',
                1,
                None,
-               '___sec36'),
-              (' Problem 2: Make a coin flipper ', 2, None, '___sec37'),
-              (' Deployment ', 1, None, '___sec38'),
-              (' Wakari ', 2, None, '___sec39'),
-              (' Uni Oslo ', 2, None, '___sec40'),
-              (' Appendix: Installation ', 1, None, '___sec41')]}
+               '___sec39'),
+              (' Problem 3: Make a coin flipper ', 2, None, '___sec40'),
+              (' Deployment ', 1, None, '___sec41'),
+              (' Wakari ', 2, None, '___sec42'),
+              (' Uni Oslo ', 2, None, '___sec43'),
+              (' Appendix: Installation ', 1, None, '___sec44')]}
 end of tocinfo -->
 
 <body>
@@ -157,14 +163,14 @@ MathJax.Hub.Config({
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
-     <!-- navigation toc: --> <li><a href="._pp002.html#___sec1" style="font-size: 80%;">Simulation program</a></li>
+     <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;">Simulation program used as sample app</a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
      <!-- navigation toc: --> <li><a href="#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
-     <!-- navigation toc: --> <li><a href="._pp005.html#___sec30" style="font-size: 80%;">Advanced topics</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec34" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec38" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Appendix: Installation</a></li>
+     <!-- navigation toc: --> <li><a href="._pp005.html#___sec32" style="font-size: 80%;">Advanced topics</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec44" style="font-size: 80%;">Appendix: Installation</a></li>
 
         </ul>
       </li>
@@ -186,7 +192,7 @@ MathJax.Hub.Config({
 Parampool's main focus is on scientific applications with lots of
 input data of different type, organized in a hierarchical tree fashion.
 The various input parameters are defined in terms of a <em>pool</em>.
-The pool can be defined as a nested list or through function
+The pool can be defined as a nested list or through a function
 application programming interface (known as an API, and here
 consisting of calls functionality in the <code>parampool.pool</code> package).
 
@@ -212,11 +218,11 @@ the section <a href="._pp003.html#pp:flask4">More input parameters and results</
     ):
 </pre></div>
 <p>
-Let us organize 10 input parameters into four subpools. At the top
+Let us organize the 10 input parameters into four subpools. At the top
 level we need a subpool, usually called "Main pool" or named after
 the application. Each subpool
 is here specified with a logical name of each parameter and the
-corresponding variable names in the compute function:
+corresponding variable name in the compute function:
 
 <ul>
  <li> Main pool</li>
@@ -266,7 +272,7 @@ A pool is a hierarchical <em>tree structure</em> with <em>subpools</em> and
 in the problem. The task now is to make a Python specification of
 the of subpools and data items in the pool tree.
 
-<h2 id="pp:flask_pool1:list">Specify a pool as a list</h2>
+<h2 id="pp:flask_pool1:list">Specifying a pool as a list</h2>
 
 <p>
 The pool tree can be specified as a list of lists, strings, and dictionaries.
@@ -323,32 +329,39 @@ pool function goes as follows:
 <p>
 Actually, the pool function must return a <code>parampool.pool.Pool</code> object,
 so after the definition of the pool tree as a list we must make the
-shown conversion from a list to <code>Pool</code> object via the <code>listtree2Pool</code>
+shown conversion from a list to a <code>Pool</code> object via the <code>listtree2Pool</code>
 function.
 
 <h2 id="pp:flask_pool1:dataitem">Attributes in data items</h2>
 
 <p>
 Each data item has a name and preferably a default value, as in the
-case of "Initial velocity". More attributes can be added:
+case of &quot;Initial velocity&quot;. More attributes can be added:
 
 <ul>
- <li> 'widget' specifies the type of widget used in a graphical
+ <li> <code>widget</code> specifies the type of widget used in a graphical
    user interface. Legal values are <code>integer</code>, <code>float</code>, <code>range</code>
-   (requires the <code>minmax</code> attribute), <code>integer_range</code> (requires
-   the <code>minmax</code> attribute), <code>textline</code>, <code>textarea</code> (for larger
+   (requires the <code>minmax</code> attribute too), <code>integer_range</code> (requires
+   the <code>minmax</code> attribute too), <code>textline</code>, <code>textarea</code> (for larger
    multi-line texts), <code>checkbox</code> (for boolen variables), <code>select</code>
    (list of options), <code>email</code>, <code>password</code>, <code>file</code> (for a filename
    of a file to be uploaded, <code>url</code>, <code>hidden</code> (for an invisible field),
    and <code>tel</code> (for a phone number). If not given, <code>widget</code> is based
-   on the value of <code>str2type</code> or the type of the default value.</li>
+   on the value of the <code>str2type</code> attribute or the type of the default value.</li>
  <li> <code>minmax</code> is a 2-list or 2-tuple with lower and upper bound in
    the interval of legal values of a number.</li>
  <li> The <code>range_steps</code> attribute, valid when <code>widget</code> is <code>range</code>,  specifies the
    steps in the slider used to select the number.
-   Here we can select the "Initial angle" in unit steps between 0 and 90
+   In our example,
+   we can select the &quot;Initial angle&quot; in unit steps between 0 and 90
    degrees.</li>
- <li> <code>unit</code> specifies a unit, e.g., <code>1/s</code> or <code>kg/m**3</code>, or <code>1/s</code>.</li>
+ <li> <code>unit</code> specifies a unit, e.g., <code>1/s</code> or <code>kg/m**3</code>.
+   If the input contains another unit, e.g., <code>4 1/h</code>, the value will
+   be automatically converted to the registered unit (\( 4/3600 \) 1/s
+   if 1/s is the registered unit).
+   (Parampool applies the the <code>PhysicalQuantity</code> object from the
+   ScientificPython package to perform computations with units.
+   A copy of this object is bundled with Parampool.)</li>
  <li> <code>help</code> adds a help string to explain more about the parameter and
    how it can be set.</li>
  <li> <code>number_step</code> specifies the precision of <code>float</code> or <code>integer</code>
@@ -356,13 +369,15 @@ case of "Initial velocity". More attributes can be added:
    the precision is arbitrary.</li>
  <li> <code>str2type</code> is a conversion function from a string (text given in
    a user interface) to the right type for the parameter. A value
-   is automatically assigned if <code>widget</code> is given, otherwise one
-   applies the default value to find the right <code>str2type</code> function.
-   This means that it is strictly not necessary to assign for the
-   "Wind velocity" data item. With more complicated objects one can
+   of <code>str2typ2</code> is automatically assigned if <code>widget</code> is given, otherwise
+   Parampool applies the default value to find the right <code>str2type</code> function.
+   This means that it is strictly not necessary to assign <code>str2type</code> for the
+   &quot;Wind velocity&quot; data item since the default value <code>0.0</code> implies
+   <code>str2type=float</code>. With more complicated objects one can
    assign a user-given conversion function to <code>str2type</code> (shown later).</li>
- <li> <code>option</code> is a list of options for a <code>select</code> widget, here the
-   type of numerical solution methods that can be chosen.</li>
+ <li> <code>option</code> is a list of options for a <code>select</code> widget. The &quot;Method&quot;
+   data item (for the name of the numerical solution method)
+   provides an example of this widget type.</li>
  <li> <code>validate</code> holds a function that takes the value of the data item
    as argument and returns <code>True</code> or <code>False</code> depending on whether
    the value can be accepted or not.</li>
@@ -370,18 +385,18 @@ case of "Initial velocity". More attributes can be added:
    in Flask or Django interfaces instead of the name of data item.</li>
  <li> <code>widget_size</code> specifies the size (width) of fields in graphical
    user interfaces.</li>
- <li> <code>textline</code> must be used for default values that are <code>None</code>,
-   because another value or the text "None" can be written in
+ <li> The <code>textline</code> widget must be used for default values that are <code>None</code>,
+   because another value or the text <code>None</code> can be written in
    the field. In this case, <code>str2type</code> is automatically set to <code>eval</code>
    and any valid Python expression is then essentially allowable,
-   but wrong objects will give errors in the compute function.</li>
+   but wrong object types may give errors in the compute function.</li>
 </ul>
 
 <div class="alert alert-block alert-success alert-text-normal"><b>Check that default values are real numbers.</b>
 If a default value is set to <code>5</code>, Parampool will interpret this as an
 integer and let <code>string2type</code> be <code>int</code> and force all input to be
 converted to integers. Normally, you want input to be real, so check
-that the default value is <code>5.0</code> unless the pool item is meant to be
+that the default value is <code>5.0</code> unless the pool item is really meant to be
 an integer.
 </div>
 
@@ -400,8 +415,8 @@ in the pool is extracted by
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">variable <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;my parameter&#39;</span>)
 </pre></div>
 <p>
-In case multiple data items have the same name, enough of the subpool path
-must be given, e.g.,
+In case multiple data items have the same name, a sufficient part
+of the subpool path must be given, e.g.,
 
 <p>
 
@@ -409,7 +424,7 @@ must be given, e.g.,
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">variable <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;My Subpool1/my parameter&#39;</span>)
 </pre></div>
 <p>
-Our specific computing function is a wrapper for <code>compute_motion_and_forces</code>:
+Our specific compute function is a wrapper for <code>compute_motion_and_forces</code>:
 
 <p>
 
@@ -432,7 +447,8 @@ Our specific computing function is a wrapper for <code>compute_motion_and_forces
 </pre></div>
 <p>
 The assumption is that the pool object provides enough input data for
-the compute function. If this assumption does not hold, one can
+the compute function. If this assumption does not hold and extra
+information is needed, one can
 simply make a class, store extra data as attributes in the class,
 and let the compute function be a method in the class.
 
@@ -440,7 +456,7 @@ and let the compute function be a method in the class.
 
 <p>
 Having defined a pool, it is trivial to get a command-line interface
-in the application. Just perform
+in the application. Just write
 
 <p>
 
@@ -452,8 +468,9 @@ pool <span style="color: #666666">=</span> set_values_from_command_line(pool)
 Now <code>pool</code> has values loaded from the command line. The name of
 the command-line options follow the names in the pool, but with
 underscore replacing whitespace: <code>--Initial_motion_data/Initial_angle</code>.
-However, in this case <code>--Initial_angle</code> also works since it is a
-unique name in the pool tree.
+However, in this case just writing <code>--Initial_angle</code> also works since it is a
+unique name in the pool tree, and then we do not need the complete
+path with the subpool name.
 
 <p>
 One can also read data from a file with syntax
@@ -496,8 +513,8 @@ then from the command line, and finally launch the graphical web
 interface for enabling interactive setting of values in the pool system.
 Automatic generation of such interactive web interfaces constitutes
 the next topic. The lines above for loading parameters from file
-and command-line are automatically generated when a web interface
-is requested (see the section <a href="#pp:flask_pool1:GUI_cml_file">Loading parameters from file and the command line</a>).
+and command line are automatically generated when a web interface
+is requested (see also comments in the section <a href="#pp:flask_pool1:GUI_cml_file">Loading parameters from file and the command line</a>).
 
 <h2 id="pp:flask_pool1:GUI">Generating a web-based user interface</h2>
 
@@ -511,11 +528,11 @@ and write a <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/
 
 <!-- code=python (!bc pypro) typeset with pygments style "default" -->
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
-<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces_with_menu, \
-     menu_definition_list
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces_with_pool, \
+     pool_definition_list
 
-generate(compute_motion_and_forces_with_menu,
-         menu_function<span style="color: #666666">=</span>menu_definition_list,
+generate(compute_motion_and_forces_with_pool,
+         pool_function<span style="color: #666666">=</span>pool_definition_list,
          MathJax<span style="color: #666666">=</span><span style="color: #008000">True</span>)
 </pre></div>
 <p>
@@ -554,11 +571,16 @@ as the one in Figure <a href="#pp:flask_pool1:fig1">7</a>.
 
 <p>
 The pool tree is mapped onto a visual structure often used for
-directory trees. Clicking on <em>open all</em> at the top of the user interface
+directory trees. The look and feel resemble that of the Windows
+Explorer application in the Windows operating system.
+
+<p>
+Clicking on <em>open all</em> at the top of the user interface
 expands all subpools so that all parameters (data items) become visible.
 Figure <a href="#pp:flask_pool1:fig2">8</a> displays the result in the Opera browser.
 Note that in this type of user interface, the name of each data item
-is typeset in LaTeX and inserted as a picture.
+is automatically typeset in LaTeX and inserted as a picture (the
+<a href="http://latex.codecogs.com" target="_self"><tt>http://latex.codecogs.com</tt></a> utility is used).
 
 <p>
 <center> <!-- figure -->
@@ -574,9 +596,7 @@ The following technical points must be mentioned.
 <li> A plain float or integer value gives a <code>textline</code> widget,
    while if a <code>minmax</code>
    range is specified, a <code>float</code> or <code>integer</code> widget
-   (HTML5 number field) is chosen. Choosing <code>float</code> or <code>integer</code>
-   explicitly as widget may lead to different width of the widget
-   in different browsers.</li>
+   (so-called HTML5 number field) is chosen.</li>
 <li> Data items whose widgets are specified as <code>float</code> or <code>integer</code>, or
    where this is implied because <code>str2type</code> is <code>float</code> or <code>int</code>, or
    the default value is a <code>float</code> or <code>int</code> <em>and</em> the <code>minmax</code> attribute
@@ -590,13 +610,13 @@ The following technical points must be mentioned.
 <li> When the widget is <code>range</code>, an HTML5 range field is used, which is
    usually rendered as a slider in browsers. The slider gets by default
    100 steps (can be changed or specified individually for any data item).</li>
-<li> With the <code>select</code> widget we get a pull-down pool with the different
+<li> With the <code>select</code> widget we get a pull-down menu with the different
    options.</li>
 <li> Any data item whose default value is <code>True</code> or <code>False</code> maps directly to
    a checkbox for boolean parameters.</li>
 <li> Any data item with <code>unit</code> specified maps to an ordinary text field,
    since input consists of a number with an optional text for the unit.
-   That is, if we choose to set <code>unit='m/s'</code> for the "Initial velocity"
+   That is, if we choose to set <code>unit='m/s'</code> for the &quot;Initial velocity&quot;
    data item, the input field will not the an HTML5 number field, but
    a standard HTML text field.</li>
 <li> The names of the data items are typeset in LaTeX and shown as
@@ -619,17 +639,17 @@ default value.
 We can try out the interface:
 
 <ol>
-<li> Set "Initial velocity" to 8.</li>
-<li> Move the slider for "Initial angle" to 55.</li>
-<li> Add a positive "Wind velocity" of -3.</li>
-<li> Specify "Mass" as the text <code>0.1*1000 g</code> (i.e., we use g rather
+<li> Set &quot;Initial velocity&quot; to 8.</li>
+<li> Move the slider for &quot;Initial angle&quot; to 55.</li>
+<li> Add a positive &quot;Wind velocity&quot; of -3.</li>
+<li> Specify &quot;Mass&quot;as the text <code>0.1*1000 g</code> (i.e., we use g rather
    than the default kg as unit, but the value is still 0.1 kg).</li>
-<li> Choose <code>RK2</code> for "Method".</li>
-<li> Set "Time step" to 0.12.</li>
-<li> Uncheck the "Plot simplified motion" boolean value.</li>
+<li> Choose <code>RK2</code> for &quot;Method&quot;.</li>
+<li> Set &quot;Time step&quot; to 0.12.</li>
+<li> Uncheck the &quot;Plot simplified motion&quot; boolean value.</li>
 <li> Hold the mouse pointer over the
-   "Wind velocity" field to see the help string. Then point the mouse
-   to  "Mass" input field and the specified unit pops up.
+   &quot;Wind velocity&quot; field to see the help string. Then point the mouse
+   to  &quot;Mass&quot; input field and the specified unit pops up.
    A combination of help
    and unit information is showed if both are given in the
    data item definition.</li>
@@ -662,35 +682,45 @@ this example).
 
 <p>
 <b>Text in a number field.</b>
-Write <code>abc</code> in the "Initial velocity" field and press the <em>Compute</em> button.
-The error message "Please enter a number" pops up.
+Write <code>abc</code> in the &quot;Initial velocity&quot; field and press the <em>Compute</em> button.
+The error message &quot;Please enter a number&quot; pops up.
 
 <p>
 <b>Failure of user-provided validate function.</b>
-Give a negative value for "Mass".
-The "Mass" data item has a validation function provided by us.
+Give a negative value for &quot;Mass&quot;.
+The &quot;Mass&quot;data item has a validation function provided by us.
 A <code>False</code> value returned from this function gives rise to a
 <code>DataItemValueError</code> shown in the browser. It reads here
-<code>Mass = -0.1: validate function &lt;lambda&gt; claims invalid value</code>.
 
+<p>
+
+<!-- code=text typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Mass = -0.1: validate function &lt;lambda&gt; claims invalid value.
+</pre></div>
 <p>
 <b>Failure of converting string to right type.</b>
-Write <code>abc</code> for "Radius". This is a text field so any
-text is in principle valid, but <code>parampool</code> raises a <code>TypeError</code>
-with the message <code>could not apply str2type=&lt;type 'float'&gt; to value abc &lt;type 'str'&gt;</code>.
+Write <code>abc</code> for &quot;Radius&quot;. This is a text field so any
+text is in principle valid, but Parampool raises a <code>TypeError</code>
+with the message
 
 <p>
+
+<!-- code=text typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">could not apply str2type=&lt;type &#39;float&#39;&gt; to value abc &lt;type &#39;str&#39;&gt;
+</pre></div>
+<p>
 <b>Failure in the compute function.</b>
-Give a list <code>[0.1, 0.2]</code> for "Time step". Since the default is <code>None</code>,
+Give a list <code>[0.1, 0.2]</code> for &quot;Time step&quot;. Since the default is <code>None</code>,
 which causes <code>str2type=eval</code>, any Python expression is accepted in
-the interface, but the compute function raises a <code>TypeError</code>
-because <code>float(dt)</code> fails when <code>dt</code> is a list. A remedy is to
-write a tailored <code>str2type</code> function:
+the interface, but the compute function used in our example
+in this tutorial will raise a <code>TypeError</code>
+because <code>float(dt)</code> fails when <code>dt</code> is a list. One could think
+of providing a tailored <code>str2type</code> function in this case:
 
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">convert_time_step</span>(data_item, value):
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">convert_time_step</span>(value):
     <span style="color: #408080; font-style: italic"># Value must be None or a float</span>
     <span style="color: #008000; font-weight: bold">if</span> value <span style="color: #666666">==</span> <span style="color: #BA2121">&#39;None&#39;</span>:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">None</span>
@@ -698,11 +728,12 @@ write a tailored <code>str2type</code> function:
         <span style="color: #008000; font-weight: bold">try</span>:
             <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">float</span>(value)
         <span style="color: #008000; font-weight: bold">except</span> <span style="color: #D2413A; font-weight: bold">TypeError</span>:
-            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #D2413A; font-weight: bold">TypeError</span>(<span style="color: #BA2121">&#39;</span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">: could not convert &quot;</span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">&quot; to float&#39;</span> <span style="color: #666666">%</span>
-	                    (data_item<span style="color: #666666">.</span>name, value))
+            <span style="color: #008000; font-weight: bold">raise</span> <span style="color: #D2413A; font-weight: bold">TypeError</span>(
+	    <span style="color: #BA2121">&#39;Time step: could not convert &quot;</span><span style="color: #BB6688; font-weight: bold">%s</span><span style="color: #BA2121">&quot; to float, &#39;</span>
+	    <span style="color: #BA2121">&#39;must be None or float&#39;</span> <span style="color: #666666">%</span> value)
 </pre></div>
 <p>
-Setting <code>str2type=convert_time_step</code> for the "Time step" data item
+Setting <code>str2type=convert_time_step</code> for the &quot;Time step&quot; data item
 gives an informative error message if the answer is not as expected:
 <code>None</code> or a floating-point number.
 
@@ -715,13 +746,13 @@ see the section <a href="#pp:flask_pool1:cml_file">A command-line and file inter
 before the web GUI is offered to the
 user. When autogenerating the web interface, the magic lines from
 the section <a href="#pp:flask_pool1:cml_file">A command-line and file interface</a> are automatically inserted
-in the <code>controller.py</code> file (for Flask or `views.py for Django).
+in the <code>controller.py</code> file (for Flask or <code>views.py</code> for Django).
 This means that when starting <code>python controller.py</code> we may add
 <code>--poolfile name</code> and any set of command-line options for setting
 individual parameters. This makes it easy to control which default
 values that will appear in the web GUI.
 
-<h2 id="___sec22">Specifying a pool using an API </h2>
+<h2 id="___sec24">Specifying a pool using an API </h2>
 
 <p>
 Instead of listing all the entries in the pool tree as strings, lists,
@@ -801,11 +832,11 @@ a file tree. The rules are simple:
 
 <ul>
      <li> <code>/Main pool/Initial motion data/Initial velocity</code> is the
-       full path to the "Initial velocity" data item.</li>
-     <li> Standing in the "Initial motion data" subpool,
-       <code>..</code> is the parent subpool ("Main pool"), while
+       full path to the &quot;Initial velocity&quot; data item.</li>
+     <li> Standing in the &quot;Initial motion data&quot; subpool,
+       <code>..</code> is the parent subpool (&quot;Main pool&quot;), while
        <code>../Numerical parameters</code> is the correct path to the
-       "Numerical parameters" subpool. That is, we can use
+       &quot;Numerical parameters&quot; subpool. That is, we can use
        relative and absolute paths as in a file tree.</li>
 </ul>
 
@@ -818,10 +849,10 @@ of this GUI (found in the <a href="https://github.com/hplgit/parampool/tree/mast
 the same as in the previous one (found in the <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool1" target="_self"><tt>flask_pool1</tt></a>
 directory).
 
-<h2 id="___sec23">Specifying a pool using an alternative API </h2>
+<h2 id="___sec25">Specifying a pool using an alternative API </h2>
 
 <p>
-There is an another way of defining subpools as well: make a functions
+There is an another way of defining subpools as well: make a function
 for defining each subpool.
 
 <p>
@@ -846,13 +877,7 @@ for defining each subpool.
     pool <span style="color: #666666">=</span> plot_pool(pool)
     pool<span style="color: #666666">.</span>update()  <span style="color: #408080; font-style: italic"># finalize pool construction</span>
 
-    <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.UI</span> <span style="color: #008000; font-weight: bold">import</span> (
-        set_data_item_attribute,
-        set_defaults_from_file,
-        set_defaults_from_command_line,
-        set_defaults_in_model_file,
-        write_poolfile,
-        )
+    <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.UI</span> <span style="color: #008000; font-weight: bold">import</span> set_data_item_attribute
     <span style="color: #408080; font-style: italic"># Change default values in the web GUI</span>
     <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.DataItem</span>
     parampool<span style="color: #666666">.</span>pool<span style="color: #666666">.</span>DataItem<span style="color: #666666">.</span>DataItem<span style="color: #666666">.</span>defaults[<span style="color: #BA2121">&#39;minmax&#39;</span>] <span style="color: #666666">=</span> [<span style="color: #666666">0</span>, <span style="color: #666666">100</span>]
@@ -864,19 +889,17 @@ for defining each subpool.
     pool <span style="color: #666666">=</span> set_data_item_attribute(pool, <span style="color: #BA2121">&#39;widget_size&#39;</span>, <span style="color: #666666">6</span>)
     pool<span style="color: #666666">.</span>get(<span style="color: #BA2121">&#39;Time step&#39;</span>)<span style="color: #666666">.</span>data[<span style="color: #BA2121">&#39;widget_size&#39;</span>] <span style="color: #666666">=</span> <span style="color: #666666">4</span>
 
-    pool <span style="color: #666666">=</span> set_defaults_from_file(pool, command_line_option<span style="color: #666666">=</span><span style="color: #BA2121">&#39;--poolfile&#39;</span>)
-    pool <span style="color: #666666">=</span> set_defaults_from_command_line(pool)
+    <span style="color: #408080; font-style: italic"># Example on editing hardcoded defaults in the model files</span>
+    <span style="color: #408080; font-style: italic"># (not necessary, but a possible technique along with</span>
+    <span style="color: #408080; font-style: italic"># setting defaults in the pool, in a file, or on the command line)</span>
+    <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.UI</span> <span style="color: #008000; font-weight: bold">import</span> set_defaults_in_model_file
     flask_modelfile <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;model.py&#39;</span>
-    django_modelfile <span style="color: #666666">=</span> os<span style="color: #666666">.</span>path<span style="color: #666666">.</span>join(<span style="color: #BA2121">&#39;motion_and_forces_with_pool&#39;</span>, <span style="color: #BA2121">&#39;app&#39;</span>,
-                                    <span style="color: #BA2121">&#39;models.py&#39;</span>)
+    django_modelfile <span style="color: #666666">=</span> os<span style="color: #666666">.</span>path<span style="color: #666666">.</span>join(
+        <span style="color: #BA2121">&#39;motion_and_forces_with_pool&#39;</span>, <span style="color: #BA2121">&#39;app&#39;</span>, <span style="color: #BA2121">&#39;models.py&#39;</span>)
     <span style="color: #008000; font-weight: bold">if</span> os<span style="color: #666666">.</span>path<span style="color: #666666">.</span>isfile(flask_modelfile):
         set_defaults_in_model_file(flask_modelfile, pool)
     <span style="color: #008000; font-weight: bold">elif</span> os<span style="color: #666666">.</span>path<span style="color: #666666">.</span>isfile(django_modelfile):
         set_defaults_in_model_file(django_modelfile, pool)
-
-    poolfile <span style="color: #666666">=</span> <span style="color: #008000">open</span>(<span style="color: #BA2121">&#39;pool.dat&#39;</span>, <span style="color: #BA2121">&#39;w&#39;</span>)
-    poolfile<span style="color: #666666">.</span>write(write_poolfile(pool))
-    poolfile<span style="color: #666666">.</span>close()
 
     <span style="color: #008000; font-weight: bold">return</span> pool
 
@@ -941,7 +964,9 @@ for defining each subpool.
     <span style="color: #008000; font-weight: bold">return</span> pool
 </pre></div>
 <p>
-This application is used to illustrate three important additional features
+This application, found in the directory
+<a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool3" target="_self"><tt>flask_pool3</tt></a> (with a corresponding <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/django_pool3" target="_self">Django counterpart</a>),
+will now be used to illustrate three important additional features
 of Parampool:
 
 <ol>
@@ -951,7 +976,7 @@ of Parampool:
    parameter sets at once</li>
 </ol>
 
-<h3 id="___sec24">File with documentation of the application </h3>
+<h3 id="___sec26">File with documentation of the application </h3>
 
 <p>
 We have in the section <a href="._pp003.html#pp:flask4">More input parameters and results</a> seen that the doc string of
@@ -961,7 +986,7 @@ It is also possible to make such a description in a separate
 file. Any HTML file will work, and the filename is specified by
 the <code>doc</code> argument to <code>generate</code>.
 
-<h3 id="___sec25">LaTeX symbol as parameter name </h3>
+<h3 id="___sec27">LaTeX symbol as parameter name </h3>
 
 <p>
 One can add a mathematical
@@ -975,11 +1000,11 @@ The choice is set by the <code>latex_name</code> keyword argument in the
 
 <!-- code=python (!bc pypro) typeset with pygments style "default" -->
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
-<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces_with_menu_loop, \
-     menu_definition_api_with_separate_subpools
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces_with_pool_loop, \
+     pool_definition_api_with_separate_subpools
 
-generate(compute_motion_and_forces_with_menu_loop,
-         menu_function<span style="color: #666666">=</span>menu_definition_api_with_separate_subpools,
+generate(compute_motion_and_forces_with_pool_loop,
+         pool_function<span style="color: #666666">=</span>pool_definition_api_with_separate_subpools,
          MathJax<span style="color: #666666">=</span><span style="color: #008000">True</span>, doc<span style="color: #666666">=</span><span style="color: #008000">open</span>(<span style="color: #BA2121">&#39;doc.html&#39;</span>, <span style="color: #BA2121">&#39;r&#39;</span>)<span style="color: #666666">.</span>read(),
          latex_name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;symbol&#39;</span>)
 </pre></div>
@@ -987,7 +1012,7 @@ generate(compute_motion_and_forces_with_menu_loop,
 The values of <code>latex_name</code> can be <code>'symbol'</code> (symbol only) or
 <code>'text, symbol'</code> (ordinary name followed by a comma and the symbol).
 
-<h3 id="___sec26">Multiple input values for parameters </h3>
+<h3 id="___sec28">Multiple input values for parameters </h3>
 
 <p>
 We can specify multiple values for parameters whose input fields are
@@ -1036,7 +1061,7 @@ loops and <code>pool.get_values</code>, 2) separating input values by <code>&</c
 <p><img src="fig-pp/flask_pool3_results.png" align="bottom" width=800></p>
 </center>
 
-<h2 id="___sec27">2DO </h2>
+<h2 id="___sec29">2DO </h2>
 
 <ul>
  <li> Lorenz demo as exercise, provide the compute function and graphics,
@@ -1073,7 +1098,7 @@ loops and <code>pool.get_values</code>, 2) separating input values by <code>&</c
 doc = run_doconce_on_text(compute_function.__doc__)
 </pre></div>
 
-<h2 id="___sec28">Reading default values from command line or file </h2>
+<h2 id="___sec30">Reading default values from command line or file </h2>
 
 <p>
 To be programmed:
@@ -1087,7 +1112,7 @@ dump pool to file again with <code>write_poolfile(filename)</code>.
 See the <code>...separate_subpools</code> function - it has almost
 all this functionality!
 
-<h2 id="___sec29">Pool with other data structures </h2>
+<h2 id="___sec31">Pool with other data structures </h2>
 
 <p>
 Filename and text field with special <code>str2type</code> conversion. Allow list

@@ -1,4 +1,4 @@
- # Django settings for motion_and_forces_with_menu project.
+ # Django settings for motion_and_forces_with_pool project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/hpl/vc/parampool/doc/src/pp/src-pp/django_menu1/motion_and_forces_with_menu/sqlite3.db',                      # Or path to database file if using sqlite3.
+        'NAME': '/home/hpl/vc/parampool/doc/src/pp/src-pp/django_pool1/motion_and_forces_with_pool/sqlite3.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -97,10 +97,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'motion_and_forces_with_menu.urls'
+ROOT_URLCONF = 'motion_and_forces_with_pool.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'motion_and_forces_with_menu.wsgi.application'
+WSGI_APPLICATION = 'motion_and_forces_with_pool.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".

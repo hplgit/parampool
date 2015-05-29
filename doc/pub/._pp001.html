@@ -28,8 +28,7 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [(' 2DO ', 3, None, '___sec0'),
-              (' Simulation program ', 1, None, '___sec1'),
+ 'sections': [(' Simulation program used as sample app ', 1, None, '___sec0'),
               (' User interfaces for Python functions ',
                1,
                'pp:GUI4functions',
@@ -38,23 +37,26 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:real:inout',
                'pp:real:inout'),
-              (' Flask interface ', 3, None, '___sec4'),
-              (' Django interface ', 3, None, '___sec5'),
+              (' Flask interface ', 3, None, '___sec3'),
+              (' Django interface ', 3, None, '___sec4'),
               (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
-              (' Flask application ', 3, None, '___sec7'),
-              (' Django application ', 3, None, '___sec8'),
-              (' Comparing graphs in the same plot ', 3, None, '___sec9'),
+              (' Flask application ', 3, None, '___sec6'),
+              (' Django application ', 3, None, '___sec7'),
+              (' Comparing graphs in the same plot ', 3, None, '___sec8'),
               (' More input parameters and results ',
                2,
                'pp:flask4',
                'pp:flask4'),
-              (' Django interface ', 3, None, '___sec11'),
-              (' Other types of function arguments ', 2, None, '___sec12'),
+              (' The returned HTML code ', 3, None, '___sec10'),
+              (' Documentation of the application ', 3, None, '___sec11'),
+              (' Django interface ', 3, None, '___sec12'),
+              (' Other types of input data ', 2, None, '___sec13'),
+              (' Uploading a file ', 3, None, '___sec14'),
               (' Working with a pool of input parameters ',
                1,
                'pp:flask_pool1',
                'pp:flask_pool1'),
-              (' Specify a pool as a list ',
+              (' Specifying a pool as a list ',
                2,
                'pp:flask_pool1:list',
                'pp:flask_pool1:list'),
@@ -86,41 +88,45 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:flask_pool1:GUI_cml_file',
                'pp:flask_pool1:GUI_cml_file'),
-              (' Specifying a pool using an API ', 2, None, '___sec22'),
+              (' Specifying a pool using an API ', 2, None, '___sec24'),
               (' Specifying a pool using an alternative API ',
                2,
                None,
-               '___sec23'),
+               '___sec25'),
               (' File with documentation of the application ',
                3,
                None,
-               '___sec24'),
-              (' LaTeX symbol as parameter name ', 3, None, '___sec25'),
-              (' Multiple input values for parameters ', 3, None, '___sec26'),
-              (' 2DO ', 2, None, '___sec27'),
+               '___sec26'),
+              (' LaTeX symbol as parameter name ', 3, None, '___sec27'),
+              (' Multiple input values for parameters ', 3, None, '___sec28'),
+              (' 2DO ', 2, None, '___sec29'),
               (' Reading default values from command line or file ',
                2,
                None,
-               '___sec28'),
-              (' Pool with other data structures ', 2, None, '___sec29'),
-              (' Advanced topics ', 1, None, '___sec30'),
-              (' Login and archival of results ', 2, None, '___sec31'),
-              (' Animations ', 2, None, '___sec32'),
-              (' Python expressions as input ', 2, None, '___sec33'),
-              (' Exercises ', 1, None, '___sec34'),
+               '___sec30'),
+              (' Pool with other data structures ', 2, None, '___sec31'),
+              (' Advanced topics ', 1, None, '___sec32'),
+              (' Login and archival of results ', 2, None, '___sec33'),
+              (' Animations ', 2, None, '___sec34'),
+              (' Python expressions as input ', 2, None, '___sec35'),
+              (' Exercises ', 1, None, '___sec36'),
               (' Exercise 1: Make a web app for integration ',
                2,
-               None,
-               '___sec35'),
+               'pp:exer:integrate',
+               'pp:exer:integrate'),
+              (' Exercise 2: Make a web app for plotting data ',
+               2,
+               'pp:exer:integrate',
+               'pp:exer:integrate'),
               (' Exercise: Make a web app for studying vibrations ',
                1,
                None,
-               '___sec36'),
-              (' Problem 2: Make a coin flipper ', 2, None, '___sec37'),
-              (' Deployment ', 1, None, '___sec38'),
-              (' Wakari ', 2, None, '___sec39'),
-              (' Uni Oslo ', 2, None, '___sec40'),
-              (' Appendix: Installation ', 1, None, '___sec41')]}
+               '___sec39'),
+              (' Problem 3: Make a coin flipper ', 2, None, '___sec40'),
+              (' Deployment ', 1, None, '___sec41'),
+              (' Wakari ', 2, None, '___sec42'),
+              (' Uni Oslo ', 2, None, '___sec43'),
+              (' Appendix: Installation ', 1, None, '___sec44')]}
 end of tocinfo -->
 
 <body>
@@ -157,14 +163,14 @@ MathJax.Hub.Config({
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
-     <!-- navigation toc: --> <li><a href="._pp002.html#___sec1" style="font-size: 80%;">Simulation program</a></li>
+     <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;">Simulation program used as sample app</a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
      <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
-     <!-- navigation toc: --> <li><a href="._pp005.html#___sec30" style="font-size: 80%;">Advanced topics</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec34" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec38" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Appendix: Installation</a></li>
+     <!-- navigation toc: --> <li><a href="._pp005.html#___sec32" style="font-size: 80%;">Advanced topics</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec44" style="font-size: 80%;">Appendix: Installation</a></li>
 
         </ul>
       </li>
@@ -180,25 +186,18 @@ MathJax.Hub.Config({
 <a name="part0001"></a>
 <!-- !split -->
 
-<p>
-
-<b>NOTE:</b>
-This report is in a <b>very preliminary state</b>, but should be
-sufficient for exploring Parampool for creating web GUIs. Please send
-email to the first author for questions, reporting typos and errors,
-request of more information, etc.
-
-<h2>Table of contents</h2>
+<h2>
+Table of contents</h2>
 
 <p>
-<a href="._pp002.html#___sec1"> Simulation program </a><br>
+<a href="._pp002.html#___sec0"> Simulation program used as sample app </a><br>
 <a href="._pp003.html#pp:GUI4functions"> User interfaces for Python functions </a><br>
 &nbsp; &nbsp; &nbsp; <a href="._pp003.html#pp:real:inout"> Real numbers as input and output </a><br>
 &nbsp; &nbsp; &nbsp; <a href="._pp003.html#pp:plot:output"> A plot as output </a><br>
 &nbsp; &nbsp; &nbsp; <a href="._pp003.html#pp:flask4"> More input parameters and results </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp003.html#___sec12"> Other types of function arguments </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp003.html#___sec13"> Other types of input data </a><br>
 <a href="._pp004.html#pp:flask_pool1"> Working with a pool of input parameters </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp004.html#pp:flask_pool1:list"> Specify a pool as a list </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp004.html#pp:flask_pool1:list"> Specifying a pool as a list </a><br>
 &nbsp; &nbsp; &nbsp; <a href="._pp004.html#pp:flask_pool1:dataitem"> Attributes in data items </a><br>
 &nbsp; &nbsp; &nbsp; <a href="._pp004.html#pp:flask_pool1:compute"> The compute function </a><br>
 &nbsp; &nbsp; &nbsp; <a href="._pp004.html#pp:flask_pool1:cml_file"> A command-line and file interface </a><br>
@@ -206,46 +205,26 @@ request of more information, etc.
 &nbsp; &nbsp; &nbsp; <a href="._pp004.html#pp:flask_pool1:GUI_op"> Operating the user interface </a><br>
 &nbsp; &nbsp; &nbsp; <a href="._pp004.html#pp:flask_pool1:GUI_error"> Detection of wrong input </a><br>
 &nbsp; &nbsp; &nbsp; <a href="._pp004.html#pp:flask_pool1:GUI_cml_file"> Loading parameters from file and the command line </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec22"> Specifying a pool using an API </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec23"> Specifying a pool using an alternative API </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec27"> 2DO </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec28"> Reading default values from command line or file </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec29"> Pool with other data structures </a><br>
-<a href="._pp005.html#___sec30"> Advanced topics </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp005.html#___sec31"> Login and archival of results </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp005.html#___sec32"> Animations </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp005.html#___sec33"> Python expressions as input </a><br>
-<a href="._pp006.html#___sec34"> Exercises </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp006.html#___sec35"> Exercise 1: Make a web app for integration </a><br>
-<a href="._pp006.html#___sec36"> Exercise: Make a web app for studying vibrations </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp006.html#___sec37"> Problem 2: Make a coin flipper </a><br>
-<a href="._pp006.html#___sec38"> Deployment </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp006.html#___sec39"> Wakari </a><br>
-&nbsp; &nbsp; &nbsp; <a href="._pp006.html#___sec40"> Uni Oslo </a><br>
-<a href="._pp006.html#___sec41"> Appendix: Installation </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec24"> Specifying a pool using an API </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec25"> Specifying a pool using an alternative API </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec29"> 2DO </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec30"> Reading default values from command line or file </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp004.html#___sec31"> Pool with other data structures </a><br>
+<a href="._pp005.html#___sec32"> Advanced topics </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp005.html#___sec33"> Login and archival of results </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp005.html#___sec34"> Animations </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp005.html#___sec35"> Python expressions as input </a><br>
+<a href="._pp006.html#___sec36"> Exercises </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp006.html#pp:exer:integrate"> Exercise 1: Make a web app for integration </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp006.html#pp:exer:integrate"> Exercise 2: Make a web app for plotting data </a><br>
+<a href="._pp006.html#___sec39"> Exercise: Make a web app for studying vibrations </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp006.html#___sec40"> Problem 3: Make a coin flipper </a><br>
+<a href="._pp006.html#___sec41"> Deployment </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp006.html#___sec42"> Wakari </a><br>
+&nbsp; &nbsp; &nbsp; <a href="._pp006.html#___sec43"> Uni Oslo </a><br>
+<a href="._pp006.html#___sec44"> Appendix: Installation </a><br>
 </p>
-
-<h3 id="___sec0">2DO </h3>
-
-<ul>
- <li> More links to additional material: (Read these when returning to
-   this work)</li>
-
-<ul>
-   <li> <a href="http://maximebf.com/blog/2012/10/building-websites-in-python-with-flask/#.UxV4jHVdXn4" target="_self">Quick Flask++ tutorial</a></li>
-   <li> <a href="http://www.realpython.com/blog/design/getting-started-with-bootstrap-3/#.UxV8pHVdXn4" target="_self">Quick overview of Bootstrap 3</a>, <a href="http://www.w3resource.com/twitter-bootstrap/tutorial.php" target="_self">another Bootstrap 3 tutorial</a></li>
-   <li> <a href="http://pythonthusiast.pythonblogs.com/230_pythonthusiast/archive/1309_building_in_openshift_part_iv__application_layout_and_templating_using_bootstrap_3_and_jinja_2.html" target="_self">Flask and Boostrap intro</a> (<a href="http://bio-ekowibowo.rhcloud.com/" target="_self">sample app</a> has sign in functionality and bootstrap layout explained <a href="http://pythonthusiast.pythonblogs.com/230_pythonthusiast/archive/1317_building_python_flask_application_in_openshiftheroku_replacement_part_vii__adding_sign_in_form_using_bootstrap_3_and_login_feature_using_flask-login.html" target="_self">here</a>)</li>
-   <li> <a href="http://www.shea.io/lightweight-python-apps-with-flask-twitter-bootstrap-and-heroku/" target="_self">Flask, Heroku and Bootstrap</a> (this is a good recipe we can turn into building a science app)</li>
-   <li> <a href="http://www.shea.io/facebook-authentication-for-flask-apps/" target="_self">Facebook login in Flask</a></li>
-   <li> <a href="https://github.com/mbr/flask-bootstrap" target="_self">Flask-Bootstrap</a> and its <a href="http://pythonhosted.org/Flask-Bootstrap/" target="_self">doc</a>, read in particular <a href="http://pythonhosted.org/Flask-Bootstrap/basic-usage.html" target="_self">basic usage</a> and see the (only?) <a href="https://github.com/mbr/flask-bootstrap/blob/master/sample_application/__init__.py" target="_self">example</a></li>
-   <li> <a href="http://www.lynda.com/Bootstrap-tutorials/Bootstrap-Adding-Interactivity-Your-Site/122456-2.html?utm_source=google&utm_medium=cpc&utm_campaign=Search-Dev-Bootstrap:%2BAdding%2BInteractivity%2Bto%2BYour%2BSite&utm_content=34118887386&utm_term=%2Bbootstrap%20%2Btutorial&gclid=CP7Mupaq-LwCFcPTcgodLxEA-A" target="_self">Bootstrap video intro</a></li>
-</ul>
-
- <li> <a href="https://github.com/splaice/py-bootstrap" target="_self">A complete modern Python project with virtualenv, testing, setup.py, etc.</a></li>
- <li> <a href="http://www.skulpt.org/" target="_self">Skulpt: Interactive Python in the browser</a></li>
- <li> <a href="http://inventwithpython.com/" target="_self">Python for computer games</a></li>
-</ul>
-
+<p>
 <p>
 <!-- navigation buttons at the bottom of the page -->
 <ul class="pagination">

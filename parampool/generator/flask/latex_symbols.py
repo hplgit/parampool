@@ -39,7 +39,7 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=300):
     try:
         code = urllib.urlopen(link).read()
     except IOError:
-        raise IOError('No Internet connection? Cannot open http://latex.codecogs.com/png.latex...')
+        raise IOError('No Internet connection? Cannot open http://latex.codecogs.com/png.latex for making latex images for the user interface (required for a Pool object)')
 
     f = open(filename, 'wb')
     f.write(code)
