@@ -41,7 +41,7 @@ instead (!).
 The user interface above was based on inspecting a Python function and
 its keyword arguments and default values.
 To get more control of the user interface, you can specify all the
-input parameters as a hierarichal tree, called *pool tree*, say
+input parameters as a hierarichal tree, called *pool tree*. Here is an example:
 
  * Main pool
    * Initial motion data
@@ -63,16 +63,15 @@ In Python, this may take the form
 
 @@@CODE doc/src/pp/src-pp/compute.py fromto: def pool_definition_list@def convert_time_step
 
-There is more  you to learn when specifying a pool (compared to just
+There is more to learn when specifying a *pool* of parameters (compared to just
 providing a compute function), but you also get a lot fancier
-web-based graphical user interface. The interface is automatically generated
-with very few lines of code.
+web-based graphical user interface or command-line (or file) interface.
+The interfaces are automatically generated with very few lines of code.
 
 FIGURE: [doc/src/pp/fig-pp/flask_pool1_filled.png, width=800]
 
 You can freely choose between a Flask or Django application for realizing the
 user interface.
 
-A "tutorial": "http://hplgit.github.io/parampool/doc/pub/pp.html"
-is in the writings, and
-you need the tutorial be able to use the package.
+Read the "tutorial": "http://hplgit.github.io/parampool/doc/pub/pp.html"
+to learn how to use Parampool!

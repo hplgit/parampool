@@ -4,10 +4,10 @@ The `parampool` package is a tool for administering a pool of parameters
 in scientific applications. The package contains
 
  * a general tree data structure in Python (subpackage `tree`),
- * an application of the tree structure to menus of input parameters
-   for simulation programs (subpackage `menu`),
+ * an application of the tree structure to pools of input parameters
+   for simulation programs (subpackage `pool`),
  * tools for automatic generation of web-based user interfaces
-   (subpackage `generator`), based on a menu or just a function.
+   (subpackage `generator`), based on a pool or just a function.
 
 With `parampool` it is very easy to equip a scientific application with
 various kinds of user interfaces: graphical via web, command line,
@@ -57,14 +57,14 @@ get results back.
 Replace `flask` by `django` and you get a Django-based user interface
 instead (!).
 
-### Killer demo: make a menu tree
+### Killer demo: make a pool tree
 
 The user interface above was based on inspecting a Python function and
 its keyword arguments and default values.
 To get more control of the user interface, you can specify all the
-input parameters as a hierarichal tree, called *menu tree*, say
+input parameters as a hierarichal tree, called *pool tree*. Here is an example:
 
- * Main menu
+ * Main pool
    * Initial motion data
      * Initial velocity: `initial_velocity`
      * Initial angle: `initial_angle`
@@ -89,9 +89,9 @@ In Python, this may take the form
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.Python}
-def menu_definition_list():
-    """Create and return menu defined through a nested list."""
-    menu = [
+def pool_definition_list():
+    """Create and return pool defined through a nested list."""
+    pool = [
         'Main', [
             'Initial motion data', [
                 dict(name='Initial velocity', default=5.0),
@@ -106,8 +106,10 @@ def menu_definition_list():
                      minmax=[-50, 50], number_step=0.5,
                      widget='float', str2type=float),
                 dict(name='Mass', default=0.1, unit='kg',
-                     validate=lambda data_item, value: value > 0),
-                dict(name='Radius', default=0.11, unit='m'),
+                     validate=lambda data_item, value: value > 0,
+                     help='Mass of body.'),
+                dict(name='Radius', default=0.11, unit='m',
+                     help='Radius of spherical body.'),
                 ],
             'Numerical parameters', [
                 dict(name='Method', default='RK4',
@@ -118,28 +120,29 @@ def menu_definition_list():
                      widget='textline', unit='s'),
                 ],
             'Plot parameters', [
-                dict(name='Plot simplified motion', default=True),
-                dict(name='New plot', default=True),
+                dict(name='Plot simplified motion', default=True,
+                     help='Plot motion without drag+lift forces.'),
+                dict(name='New plot', default=True,
+                     help='Erase all old curves.'),
                 ],
             ],
         ]
-    from parampool.menu.UI import listtree2Menu
-    menu = listtree2Menu(menu)
-    return menu
+    from parampool.pool.UI import listtree2Pool
+    pool = listtree2Pool(pool)
+    return pool
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-There is more  you to learn when specifying a menu (compared to just
+There is more to learn when specifying a *pool* of parameters (compared to just
 providing a compute function), but you also get a lot fancier
-web-based graphical user interface. The interface is automatically generated
-with very few lines of code.
+web-based graphical user interface or command-line (or file) interface.
+The interfaces are automatically generated with very few lines of code.
 
-<!-- <img src="doc/src/pp/fig-pp/flask_menu1_filled.png" width=800> -->
-![](doc/src/pp/fig-pp/flask_menu1_filled.png)
+<!-- <img src="doc/src/pp/fig-pp/flask_pool1_filled.png" width=800> -->
+![](doc/src/pp/fig-pp/flask_pool1_filled.png)
 
 You can freely choose between a Flask or Django application for realizing the
 user interface.
 
-A [tutorial](http://hplgit.github.io/parampool/doc/pub/pp.html)
-is in the writings, and
-you need the tutorial be able to use the package.
+Read the [tutorial](http://hplgit.github.io/parampool/doc/pub/pp.html)
+to learn how to use Parampool!
 
