@@ -7,7 +7,7 @@ Automatically generated HTML file from DocOnce source
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="DocOnce: https://github.com/hplgit/doconce/" />
 <meta name="description" content="Parampool Tutorial">
-<meta name="keywords" content="subpool,data item">
+<meta name="keywords" content="Matplotlib plotting,Bokeh plotting,mpld3 plotting,subpool,data item">
 
 <title>Parampool Tutorial</title>
 
@@ -28,105 +28,104 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [(' Simulation program used as sample app ', 1, None, '___sec0'),
-              (' User interfaces for Python functions ',
+ 'sections': [('Simulation program used as sample app', 1, None, '___sec0'),
+              ('User interfaces for Python functions',
                1,
                'pp:GUI4functions',
                'pp:GUI4functions'),
-              (' Real numbers as input and output ',
+              ('Real numbers as input and output',
                2,
                'pp:real:inout',
                'pp:real:inout'),
-              (' Flask interface ', 3, None, '___sec3'),
-              (' Django interface ', 3, None, '___sec4'),
-              (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
-              (' Flask application ', 3, None, '___sec6'),
-              (' Django application ', 3, None, '___sec7'),
-              (' Comparing graphs in the same plot ', 3, None, '___sec8'),
-              (' More input parameters and results ',
+              ('Flask interface', 3, None, '___sec3'),
+              ('Django interface', 3, None, '___sec4'),
+              ('A plot as output', 2, 'pp:plot:output', 'pp:plot:output'),
+              ('Flask application', 3, None, '___sec6'),
+              ('Django application', 3, None, '___sec7'),
+              ('Comparing graphs in the same plot', 3, None, '___sec8'),
+              ('Bokeh plotting', 3, None, '___sec9'),
+              ('mpld3 plotting', 3, None, '___sec10'),
+              ('More input parameters and results',
                2,
                'pp:flask4',
                'pp:flask4'),
-              (' The returned HTML code ', 3, None, '___sec10'),
-              (' Documentation of the application ', 3, None, '___sec11'),
-              (' Django interface ', 3, None, '___sec12'),
-              (' Other types of input data ', 2, None, '___sec13'),
-              (' Uploading a file ', 3, None, '___sec14'),
-              (' Working with a pool of input parameters ',
+              ('The returned HTML code', 3, None, '___sec12'),
+              ('Documentation of the application', 3, None, '___sec13'),
+              ('Django interface', 3, None, '___sec14'),
+              ('Other types of input data', 2, None, '___sec15'),
+              ('Uploading a file', 3, None, '___sec16'),
+              ('Working with a pool of input parameters',
                1,
                'pp:flask_pool1',
                'pp:flask_pool1'),
-              (' Specifying a pool as a list ',
+              ('Specifying a pool as a list',
                2,
                'pp:flask_pool1:list',
                'pp:flask_pool1:list'),
-              (' Attributes in data items ',
+              ('Attributes in data items',
                2,
                'pp:flask_pool1:dataitem',
                'pp:flask_pool1:dataitem'),
-              (' The compute function ',
+              ('The compute function',
                2,
                'pp:flask_pool1:compute',
                'pp:flask_pool1:compute'),
-              (' A command-line and file interface ',
+              ('A command-line and file interface',
                2,
                'pp:flask_pool1:cml_file',
                'pp:flask_pool1:cml_file'),
-              (' Generating a web-based user interface ',
+              ('Generating a web-based user interface',
                2,
                'pp:flask_pool1:GUI',
                'pp:flask_pool1:GUI'),
-              (' Operating the user interface ',
+              ('Operating the user interface',
                2,
                'pp:flask_pool1:GUI_op',
                'pp:flask_pool1:GUI_op'),
-              (' Detection of wrong input ',
+              ('Detection of wrong input',
                2,
                'pp:flask_pool1:GUI_error',
                'pp:flask_pool1:GUI_error'),
-              (' Loading parameters from file and the command line ',
+              ('Loading parameters from file and the command line',
                2,
                'pp:flask_pool1:GUI_cml_file',
                'pp:flask_pool1:GUI_cml_file'),
-              (' Specifying a pool using an API ', 2, None, '___sec24'),
-              (' Specifying a pool using an alternative API ',
+              ('Specifying a pool using an API', 2, None, '___sec26'),
+              ('Specifying a pool using an alternative API',
                2,
                None,
-               '___sec25'),
-              (' File with documentation of the application ',
+               '___sec27'),
+              ('File with documentation of the application',
                3,
                None,
-               '___sec26'),
-              (' LaTeX symbol as parameter name ', 3, None, '___sec27'),
-              (' Multiple input values for parameters ', 3, None, '___sec28'),
-              (' 2DO ', 2, None, '___sec29'),
-              (' Reading default values from command line or file ',
-               2,
-               None,
-               '___sec30'),
-              (' Pool with other data structures ', 2, None, '___sec31'),
-              (' Advanced topics ', 1, None, '___sec32'),
-              (' Login and archival of results ', 2, None, '___sec33'),
-              (' Animations ', 2, None, '___sec34'),
-              (' Python expressions as input ', 2, None, '___sec35'),
-              (' Exercises ', 1, None, '___sec36'),
-              (' Exercise 1: Make a web app for integration ',
+               '___sec28'),
+              ('LaTeX symbol as parameter name', 3, None, '___sec29'),
+              ('Multiple input values for parameters', 3, None, '___sec30'),
+              ('Login and archival of results', 2, None, '___sec31'),
+              ('Python expressions as input', 2, None, '___sec32'),
+              ('Exercises', 1, None, '___sec33'),
+              ('Exercise 1: Make a web app for integration',
                2,
                'pp:exer:integrate',
                'pp:exer:integrate'),
-              (' Exercise 2: Make a web app for plotting data ',
+              ('Exercise 2: Make a web app for plotting data',
                2,
-               'pp:exer:integrate',
-               'pp:exer:integrate'),
-              (' Exercise: Make a web app for studying vibrations ',
-               1,
+               'pp:exer:plotdata',
+               'pp:exer:plotdata'),
+              ('Exercise 3: Make a web app for studying vibrations',
+               2,
                None,
-               '___sec39'),
-              (' Problem 3: Make a coin flipper ', 2, None, '___sec40'),
-              (' Deployment ', 1, None, '___sec41'),
-              (' Wakari ', 2, None, '___sec42'),
-              (' Uni Oslo ', 2, None, '___sec43'),
-              (' Appendix: Installation ', 1, None, '___sec44')]}
+               '___sec36'),
+              ('Problem 4: Make a coin flipper', 2, None, '___sec37'),
+              ('Exercise 5: Make a web app for the Lorenz system',
+               2,
+               'pp:exer:lorenz',
+               'pp:exer:lorenz'),
+              ('Deployment', 1, None, '___sec39'),
+              ('Wakari', 2, None, '___sec40'),
+              ('Local server', 2, None, '___sec41'),
+              ('Bibliography', 1, None, '___sec42'),
+              ('Appendix: Installation of Parampool', 1, None, '___sec43')]}
 end of tocinfo -->
 
 <body>
@@ -166,11 +165,10 @@ MathJax.Hub.Config({
      <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;">Simulation program used as sample app</a></li>
      <!-- navigation toc: --> <li><a href="#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
      <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
-     <!-- navigation toc: --> <li><a href="._pp005.html#___sec32" style="font-size: 80%;">Advanced topics</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec44" style="font-size: 80%;">Appendix: Installation</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec33" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec42" style="font-size: 80%;">Bibliography</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec43" style="font-size: 80%;">Appendix: Installation of Parampool</a></li>
 
         </ul>
       </li>
@@ -630,11 +628,40 @@ pyplot or pylab:
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
 <div class="highlight" style="background: #ffffff"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">mpl</span>
 mpl<span style="color: #666666">.</span>use(<span style="color: #BA2121">&#39;Agg&#39;</span>)
-<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib.pyplot</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">plot</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib.pyplot</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">plt</span>
 </pre></div>
 <p>
 </div>
 
+
+<h3 id="___sec9">Bokeh plotting </h3>
+
+<p>
+One can use the Bokeh library for plotting instead of Matplotlib,
+see <a href="._pp006.html#Langtangen:web4sciapps">[1]</a> for an example. The major problem
+is that Parampool generates the <code>view.html</code> file and the head and
+body parts of the HTML file generated by Bokeh must be inserted in
+the <code>view.html</code> file at the right places. This can be done
+manually or by a suitable script.
+
+<h3 id="___sec10">mpld3 plotting </h3>
+
+<p>
+The <a href="http://mpld3.github.io" target="_self">mpld3</a> library can be used to convert
+Matplotlib plots to a string containing all the HTML code
+for the plot:
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #408080; font-style: italic"># Plot array y vs x</span>
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">matplotlib.pyplot</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">plt</span><span style="color: #666666">,</span> <span style="color: #0000FF; font-weight: bold">mpld3</span>
+fig, ax <span style="color: #666666">=</span> plt<span style="color: #666666">.</span>subplots()
+ax<span style="color: #666666">.</span>plot(x, y)
+html_text <span style="color: #666666">=</span> mpld3<span style="color: #666666">.</span>fig_to_html(fig)
+</pre></div>
+<p>
+It is relatively easy to create interactive plots with mpld3.
 
 <h2 id="pp:flask4">More input parameters and results</h2>
 
@@ -669,7 +696,7 @@ The function that performs the computations has the following signature:
 and returns a formatted string <code>html_text</code> with two plots organized
 in an HTML table.
 
-<h3 id="___sec10">The returned HTML code </h3>
+<h3 id="___sec12">The returned HTML code </h3>
 
 <p>
 The technique described in the
@@ -727,7 +754,7 @@ of the returned HTML string can be found in the <a href="https://github.com/hplg
 <p><img src="fig-pp/flask4.png" align="bottom" width=850></p>
 </center>
 
-<h3 id="___sec11">Documentation of the application </h3>
+<h3 id="___sec13">Documentation of the application </h3>
 
 <p>
 The Parampool <code>generate</code> function applies the convention that
@@ -833,7 +860,7 @@ in the doc string.)
 </div>
 
 
-<h3 id="___sec12">Django interface </h3>
+<h3 id="___sec14">Django interface </h3>
 
 <p>
 As before, the Django interface is generated by importing the function
@@ -842,7 +869,7 @@ A subdirectory <code>motion_and_forces</code> contains the files, and the
 Django application is started as shown in previous examples and has the same
 functionality as the Flask application.
 
-<h2 id="___sec13">Other types of input data </h2>
+<h2 id="___sec15">Other types of input data </h2>
 
 <p>
 The <code>generate</code> function will recognize the following different types
@@ -851,7 +878,7 @@ of keyword arguments in the compute function:
 <code>tuple</code>, <code>numpy.ndarray</code>, name of a file, as well as user-defined class types
 (a la <code>MyClass</code>).
 
-<h3 id="___sec14">Uploading a file </h3>
+<h3 id="___sec16">Uploading a file </h3>
 
 <p>
 Here is a minimalistic example on computing the mean and standard

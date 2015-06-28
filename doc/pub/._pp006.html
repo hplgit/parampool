@@ -7,7 +7,7 @@ Automatically generated HTML file from DocOnce source
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="DocOnce: https://github.com/hplgit/doconce/" />
 <meta name="description" content="Parampool Tutorial">
-<meta name="keywords" content="subpool,data item">
+<meta name="keywords" content="Matplotlib plotting,Bokeh plotting,mpld3 plotting,subpool,data item">
 
 <title>Parampool Tutorial</title>
 
@@ -28,105 +28,104 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [(' Simulation program used as sample app ', 1, None, '___sec0'),
-              (' User interfaces for Python functions ',
+ 'sections': [('Simulation program used as sample app', 1, None, '___sec0'),
+              ('User interfaces for Python functions',
                1,
                'pp:GUI4functions',
                'pp:GUI4functions'),
-              (' Real numbers as input and output ',
+              ('Real numbers as input and output',
                2,
                'pp:real:inout',
                'pp:real:inout'),
-              (' Flask interface ', 3, None, '___sec3'),
-              (' Django interface ', 3, None, '___sec4'),
-              (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
-              (' Flask application ', 3, None, '___sec6'),
-              (' Django application ', 3, None, '___sec7'),
-              (' Comparing graphs in the same plot ', 3, None, '___sec8'),
-              (' More input parameters and results ',
+              ('Flask interface', 3, None, '___sec3'),
+              ('Django interface', 3, None, '___sec4'),
+              ('A plot as output', 2, 'pp:plot:output', 'pp:plot:output'),
+              ('Flask application', 3, None, '___sec6'),
+              ('Django application', 3, None, '___sec7'),
+              ('Comparing graphs in the same plot', 3, None, '___sec8'),
+              ('Bokeh plotting', 3, None, '___sec9'),
+              ('mpld3 plotting', 3, None, '___sec10'),
+              ('More input parameters and results',
                2,
                'pp:flask4',
                'pp:flask4'),
-              (' The returned HTML code ', 3, None, '___sec10'),
-              (' Documentation of the application ', 3, None, '___sec11'),
-              (' Django interface ', 3, None, '___sec12'),
-              (' Other types of input data ', 2, None, '___sec13'),
-              (' Uploading a file ', 3, None, '___sec14'),
-              (' Working with a pool of input parameters ',
+              ('The returned HTML code', 3, None, '___sec12'),
+              ('Documentation of the application', 3, None, '___sec13'),
+              ('Django interface', 3, None, '___sec14'),
+              ('Other types of input data', 2, None, '___sec15'),
+              ('Uploading a file', 3, None, '___sec16'),
+              ('Working with a pool of input parameters',
                1,
                'pp:flask_pool1',
                'pp:flask_pool1'),
-              (' Specifying a pool as a list ',
+              ('Specifying a pool as a list',
                2,
                'pp:flask_pool1:list',
                'pp:flask_pool1:list'),
-              (' Attributes in data items ',
+              ('Attributes in data items',
                2,
                'pp:flask_pool1:dataitem',
                'pp:flask_pool1:dataitem'),
-              (' The compute function ',
+              ('The compute function',
                2,
                'pp:flask_pool1:compute',
                'pp:flask_pool1:compute'),
-              (' A command-line and file interface ',
+              ('A command-line and file interface',
                2,
                'pp:flask_pool1:cml_file',
                'pp:flask_pool1:cml_file'),
-              (' Generating a web-based user interface ',
+              ('Generating a web-based user interface',
                2,
                'pp:flask_pool1:GUI',
                'pp:flask_pool1:GUI'),
-              (' Operating the user interface ',
+              ('Operating the user interface',
                2,
                'pp:flask_pool1:GUI_op',
                'pp:flask_pool1:GUI_op'),
-              (' Detection of wrong input ',
+              ('Detection of wrong input',
                2,
                'pp:flask_pool1:GUI_error',
                'pp:flask_pool1:GUI_error'),
-              (' Loading parameters from file and the command line ',
+              ('Loading parameters from file and the command line',
                2,
                'pp:flask_pool1:GUI_cml_file',
                'pp:flask_pool1:GUI_cml_file'),
-              (' Specifying a pool using an API ', 2, None, '___sec24'),
-              (' Specifying a pool using an alternative API ',
+              ('Specifying a pool using an API', 2, None, '___sec26'),
+              ('Specifying a pool using an alternative API',
                2,
                None,
-               '___sec25'),
-              (' File with documentation of the application ',
+               '___sec27'),
+              ('File with documentation of the application',
                3,
                None,
-               '___sec26'),
-              (' LaTeX symbol as parameter name ', 3, None, '___sec27'),
-              (' Multiple input values for parameters ', 3, None, '___sec28'),
-              (' 2DO ', 2, None, '___sec29'),
-              (' Reading default values from command line or file ',
-               2,
-               None,
-               '___sec30'),
-              (' Pool with other data structures ', 2, None, '___sec31'),
-              (' Advanced topics ', 1, None, '___sec32'),
-              (' Login and archival of results ', 2, None, '___sec33'),
-              (' Animations ', 2, None, '___sec34'),
-              (' Python expressions as input ', 2, None, '___sec35'),
-              (' Exercises ', 1, None, '___sec36'),
-              (' Exercise 1: Make a web app for integration ',
+               '___sec28'),
+              ('LaTeX symbol as parameter name', 3, None, '___sec29'),
+              ('Multiple input values for parameters', 3, None, '___sec30'),
+              ('Login and archival of results', 2, None, '___sec31'),
+              ('Python expressions as input', 2, None, '___sec32'),
+              ('Exercises', 1, None, '___sec33'),
+              ('Exercise 1: Make a web app for integration',
                2,
                'pp:exer:integrate',
                'pp:exer:integrate'),
-              (' Exercise 2: Make a web app for plotting data ',
+              ('Exercise 2: Make a web app for plotting data',
                2,
-               'pp:exer:integrate',
-               'pp:exer:integrate'),
-              (' Exercise: Make a web app for studying vibrations ',
-               1,
+               'pp:exer:plotdata',
+               'pp:exer:plotdata'),
+              ('Exercise 3: Make a web app for studying vibrations',
+               2,
                None,
-               '___sec39'),
-              (' Problem 3: Make a coin flipper ', 2, None, '___sec40'),
-              (' Deployment ', 1, None, '___sec41'),
-              (' Wakari ', 2, None, '___sec42'),
-              (' Uni Oslo ', 2, None, '___sec43'),
-              (' Appendix: Installation ', 1, None, '___sec44')]}
+               '___sec36'),
+              ('Problem 4: Make a coin flipper', 2, None, '___sec37'),
+              ('Exercise 5: Make a web app for the Lorenz system',
+               2,
+               'pp:exer:lorenz',
+               'pp:exer:lorenz'),
+              ('Deployment', 1, None, '___sec39'),
+              ('Wakari', 2, None, '___sec40'),
+              ('Local server', 2, None, '___sec41'),
+              ('Bibliography', 1, None, '___sec42'),
+              ('Appendix: Installation of Parampool', 1, None, '___sec43')]}
 end of tocinfo -->
 
 <body>
@@ -166,11 +165,10 @@ MathJax.Hub.Config({
      <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;">Simulation program used as sample app</a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
      <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
-     <!-- navigation toc: --> <li><a href="._pp005.html#___sec32" style="font-size: 80%;">Advanced topics</a></li>
-     <!-- navigation toc: --> <li><a href="#___sec36" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="#___sec39" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
-     <!-- navigation toc: --> <li><a href="#___sec41" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="#___sec44" style="font-size: 80%;">Appendix: Installation</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec33" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec39" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec42" style="font-size: 80%;">Bibliography</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec43" style="font-size: 80%;">Appendix: Installation of Parampool</a></li>
 
         </ul>
       </li>
@@ -186,13 +184,12 @@ MathJax.Hub.Config({
 <a name="part0006"></a>
 <!-- !split -->
 
-<h1 id="___sec36">Exercises </h1>
+<h1 id="___sec33">Exercises </h1>
 
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="___sec37">Exercise 1: Make a web app for integration </h2>
-<div id="pp:exer:integrate"></div>
+<h2 id="pp:exer:integrate">Exercise 1: Make a web app for integration</h2>
 
 <p>
 The purpose of this exercise is to use Parampool to generate a
@@ -268,7 +265,7 @@ Filename: <code>integrate</code>.
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="pp:exer:integrate">Exercise 2: Make a web app for plotting data</h2>
+<h2 id="pp:exer:plotdata">Exercise 2: Make a web app for plotting data</h2>
 
 <p>
 Make a web app with the <code>parampool.pool.Pool</code> functionality
@@ -302,7 +299,10 @@ Filename: <code>upload_and_plot</code>.
 <p>
 <!-- --- end exercise --- -->
 
-<h1 id="___sec39">Exercise: Make a web app for studying vibrations </h1>
+<p>
+<!-- --- begin exercise --- -->
+
+<h2 id="___sec36">Exercise 3: Make a web app for studying vibrations </h2>
 
 <p>
 Download the <a href="https://github.com/hplgit/bumpy" target="_self">bumpy</a> for
@@ -317,8 +317,22 @@ mu'' + f(u') + s(u) = F(t).
 $$
 
 <p>
+<b>a)</b>
 Make an interface to the bumpy application where the user can set
-the following items:
+the following items.
+
+<ul>
+ <li> Subpool ``Main``:</li>
+
+<ul>
+   <li> \( m \)</li>
+   <li> damping type: linear \( f(u')=bu' \) or quadratic \( f(u')=b|u'|u' \) (option list)</li>
+   <li> damping parameter \( b \)</li>
+   <li> subpool &quot;spring&quot;</li>
+   <li> subpool &quot;excitation&quot;</li>
+</ul>
+
+ <li> Subpool &quot;spring&quot;:</li>
 
 <ul>
    <li> an option list for selected formulas for the spring \( s(u) \):</li>
@@ -330,42 +344,63 @@ the following items:
      <li> \( s(u) = k\sin u \) (pendulum &quot;spring&quot; caused by gravity)</li>
 </ul>
 
-     [[[
-   <li> F=A*sin(w*t), A and w are parameters</li>
-   <li> damping with two values and radio buttons, b</li>
-   <li> s is a text expression</li>
-   <li> F is a filename (0 is default)</li>
-   <li> there is a subpool for F with different models: filename,
-     A*sin(w*t) (subpool), white noise with intensity, formula of t</li>
-   <li> another subpool for s models</li>
+   <li> \( k \)</li>
 </ul>
 
-On the main pool: damping can have radio buttons for linear b*u and
-quadratic b*u**2, F has list of different type of forces
+ <li> Subpool &quot;excitation&quot;:</li>
+
+<ul>
+   <li> an option list for selected formulas for the excitation \( F(t) \):</li>
+
+<ul>
+     <li> $F(t)=A*sin(w*t)</li>
+     <li> $F(t)=A*cos(w*t)</li>
+     <li> \( F=A \) for \( t\leq w \), \( F=0 \) for \( t>w \)</li>
+     <li> \( F(t) \) read from file</li>
+</ul>
+
+   <li> \( A \)</li>
+   <li> \( w \)</li>
+   <li> filename</li>
+</ul>
+
+</ul>
+
+<b>b)</b>
+Can you simplify the interface and accept general mathematical
+expressions for \( F(t) \) and \( s(u) \)?
+
+<p>
+<!-- --- end exercise --- -->
 
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="___sec40">Problem 3: Make a coin flipper </h2>
+<h2 id="___sec37">Problem 4: Make a coin flipper </h2>
 
 <p>
-Make a web application where we can set the number of coins to be
-flipped. Clicking on the <em>Submit</em> button (whose name should rather
-be <em>flip</em>) shows images of coins with heads and tails according to
-a random flip of each coin.
+Make a web application where we can set the number of coins, \( m \), to
+be flipped. Guess the maximum number of heads, \( n \). If the number of
+heads is less than or equal to \( n \), you earn \( m-n \) points.  Clicking
+on the <em>Submit</em> button (whose name should rather be <em>Flip</em>) shows
+images of coins with heads and tails according to a random flip of
+each coin as well as the total number of earned points.  Make a button
+to reset the game.
 
 <p>
 <!-- --- begin hint in exercise --- -->
 
 <p>
 <a class="glyphicon glyphicon-hand-right showdetails" data-toggle="collapse"
- data-target="#exer_3_1" style="font-size: 80%;"></a>
+ data-target="#exer_4_1" style="font-size: 80%;"></a>
 <b>Hint.</b>
 <div class="collapse-group">
-<p><div class="collapse" id="exer_3_1">
+<p><div class="collapse" id="exer_4_1">
 
 <p>
 See <a href="random.org/coins" target="_self"><tt>random.org/coins</tt></a> for inspiration and images of coins.
+Use a global variable in the compute module to hold the number of
+earned points.
 
 <p>
 </div></p>
@@ -379,7 +414,35 @@ Filename: <code>coin_flipper</code>.
 <p>
 <!-- --- end exercise --- -->
 
-<h1 id="___sec41">Deployment </h1>
+<p>
+<!-- --- begin exercise --- -->
+
+<h2 id="pp:exer:lorenz">Exercise 5: Make a web app for the Lorenz system</h2>
+
+<p>
+The famous
+<a href="https://en.wikipedia.org/wiki/Lorenz_system" target="_self">Lorez system</a>
+for illustrating chaotic motion is given by
+
+$$
+\begin{align}
+x'(t) &= s(y(t) - x(t)),\\ 
+y'(t) &= x(t)(r-z(t)) - y(t),\\ 
+z'(t) &= x(t)y(t) - bz(t),
+\end{align}
+$$
+
+with initial conditions \( x(0)=x_0 \), \( y(0)=y_0 \), and \( z(0)=z_0 \).
+Make a web app that can solve this system and visualize its solution.
+The web interface must allow for setting \( x_0 \), \( y_0 \), \( z_0 \), \( r \), \( s \), \( b \),
+the number of time steps (or the time step), and the final time \( T \) for
+the simulation.
+Filename: <code>lorenz</code>.
+
+<p>
+<!-- --- end exercise --- -->
+
+<h1 id="___sec39">Deployment </h1>
 
 <p>
 The most obvious servers to deploy web applications on, like Google App Engine,
@@ -387,7 +450,7 @@ only support very light weight Python. For heavier scientific applications
 we may need more tools; SSH access, a Fortran compiler, etc. Therefore we
 introduce two servers we recommend for the scientific computing usage.
 
-<h2 id="___sec42">Wakari </h2>
+<h2 id="___sec40">Wakari </h2>
 
 <p>
 <a href="https://www.wakari.io" target="_self">Wakari</a> is originally meant to be a Python
@@ -404,7 +467,7 @@ laptop-terminal&gt; ssh -p [port] -f -N -L 5000:localhost:5000 \
                  [username]@[wakari-hostname].wakari.io
 </pre></div>
 <p>
-<div class="alert alert-block alert-success alert-text-normal"><b>Port - username - hostname.</b>
+<div class="alert alert-block alert-success alert-text-normal"><b>Port, username, and hostname.</b>
 
 <p>
 Information about which port to forward, as well as username and
@@ -429,32 +492,29 @@ on your laptop.
 
 <p>
 Even though only Flask and not Django is pre-installed in Wakari, it
-is relatively straight-forward to download Django
+is relatively straight-forward to download the Django
 <a href="https://www.djangoproject.com/download/" target="_self">source</a> and install it
-locally to your user. Also, if Gnuplot is to be installed and compiled
-with PNG support, the library <code>Pnglib</code> needs to be installed before
-Gnuplot is compiled.
+locally on your user. (Also, if Gnuplot is to be installed and
+compiled with PNG support, the library <code>pnglib</code> needs to be installed
+before Gnuplot is compiled. The Parampool repo features a <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/misc/install_on_wakari.sh" target="_self">script</a>
+that demonstrates how to install various scientific computing packages
+on Wakari.)
 
 <p>
 <!-- The script <code>install_on_wakari.sh</code> in the top -->
 <!-- directory of cbc-websolver accomplishes this. -->
 
-<h2 id="___sec43">Uni Oslo </h2>
+<h2 id="___sec41">Local server </h2>
 
 <p>
-The biggest downside with the Uni Oslo server is that you need to be a
-student or employee to access it. Nevertheless, the procedure
-described below for running web applications through a CGI script can
-be applied to any server.
-
-<p>
-If only little traffic has to be handled, it is possible to run Flask
+If only little traffic is expected for a web application,
+it is possible to run Flask
 and Django through a CGI script. The script imports and starts the
 application's wsgi handler and works as a gateway between the Internet
 and the Flask or Django server.
 
 <p>
-The simplest example of a CGI script running Flask follows:
+The simplest example of a Python CGI script running Flask goes like
 
 <p>
 
@@ -466,36 +526,30 @@ The simplest example of a CGI script running Flask follows:
 CGIHandler()<span style="color: #666666">.</span>run(app)
 </pre></div>
 <p>
-This code assumes that the Python executive in <code>/usr/bin/</code> is available and
-up-to-date, and that all required Python modules are on the
-<code>PYTHONPATH</code> environment and are available to be run by others. As the
-Python version on the Uni Oslo server, version 2.5, is no longer
-supported by the Python web frameworks, we need to install a newer
-version locally and use the absolute path to its executive in the
-header of the CGI script.
-
-<p>
-With a new Python installation we also need to (re)install all required modules
-and add them to <code>sys.path</code>. The script <code>install_on_uio.sh</code> in the top directory
-of cbc-websolver installs all required packages locally. Then we can
-add the location of these modules to <code>sys.path</code> in the CGI script:
+This code assumes that the Python executable is located
+in <code>/usr/bin/</code> and
+up-to-date version wise, and that all required Python modules are in
+directories listed in the
+<code>PYTHONPATH</code> environment variable. These modules must be accessible
+for any user. Sometimes <code>/usr/bin/python</code> is too old so you need to
+compiler a newer version and use its path in the
+header of the CGI script. In case you run such a &quot;private&quot; Python
+installation, all necessary modules must also be installed.
+Also make sure that <code>controller.py</code> is in a directory listed in
+<code>PYTHONPATH</code>, or add the directory to <code>sys.path</code>:
 
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
 <div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">sys</span>
-sys<span style="color: #666666">.</span>path <span style="color: #666666">+=</span> [<span style="color: #BA2121">&#39;/path/to/local/installation/lib/python2.7/site-packages/&#39;</span>]
-
-CGIHandler()<span style="color: #666666">.</span>run(app)
+<span style="color: #408080; font-style: italic"># controller.py is in /usr/local/my/software</span>
+sys<span style="color: #666666">.</span>path<span style="color: #666666">.</span>insert(<span style="color: #666666">0</span>, <span style="color: #BA2121">&#39;/usr/local/my/software&#39;</span>)
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">controller</span> <span style="color: #008000; font-weight: bold">import</span> app
 </pre></div>
-<p>
-One also needs to assure that the location of controller.py is in sys.path,
-or the import of app will fail.
-
 <p>
 The only difference between the CGI script for Flask and Django is that for
 Django one needs to add the directory containing the <code>settings.py</code> file to
-<code>sys.path</code> and set <code>os.environ['DJANGO_SETTINGS_MODULE']</code> to settings. Also,
+<code>sys.path</code> and set <code>os.environ['DJANGO_SETTINGS_MODULE']</code>. Also,
 the import of the app is a bit different than before:
 
 <p>
@@ -508,18 +562,11 @@ app <span style="color: #666666">=</span> django<span style="color: #666666">.</
 CGIHandler()<span style="color: #666666">.</span>run(app)
 </pre></div>
 <p>
-<div class="alert alert-block alert-success alert-text-normal"><b>Make CGI script accessible for others.</b>
 Remember that all scripts and modules to be accessed from the web need to
 have permissions for everyone to read and execute. This can be done by, e.g.,
+<code>chmod 755 filename</code>.
 
-<p>
-
-<!-- code=text (!bc sys) typeset with pygments style "default" -->
-<div class="highlight" style="background: #ffffff"><pre style="line-height: 125%">Terminal&gt; chmod 755 run_django.cgi
-</pre></div>
-<p>
-</div>
-
+<h1 id="___sec42">Bibliography </h1>
 
 <p>
 <!-- begin bibliography -->
@@ -534,19 +581,23 @@ have permissions for everyone to read and execute. This can be done by, e.g.,
 
 <!-- end bibliography -->
 
-<h1 id="___sec44">Appendix: Installation </h1>
+<h1 id="___sec43">Appendix: Installation of Parampool </h1>
 
 <p>
-We need
+Parampool needs
 
 <ul>
+ <li> Python version 2.7</li>
+ <li> Numerical Python: <code>sudo pip install numpy</code></li>
+ <li> Parampool itself from <a href="https://github.com/hplgit/parampool" target="_self"><tt>https://github.com/hplgit/parampool</tt></a></li>
  <li> Flask: <code>sudo pip install Flask</code></li>
- <li> Django (optional): <code>sudo pip install django</code></li>
  <li> progressbar: <code>sudo pip install progressbar</code></li>
  <li> Flask-WTF: <code>pip install Flask-WTF</code></li>
  <li> Flask-SQLAlchemy: <code>sudo pip install Flask-SQLAlchemy</code></li>
  <li> Flask-Login: <code>sudo pip install Flask-Login</code></li>
  <li> Flask-Mail: <code>sudo pip install Flask-Mail</code></li>
+ <li> Django (optional): <code>sudo pip install django</code></li>
+ <li> DocOnce (optional, for documentation) from <a href="https://github.com/hplgit/doconce" target="_self"><tt>https://github.com/hplgit/doconce</tt></a></li>
 </ul>
 
 

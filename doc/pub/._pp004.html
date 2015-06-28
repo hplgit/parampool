@@ -7,7 +7,7 @@ Automatically generated HTML file from DocOnce source
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="DocOnce: https://github.com/hplgit/doconce/" />
 <meta name="description" content="Parampool Tutorial">
-<meta name="keywords" content="subpool,data item">
+<meta name="keywords" content="Matplotlib plotting,Bokeh plotting,mpld3 plotting,subpool,data item">
 
 <title>Parampool Tutorial</title>
 
@@ -28,105 +28,104 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [(' Simulation program used as sample app ', 1, None, '___sec0'),
-              (' User interfaces for Python functions ',
+ 'sections': [('Simulation program used as sample app', 1, None, '___sec0'),
+              ('User interfaces for Python functions',
                1,
                'pp:GUI4functions',
                'pp:GUI4functions'),
-              (' Real numbers as input and output ',
+              ('Real numbers as input and output',
                2,
                'pp:real:inout',
                'pp:real:inout'),
-              (' Flask interface ', 3, None, '___sec3'),
-              (' Django interface ', 3, None, '___sec4'),
-              (' A plot as output ', 2, 'pp:plot:output', 'pp:plot:output'),
-              (' Flask application ', 3, None, '___sec6'),
-              (' Django application ', 3, None, '___sec7'),
-              (' Comparing graphs in the same plot ', 3, None, '___sec8'),
-              (' More input parameters and results ',
+              ('Flask interface', 3, None, '___sec3'),
+              ('Django interface', 3, None, '___sec4'),
+              ('A plot as output', 2, 'pp:plot:output', 'pp:plot:output'),
+              ('Flask application', 3, None, '___sec6'),
+              ('Django application', 3, None, '___sec7'),
+              ('Comparing graphs in the same plot', 3, None, '___sec8'),
+              ('Bokeh plotting', 3, None, '___sec9'),
+              ('mpld3 plotting', 3, None, '___sec10'),
+              ('More input parameters and results',
                2,
                'pp:flask4',
                'pp:flask4'),
-              (' The returned HTML code ', 3, None, '___sec10'),
-              (' Documentation of the application ', 3, None, '___sec11'),
-              (' Django interface ', 3, None, '___sec12'),
-              (' Other types of input data ', 2, None, '___sec13'),
-              (' Uploading a file ', 3, None, '___sec14'),
-              (' Working with a pool of input parameters ',
+              ('The returned HTML code', 3, None, '___sec12'),
+              ('Documentation of the application', 3, None, '___sec13'),
+              ('Django interface', 3, None, '___sec14'),
+              ('Other types of input data', 2, None, '___sec15'),
+              ('Uploading a file', 3, None, '___sec16'),
+              ('Working with a pool of input parameters',
                1,
                'pp:flask_pool1',
                'pp:flask_pool1'),
-              (' Specifying a pool as a list ',
+              ('Specifying a pool as a list',
                2,
                'pp:flask_pool1:list',
                'pp:flask_pool1:list'),
-              (' Attributes in data items ',
+              ('Attributes in data items',
                2,
                'pp:flask_pool1:dataitem',
                'pp:flask_pool1:dataitem'),
-              (' The compute function ',
+              ('The compute function',
                2,
                'pp:flask_pool1:compute',
                'pp:flask_pool1:compute'),
-              (' A command-line and file interface ',
+              ('A command-line and file interface',
                2,
                'pp:flask_pool1:cml_file',
                'pp:flask_pool1:cml_file'),
-              (' Generating a web-based user interface ',
+              ('Generating a web-based user interface',
                2,
                'pp:flask_pool1:GUI',
                'pp:flask_pool1:GUI'),
-              (' Operating the user interface ',
+              ('Operating the user interface',
                2,
                'pp:flask_pool1:GUI_op',
                'pp:flask_pool1:GUI_op'),
-              (' Detection of wrong input ',
+              ('Detection of wrong input',
                2,
                'pp:flask_pool1:GUI_error',
                'pp:flask_pool1:GUI_error'),
-              (' Loading parameters from file and the command line ',
+              ('Loading parameters from file and the command line',
                2,
                'pp:flask_pool1:GUI_cml_file',
                'pp:flask_pool1:GUI_cml_file'),
-              (' Specifying a pool using an API ', 2, None, '___sec24'),
-              (' Specifying a pool using an alternative API ',
+              ('Specifying a pool using an API', 2, None, '___sec26'),
+              ('Specifying a pool using an alternative API',
                2,
                None,
-               '___sec25'),
-              (' File with documentation of the application ',
+               '___sec27'),
+              ('File with documentation of the application',
                3,
                None,
-               '___sec26'),
-              (' LaTeX symbol as parameter name ', 3, None, '___sec27'),
-              (' Multiple input values for parameters ', 3, None, '___sec28'),
-              (' 2DO ', 2, None, '___sec29'),
-              (' Reading default values from command line or file ',
-               2,
-               None,
-               '___sec30'),
-              (' Pool with other data structures ', 2, None, '___sec31'),
-              (' Advanced topics ', 1, None, '___sec32'),
-              (' Login and archival of results ', 2, None, '___sec33'),
-              (' Animations ', 2, None, '___sec34'),
-              (' Python expressions as input ', 2, None, '___sec35'),
-              (' Exercises ', 1, None, '___sec36'),
-              (' Exercise 1: Make a web app for integration ',
+               '___sec28'),
+              ('LaTeX symbol as parameter name', 3, None, '___sec29'),
+              ('Multiple input values for parameters', 3, None, '___sec30'),
+              ('Login and archival of results', 2, None, '___sec31'),
+              ('Python expressions as input', 2, None, '___sec32'),
+              ('Exercises', 1, None, '___sec33'),
+              ('Exercise 1: Make a web app for integration',
                2,
                'pp:exer:integrate',
                'pp:exer:integrate'),
-              (' Exercise 2: Make a web app for plotting data ',
+              ('Exercise 2: Make a web app for plotting data',
                2,
-               'pp:exer:integrate',
-               'pp:exer:integrate'),
-              (' Exercise: Make a web app for studying vibrations ',
-               1,
+               'pp:exer:plotdata',
+               'pp:exer:plotdata'),
+              ('Exercise 3: Make a web app for studying vibrations',
+               2,
                None,
-               '___sec39'),
-              (' Problem 3: Make a coin flipper ', 2, None, '___sec40'),
-              (' Deployment ', 1, None, '___sec41'),
-              (' Wakari ', 2, None, '___sec42'),
-              (' Uni Oslo ', 2, None, '___sec43'),
-              (' Appendix: Installation ', 1, None, '___sec44')]}
+               '___sec36'),
+              ('Problem 4: Make a coin flipper', 2, None, '___sec37'),
+              ('Exercise 5: Make a web app for the Lorenz system',
+               2,
+               'pp:exer:lorenz',
+               'pp:exer:lorenz'),
+              ('Deployment', 1, None, '___sec39'),
+              ('Wakari', 2, None, '___sec40'),
+              ('Local server', 2, None, '___sec41'),
+              ('Bibliography', 1, None, '___sec42'),
+              ('Appendix: Installation of Parampool', 1, None, '___sec43')]}
 end of tocinfo -->
 
 <body>
@@ -166,11 +165,10 @@ MathJax.Hub.Config({
      <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;">Simulation program used as sample app</a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
      <!-- navigation toc: --> <li><a href="#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
-     <!-- navigation toc: --> <li><a href="._pp005.html#___sec32" style="font-size: 80%;">Advanced topics</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">Exercise: Make a web app for studying vibrations</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec41" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec44" style="font-size: 80%;">Appendix: Installation</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec33" style="font-size: 80%;">Exercises</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec42" style="font-size: 80%;">Bibliography</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec43" style="font-size: 80%;">Appendix: Installation of Parampool</a></li>
 
         </ul>
       </li>
@@ -265,6 +263,16 @@ corresponding variable name in the compute function:
 With a pool we can give the parameters more readable logical names (not
 restricted to a valid variable name in Python), but we can also
 specify a lot other properties too, as will be explained.
+
+<p>
+<div class="alert alert-block alert-danger alert-text-normal"><b>: Parameter names must be unique!</b>
+The generated Flask or Django code has a class (in <code>model.py</code> or
+<code>models.py</code> for Flask and Django, respectively) where each parameter name
+is transformed to a static class variable. Such code requires each
+parameter to have a unique name. (Using variable names that merge the
+parameter name with its subpool path would solve this problem.)
+</div>
+
 
 <p>
 A pool is a hierarchical <em>tree structure</em> with <em>subpools</em> and
@@ -752,7 +760,7 @@ This means that when starting <code>python controller.py</code> we may add
 individual parameters. This makes it easy to control which default
 values that will appear in the web GUI.
 
-<h2 id="___sec24">Specifying a pool using an API </h2>
+<h2 id="___sec26">Specifying a pool using an API </h2>
 
 <p>
 Instead of listing all the entries in the pool tree as strings, lists,
@@ -849,7 +857,7 @@ of this GUI (found in the <a href="https://github.com/hplgit/parampool/tree/mast
 the same as in the previous one (found in the <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool1" target="_self"><tt>flask_pool1</tt></a>
 directory).
 
-<h2 id="___sec25">Specifying a pool using an alternative API </h2>
+<h2 id="___sec27">Specifying a pool using an alternative API </h2>
 
 <p>
 There is an another way of defining subpools as well: make a function
@@ -976,7 +984,7 @@ of Parampool:
    parameter sets at once</li>
 </ol>
 
-<h3 id="___sec26">File with documentation of the application </h3>
+<h3 id="___sec28">File with documentation of the application </h3>
 
 <p>
 We have in the section <a href="._pp003.html#pp:flask4">More input parameters and results</a> seen that the doc string of
@@ -986,7 +994,7 @@ It is also possible to make such a description in a separate
 file. Any HTML file will work, and the filename is specified by
 the <code>doc</code> argument to <code>generate</code>.
 
-<h3 id="___sec27">LaTeX symbol as parameter name </h3>
+<h3 id="___sec29">LaTeX symbol as parameter name </h3>
 
 <p>
 One can add a mathematical
@@ -1009,10 +1017,11 @@ generate(compute_motion_and_forces_with_pool_loop,
          latex_name<span style="color: #666666">=</span><span style="color: #BA2121">&#39;symbol&#39;</span>)
 </pre></div>
 <p>
-The values of <code>latex_name</code> can be <code>'symbol'</code> (symbol only) or
-<code>'text, symbol'</code> (ordinary name followed by a comma and the symbol).
+The values of <code>latex_name</code> can be <code>'symbol'</code>, meaning symbol only, or
+<code>'text, symbol'</code>, meaning that the ordinary name is
+followed by a comma and the symbol.
 
-<h3 id="___sec28">Multiple input values for parameters </h3>
+<h3 id="___sec30">Multiple input values for parameters </h3>
 
 <p>
 We can specify multiple values for parameters whose input fields are
@@ -1047,10 +1056,10 @@ like this:
 </pre></div>
 <p>
 Note that we accumulate the HTML code returned from the
-<code>compute_motion_and_forces</code> function that runs the simulation
+compute function <code>compute_motion_and_forces</code> that runs the simulation
 and returns the results as HTML code. Figure <a href="#pp:flask_pool3:fig1">11</a>
-mathematical description of the application, LaTeX symbols as parameter names, and two input values for two parameters, leading to \( 2\times 2=4 \) runs,
-and hence four lines of plots. One realizes how easy it is to quickly
+features a mathematical description of the application, LaTeX symbols as parameter names, and two input values for two parameters, leading to \( 2\times 2=4 \) runs,
+and hence four lines of plots. The example demonstrates how easy it is to quickly
 perform parameter studies by simply 1) writing the compute function with
 loops and <code>pool.get_values</code>, 2) separating input values by <code>&</code> in the GUI.
 
@@ -1061,62 +1070,87 @@ loops and <code>pool.get_values</code>, 2) separating input values by <code>&</c
 <p><img src="fig-pp/flask_pool3_results.png" align="bottom" width=800></p>
 </center>
 
-<h2 id="___sec29">2DO </h2>
-
-<ul>
- <li> Lorenz demo as exercise, provide the compute function and graphics,
-   perhaps also good demo in web4sciapps.</li>
- <li> units and text fields: Done</li>
- <li> pool list: no doc</li>
- <li> pool API: add doc in <code>doc.html</code>, also show possibility to call</li>
- <li> Check if multiple answers are correctly handled in DataItem,
-   make <code>enable_multiple_answers(*args)</code> which turns all widgets into
-   textline (or those given as arguments), make multiple loop parameters,
-   can get them as list of dicts <code>pool.get_multiple_values(*args)</code>
-   (all if no argument, otherwise those params listed), let keys
-   be either full path or shortest possible path, can iterate over
-   this list, test in ball example by having a new function with
-   the multiple loop calling up <code>compute_motion_and_forces_plot</code>
-   with <code>new_plot=True</code> first time and false the next times.</li>
- <li> Let <code>w</code> be function, widget=texline, str2type can be StringFunction.
-   Can also invent a special syntax and translate to StringFunction or
-   just make a function.</li>
- <li> Let <code>w</code> be filename: upload a Python module with the w(t) function.</li>
- <li> Problem: non-unique data item names cause trouble for the model
-   class since just name is used as static variable...</li>
- <li> Show auto edit of the HTML code, e.g., removing Input: and Result:,
-   this is easier than freezing the files and manually editing them.
-   Reason: if you add new data itmes or subpools to the pool,
-   it is convenient to be able to regenerate the whole setup.</li>
-</ul>
+<p>
+However, writing nested loops for a lot of parameters is unnecessary tedious.
+We can use the <code>itertools.product</code> function to compute all possible
+combinations and simplify the loop. This function takes a set of
+lists or tuples and returns an iterator over all combinations of all
+the elements in the lists/tuples. As an example,
 
 <p>
 
-<!-- code=text typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">from parampool.generator.flask.generate_template import \ 
-     run_doconce_on_text
-doc = run_doconce_on_text(compute_function.__doc__)
+<!-- code=python (!bc pyshell) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #666666">&gt;&gt;&gt;</span> <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">itertools</span>
+<span style="color: #666666">&gt;&gt;&gt;</span> values1 <span style="color: #666666">=</span> [<span style="color: #666666">1</span>, <span style="color: #666666">-1</span>]
+<span style="color: #666666">&gt;&gt;&gt;</span> values2 <span style="color: #666666">=</span> [<span style="color: #666666">2</span>, <span style="color: #666666">4</span>, <span style="color: #666666">6</span>]
+<span style="color: #666666">&gt;&gt;&gt;</span> combinations <span style="color: #666666">=</span> itertools<span style="color: #666666">.</span>product(values1, values2)
+<span style="color: #666666">&gt;&gt;&gt;</span> <span style="color: #008000; font-weight: bold">for</span> combination <span style="color: #AA22FF; font-weight: bold">in</span> combinations:
+<span style="color: #666666">...</span>     <span style="color: #008000; font-weight: bold">print</span> combination
+(<span style="color: #666666">1</span>, <span style="color: #666666">2</span>)
+(<span style="color: #666666">1</span>, <span style="color: #666666">4</span>)
+(<span style="color: #666666">1</span>, <span style="color: #666666">6</span>)
+(<span style="color: #666666">-1</span>, <span style="color: #666666">2</span>)
+(<span style="color: #666666">-1</span>, <span style="color: #666666">4</span>)
+(<span style="color: #666666">-1</span>, <span style="color: #666666">6</span>)
 </pre></div>
-
-<h2 id="___sec30">Reading default values from command line or file </h2>
+<p>
+The single loop is equivalent to
 
 <p>
-To be programmed:
-Insert <code>pool = set_defaults_from_file(pool)</code> after calling
-<code>pool_function</code>. Then call <code>set_values_from_command_line(pool)</code>
-to override from command line. At the end of the <code>controller.py</code> script,
-dump pool to file again with <code>write_poolfile(filename)</code>.
-(The filename is given on the command line: <code>--poolfile filename</code>.)
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">for</span> value1 <span style="color: #AA22FF; font-weight: bold">in</span> values1:
+    <span style="color: #008000; font-weight: bold">for</span> value2 <span style="color: #AA22FF; font-weight: bold">in</span> values2:
+        combination <span style="color: #666666">=</span> (value1, value2)
+	<span style="color: #008000; font-weight: bold">print</span> combination
+</pre></div>
+<p>
+With an unknown number of lists as arguments to <code>itertools.prodct</code> one
+can use the construction
 
 <p>
-See the <code>...separate_subpools</code> function - it has almost
-all this functionality!
 
-<h2 id="___sec31">Pool with other data structures </h2>
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">values <span style="color: #666666">=</span> [values1, values2]
+combinations <span style="color: #666666">=</span> itertools<span style="color: #666666">.</span>product(<span style="color: #666666">*</span>values)
+</pre></div>
+<p>
+With these ideas we can generalize our implementation of nested loops
+over multiple values of the parameters:
 
 <p>
-Filename and text field with special <code>str2type</code> conversion. Allow list
-syntax, but convert to array in <code>str2type</code> after list is eval'ed.
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces_with_pool_loop_product</span>(pool):
+    <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">itertools</span>
+    initial_angle <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Initial angle&#39;</span>)
+    method <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Method&#39;</span>)
+    new_plot <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;New plot&#39;</span>)  <span style="color: #408080; font-style: italic"># should be True here</span>
+    plot_simplified_motion <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Plot simplified motion&#39;</span>)
+    <span style="color: #408080; font-style: italic"># Make list of all names with potentially multiple values</span>
+    names <span style="color: #666666">=</span> <span style="color: #BA2121">&quot;&quot;&quot;</span>
+<span style="color: #BA2121">    Initial velocity</span>
+<span style="color: #BA2121">    Spinrate</span>
+<span style="color: #BA2121">    Mass</span>
+<span style="color: #BA2121">    Radius</span>
+<span style="color: #BA2121">    Time step</span>
+<span style="color: #BA2121">    Wind velocity</span>
+<span style="color: #BA2121">    &quot;&quot;&quot;</span>
+    names <span style="color: #666666">=</span> [line<span style="color: #666666">.</span>strip() <span style="color: #008000; font-weight: bold">for</span> line <span style="color: #AA22FF; font-weight: bold">in</span> names<span style="color: #666666">.</span>splitlines()]
+    <span style="color: #408080; font-style: italic"># Get all values of all parameters</span>
+    values <span style="color: #666666">=</span> [pool<span style="color: #666666">.</span>get_values(name) <span style="color: #008000; font-weight: bold">for</span> name <span style="color: #AA22FF; font-weight: bold">in</span> names]
+    combinations <span style="color: #666666">=</span> itertools<span style="color: #666666">.</span>product(<span style="color: #666666">*</span>values)
+    html <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;&#39;</span>
+    <span style="color: #008000; font-weight: bold">for</span> combination <span style="color: #AA22FF; font-weight: bold">in</span> combinations:
+        initial_velocity, spinrate, m, R, dt, w <span style="color: #666666">=</span> combination
+        html <span style="color: #666666">+=</span> compute_motion_and_forces(
+            initial_velocity, initial_angle,
+            spinrate, w, m, R, method, dt,
+            plot_simplified_motion, new_plot)
+    <span style="color: #008000; font-weight: bold">return</span> html
+</pre></div>
+<p>
+This is the type of implementation recommended in applications.
 
 <p>
 <p>
