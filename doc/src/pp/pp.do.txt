@@ -484,6 +484,16 @@ html_text = mpld3.fig_to_html(fig)
 !ec
 It is relatively easy to create interactive plots with mpld3.
 
+idx{highcharts}
+idx{`pandas_highcharts`}
+
+=== Pandas highcharts plotting ===
+
+The "pandas-highcharts": "https://pypi.python.org/pypi/pandas-highcharts/"
+package is another strong and popular alternative for interative
+plotting in web pages.
+
+
 ===== More input parameters and results =====
 label{pp:flask4}
 
@@ -1377,8 +1387,8 @@ the following items.
    * $k$
  * Subpool ``excitation'':
    * an option list for selected formulas for the excitation $F(t)$:
-     * $F(t)=A*sin(w*t)
-     * $F(t)=A*cos(w*t)
+     * $F(t)=A*sin(w*t)$
+     * $F(t)=A*cos(w*t)$
      * $F=A$ for $t\leq w$, $F=0$ for $t>w$
      * $F(t)$ read from file
    * $A$
@@ -1451,7 +1461,7 @@ laptop-terminal> ssh -p [port] -f -N -L 5000:localhost:5000 \
                  [username]@[wakari-hostname].wakari.io
 !ec
 
-!bnotice Port, username, and hostname
+!bnotice Port - username - hostname
 
 Information about which port to forward, as well as username and
 wakari-hostname, is available under `SSH Access` at the user submeu in
