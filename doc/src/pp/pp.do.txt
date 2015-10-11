@@ -1563,4 +1563,6 @@ Parampool needs
  * Flask-Login: `sudo pip install Flask-Login`
  * Flask-Mail: `sudo pip install Flask-Mail`
  * Django (optional): `sudo pip install django`
- * DocOnce (optional, for documentation) from URL: "https://github.com/hplgit/doconce"
+ * Odespy (optional, but used in most of the tutorial examples): <linebreak>
+   `pip install -e git+https://github.com/hplgit/odespy.git#egg=odespy`
+ * DocOnce (optional, for documentation, used in some tutorial examples) from URL: "https://github.com/hplgit/doconce"
