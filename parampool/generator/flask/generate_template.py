@@ -102,7 +102,7 @@ MathJax.Hub.Config({
         f.close()
 
 def generate_template_dtree(compute_function, classname,
-                            menu, outfile, doc, align='left',
+                            pool, outfile, doc, align='left',
                             MathJax=False, login=False,
                             latex_name='text, symbol'):
 
@@ -111,7 +111,7 @@ def generate_template_dtree(compute_function, classname,
     import inspect
     args = inspect.getargspec(compute_function).args
     compute_function_name = compute_function.__name__
-    from parampool.menu.DataItem import DataItem
+    from parampool.pool.DataItem import DataItem
     default_widget_size = DataItem.defaults['widget_size']
 
     pre_code = """\
@@ -278,8 +278,8 @@ MathJax.Hub.Config({
     codedata = CodeData()
     codedata.code = pre_code
     # Display a progressbar if we have many data items
-    menu.update()
-    num_widgets = len(args) if menu is None else len(menu.paths2data_items)
+    pool.update()
+    num_widgets = len(args) if pool is None else len(pool.paths2data_items)
     display_progressbar = num_widgets >= 10
     if display_progressbar:
         from progressbar import \
@@ -288,7 +288,7 @@ MathJax.Hub.Config({
                    Bar(marker=RotatingMarker()), ' ', ETA()]
         pb = ProgressBar(widgets=widgets, maxval=num_widgets-1).start()
         codedata.pb = pb
-    menu.traverse(callback_leaf=leaf_func,
+    pool.traverse(callback_leaf=leaf_func,
           callback_subtree_start=subtree_start_func,
           callback_subtree_end=subtree_end_func,
           user_data=codedata,
@@ -472,7 +472,7 @@ def run_doconce_on_text(doc):
     return doc
 
 def generate_template(compute_function, classname, outfile,
-                      menu=None, overwrite=False, MathJax=False,
+                      pool=None, overwrite=False, MathJax=False,
                       doc='', login=False, latex_name='text, symbol'):
     if doc == '':
         # Apply doc string as documentation
@@ -495,9 +495,9 @@ def generate_template(compute_function, classname, outfile,
     if login:
         generate_login_templates(classname)
 
-    if menu is not None:
+    if pool is not None:
         return generate_template_dtree(
-            compute_function, classname, menu, outfile, doc,
+            compute_function, classname, pool, outfile, doc,
             MathJax=MathJax, login=login, latex_name=latex_name)
     else:
         return generate_template_std(classname, outfile, doc, MathJax, login)

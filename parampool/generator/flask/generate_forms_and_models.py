@@ -3,13 +3,13 @@ from generate_model import generate_model
 def generate_forms_and_models(compute_function,
                               classname,
                               default_field,
-                              menu,
+                              pool,
                               filename_forms,
                               filename_db_models,
                               app_file):
 
     form_text = generate_model(compute_function, classname, outfile=None,
-                               default_field=default_field, menu=menu)
+                               default_field=default_field, pool=pool)
 
     app_module = app_file.replace('.py', '')
 
@@ -58,7 +58,7 @@ class %(classname)s(db.Model):
 
 ''' % vars()
 
-    if not menu:
+    if not pool:
         if defaults:
             defaults = ["none"]*(len(arg_names)-len(defaults)) + list(defaults)
         else:
@@ -102,7 +102,7 @@ class %(classname)s(db.Model):
         codedata.code = db_code
         codedata.longest_name = longest_name
 
-        menu.traverse(callback_leaf=leaf_func,
+        pool.traverse(callback_leaf=leaf_func,
                       user_data=codedata,
                       verbose=False)
 
@@ -125,7 +125,7 @@ class %(classname)s(db.Model):
 
     db_models_module = filename_db_models.replace('.py', '')
 
-    if not menu:
+    if not pool:
         html5import = 'import flask.ext.wtf.html5 as html5'
     else:
         html5import = ''

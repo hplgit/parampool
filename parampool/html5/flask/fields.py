@@ -7,7 +7,7 @@ and http://simonklee.org/pkg/flask-wtf.
 from wtforms.fields import FloatField as FlaskFloatField
 from wtforms.fields import IntegerField as FlaskIntegerField
 from wtforms.widgets import HTMLString, Input
-from parampool.menu.DataItem import DataItem
+from parampool.pool.DataItem import DataItem
 
 class HTML5Input(Input):
     """

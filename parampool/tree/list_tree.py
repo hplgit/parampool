@@ -97,10 +97,10 @@ def printer(tree):
 
     def subtree_start_printer(
         subtree_name, level, subtree, user_data):
-        menu_type = subtree_name[level]
+        tree_type = subtree_name[level]
         indentation = '    '*level
         user_data[0] += '%s %s "%s" (level=%d)\n' % \
-               (indentation, menu_type, subtree_name[-1], level)
+               (indentation, tree_type, subtree_name[-1], level)
 
     output = ''
     user_data = [output]
@@ -150,7 +150,3 @@ def test_traverse():
 
 if __name__ == '__main__':
     test_traverse()
-
-
-
-

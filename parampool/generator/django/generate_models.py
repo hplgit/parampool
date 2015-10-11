@@ -1,11 +1,11 @@
 import parampool.utils
 
-def generate_models_menu(classname, outfile, menu):
+def generate_models_pool(classname, outfile, pool):
     """
     Generate Django ModelForm by iterating through
-    leaf nodes in the given menu object.
+    leaf nodes in the given pool object.
     """
-    from parampool.menu.DataItem import DataItem
+    from parampool.pool.DataItem import DataItem
     default_widget_size = DataItem.defaults['widget_size']
 
     class CodeData(object):
@@ -196,12 +196,12 @@ class %(classname)s(models.Model):
         if len(item.name) > user_data.longest_name:
             user_data.longest_name = len(item.name)
 
-    menu.traverse(callback_leaf=longest_name_func,
+    pool.traverse(callback_leaf=longest_name_func,
                   user_data=codedata,
                   verbose=False)
 
     # Generate all code
-    menu.traverse(callback_leaf=leaf_func,
+    pool.traverse(callback_leaf=leaf_func,
                   user_data=codedata,
                   verbose=False)
 
@@ -401,14 +401,14 @@ class %(classname)sUserForm(ModelForm):
         out.close()
 
 def generate_models(compute_func, classname, outfile, default_field,
-                    menu=None, login=False):
+                    pool=None, login=False):
     """
-    Generate the Django ModelForm using menu if given,
+    Generate the Django ModelForm using pool if given,
     else use inspect on the compute function.
     """
 
-    if menu is not None:
-        generate_models_menu(classname, outfile, menu)
+    if pool is not None:
+        generate_models_pool(classname, outfile, pool)
     else:
         generate_models_inspect(
             compute_func, classname, outfile, default_field)

@@ -1,10 +1,10 @@
 """
-Representation of a menu tree.
+Representation of a pool tree.
 class ``Pool`` wraps class ``Tree`` and makes that class more suitable
-for menus by renaming methods and adding functionality.
+for pools by renaming methods and adding functionality.
 """
 from parampool.tree.SubTree import SubTree
-from parampool.menu.DataItem import DataItem
+from parampool.pool.DataItem import DataItem
 from parampool.tree.Tree import Tree, hash_all_leaves, get_leaf
 from parampool.PhysicalQuantities import PhysicalQuantity as PQ
 
@@ -13,12 +13,12 @@ class Pool(Tree):
         Tree.__init__(self, root, root_name)
         for level in self.level_name:
             self.level_name[level] = \
-            self.level_name[level].replace('tree', 'menu')
+            self.level_name[level].replace('tree', 'pool')
 
     def add_data_item(self, **data_item_attributes):
         """
         Add a new ``DataItem`` object at the current location
-        in the menu tree. The keyword arguments sets various
+        in the pool tree. The keyword arguments sets various
         attributes in the data item. At least ``name`` must
         be given.
         """
@@ -37,7 +37,7 @@ class Pool(Tree):
         which can be a unique valid abbreviation of the full name.
         """
         if not hasattr(self, 'paths2data_items'):
-            raise ValueError('menu.get("%s") does not work because menu construction is not finalized with menu.update()' % data_item_name)
+            raise ValueError('pool.get("%s") does not work because pool construction is not finalized with pool.update()' % data_item_name)
         try:
             return get_leaf(data_item_name, self.paths2data_items)
         except ValueError:
@@ -160,20 +160,20 @@ def test_Pool():
     reference = """\
 item1
 item2
-sub menu "sub1" (level=0)
+sub pool "sub1" (level=0)
     item3
-sub menu "sub2" (level=0)
+sub pool "sub2" (level=0)
     item4
-    subsub menu "sub3" (level=1)
+    subsub pool "sub3" (level=1)
         item5
-        subsubsub menu "sub4" (level=2)
+        subsubsub pool "sub4" (level=2)
             item6
             item7
             item8
             item9
             item12
         item10
-    subsub menu "sub5" (level=1)
+    subsub pool "sub5" (level=1)
         item11"""
     assert_equal_text(str(p), reference)
 

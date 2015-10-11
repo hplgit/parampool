@@ -101,7 +101,7 @@ MathJax.Hub.Config({
         f.close()
 
 def generate_template_dtree(compute_function, classname,
-                            menu, outfile, doc, login, align='left',
+                            pool, outfile, doc, login, align='left',
                             MathJax=False):
 
     # TODO: Support for right align in 'parent' functions
@@ -270,8 +270,8 @@ MathJax.Hub.Config({
     codedata = CodeData()
     codedata.code = pre_code
     # Display a progressbar if we have many data items
-    menu.update()
-    num_widgets = len(args) if menu is None else len(menu.paths2data_items)
+    pool.update()
+    num_widgets = len(args) if pool is None else len(pool.paths2data_items)
     display_progressbar = num_widgets >= 10
     if display_progressbar:
         from progressbar import \
@@ -280,7 +280,7 @@ MathJax.Hub.Config({
                    Bar(marker=RotatingMarker()), ' ', ETA()]
         pb = ProgressBar(widgets=widgets, maxval=num_widgets-1).start()
         codedata.pb = pb
-    menu.traverse(callback_leaf=leaf_func,
+    pool.traverse(callback_leaf=leaf_func,
           callback_subtree_start=subtree_start_func,
           callback_subtree_end=subtree_end_func,
           user_data=codedata,
@@ -393,7 +393,7 @@ def zip_lists(a, b):
     f.close()
 
 def generate_template(compute_function, classname,
-                      outfile, menu=None, login=False,
+                      outfile, pool=None, login=False,
                       MathJax=False, doc=''):
     from parampool.generator.flask.generate_template import run_doconce_on_text
     if doc == '':
@@ -406,9 +406,9 @@ def generate_template(compute_function, classname,
     if login:
         generate_form_templates(outfile)
 
-    if menu:
+    if pool:
         return generate_template_dtree(
-            compute_function, classname, menu, outfile, doc, login,
+            compute_function, classname, pool, outfile, doc, login,
             MathJax=MathJax)
     else:
         return generate_template_std(classname, outfile, doc, login, MathJax)

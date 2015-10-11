@@ -10,7 +10,7 @@ class SubTree:
         self.parent = parent  # parent tree (like .. in a directory)
 
     def add(self, item):
-        """Add a Leaf or SubTree object to this menu."""
+        """Add a Leaf or SubTree object to this tree."""
         assert (isinstance(item, SubTree) or hasattr(item, 'name')), \
                item.__class__.__name__
         self.tree.append(item)

@@ -73,8 +73,8 @@ class DataItem:
     # defaults are used by GUI generating software to get
     # values of attributes that are not set. These defaults can
     # be set in user code:
-    # import parampool.menu.DataItem
-    # parampool.menu.DataItem.DataItem.defaults['minmax'] = [-10000, 10000]
+    # import parampool.pool.DataItem
+    # parampool.pool.DataItem.DataItem.defaults['minmax'] = [-10000, 10000]
     defaults = {'widget_size': 11, 'minmax': [-1000, 1000],
                 'range_steps': 100, 'number_step': 0.001}
     # range_steps: how many steps in a range slider
