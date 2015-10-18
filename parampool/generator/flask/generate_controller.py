@@ -170,7 +170,7 @@ def index():
                     pool.set_value(name, value)
 
             result = compute(pool)
-            if user.is_authenticated():
+            if user.is_authenticated:
                 object = %(classname)s()
                 form.populate_obj(object)
                 object.result = result
@@ -194,7 +194,7 @@ def index():
                 code += '''
         result = compute(form)
 
-        if user.is_authenticated():
+        if user.is_authenticated:
             object = %(classname)s()
             form.populate_obj(object)
             object.result = result
@@ -211,7 +211,7 @@ def index():
                 code += '''
 
             result = compute(form)
-            if user.is_authenticated():
+            if user.is_authenticated:
                 object = %(classname)s()
                 form.populate_obj(object)
                 object.result = result
@@ -225,7 +225,7 @@ def index():
 ''' % vars()
         code += '''
     else:
-        if user.is_authenticated():
+        if user.is_authenticated:
             if user.%(classname)s.count() > 0:
                 instance = user.%(classname)s.order_by('-id').first()
                 result = instance.result
@@ -490,7 +490,7 @@ def logout():
 def old():
     data = []
     user = current_user
-    if user.is_authenticated():
+    if user.is_authenticated:
         instances = user.%(classname)s.order_by('-id').all()
         for instance in instances:
             form = populate_form_from_instance(instance)
@@ -506,7 +506,7 @@ def old():
 @login_required
 def add_comment():
     user = current_user
-    if request.method == 'POST' and user.is_authenticated():
+    if request.method == 'POST' and user.is_authenticated:
         instance = user.%(classname)s.order_by('-id').first()
         instance.comments = request.form.get("comments", None)
         db.session.commit()
@@ -517,7 +517,7 @@ def add_comment():
 def delete_post(id):
     id = int(id)
     user = current_user
-    if user.is_authenticated():
+    if user.is_authenticated:
         if id == -1:
             instances = user.%(classname)s.delete()
         else:
