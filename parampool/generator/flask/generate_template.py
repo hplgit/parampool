@@ -35,7 +35,7 @@ MathJax.Hub.Config({
 '''
     if login:
         code += '''
-  {% if user.is_anonymous %}
+  {% if is_anonymous %}
   <p align="right"><a href="/login">Login</a>
   / <a href="/reg">Register</a></p>
   {% else %}
@@ -78,7 +78,7 @@ MathJax.Hub.Config({
 
     if login:
         code +='''
-      {% if not user.is_anonymous %}
+      {% if not is_anonymous %}
         <h3>Comments:</h3>
         <form method=post action="/add_comment">
             <textarea name="comments" rows="4" cols="40"></textarea>
@@ -141,7 +141,7 @@ MathJax.Hub.Config({
 '''
     if login:
         pre_code += """
-  {% if user.is_anonymous %}
+  {% if is_anonymous %}
   <p align="right"><a href="/login">Login</a>
   / <a href="/reg">Register</a></p>
   {% else %}
@@ -183,7 +183,7 @@ MathJax.Hub.Config({
 """
     if login:
         post_code += """
-        {% if not user.is_anonymous %}
+        {% if not is_anonymous %}
         <h3>Comments:</h3>
         <form method=post action="/add_comment">
             <textarea name="comments" rows="4" cols="40"></textarea>
