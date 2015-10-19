@@ -435,6 +435,8 @@ def populate_form_from_instance(instance):
         field.data = getattr(instance, field.name)
     return form
 
+#app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+
 def send_email(user):
     from flask.ext.mail import Mail, Message
     mail = Mail(app)
