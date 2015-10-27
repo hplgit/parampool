@@ -1449,6 +1449,79 @@ The web interface must allow for setting $x_0$, $y_0$, $z_0$, $r$, $s$, $b$,
 the number of time steps (or the time step), and the final time $T$ for
 the simulation.
 
+===== Exercise: Customize an automatically generated web app =====
+label{pp:exer:custom1}
+file=on_off_vars
+
+Suppose you want to evaluate the formula,
+
+!bt
+\[ f(x) = c_0 + c_1x + x^{p_1} + x^{p_2},\]
+!et
+but you want to control whether the two last terms are included or not.
+A simple compute function is
+
+!bc pycod
+def formula(x=1.0, c0=0.0, c1=1.0, p1=0.0, p2=0.0,
+            include_p1=True, include_p2=True):
+    r = c0 + c1*x
+    if include_p1:
+        r += x**p1
+    if include_p2:
+        r += x**p2
+    return r
+!ec
+Running the Parampool web generator on this compute function leads to
+the following GUI:
+
+<linebreak>
+<linebreak>
+
+FIGURE: [fig-pp/on_off_vars_default_UI, width=500 frac=0.7]
+
+<linebreak>
+<linebreak>
+
+However, it would look nicer if the boolean variables were grouped with
+their corresponding numbers, as here (also including results from
+the computation of the formula):
+
+<linebreak>
+<linebreak>
+
+FIGURE: [fig-pp/on_off_vars_desired_UI, width=500 frac=0.7]
+
+<linebreak>
+<linebreak>
+
+Edit the generated web application so that the user interface becomes
+as desired.
+
+!bhint
+Split the `form` data structure
+into two lists: one with pure numbers as fields and one with
+a list of tuples of a boolean and its corresponding number. Send both
+form lists to `render_template`. Edit `view.html` such that you first
+process all fields in the form with pure numbers and then you
+process all fields in the form with both a boolean and a number.
+In the latter case, use two columns per row in the table that formats
+the input fields.
+!ehint
+
+!bsol
+An appropriate `compute.py` file is
+
+@@@CODE exer-pp/on_off_vars/compute.py
+
+First we need to generate the web app via a `generator.py` file:
+
+@@@CODE exer-pp/on_off_vars/_generate.py
+
+Finally, we must edit `view.html` file so it looks as follows:
+
+@@@CODE exer-pp/on_off_vars/templates/view.html
+!esol
+
 
 ======= Deployment =======
 

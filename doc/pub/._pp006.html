@@ -123,11 +123,15 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:exer:lorenz',
                'pp:exer:lorenz'),
-              ('Deployment', 1, None, '___sec41'),
-              ('Wakari', 2, None, '___sec42'),
-              ('Local server', 2, None, '___sec43'),
-              ('Bibliography', 1, None, '___sec44'),
-              ('Appendix: Installation of Parampool', 1, None, '___sec45')]}
+              ('Exercise 6: Customize an automatically generated web app',
+               2,
+               'pp:exer:custom1',
+               'pp:exer:custom1'),
+              ('Deployment', 1, None, '___sec42'),
+              ('Wakari', 2, None, '___sec43'),
+              ('Local server', 2, None, '___sec44'),
+              ('Bibliography', 1, None, '___sec45'),
+              ('Appendix: Installation of Parampool', 1, None, '___sec46')]}
 end of tocinfo -->
 
 <body>
@@ -168,9 +172,9 @@ MathJax.Hub.Config({
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
      <!-- navigation toc: --> <li><a href="._pp004.html#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
      <!-- navigation toc: --> <li><a href="#___sec35" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="#___sec41" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="#___sec44" style="font-size: 80%;">Bibliography</a></li>
-     <!-- navigation toc: --> <li><a href="#___sec45" style="font-size: 80%;">Appendix: Installation of Parampool</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec42" style="font-size: 80%;">Deployment</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec45" style="font-size: 80%;">Bibliography</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec46" style="font-size: 80%;">Appendix: Installation of Parampool</a></li>
 
         </ul>
       </li>
@@ -447,7 +451,221 @@ Filename: <code>lorenz</code>.
 <p>
 <!-- --- end exercise --- -->
 
-<h1 id="___sec41">Deployment </h1>
+<p>
+<!-- --- begin exercise --- -->
+
+<h2 id="pp:exer:custom1">Exercise 6: Customize an automatically generated web app</h2>
+
+<p>
+Suppose you want to evaluate the formula,
+
+$$ f(x) = c_0 + c_1x + x^{p_1} + x^{p_2},$$
+
+but you want to control whether the two last terms are included or not.
+A simple compute function is
+
+<p>
+
+<!-- code=python (!bc pycod) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">formula</span>(x<span style="color: #666666">=1.0</span>, c0<span style="color: #666666">=0.0</span>, c1<span style="color: #666666">=1.0</span>, p1<span style="color: #666666">=0.0</span>, p2<span style="color: #666666">=0.0</span>,
+            include_p1<span style="color: #666666">=</span><span style="color: #008000">True</span>, include_p2<span style="color: #666666">=</span><span style="color: #008000">True</span>):
+    r <span style="color: #666666">=</span> c0 <span style="color: #666666">+</span> c1<span style="color: #666666">*</span>x
+    <span style="color: #008000; font-weight: bold">if</span> include_p1:
+        r <span style="color: #666666">+=</span> x<span style="color: #666666">**</span>p1
+    <span style="color: #008000; font-weight: bold">if</span> include_p2:
+        r <span style="color: #666666">+=</span> x<span style="color: #666666">**</span>p2
+    <span style="color: #008000; font-weight: bold">return</span> r
+</pre></div>
+<p>
+Running the Parampool web generator on this compute function leads to
+the following GUI:
+
+<p>
+<br />
+<br />
+
+<p>
+<center><p><img src="fig-pp/on_off_vars_default_UI.png" align="bottom" width=500></p></center>
+
+<p>
+<br />
+<br />
+
+<p>
+However, it would look nicer if the boolean variables were grouped with
+their corresponding numbers, as here (also including results from
+the computation of the formula):
+
+<p>
+<br />
+<br />
+
+<p>
+<center><p><img src="fig-pp/on_off_vars_desired_UI.png" align="bottom" width=500></p></center>
+
+<p>
+<br />
+<br />
+
+<p>
+Edit the generated web application so that the user interface becomes
+as desired.
+
+<p>
+<!-- --- begin hint in exercise --- -->
+
+<p>
+<a class="glyphicon glyphicon-hand-right showdetails" data-toggle="collapse"
+ data-target="#exer_6_1" style="font-size: 80%;"></a>
+<b>Hint.</b>
+<div class="collapse-group">
+<p><div class="collapse" id="exer_6_1">
+
+<p>
+Split the <code>form</code> data structure
+into two lists: one with pure numbers as fields and one with
+a list of tuples of a boolean and its corresponding number. Send both
+form lists to <code>render_template</code>. Edit <code>view.html</code> such that you first
+process all fields in the form with pure numbers and then you
+process all fields in the form with both a boolean and a number.
+In the latter case, use two columns per row in the table that formats
+the input fields.
+
+<p>
+</div></p>
+</div>
+</p>
+
+<p>
+<!-- --- end hint in exercise --- -->
+
+<p>
+<!-- --- begin solution of exercise --- -->
+
+<p>
+<a class="glyphicon glyphicon-hand-right showdetails" data-toggle="collapse"
+ data-target="#exer_6_2" style="font-size: 80%;"></a>
+<b>Solution.</b>
+<div class="collapse-group">
+<p><div class="collapse" id="exer_6_2">
+
+<p>
+An appropriate <code>compute.py</code> file is
+
+<p>
+
+<!-- code=python (!bc pypro) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">numpy</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">np</span>
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">math</span> <span style="color: #008000; font-weight: bold">import</span> pi, sqrt, sin, cos
+<span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">os</span>
+
+<span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">formula</span>(x<span style="color: #666666">=1.0</span>, c0<span style="color: #666666">=0.0</span>, c1<span style="color: #666666">=1.0</span>, p1<span style="color: #666666">=0.0</span>, p2<span style="color: #666666">=0.0</span>,
+            include_p1<span style="color: #666666">=</span><span style="color: #008000">True</span>, include_p2<span style="color: #666666">=</span><span style="color: #008000">True</span>):
+    r <span style="color: #666666">=</span> c0 <span style="color: #666666">+</span> c1<span style="color: #666666">*</span>x
+    <span style="color: #008000; font-weight: bold">if</span> include_p1:
+        r <span style="color: #666666">+=</span> x<span style="color: #666666">**</span>p1
+    <span style="color: #008000; font-weight: bold">if</span> include_p2:
+        r <span style="color: #666666">+=</span> x<span style="color: #666666">**</span>p2
+    <span style="color: #008000; font-weight: bold">return</span> r
+
+<span style="color: #008000; font-weight: bold">if</span> __name__ <span style="color: #666666">==</span> <span style="color: #BA2121">&#39;__main__&#39;</span>:
+    r <span style="color: #666666">=</span> <span style="color: #666666">2</span> <span style="color: #666666">+</span> <span style="color: #666666">4*0</span> <span style="color: #666666">+</span> <span style="color: #666666">0**0</span> <span style="color: #666666">+</span> <span style="color: #666666">0**0</span>
+    <span style="color: #008000; font-weight: bold">assert</span> formula(<span style="color: #666666">0</span>, c0<span style="color: #666666">=2</span>, c1<span style="color: #666666">=4</span>, p1<span style="color: #666666">=0</span>, p2<span style="color: #666666">=0</span>,
+                   include_p1<span style="color: #666666">=</span><span style="color: #008000">True</span>, include_p2<span style="color: #666666">=</span><span style="color: #008000">True</span>) <span style="color: #666666">==</span> r
+    r <span style="color: #666666">=</span> <span style="color: #666666">2</span> <span style="color: #666666">+</span> <span style="color: #666666">4*2</span> <span style="color: #666666">+</span> <span style="color: #666666">2**3</span>
+    <span style="color: #008000; font-weight: bold">assert</span> formula(<span style="color: #666666">2</span>, c0<span style="color: #666666">=2</span>, c1<span style="color: #666666">=4</span>, p1<span style="color: #666666">=3</span>, p2<span style="color: #666666">=2</span>,
+                   include_p1<span style="color: #666666">=</span><span style="color: #008000">True</span>, include_p2<span style="color: #666666">=</span><span style="color: #008000">False</span>) <span style="color: #666666">==</span> r
+</pre></div>
+<p>
+First we need to generate the web app via a <code>generator.py</code> file:
+
+<p>
+
+<!-- code=python (!bc pypro) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> formula <span style="color: #008000; font-weight: bold">as</span> compute
+
+generate(compute, default_field<span style="color: #666666">=</span><span style="color: #BA2121">&#39;FloatField&#39;</span>)
+</pre></div>
+<p>
+Finally, we must edit <code>view.html</code> file so it looks as follows:
+
+<p>
+
+<!-- code=html (!bc htmlpro) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #BC7A00">&lt;!DOCTYPE html&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;html</span> <span style="color: #7D9029">lang=</span><span style="color: #BA2121">&quot;en&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;head&gt;</span>
+    <span style="color: #008000; font-weight: bold">&lt;meta</span> <span style="color: #7D9029">charset=</span><span style="color: #BA2121">&quot;utf-8&quot;</span> <span style="color: #008000; font-weight: bold">/&gt;</span>
+    <span style="color: #008000; font-weight: bold">&lt;title&gt;</span>Flask Formula app<span style="color: #008000; font-weight: bold">&lt;/title&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;/head&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;body&gt;</span>
+
+
+  <span style="color: #408080; font-style: italic">&lt;!-- Input and Results are typeset as a two-column table --&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;table&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;tr&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">valign=</span><span style="color: #BA2121">&quot;top&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+    <span style="color: #008000; font-weight: bold">&lt;h2&gt;</span>Input:<span style="color: #008000; font-weight: bold">&lt;/h2&gt;</span>
+
+      <span style="color: #008000; font-weight: bold">&lt;form</span> <span style="color: #7D9029">method=</span><span style="color: #BA2121">post</span> <span style="color: #7D9029">action=</span><span style="color: #BA2121">&quot;&quot;</span> <span style="color: #7D9029">enctype=</span><span style="color: #BA2121">&quot;multipart/form-data&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+        <span style="color: #008000; font-weight: bold">&lt;table&gt;</span>
+	  <span style="color: #408080; font-style: italic">&lt;!-- List all pure numbers first --&gt;</span>
+          {% for field in form_pure_numbers %}
+            <span style="color: #008000; font-weight: bold">&lt;tr&gt;&lt;td&gt;</span>{{ field.name }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+                <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ field(size=10) }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+                <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{% if field.errors %}
+                  <span style="color: #008000; font-weight: bold">&lt;ul</span> <span style="color: #7D9029">class=</span><span style="color: #BA2121">errors</span><span style="color: #008000; font-weight: bold">&gt;</span>
+                  {% for error in field.errors %}
+                    <span style="color: #008000; font-weight: bold">&lt;li&gt;</span>{{ error }}<span style="color: #008000; font-weight: bold">&lt;/li&gt;</span>
+                  {% endfor %}<span style="color: #008000; font-weight: bold">&lt;/ul&gt;</span>
+                {% endif %}<span style="color: #008000; font-weight: bold">&lt;/td&gt;&lt;/tr&gt;</span>
+          {% endfor %}
+	  <span style="color: #408080; font-style: italic">&lt;!-- List all numbers with boolean --&gt;</span>
+          {% for number, boolean in form_numbers_wbools %}
+          <span style="color: #008000; font-weight: bold">&lt;tr&gt;</span>
+	    <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ number.name }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+            <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ number(size=20) }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+            <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{% if number.errors %}
+              <span style="color: #008000; font-weight: bold">&lt;ul</span> <span style="color: #7D9029">class=</span><span style="color: #BA2121">errors</span><span style="color: #008000; font-weight: bold">&gt;</span>
+                  {% for error in number.errors %}
+                  <span style="color: #008000; font-weight: bold">&lt;li&gt;</span>{{ error }}<span style="color: #008000; font-weight: bold">&lt;/li&gt;</span>
+                  {% endfor %}<span style="color: #008000; font-weight: bold">&lt;/ul&gt;</span>
+                {% endif %}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+	    <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ boolean.name }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+            <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ boolean() }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+	    <span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
+          {% endfor %}
+        <span style="color: #008000; font-weight: bold">&lt;/table&gt;</span>
+        <span style="color: #008000; font-weight: bold">&lt;p&gt;&lt;input</span> <span style="color: #7D9029">type=</span><span style="color: #BA2121">&quot;submit&quot;</span> <span style="color: #7D9029">value=</span><span style="color: #BA2121">&quot;Compute&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+    <span style="color: #008000; font-weight: bold">&lt;/form&gt;&lt;/p&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+
+  <span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">valign=</span><span style="color: #BA2121">&quot;top&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+    {% if result != None %}
+      <span style="color: #008000; font-weight: bold">&lt;h2&gt;</span>Results:<span style="color: #008000; font-weight: bold">&lt;/h2&gt;</span>
+        {{ result|safe }}
+
+    {% endif %}
+  <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;/table&gt;</span>
+  <span style="color: #008000; font-weight: bold">&lt;/body&gt;</span>
+<span style="color: #008000; font-weight: bold">&lt;/html&gt;</span>
+</pre></div>
+<p>
+</div></p>
+</div>
+</p>
+
+<p>
+<!-- --- end solution of exercise --- -->
+Filename: <code>on_off_vars</code>.
+
+<p>
+<!-- --- end exercise --- -->
+
+<h1 id="___sec42">Deployment </h1>
 
 <p>
 The most obvious servers to deploy web applications on, like Google App Engine,
@@ -455,7 +673,7 @@ only support very light weight Python. For heavier scientific applications
 we may need more tools; SSH access, a Fortran compiler, etc. Therefore we
 introduce two servers we recommend for the scientific computing usage.
 
-<h2 id="___sec42">Wakari </h2>
+<h2 id="___sec43">Wakari </h2>
 
 <p>
 <a href="https://www.wakari.io" target="_self">Wakari</a> is originally meant to be a Python
@@ -509,7 +727,7 @@ on Wakari.)
 <!-- The script <code>install_on_wakari.sh</code> in the top -->
 <!-- directory of cbc-websolver accomplishes this. -->
 
-<h2 id="___sec43">Local server </h2>
+<h2 id="___sec44">Local server </h2>
 
 <p>
 If only little traffic is expected for a web application,
@@ -571,7 +789,7 @@ Remember that all scripts and modules to be accessed from the web need to
 have permissions for everyone to read and execute. This can be done by, e.g.,
 <code>chmod 755 filename</code>.
 
-<h1 id="___sec44">Bibliography </h1>
+<h1 id="___sec45">Bibliography </h1>
 
 <p>
 <!-- begin bibliography -->
@@ -586,7 +804,7 @@ have permissions for everyone to read and execute. This can be done by, e.g.,
 
 <!-- end bibliography -->
 
-<h1 id="___sec45">Appendix: Installation of Parampool </h1>
+<h1 id="___sec46">Appendix: Installation of Parampool </h1>
 
 <p>
 Parampool needs
