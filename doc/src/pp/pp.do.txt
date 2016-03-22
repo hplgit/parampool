@@ -910,7 +910,7 @@ and command line are automatically generated when a web interface
 is requested (see also comments in Section ref{pp:flask_pool1:GUI_cml_file}).
 
 
-===== Generating a web-based user interface =====
+===== A web-based user interface =====
 label{pp:flask_pool1:GUI}
 
 With a pool function and a compute function at hand,
@@ -941,7 +941,7 @@ as the one in Figure ref{pp:flask_pool1:fig1}.
 FIGURE: [fig-pp/flask_pool1_closed.png, width=800] Web interface in closed form. label{pp:flask_pool1:fig1}
 
 
-===== Operating the user interface =====
+===== Operating the graphical web interface =====
 label{pp:flask_pool1:GUI_op}
 
 The pool tree is mapped onto a visual structure often used for
@@ -963,7 +963,6 @@ The following technical points must be mentioned.
    while if a `minmax`
    range is specified, a `float` or `integer` widget
    (so-called HTML5 number field) is chosen.
-
  o Data items whose widgets are specified as `float` or `integer`, or
    where this is implied because `str2type` is `float` or `int`, or
    the default value is a `float` or `int` *and* the `minmax` attribute
@@ -1085,16 +1084,32 @@ gives an informative error message if the answer is not as expected:
 label{pp:flask_pool1:GUI_cml_file}
 
 Parameters can be assigned default values in a file and then other
-values on the command line,
-see Section ref{pp:flask_pool1:cml_file},
-before the web GUI is offered to the
-user. When autogenerating the web interface, the magic lines from
-Section ref{pp:flask_pool1:cml_file} are automatically inserted
-in the `controller.py` file (for Flask or `views.py` for Django).
-This means that when starting `python controller.py` we may add
-`--poolfile name` and any set of command-line options for setting
-individual parameters. This makes it easy to control which default
-values that will appear in the web GUI.
+values on the command line, see Section ref{pp:flask_pool1:cml_file},
+before the web GUI is offered to the user. When autogenerating the web
+interface, the magic lines from Section ref{pp:flask_pool1:cml_file}
+are automatically inserted in the `controller.py` file (for Flask or
+`views.py` for Django).  This means that when starting `python
+controller.py` we may add `--poolfile name` and any set of
+command-line options for setting individual parameters. This makes it
+easy to control which default values that will appear in the web GUI.
+
+===== Common trouble: ``Address already in use'' =====
+
+Sometimes, after much trial and error with developing a graphical
+user interface, one gets an error message that the IP address is
+already in use.
+To recover from this problem, run the `lsof` program to see which program
+that applies the 5000 port (Flask runs its server on `http://127.0.0.1:5000`,
+which means that it uses the 5000 port). Find the PID of the program
+that occupies the port and force abortion of that program:
+
+!bc sys
+Terminal> lsof -i :5000
+COMMAND   PID USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
+python  48824  hpl    3u  IPv4 1128848      0t0  TCP ...
+Terminal> kill -9 48824
+!ec
+Now you can restart the application.
 
 ===== Specifying a pool using an API =====
 

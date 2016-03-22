@@ -21,6 +21,13 @@ Automatically generated HTML file from DocOnce source
 <style type="text/css">
 /* Let inline verbatim have the same color as the surroundings */
 code { color: inherit; background-color: transparent; }
+
+/* Add scrollbar to dropdown menus in bootstrap navigation bar */
+.dropdown-menu {
+   height: auto;
+   max-height: 400px;
+   overflow-x: hidden;
+}
 </style>
 
 
@@ -75,11 +82,11 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:flask_pool1:cml_file',
                'pp:flask_pool1:cml_file'),
-              ('Generating a web-based user interface',
+              ('A web-based user interface',
                2,
                'pp:flask_pool1:GUI',
                'pp:flask_pool1:GUI'),
-              ('Operating the user interface',
+              ('Operating the graphical web interface',
                2,
                'pp:flask_pool1:GUI_op',
                'pp:flask_pool1:GUI_op'),
@@ -91,21 +98,25 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:flask_pool1:GUI_cml_file',
                'pp:flask_pool1:GUI_cml_file'),
-              ('Specifying a pool using an API', 2, None, '___sec27'),
+              ("Common trouble: ``Address already in use''",
+               2,
+               None,
+               '___sec27'),
+              ('Specifying a pool using an API', 2, None, '___sec28'),
               ('Specifying a pool using an alternative API',
                2,
                None,
-               '___sec28'),
+               '___sec29'),
               ('File with documentation of the application',
                3,
                None,
-               '___sec29'),
-              ('LaTeX symbol as parameter name', 3, None, '___sec30'),
-              ('Multiple input values for parameters', 3, None, '___sec31'),
-              ('Login and archival of results', 2, None, '___sec32'),
-              ('Problems with sending email', 3, None, '___sec33'),
-              ('Python expressions as input', 2, None, '___sec34'),
-              ('Exercises', 1, None, '___sec35'),
+               '___sec30'),
+              ('LaTeX symbol as parameter name', 3, None, '___sec31'),
+              ('Multiple input values for parameters', 3, None, '___sec32'),
+              ('Login and archival of results', 2, None, '___sec33'),
+              ('Problems with sending email', 3, None, '___sec34'),
+              ('Python expressions as input', 2, None, '___sec35'),
+              ('Exercises', 1, None, '___sec36'),
               ('Exercise 1: Make a web app for integration',
                2,
                'pp:exer:integrate',
@@ -117,8 +128,8 @@ code { color: inherit; background-color: transparent; }
               ('Exercise 3: Make a web app for studying vibrations',
                2,
                None,
-               '___sec38'),
-              ('Problem 4: Make a coin flipper', 2, None, '___sec39'),
+               '___sec39'),
+              ('Problem 4: Make a coin flipper', 2, None, '___sec40'),
               ('Exercise 5: Make a web app for the Lorenz system',
                2,
                'pp:exer:lorenz',
@@ -127,11 +138,11 @@ code { color: inherit; background-color: transparent; }
                2,
                'pp:exer:custom1',
                'pp:exer:custom1'),
-              ('Deployment', 1, None, '___sec42'),
-              ('Wakari', 2, None, '___sec43'),
-              ('Local server', 2, None, '___sec44'),
-              ('Bibliography', 1, None, '___sec45'),
-              ('Appendix: Installation of Parampool', 1, None, '___sec46')]}
+              ('Deployment', 1, None, '___sec43'),
+              ('Wakari', 2, None, '___sec44'),
+              ('Local server', 2, None, '___sec45'),
+              ('Bibliography', 1, None, '___sec46'),
+              ('Appendix: Installation of Parampool', 1, None, '___sec47')]}
 end of tocinfo -->
 
 <body>
@@ -163,18 +174,60 @@ MathJax.Hub.Config({
     </button>
     <a class="navbar-brand" href="pp.html">Parampool Tutorial</a>
   </div>
+
   <div class="navbar-collapse collapse navbar-responsive-collapse">
     <ul class="nav navbar-nav navbar-right">
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
-     <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;">Simulation program used as sample app</a></li>
-     <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;">User interfaces for Python functions</a></li>
-     <!-- navigation toc: --> <li><a href="#pp:flask_pool1" style="font-size: 80%;">Working with a pool of input parameters</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec35" style="font-size: 80%;">Exercises</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec42" style="font-size: 80%;">Deployment</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec45" style="font-size: 80%;">Bibliography</a></li>
-     <!-- navigation toc: --> <li><a href="._pp006.html#___sec46" style="font-size: 80%;">Appendix: Installation of Parampool</a></li>
+     <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;"><b>Simulation program used as sample app</b></a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;"><b>User interfaces for Python functions</b></a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#pp:real:inout" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Real numbers as input and output</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec3" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Flask interface</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec4" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Django interface</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#pp:plot:output" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;A plot as output</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec6" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Flask application</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec7" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Django application</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec8" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Comparing graphs in the same plot</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec9" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bokeh plotting</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec10" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mpld3 plotting</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec11" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Pandas highcharts plotting</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#pp:flask4" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;More input parameters and results</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec13" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The returned HTML code</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec14" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Documentation of the application</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec15" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Django interface</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec16" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Other types of input data</a></li>
+     <!-- navigation toc: --> <li><a href="._pp003.html#___sec17" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Uploading a file</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1" style="font-size: 80%;"><b>Working with a pool of input parameters</b></a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1:list" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Specifying a pool as a list</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1:dataitem" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Attributes in data items</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1:compute" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;The compute function</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1:cml_file" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;A command-line and file interface</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1:GUI" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;A web-based user interface</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1:GUI_op" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Operating the graphical web interface</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1:GUI_error" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Detection of wrong input</a></li>
+     <!-- navigation toc: --> <li><a href="#pp:flask_pool1:GUI_cml_file" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Loading parameters from file and the command line</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec27" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Common trouble: ``Address already in use''</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec28" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Specifying a pool using an API</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec29" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Specifying a pool using an alternative API</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec30" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;File with documentation of the application</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec31" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LaTeX symbol as parameter name</a></li>
+     <!-- navigation toc: --> <li><a href="#___sec32" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Multiple input values for parameters</a></li>
+     <!-- navigation toc: --> <li><a href="._pp005.html#___sec33" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Login and archival of results</a></li>
+     <!-- navigation toc: --> <li><a href="._pp005.html#___sec34" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Problems with sending email</a></li>
+     <!-- navigation toc: --> <li><a href="._pp005.html#___sec35" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Python expressions as input</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec36" style="font-size: 80%;"><b>Exercises</b></a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#pp:exer:integrate" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Exercise 1: Make a web app for integration</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#pp:exer:plotdata" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Exercise 2: Make a web app for plotting data</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec39" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Exercise 3: Make a web app for studying vibrations</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec40" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Problem 4: Make a coin flipper</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#pp:exer:lorenz" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Exercise 5: Make a web app for the Lorenz system</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#pp:exer:custom1" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Exercise 6: Customize an automatically generated web app</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec43" style="font-size: 80%;"><b>Deployment</b></a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec44" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Wakari</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec45" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Local server</a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec46" style="font-size: 80%;"><b>Bibliography</b></a></li>
+     <!-- navigation toc: --> <li><a href="._pp006.html#___sec47" style="font-size: 80%;"><b>Appendix: Installation of Parampool</b></a></li>
 
         </ul>
       </li>
@@ -530,7 +583,7 @@ the next topic. The lines above for loading parameters from file
 and command line are automatically generated when a web interface
 is requested (see also comments in the section <a href="#pp:flask_pool1:GUI_cml_file">Loading parameters from file and the command line</a>).
 
-<h2 id="pp:flask_pool1:GUI">Generating a web-based user interface</h2>
+<h2 id="pp:flask_pool1:GUI">A web-based user interface</h2>
 
 <p>
 With a pool function and a compute function at hand,
@@ -575,13 +628,13 @@ Open the URL <code>http://127.0.0.1:5000</code> in a web broswer to see an inter
 as the one in Figure <a href="#pp:flask_pool1:fig1">7</a>.
 
 <p>
-<center> <!-- figure -->
+<center> <!-- figure label: --> <div id="pp:flask_pool1:fig1"></div> <!-- FIGURE -->
 <hr class="figure">
-<center><p class="caption">Figure 7:  Web interface in closed form. <div id="pp:flask_pool1:fig1"></div> </p></center>
+<center><p class="caption">Figure 7:  Web interface in closed form.  <!-- caption label: pp:flask_pool1:fig1 --> </p></center>
 <p><img src="fig-pp/flask_pool1_closed.png" align="bottom" width=800></p>
 </center>
 
-<h2 id="pp:flask_pool1:GUI_op">Operating the user interface</h2>
+<h2 id="pp:flask_pool1:GUI_op">Operating the graphical web interface</h2>
 
 <p>
 The pool tree is mapped onto a visual structure often used for
@@ -597,9 +650,9 @@ is automatically typeset in LaTeX and inserted as a picture (the
 <a href="http://latex.codecogs.com" target="_self"><tt>http://latex.codecogs.com</tt></a> utility is used).
 
 <p>
-<center> <!-- figure -->
+<center> <!-- figure label: --> <div id="pp:flask_pool1:fig2"></div> <!-- FIGURE -->
 <hr class="figure">
-<center><p class="caption">Figure 8:  Web interface in fully expanded form. <div id="pp:flask_pool1:fig2"></div> </p></center>
+<center><p class="caption">Figure 8:  Web interface in fully expanded form.  <!-- caption label: pp:flask_pool1:fig2 --> </p></center>
 <p><img src="fig-pp/flask_pool1_open.png" align="bottom" width=800></p>
 </center>
 
@@ -672,9 +725,9 @@ We can try out the interface:
 You should see something like Figure <a href="#pp:flask_pool1:fig3">9</a>.
 
 <p>
-<center> <!-- figure -->
+<center> <!-- figure label: --> <div id="pp:flask_pool1:fig3"></div> <!-- FIGURE -->
 <hr class="figure">
-<center><p class="caption">Figure 9:  Web interface with input parameters filled out. <div id="pp:flask_pool1:fig3"></div> </p></center>
+<center><p class="caption">Figure 9:  Web interface with input parameters filled out.  <!-- caption label: pp:flask_pool1:fig3 --> </p></center>
 <p><img src="fig-pp/flask_pool1_filled.png" align="bottom" width=800></p>
 </center>
 
@@ -686,9 +739,9 @@ of wind against the motion, drag, and lift (which are substantial in
 this example).
 
 <p>
-<center> <!-- figure -->
+<center> <!-- figure label: --> <div id="pp:flask_pool1:fig4"></div> <!-- FIGURE -->
 <hr class="figure">
-<center><p class="caption">Figure 10:  Web interface with input and results. <div id="pp:flask_pool1:fig4"></div> </p></center>
+<center><p class="caption">Figure 10:  Web interface with input and results.  <!-- caption label: pp:flask_pool1:fig4 --> </p></center>
 <p><img src="fig-pp/flask_pool1_result.png" align="bottom" width=800></p>
 </center>
 
@@ -755,18 +808,38 @@ gives an informative error message if the answer is not as expected:
 
 <p>
 Parameters can be assigned default values in a file and then other
-values on the command line,
-see the section <a href="#pp:flask_pool1:cml_file">A command-line and file interface</a>,
-before the web GUI is offered to the
-user. When autogenerating the web interface, the magic lines from
-the section <a href="#pp:flask_pool1:cml_file">A command-line and file interface</a> are automatically inserted
-in the <code>controller.py</code> file (for Flask or <code>views.py</code> for Django).
-This means that when starting <code>python controller.py</code> we may add
-<code>--poolfile name</code> and any set of command-line options for setting
-individual parameters. This makes it easy to control which default
-values that will appear in the web GUI.
+values on the command line, see the section <a href="#pp:flask_pool1:cml_file">A command-line and file interface</a>,
+before the web GUI is offered to the user. When autogenerating the web
+interface, the magic lines from the section <a href="#pp:flask_pool1:cml_file">A command-line and file interface</a>
+are automatically inserted in the <code>controller.py</code> file (for Flask or
+<code>views.py</code> for Django).  This means that when starting <code>python
+controller.py</code> we may add <code>--poolfile name</code> and any set of
+command-line options for setting individual parameters. This makes it
+easy to control which default values that will appear in the web GUI.
 
-<h2 id="___sec27">Specifying a pool using an API </h2>
+<h2 id="___sec27">Common trouble: &quot;Address already in use&quot; </h2>
+
+<p>
+Sometimes, after much trial and error with developing a graphical
+user interface, one gets an error message that the IP address is
+already in use.
+To recover from this problem, run the <code>lsof</code> program to see which program
+that applies the 5000 port (Flask runs its server on <code>http://127.0.0.1:5000</code>,
+which means that it uses the 5000 port). Find the PID of the program
+that occupies the port and force abortion of that program:
+
+<p>
+
+<!-- code=text (!bc sys) typeset with pygments style "default" -->
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; lsof -i :5000
+COMMAND   PID USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
+python  48824  hpl    3u  IPv4 1128848      0t0  TCP ...
+Terminal&gt; kill -9 48824
+</pre></div>
+<p>
+Now you can restart the application.
+
+<h2 id="___sec28">Specifying a pool using an API </h2>
 
 <p>
 Instead of listing all the entries in the pool tree as strings, lists,
@@ -863,7 +936,7 @@ of this GUI (found in the <a href="https://github.com/hplgit/parampool/tree/mast
 the same as in the previous one (found in the <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool1" target="_self"><tt>flask_pool1</tt></a>
 directory).
 
-<h2 id="___sec28">Specifying a pool using an alternative API </h2>
+<h2 id="___sec29">Specifying a pool using an alternative API </h2>
 
 <p>
 There is an another way of defining subpools as well: make a function
@@ -990,7 +1063,7 @@ of Parampool:
    parameter sets at once</li>
 </ol>
 
-<h3 id="___sec29">File with documentation of the application </h3>
+<h3 id="___sec30">File with documentation of the application </h3>
 
 <p>
 We have in the section <a href="._pp003.html#pp:flask4">More input parameters and results</a> seen that the doc string of
@@ -1000,7 +1073,7 @@ It is also possible to make such a description in a separate
 file. Any HTML file will work, and the filename is specified by
 the <code>doc</code> argument to <code>generate</code>.
 
-<h3 id="___sec30">LaTeX symbol as parameter name </h3>
+<h3 id="___sec31">LaTeX symbol as parameter name </h3>
 
 <p>
 One can add a mathematical
@@ -1027,7 +1100,7 @@ The values of <code>latex_name</code> can be <code>'symbol'</code>, meaning symb
 <code>'text, symbol'</code>, meaning that the ordinary name is
 followed by a comma and the symbol.
 
-<h3 id="___sec31">Multiple input values for parameters </h3>
+<h3 id="___sec32">Multiple input values for parameters </h3>
 
 <p>
 We can specify multiple values for parameters whose input fields are
@@ -1070,9 +1143,9 @@ perform parameter studies by simply 1) writing the compute function with
 loops and <code>pool.get_values</code>, 2) separating input values by <code>&</code> in the GUI.
 
 <p>
-<center> <!-- figure -->
+<center> <!-- figure label: --> <div id="pp:flask_pool3:fig1"></div> <!-- FIGURE -->
 <hr class="figure">
-<center><p class="caption">Figure 11:  Web interface with documentation, LaTeX symbols, and multiple input values. <div id="pp:flask_pool3:fig1"></div> </p></center>
+<center><p class="caption">Figure 11:  Web interface with documentation, LaTeX symbols, and multiple input values.  <!-- caption label: pp:flask_pool3:fig1 --> </p></center>
 <p><img src="fig-pp/flask_pool3_results.png" align="bottom" width=800></p>
 </center>
 
