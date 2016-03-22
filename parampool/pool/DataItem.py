@@ -397,9 +397,11 @@ from the following list: %s' % (self._signature(), widget, allowed_widgets))
             value = str(value)
 
         if not isinstance(value, str):
-            if not type(value) == type(self.data["default"]):
+            if type(value) == type(False):
+                self._use_str2type = False
+            elif not type(value) == type(self.data["default"]):
                 if not (isinstance(value, float) and isinstance(self.data["default"], int)):
-                    raise ValueError('%s: value=%s %s must be a string (or %s)' %
+                    raise ValueError('%s: value=%s %s must be a string (or the default type %s)' %
                                  (self._signature(), value, type(value),
                                   type(self.data["default"])))
             else:

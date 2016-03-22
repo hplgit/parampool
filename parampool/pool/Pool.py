@@ -26,6 +26,7 @@ class Pool(Tree):
 
     subpool = Tree.subtree
     change_subpool = Tree.change_subtree
+    get_current_subpool = Tree.get_current_subtree
 
     def update(self):
         self.paths2data_items = hash_all_leaves(self)

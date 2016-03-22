@@ -14,14 +14,19 @@ def generate_model_pool(classname, outfile, pool):
         parent_id = [-1]
 
     def leaf_func(tree_path, level, item, user_data):
-        name = item.name
+        name = '/'.join(tree_path) + '/' + item.name  # full path
         field_name = parampool.utils.legal_variable_name(name)
+        if field_name.startswith('__'):
+            raise ValueError('Avoid data items at the very top level, have a subpool')
         default = item.data["default"]
 
         # Make label
         label = ""
         if 'name' in item.data:
             label += item.data['name']
+
+        # Make description as full path
+        description = '/' + name
 
         widget = item.data.get("widget")
 
@@ -53,7 +58,7 @@ def generate_model_pool(classname, outfile, pool):
 
     %%(field_name)-%ds = html5.IntegerField(
         label=u'%%(label)s',
-        description=u'%%(label)s',
+        description=u'%%(description)s',
         default=%%(default)s,
         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
@@ -70,7 +75,7 @@ def generate_model_pool(classname, outfile, pool):
 
     %%(field_name)-%ds = HTML5FloatField(
         label=u'%%(label)s',
-        description=u'%%(label)s',
+        description=u'%%(description)s',
         default=%%(default)g,
         validators=[wtf.validators.InputRequired()\
 """ % user_data.longest_name % vars()
@@ -91,7 +96,7 @@ def generate_model_pool(classname, outfile, pool):
 
     %%(field_name)-%ds = FloatRangeField(
         label=u'%%(label)s',
-        description=u'%%(label)s',
+        description=u'%%(description)s',
         default=%%(default)g,
         onchange="showValue(this.value)",
         min=%%(minvalue)g, max=%%(maxvalue)g, step=%%(range_step)g,
@@ -104,7 +109,7 @@ def generate_model_pool(classname, outfile, pool):
 
     %%(field_name)-%ds = IntegerRangeField(
         label=u'%%(label)s',
-        description=u'%%(label)s',
+        description=u'%%(description)s',
         default=%%(default)g,
         onchange="showValue(this.value)",
         min=%%(minvalue)g, max=%%(maxvalue)g, step=%%(range_step)g,
@@ -117,7 +122,7 @@ def generate_model_pool(classname, outfile, pool):
 
     %%(field_name)-%ds = wtf.FileField(
         label=u'%%(label)s',
-        description=u'%%(label)s',
+        description=u'%%(description)s',
         validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()
 
@@ -132,7 +137,7 @@ def generate_model_pool(classname, outfile, pool):
 
     %%(field_name)-%ds = wtf.SelectField(
         label=u'%%(label)s',
-        description=u'%%(label)s',
+        description=u'%%(description)s',
         default='%%(default)s',
         validators=[wtf.validators.InputRequired()],
         choices=%%(choices)s)
@@ -147,7 +152,7 @@ def generate_model_pool(classname, outfile, pool):
 
     %%(field_name)-%ds = wtf.BooleanField(
         label=u'%%(label)s',
-        description=u'%%(label)s',
+        description=u'%%(description)s',
         default=%%(default)s)
 """ % user_data.longest_name % vars()
 
@@ -166,7 +171,7 @@ def generate_model_pool(classname, outfile, pool):
 
     %%(field_name)-%ds = %%(field)s(
         label=u'%%(label)s',
-        description=u'%%(label)s',
+        description=u'%%(description)s',
         default='%%(default)s',
         validators=[wtf.validators.InputRequired()])
 """ % user_data.longest_name % vars()

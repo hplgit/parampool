@@ -18,7 +18,7 @@ def get_symbol(symbol, static_dir='static', path=[], dpi=300):
     if not os.path.isdir(symdir):
         os.makedirs(symdir)
 
-    name = symbol.replace(' ', '_').replace('mbox', '')
+    name = symbol.replace(' ', '_').replace('mbox', '').replace('\\', '')
     for c in '''$^[]!@#%+=|/<>,.`~"'\\{}''':
         name = name.replace(c, '')
     name_orig = name + '_orig'

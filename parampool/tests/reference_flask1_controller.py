@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = Mysimplefunc(request.form)
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST': # and form.validate():
 
         result = compute(form)
 

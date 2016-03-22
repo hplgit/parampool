@@ -217,7 +217,7 @@ MathJax.Hub.Config({
         if 'symbol' in item.data:
             symbol = item.data["symbol"]
         else:
-            symbol = "\\mbox{%s}" % name
+            symbol = "\\mbox{%s}" % name.split('/')[-1].replace('_', r'\_')
         imgsrc = get_symbol(symbol, static_dir, tree_path)
         imgsrc = os.sep + "static" + imgsrc.split("static")[-1]
 

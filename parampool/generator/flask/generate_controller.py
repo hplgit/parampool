@@ -61,10 +61,10 @@ import os
 from %(compute_function_file)s import %(compute_function_name)s as compute_function
 ''' % vars()
     if pool:
+        # AEJ: Why pool first? With login we don't even have this file.
+        # TODO: Find out the reason for this order of imports.
         code += '''
 # Pool object (must be imported before %(model_module)s)
-# AEJ: Why? With login we don't even have this file.
-# TODO: Find out the reason for this order of imports.
 from %(pool_function_file)s import %(pool_function_name)s as pool_function
 pool = pool_function()
 
@@ -274,7 +274,7 @@ def allowed_file(filename):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     form = %(classname)s(request.form)
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST': # and form.validate():
 ''' % vars()
         if file_upload:
         # Need to write custom validation for files
@@ -470,7 +470,7 @@ register a new user and leave the 'notify' field unchecked."""
 def create_login():
     from %(forms_module)s import register_form
     form = register_form(request.form)
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST': # and form.validate():
         user = User()
         form.populate_obj(user)
         user.set_password(form.password.data)
@@ -486,7 +486,7 @@ def create_login():
 def login():
     from %(forms_module)s import login_form
     form = login_form(request.form)
-    if request.method == 'POST' and form.validate():
+    if request.method == 'POST': # and form.validate():
         user = form.get_user()
         login_user(user)
         return redirect(url_for('index'))
@@ -556,6 +556,7 @@ if __name__ == '__main__':
 
     if pool:
         code += """
+    # Dump pool to file for use with --poolfile .tmp_pool.dat
     from parampool.pool.UI import write_poolfile
     write_poolfile(pool, '.tmp_pool.dat')
 """

@@ -202,7 +202,7 @@ MathJax.Hub.Config({
     def leaf_func(tree_path, level, item, user_data):
         id = user_data.id
         parent_id = user_data.parent_id[-1]
-        name = item.name
+        name = '/'.join(tree_path) + '/' + item.name  # full path
         field_name = parampool.utils.legal_variable_name(name)
 
         widget_size = item.get('widget_size', default=default_widget_size)
@@ -224,9 +224,9 @@ MathJax.Hub.Config({
             if latex_name == 'symbol':
                 symbol = item.data["symbol"]
             elif latex_name == 'text, symbol':
-                symbol = "\\mbox{%s}" % name + ',\\ ' + item.data["symbol"]
+                symbol = "\\mbox{%s}" % name.split('/')[-1].replace('_', r'\_') + ',\\ ' + item.data["symbol"]
         else:
-            symbol = "\\mbox{%s}" % name
+            symbol = "\\mbox{%s}" % name.split('/')[-1].replace('_', r'\_')
         imgsrc = get_symbol(symbol, 'static', tree_path)
 
         # Use slider and show current value

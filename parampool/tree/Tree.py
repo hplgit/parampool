@@ -47,7 +47,11 @@ class Tree:
         # As creating file in current dir
         self.locator.add(leaf)
 
+    def get_current_subtree(self):
+        return self.locator  # SubTree object
+
     def change_subtree(self, path):
+        """Move to path in tree."""
         # path has same syntax as file path to a directory
         original_location = self.locator
         if not isinstance(path, TreePath):
@@ -86,6 +90,17 @@ class Tree:
         subtree=None,     # subtree to invoke
         user_data=None,   # users data - for in-place manipulation
         verbose=False):   # True: write out the traversal
+        """
+        Traverse the tree, starting from subtree (the root if None).
+        At the start of each SubTree object, callback_subtree_start is
+        called, for each leaf, callback_leaf is called, and at the
+        end of the SubTree object, callback_subtree_end is called.
+        These callback functions take four arguments: tree_path
+        (with the complete path to the current subtree),
+        level (the depth in the tree), item (the SubTree or Leaf object),
+        and user_data which is some mutable data structure provided by
+        the user and that can be filled in callback functions.
+        """
         if subtree is None:
             subtree = self.root
         if tree_path is None:
@@ -237,10 +252,13 @@ def unique_short_name(short_path, paths):
     All full paths are stored in `path`.
     If unique match, return full path, otherwise return None.
     """
-    short_paths = [path[-len(short_path):] for path in paths]
-    if short_paths.count(short_path) > 1:
+    short_paths = [path.split('/')[-1] for path in paths]
+    n = short_paths.count(short_path)
+    if n > 1:  # not unique
         return None
-    else:
+    elif n == 0:  # full path
+        return short_path
+    else: # unique match n=1
         index = short_paths.index(short_path)
         return paths[index]
 
