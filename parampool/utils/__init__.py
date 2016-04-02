@@ -30,8 +30,8 @@ def save_png_to_str(plt, plotwidth=400):
     html_text = '<img src="data:image/png;base64,%(figdata_png)s" width="%(plotwidth)s">' % vars()
     return html_text
 
-def dolfinxml2pool(xmlfile, pool=None):
-    """Return a Pool tree from an XML file with DOLFIN parameters."""
+def fenicsxml2pool(xmlfile, pool=None):
+    """Return a Pool tree from an XML file with FEniCS parameters."""
     if pool is None:
         from parampool.pool.Pool import Pool
         pool = Pool()
@@ -49,7 +49,7 @@ def dolfinxml2pool(xmlfile, pool=None):
             # Add data item
             value = element.attrib['value']
             if value == '':
-                value = 'emptystring'  # just a magic code, the value gets transformed back to '' in set_dolfin_prm
+                value = 'emptystring'  # just a magic code, the value gets transformed back to '' in set_fenics_prm
             widget = 'textline'
             if element.attrib['type'] == 'double':
                 str2type = float
@@ -87,11 +87,11 @@ def dolfinxml2pool(xmlfile, pool=None):
     iterate(root)
     return pool
 
-def set_dolfin_prm(path, level, item, dolfin_parameters):
+def set_fenics_prm(path, level, item, fenics_parameters):
     """
-    Fill parameters dict in DOLFIN from a leaf in the Pool tree.
+    Fill parameters dict in FEniCS from a leaf in the Pool tree.
     Callback function for leaf in Pool tree in a FEniCS program:
-    pool.traverse(set_dolfin_prm, user_data=dolfin.parameters).
+    pool.traverse(set_fenics_prm, user_data=fenics.parameters).
     """
     submenu = path[2:]  # drop considering Main menu, dolfin
     value = item.get_value()
@@ -112,26 +112,26 @@ def set_dolfin_prm(path, level, item, dolfin_parameters):
 
     if len(submenu) == 0:
         try:
-            dolfin_parameters[item.name] = value
+            fenics_parameters[item.name] = value
         except KeyError:
-            pass # user's parameter, not in DOLFIN's parameters
+            pass # user's parameter, not in FEniCS's parameters
     elif len(submenu) == 1:
         try:
-            dolfin_parameters[submenu[0]][item.name] = value
+            fenics_parameters[submenu[0]][item.name] = value
         except KeyError:
-            pass # user's parameter, not in DOLFIN's parameters
+            pass # user's parameter, not in FEniCS's parameters
     elif len(submenu) == 2:
         try:
-            dolfin_parameters[submenu[0]][submenu[1]][item.name] = value
+            fenics_parameters[submenu[0]][submenu[1]][item.name] = value
         except KeyError:
-            pass # user's parameter, not in DOLFIN's parameters
+            pass # user's parameter, not in FEniCS's parameters
     elif len(submenu) == 3:
         try:
-            dolfin_parameters[submenu[0]][submenu[1]][submenu[2]][item.name] = value
+            fenics_parameters[submenu[0]][submenu[1]][submenu[2]][item.name] = value
         except KeyError:
-            pass # user's parameter, not in DOLFIN's parameters
+            pass # user's parameter, not in FEniCS's parameters
     else:
-        raise ValueError('DOLFIN XML parameter trees are not so deeply nested')
+        raise ValueError('FEniCS XML parameter trees are not so deeply nested')
 
 def pydiff(text1, text2, text1_name='text1', text2_name='text2',
            prefix_diff_files='tmp_diff', n=3):
