@@ -28,6 +28,15 @@ code { color: inherit; background-color: transparent; }
    max-height: 400px;
    overflow-x: hidden;
 }
+
+/* Adds an invisible element before each target to offset for the navigation
+   bar */
+.anchor::before {
+  content:"";
+  display:block;
+  height:50px;      /* fixed header height for style bootstrap_bluegray */
+  margin:-50px 0 0; /* negative fixed header height */
+}
 </style>
 
 
@@ -35,7 +44,11 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [('Simulation program used as sample app', 1, None, '___sec0'),
+ 'sections': [('Table of contents',
+               1,
+               'table_of_contents',
+               'table_of_contents'),
+              ('Simulation program used as sample app', 1, None, '___sec0'),
               ('User interfaces for Python functions',
                1,
                'pp:GUI4functions',
@@ -180,6 +193,7 @@ MathJax.Hub.Config({
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
+     <!-- navigation toc: --> <li><a href="._pp001.html#table_of_contents" style="font-size: 80%;"><b>Table of contents</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;"><b>Simulation program used as sample app</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;"><b>User interfaces for Python functions</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:real:inout" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Real numbers as input and output</a></li>
@@ -243,7 +257,7 @@ MathJax.Hub.Config({
 <a name="part0005"></a>
 <!-- !split -->
 
-<h2 id="___sec33">Login and archival of results </h2>
+<h2 id="___sec33" class="anchor">Login and archival of results </h2>
 
 <p>
 Parampool has a feature that allows a user to create an account, log in,
@@ -257,7 +271,7 @@ to the <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-p
 <p>
 
 <!-- code=python (!bc pypro) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
 <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces
 
 generate(compute_motion_and_forces, MathJax<span style="color: #666666">=</span><span style="color: #008000">True</span>,
@@ -275,7 +289,7 @@ right corner has a link <em>Previous simulations</em> which gives access to
 previous results in the database. At the bottom of the page with
 previous runs, there is a <em>Delete all</em> button that clears the database.
 
-<h3 id="___sec34">Problems with sending email </h3>
+<h3 id="___sec34" class="anchor">Problems with sending email </h3>
 
 <p>
 In case of error messages regarding sending email through Google's
@@ -285,10 +299,10 @@ right before the <code>send_email</code> function:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">app<span style="color: #666666">.</span>config[<span style="color: #BA2121">&#39;MAIL_SERVER&#39;</span>] <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;smtp.gmail.com&#39;</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>app<span style="color: #666666">.</span>config[<span style="color: #BA2121">&#39;MAIL_SERVER&#39;</span>] <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;smtp.gmail.com&#39;</span>
 </pre></div>
 
-<h2 id="___sec35">Python expressions as input </h2>
+<h2 id="___sec35" class="anchor">Python expressions as input </h2>
 
 <p>
 One can use Python expressions like <code>sin(0.5)*exp(-1)</code> in the input
@@ -305,7 +319,7 @@ do not start with an underscore:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">mymodule</span><span style="color: #666666">,</span> <span style="color: #0000FF; font-weight: bold">yourmodule</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">mymodule</span><span style="color: #666666">,</span> <span style="color: #0000FF; font-weight: bold">yourmodule</span>
 namespace <span style="color: #666666">=</span> {<span style="color: #BA2121">&#39;myfunc&#39;</span>: mymodule<span style="color: #666666">.</span>myfunc}
 namespace<span style="color: #666666">.</span>update({key: value <span style="color: #008000; font-weight: bold">for</span> key, value <span style="color: #AA22FF; font-weight: bold">in</span>
                   yourmodule<span style="color: #666666">.</span>__dict__<span style="color: #666666">.</span>iteritems()

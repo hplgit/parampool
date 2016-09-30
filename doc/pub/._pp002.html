@@ -28,6 +28,15 @@ code { color: inherit; background-color: transparent; }
    max-height: 400px;
    overflow-x: hidden;
 }
+
+/* Adds an invisible element before each target to offset for the navigation
+   bar */
+.anchor::before {
+  content:"";
+  display:block;
+  height:50px;      /* fixed header height for style bootstrap_bluegray */
+  margin:-50px 0 0; /* negative fixed header height */
+}
 </style>
 
 
@@ -35,7 +44,11 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [('Simulation program used as sample app', 1, None, '___sec0'),
+ 'sections': [('Table of contents',
+               1,
+               'table_of_contents',
+               'table_of_contents'),
+              ('Simulation program used as sample app', 1, None, '___sec0'),
               ('User interfaces for Python functions',
                1,
                'pp:GUI4functions',
@@ -180,6 +193,7 @@ MathJax.Hub.Config({
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
+     <!-- navigation toc: --> <li><a href="._pp001.html#table_of_contents" style="font-size: 80%;"><b>Table of contents</b></a></li>
      <!-- navigation toc: --> <li><a href="#___sec0" style="font-size: 80%;"><b>Simulation program used as sample app</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;"><b>User interfaces for Python functions</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:real:inout" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Real numbers as input and output</a></li>
@@ -243,7 +257,7 @@ MathJax.Hub.Config({
 <a name="part0002"></a>
 <!-- !split -->
 
-<h1 id="___sec0">Simulation program used as sample app </h1>
+<h1 id="___sec0" class="anchor">Simulation program used as sample app </h1>
 
 <p>
 We shall work with a sample application that takes a few variables as

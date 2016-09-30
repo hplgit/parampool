@@ -28,6 +28,15 @@ code { color: inherit; background-color: transparent; }
    max-height: 400px;
    overflow-x: hidden;
 }
+
+/* Adds an invisible element before each target to offset for the navigation
+   bar */
+.anchor::before {
+  content:"";
+  display:block;
+  height:50px;      /* fixed header height for style bootstrap_bluegray */
+  margin:-50px 0 0; /* negative fixed header height */
+}
 </style>
 
 
@@ -35,7 +44,11 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [('Simulation program used as sample app', 1, None, '___sec0'),
+ 'sections': [('Table of contents',
+               1,
+               'table_of_contents',
+               'table_of_contents'),
+              ('Simulation program used as sample app', 1, None, '___sec0'),
               ('User interfaces for Python functions',
                1,
                'pp:GUI4functions',
@@ -180,6 +193,7 @@ MathJax.Hub.Config({
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
+     <!-- navigation toc: --> <li><a href="._pp001.html#table_of_contents" style="font-size: 80%;"><b>Table of contents</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;"><b>Simulation program used as sample app</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;"><b>User interfaces for Python functions</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:real:inout" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Real numbers as input and output</a></li>
@@ -243,7 +257,7 @@ MathJax.Hub.Config({
 <a name="part0004"></a>
 <!-- !split -->
 
-<h1 id="pp:flask_pool1">Working with a pool of input parameters</h1>
+<h1 id="pp:flask_pool1" class="anchor">Working with a pool of input parameters</h1>
 
 <p>
 Parampool's main focus is on scientific applications with lots of
@@ -261,7 +275,7 @@ the section <a href="._pp003.html#pp:flask4">More input parameters and results</
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces0</span>(
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces0</span>(
     initial_velocity<span style="color: #666666">=5.0</span>,
     initial_angle<span style="color: #666666">=45.0</span>,
     spinrate<span style="color: #666666">=50.0</span>,
@@ -324,7 +338,7 @@ restricted to a valid variable name in Python), but we can also
 specify a lot other properties too, as will be explained.
 
 <p>
-<div class="alert alert-block alert-danger alert-text-normal"><b>: Parameter names must be unique!</b>
+<div class="alert alert-block alert-danger alert-text-normal"><b>Parameter names must be unique!</b>
 The generated Flask or Django code has a class (in <code>model.py</code> or
 <code>models.py</code> for Flask and Django, respectively) where each parameter name
 is transformed to a static class variable. Such code requires each
@@ -339,7 +353,7 @@ A pool is a hierarchical <em>tree structure</em> with <em>subpools</em> and
 in the problem. The task now is to make a Python specification of
 the of subpools and data items in the pool tree.
 
-<h2 id="pp:flask_pool1:list">Specifying a pool as a list</h2>
+<h2 id="pp:flask_pool1:list" class="anchor">Specifying a pool as a list</h2>
 
 <p>
 The pool tree can be specified as a list of lists, strings, and dictionaries.
@@ -351,7 +365,7 @@ pool function goes as follows:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">pool_definition_list</span>():
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">pool_definition_list</span>():
     <span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create and return pool defined through a nested list.&quot;&quot;&quot;</span>
     pool <span style="color: #666666">=</span> [
         <span style="color: #BA2121">&#39;Main&#39;</span>, [
@@ -399,7 +413,7 @@ so after the definition of the pool tree as a list we must make the
 shown conversion from a list to a <code>Pool</code> object via the <code>listtree2Pool</code>
 function.
 
-<h2 id="pp:flask_pool1:dataitem">Attributes in data items</h2>
+<h2 id="pp:flask_pool1:dataitem" class="anchor">Attributes in data items</h2>
 
 <p>
 Each data item has a name and preferably a default value, as in the
@@ -468,7 +482,7 @@ an integer.
 </div>
 
 
-<h2 id="pp:flask_pool1:compute">The compute function</h2>
+<h2 id="pp:flask_pool1:compute" class="anchor">The compute function</h2>
 
 <p>
 When working with pools, the compute function is allowed to take <em>only
@@ -479,7 +493,7 @@ in the pool is extracted by
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">variable <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;my parameter&#39;</span>)
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>variable <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;my parameter&#39;</span>)
 </pre></div>
 <p>
 In case multiple data items have the same name, a sufficient part
@@ -488,7 +502,7 @@ of the subpool path must be given, e.g.,
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">variable <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;My Subpool1/my parameter&#39;</span>)
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>variable <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;My Subpool1/my parameter&#39;</span>)
 </pre></div>
 <p>
 Our specific compute function is a wrapper for <code>compute_motion_and_forces</code>:
@@ -496,7 +510,7 @@ Our specific compute function is a wrapper for <code>compute_motion_and_forces</
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces_with_pool</span>(pool):
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces_with_pool</span>(pool):
     initial_velocity <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Initial velocity&#39;</span>)
     initial_angle <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Initial angle&#39;</span>)
     spinrate <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Spinrate&#39;</span>)
@@ -519,7 +533,7 @@ information is needed, one can
 simply make a class, store extra data as attributes in the class,
 and let the compute function be a method in the class.
 
-<h2 id="pp:flask_pool1:cml_file">A command-line and file interface</h2>
+<h2 id="pp:flask_pool1:cml_file" class="anchor">A command-line and file interface</h2>
 
 <p>
 Having defined a pool, it is trivial to get a command-line interface
@@ -528,7 +542,7 @@ in the application. Just write
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.UI</span> <span style="color: #008000; font-weight: bold">import</span> set_values_from_command_line
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.UI</span> <span style="color: #008000; font-weight: bold">import</span> set_values_from_command_line
 pool <span style="color: #666666">=</span> set_values_from_command_line(pool)
 </pre></div>
 <p>
@@ -545,7 +559,7 @@ One can also read data from a file with syntax
 <p>
 
 <!-- code=text (!bc dat) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">subpool Initial motion data
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>subpool Initial motion data
   Initial angle = 45.5        # small perturbation
   Spinrate = 20
 end
@@ -559,7 +573,7 @@ Data from the file is loaded into the pool by
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.UI</span> <span style="color: #008000; font-weight: bold">import</span> set_defaults_from_file
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.UI</span> <span style="color: #008000; font-weight: bold">import</span> set_defaults_from_file
 pool <span style="color: #666666">=</span> set_defaults_from_file(pool)
 </pre></div>
 <p>
@@ -583,7 +597,7 @@ the next topic. The lines above for loading parameters from file
 and command line are automatically generated when a web interface
 is requested (see also comments in the section <a href="#pp:flask_pool1:GUI_cml_file">Loading parameters from file and the command line</a>).
 
-<h2 id="pp:flask_pool1:GUI">A web-based user interface</h2>
+<h2 id="pp:flask_pool1:GUI" class="anchor">A web-based user interface</h2>
 
 <p>
 With a pool function and a compute function at hand,
@@ -594,7 +608,7 @@ and write a <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/
 <p>
 
 <!-- code=python (!bc pypro) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
 <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces_with_pool, \
      pool_definition_list
 
@@ -611,7 +625,7 @@ is required. After running
 <p>
 
 <!-- code=text (!bc sys) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; python generate.py
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>Terminal&gt; python generate.py
 </pre></div>
 <p>
 several Flask files and directories are generated (<code>model.py</code>, <code>controller.py</code>,
@@ -621,7 +635,7 @@ The user interface is started by
 <p>
 
 <!-- code=text (!bc sys) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; python controller.py
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>Terminal&gt; python controller.py
 </pre></div>
 <p>
 Open the URL <code>http://127.0.0.1:5000</code> in a web broswer to see an interface
@@ -634,7 +648,7 @@ as the one in Figure <a href="#pp:flask_pool1:fig1">7</a>.
 <p><img src="fig-pp/flask_pool1_closed.png" align="bottom" width=800></p>
 </center>
 
-<h2 id="pp:flask_pool1:GUI_op">Operating the graphical web interface</h2>
+<h2 id="pp:flask_pool1:GUI_op" class="anchor">Operating the graphical web interface</h2>
 
 <p>
 The pool tree is mapped onto a visual structure often used for
@@ -745,7 +759,7 @@ this example).
 <p><img src="fig-pp/flask_pool1_result.png" align="bottom" width=800></p>
 </center>
 
-<h2 id="pp:flask_pool1:GUI_error">Detection of wrong input</h2>
+<h2 id="pp:flask_pool1:GUI_error" class="anchor">Detection of wrong input</h2>
 
 <p>
 <b>Text in a number field.</b>
@@ -762,7 +776,7 @@ A <code>False</code> value returned from this function gives rise to a
 <p>
 
 <!-- code=text typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Mass = -0.1: validate function &lt;lambda&gt; claims invalid value.
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>Mass = -0.1: validate function &lt;lambda&gt; claims invalid value.
 </pre></div>
 <p>
 <b>Failure of converting string to right type.</b>
@@ -773,7 +787,7 @@ with the message
 <p>
 
 <!-- code=text typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">could not apply str2type=&lt;type &#39;float&#39;&gt; to value abc &lt;type &#39;str&#39;&gt;
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>could not apply str2type=&lt;type &#39;float&#39;&gt; to value abc &lt;type &#39;str&#39;&gt;
 </pre></div>
 <p>
 <b>Failure in the compute function.</b>
@@ -787,7 +801,7 @@ of providing a tailored <code>str2type</code> function in this case:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">convert_time_step</span>(value):
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">convert_time_step</span>(value):
     <span style="color: #408080; font-style: italic"># Value must be None or a float</span>
     <span style="color: #008000; font-weight: bold">if</span> value <span style="color: #666666">==</span> <span style="color: #BA2121">&#39;None&#39;</span>:
         <span style="color: #008000; font-weight: bold">return</span> <span style="color: #008000">None</span>
@@ -804,7 +818,7 @@ Setting <code>str2type=convert_time_step</code> for the &quot;Time step&quot; da
 gives an informative error message if the answer is not as expected:
 <code>None</code> or a floating-point number.
 
-<h2 id="pp:flask_pool1:GUI_cml_file">Loading parameters from file and the command line</h2>
+<h2 id="pp:flask_pool1:GUI_cml_file" class="anchor">Loading parameters from file and the command line</h2>
 
 <p>
 Parameters can be assigned default values in a file and then other
@@ -817,7 +831,7 @@ controller.py</code> we may add <code>--poolfile name</code> and any set of
 command-line options for setting individual parameters. This makes it
 easy to control which default values that will appear in the web GUI.
 
-<h2 id="___sec27">Common trouble: &quot;Address already in use&quot; </h2>
+<h2 id="___sec27" class="anchor">Common trouble: &quot;Address already in use&quot; </h2>
 
 <p>
 Sometimes, after much trial and error with developing a graphical
@@ -831,7 +845,7 @@ that occupies the port and force abortion of that program:
 <p>
 
 <!-- code=text (!bc sys) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">Terminal&gt; lsof -i :5000
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>Terminal&gt; lsof -i :5000
 COMMAND   PID USER   FD   TYPE  DEVICE SIZE/OFF NODE NAME
 python  48824  hpl    3u  IPv4 1128848      0t0  TCP ...
 Terminal&gt; kill -9 48824
@@ -839,7 +853,7 @@ Terminal&gt; kill -9 48824
 <p>
 Now you can restart the application.
 
-<h2 id="___sec28">Specifying a pool using an API </h2>
+<h2 id="___sec28" class="anchor">Specifying a pool using an API </h2>
 
 <p>
 Instead of listing all the entries in the pool tree as strings, lists,
@@ -851,7 +865,7 @@ the API:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">pool_definition_api</span>():
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">pool_definition_api</span>():
     <span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;Create and return pool using the parampool.pool API.&quot;&quot;&quot;</span>
     <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.pool.Pool</span> <span style="color: #008000; font-weight: bold">import</span> Pool
     pool <span style="color: #666666">=</span> Pool()
@@ -936,7 +950,7 @@ of this GUI (found in the <a href="https://github.com/hplgit/parampool/tree/mast
 the same as in the previous one (found in the <a href="https://github.com/hplgit/parampool/tree/master/doc/src/pp/src-pp/flask_pool1" target="_self"><tt>flask_pool1</tt></a>
 directory).
 
-<h2 id="___sec29">Specifying a pool using an alternative API </h2>
+<h2 id="___sec29" class="anchor">Specifying a pool using an alternative API </h2>
 
 <p>
 There is an another way of defining subpools as well: make a function
@@ -945,7 +959,7 @@ for defining each subpool.
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">pool_definition_api_with_separate_subpools</span>():
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">pool_definition_api_with_separate_subpools</span>():
     <span style="color: #BA2121; font-style: italic">&quot;&quot;&quot;</span>
 <span style="color: #BA2121; font-style: italic">    Create and return a pool by calling up other functions</span>
 <span style="color: #BA2121; font-style: italic">    for defining the subpools. Also demonstrate customization</span>
@@ -1063,7 +1077,7 @@ of Parampool:
    parameter sets at once</li>
 </ol>
 
-<h3 id="___sec30">File with documentation of the application </h3>
+<h3 id="___sec30" class="anchor">File with documentation of the application </h3>
 
 <p>
 We have in the section <a href="._pp003.html#pp:flask4">More input parameters and results</a> seen that the doc string of
@@ -1073,7 +1087,7 @@ It is also possible to make such a description in a separate
 file. Any HTML file will work, and the filename is specified by
 the <code>doc</code> argument to <code>generate</code>.
 
-<h3 id="___sec31">LaTeX symbol as parameter name </h3>
+<h3 id="___sec31" class="anchor">LaTeX symbol as parameter name </h3>
 
 <p>
 One can add a mathematical
@@ -1086,7 +1100,7 @@ The choice is set by the <code>latex_name</code> keyword argument in the
 <p>
 
 <!-- code=python (!bc pypro) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
 <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> compute_motion_and_forces_with_pool_loop, \
      pool_definition_api_with_separate_subpools
 
@@ -1100,7 +1114,7 @@ The values of <code>latex_name</code> can be <code>'symbol'</code>, meaning symb
 <code>'text, symbol'</code>, meaning that the ordinary name is
 followed by a comma and the symbol.
 
-<h3 id="___sec32">Multiple input values for parameters </h3>
+<h3 id="___sec32" class="anchor">Multiple input values for parameters </h3>
 
 <p>
 We can specify multiple values for parameters whose input fields are
@@ -1115,7 +1129,7 @@ like this:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces_with_pool_loop</span>(pool):
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces_with_pool_loop</span>(pool):
     html <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;&#39;</span>
     initial_angle <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Initial angle&#39;</span>)
     method <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Method&#39;</span>)
@@ -1159,7 +1173,7 @@ the elements in the lists/tuples. As an example,
 <p>
 
 <!-- code=python (!bc pyshell) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #666666">&gt;&gt;&gt;</span> <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">itertools</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #666666">&gt;&gt;&gt;</span> <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">itertools</span>
 <span style="color: #666666">&gt;&gt;&gt;</span> values1 <span style="color: #666666">=</span> [<span style="color: #666666">1</span>, <span style="color: #666666">-1</span>]
 <span style="color: #666666">&gt;&gt;&gt;</span> values2 <span style="color: #666666">=</span> [<span style="color: #666666">2</span>, <span style="color: #666666">4</span>, <span style="color: #666666">6</span>]
 <span style="color: #666666">&gt;&gt;&gt;</span> combinations <span style="color: #666666">=</span> itertools<span style="color: #666666">.</span>product(values1, values2)
@@ -1178,7 +1192,7 @@ The single loop is equivalent to
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">for</span> value1 <span style="color: #AA22FF; font-weight: bold">in</span> values1:
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">for</span> value1 <span style="color: #AA22FF; font-weight: bold">in</span> values1:
     <span style="color: #008000; font-weight: bold">for</span> value2 <span style="color: #AA22FF; font-weight: bold">in</span> values2:
         combination <span style="color: #666666">=</span> (value1, value2)
 	<span style="color: #008000; font-weight: bold">print</span> combination
@@ -1190,7 +1204,7 @@ can use the construction
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">values <span style="color: #666666">=</span> [values1, values2]
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>values <span style="color: #666666">=</span> [values1, values2]
 combinations <span style="color: #666666">=</span> itertools<span style="color: #666666">.</span>product(<span style="color: #666666">*</span>values)
 </pre></div>
 <p>
@@ -1200,7 +1214,7 @@ over multiple values of the parameters:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces_with_pool_loop_product</span>(pool):
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">compute_motion_and_forces_with_pool_loop_product</span>(pool):
     <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">itertools</span>
     initial_angle <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Initial angle&#39;</span>)
     method <span style="color: #666666">=</span> pool<span style="color: #666666">.</span>get_value(<span style="color: #BA2121">&#39;Method&#39;</span>)

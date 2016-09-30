@@ -28,6 +28,15 @@ code { color: inherit; background-color: transparent; }
    max-height: 400px;
    overflow-x: hidden;
 }
+
+/* Adds an invisible element before each target to offset for the navigation
+   bar */
+.anchor::before {
+  content:"";
+  display:block;
+  height:50px;      /* fixed header height for style bootstrap_bluegray */
+  margin:-50px 0 0; /* negative fixed header height */
+}
 </style>
 
 
@@ -35,7 +44,11 @@ code { color: inherit; background-color: transparent; }
 
 <!-- tocinfo
 {'highest level': 1,
- 'sections': [('Simulation program used as sample app', 1, None, '___sec0'),
+ 'sections': [('Table of contents',
+               1,
+               'table_of_contents',
+               'table_of_contents'),
+              ('Simulation program used as sample app', 1, None, '___sec0'),
               ('User interfaces for Python functions',
                1,
                'pp:GUI4functions',
@@ -180,6 +193,7 @@ MathJax.Hub.Config({
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Contents <b class="caret"></b></a>
         <ul class="dropdown-menu">
+     <!-- navigation toc: --> <li><a href="._pp001.html#table_of_contents" style="font-size: 80%;"><b>Table of contents</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp002.html#___sec0" style="font-size: 80%;"><b>Simulation program used as sample app</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:GUI4functions" style="font-size: 80%;"><b>User interfaces for Python functions</b></a></li>
      <!-- navigation toc: --> <li><a href="._pp003.html#pp:real:inout" style="font-size: 80%;">&nbsp;&nbsp;&nbsp;Real numbers as input and output</a></li>
@@ -243,12 +257,12 @@ MathJax.Hub.Config({
 <a name="part0006"></a>
 <!-- !split -->
 
-<h1 id="___sec36">Exercises </h1>
+<h1 id="___sec36" class="anchor">Exercises </h1>
 
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="pp:exer:integrate">Exercise 1: Make a web app for integration</h2>
+<h2 id="pp:exer:integrate" class="anchor">Exercise 1: Make a web app for integration</h2>
 
 <p>
 The purpose of this exercise is to use Parampool to generate a
@@ -283,7 +297,7 @@ makes a <code>sympy</code> expression and a valid Python function <code>f(x): re
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">sympy</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">sym</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">sympy</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">sym</span>
 expr <span style="color: #666666">=</span> sym<span style="color: #666666">.</span>sympify(s)
 x <span style="color: #666666">=</span> sym<span style="color: #666666">.</span>Symbol(<span style="color: #BA2121">&#39;x&#39;</span>)
 f <span style="color: #666666">=</span> sym<span style="color: #666666">.</span>lambdify([x], expr)
@@ -295,7 +309,7 @@ tries to integrate symbolically and then numerically if necessary:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">integrate</span>(string_expression, a, b):
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">integrate</span>(string_expression, a, b):
     <span style="color: #008000; font-weight: bold">assert</span> <span style="color: #008000">isinstance</span>(string_expression, <span style="color: #008000">str</span>)
     <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">sympy</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">sym</span>
     expr <span style="color: #666666">=</span> sym<span style="color: #666666">.</span>sympify(string_expression)
@@ -324,7 +338,7 @@ Filename: <code>integrate</code>.
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="pp:exer:plotdata">Exercise 2: Make a web app for plotting data</h2>
+<h2 id="pp:exer:plotdata" class="anchor">Exercise 2: Make a web app for plotting data</h2>
 
 <p>
 Make a web app with the <code>parampool.pool.Pool</code> functionality
@@ -361,7 +375,7 @@ Filename: <code>upload_and_plot</code>.
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="___sec39">Exercise 3: Make a web app for studying vibrations </h2>
+<h2 id="___sec39" class="anchor">Exercise 3: Make a web app for studying vibrations </h2>
 
 <p>
 Download the <a href="https://github.com/hplgit/bumpy" target="_self">bumpy</a> for
@@ -435,7 +449,7 @@ expressions for \( F(t) \) and \( s(u) \)?
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="___sec40">Problem 4: Make a coin flipper </h2>
+<h2 id="___sec40" class="anchor">Problem 4: Make a coin flipper </h2>
 
 <p>
 Make a web application where we can set the number of coins, \( m \), to
@@ -476,7 +490,7 @@ Filename: <code>coin_flipper</code>.
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="pp:exer:lorenz">Exercise 5: Make a web app for the Lorenz system</h2>
+<h2 id="pp:exer:lorenz" class="anchor">Exercise 5: Make a web app for the Lorenz system</h2>
 
 <p>
 The famous
@@ -507,7 +521,7 @@ Filename: <code>lorenz</code>.
 <p>
 <!-- --- begin exercise --- -->
 
-<h2 id="pp:exer:custom1">Exercise 6: Customize an automatically generated web app</h2>
+<h2 id="pp:exer:custom1" class="anchor">Exercise 6: Customize an automatically generated web app</h2>
 
 <p>
 Suppose you want to evaluate the formula,
@@ -520,7 +534,7 @@ A simple compute function is
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">formula</span>(x<span style="color: #666666">=1.0</span>, c0<span style="color: #666666">=0.0</span>, c1<span style="color: #666666">=1.0</span>, p1<span style="color: #666666">=0.0</span>, p2<span style="color: #666666">=0.0</span>,
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">def</span> <span style="color: #0000FF">formula</span>(x<span style="color: #666666">=1.0</span>, c0<span style="color: #666666">=0.0</span>, c1<span style="color: #666666">=1.0</span>, p1<span style="color: #666666">=0.0</span>, p2<span style="color: #666666">=0.0</span>,
             include_p1<span style="color: #666666">=</span><span style="color: #008000">True</span>, include_p2<span style="color: #666666">=</span><span style="color: #008000">True</span>):
     r <span style="color: #666666">=</span> c0 <span style="color: #666666">+</span> c1<span style="color: #666666">*</span>x
     <span style="color: #008000; font-weight: bold">if</span> include_p1:
@@ -534,15 +548,7 @@ Running the Parampool web generator on this compute function leads to
 the following GUI:
 
 <p>
-<br />
-<br />
-
-<p>
-<center><p><img src="fig-pp/on_off_vars_default_UI.png" align="bottom" width=500></p></center>
-
-<p>
-<br />
-<br />
+<br /><br /><center><p><img src="fig-pp/on_off_vars_default_UI.png" align="bottom" width=500></p></center><br /><br />
 
 <p>
 However, it would look nicer if the boolean variables were grouped with
@@ -550,15 +556,7 @@ their corresponding numbers, as here (also including results from
 the computation of the formula):
 
 <p>
-<br />
-<br />
-
-<p>
-<center><p><img src="fig-pp/on_off_vars_desired_UI.png" align="bottom" width=500></p></center>
-
-<p>
-<br />
-<br />
+<br /><br /><center><p><img src="fig-pp/on_off_vars_desired_UI.png" align="bottom" width=500></p></center><br /><br />
 
 <p>
 Edit the generated web application so that the user interface becomes
@@ -608,7 +606,7 @@ An appropriate <code>compute.py</code> file is
 <p>
 
 <!-- code=python (!bc pypro) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">numpy</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">np</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">numpy</span> <span style="color: #008000; font-weight: bold">as</span> <span style="color: #0000FF; font-weight: bold">np</span>
 <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">math</span> <span style="color: #008000; font-weight: bold">import</span> pi, sqrt, sin, cos
 <span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">os</span>
 
@@ -635,7 +633,7 @@ First we need to generate the web app via a <code>generator.py</code> file:
 <p>
 
 <!-- code=python (!bc pypro) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">parampool.generator.flask</span> <span style="color: #008000; font-weight: bold">import</span> generate
 <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">compute</span> <span style="color: #008000; font-weight: bold">import</span> formula <span style="color: #008000; font-weight: bold">as</span> compute
 
 generate(compute, default_field<span style="color: #666666">=</span><span style="color: #BA2121">&#39;FloatField&#39;</span>)
@@ -646,65 +644,65 @@ Finally, we must edit <code>view.html</code> file so it looks as follows:
 <p>
 
 <!-- code=html (!bc htmlpro) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #BC7A00">&lt;!DOCTYPE html&gt;</span>
-<span style="color: #008000; font-weight: bold">&lt;html</span> <span style="color: #7D9029">lang=</span><span style="color: #BA2121">&quot;en&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;head&gt;</span>
-    <span style="color: #008000; font-weight: bold">&lt;meta</span> <span style="color: #7D9029">charset=</span><span style="color: #BA2121">&quot;utf-8&quot;</span> <span style="color: #008000; font-weight: bold">/&gt;</span>
-    <span style="color: #008000; font-weight: bold">&lt;title&gt;</span>Flask Formula app<span style="color: #008000; font-weight: bold">&lt;/title&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;/head&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;body&gt;</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #BC7A00">&lt;!DOCTYPE html&gt;</span>
+&lt;<span style="color: #008000; font-weight: bold">html</span> <span style="color: #7D9029">lang</span><span style="color: #666666">=</span><span style="color: #BA2121">&quot;en&quot;</span>&gt;
+  &lt;<span style="color: #008000; font-weight: bold">head</span>&gt;
+    &lt;<span style="color: #008000; font-weight: bold">meta</span> <span style="color: #7D9029">charset</span><span style="color: #666666">=</span><span style="color: #BA2121">&quot;utf-8&quot;</span> /&gt;
+    &lt;<span style="color: #008000; font-weight: bold">title</span>&gt;Flask Formula app&lt;/<span style="color: #008000; font-weight: bold">title</span>&gt;
+  &lt;/<span style="color: #008000; font-weight: bold">head</span>&gt;
+  &lt;<span style="color: #008000; font-weight: bold">body</span>&gt;
 
 
   <span style="color: #408080; font-style: italic">&lt;!-- Input and Results are typeset as a two-column table --&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;table&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;tr&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">valign=</span><span style="color: #BA2121">&quot;top&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
-    <span style="color: #008000; font-weight: bold">&lt;h2&gt;</span>Input:<span style="color: #008000; font-weight: bold">&lt;/h2&gt;</span>
+  &lt;<span style="color: #008000; font-weight: bold">table</span>&gt;
+  &lt;<span style="color: #008000; font-weight: bold">tr</span>&gt;
+  &lt;<span style="color: #008000; font-weight: bold">td</span> <span style="color: #7D9029">valign</span><span style="color: #666666">=</span><span style="color: #BA2121">&quot;top&quot;</span>&gt;
+    &lt;<span style="color: #008000; font-weight: bold">h2</span>&gt;Input:&lt;/<span style="color: #008000; font-weight: bold">h2</span>&gt;
 
-      <span style="color: #008000; font-weight: bold">&lt;form</span> <span style="color: #7D9029">method=</span><span style="color: #BA2121">post</span> <span style="color: #7D9029">action=</span><span style="color: #BA2121">&quot;&quot;</span> <span style="color: #7D9029">enctype=</span><span style="color: #BA2121">&quot;multipart/form-data&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
-        <span style="color: #008000; font-weight: bold">&lt;table&gt;</span>
+      &lt;<span style="color: #008000; font-weight: bold">form</span> <span style="color: #7D9029">method</span><span style="color: #666666">=</span><span style="color: #BA2121">post</span> <span style="color: #7D9029">action</span><span style="color: #666666">=</span><span style="color: #BA2121">&quot;&quot;</span> <span style="color: #7D9029">enctype</span><span style="color: #666666">=</span><span style="color: #BA2121">&quot;multipart/form-data&quot;</span>&gt;
+        &lt;<span style="color: #008000; font-weight: bold">table</span>&gt;
 	  <span style="color: #408080; font-style: italic">&lt;!-- List all pure numbers first --&gt;</span>
           {% for field in form_pure_numbers %}
-            <span style="color: #008000; font-weight: bold">&lt;tr&gt;&lt;td&gt;</span>{{ field.name }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
-                <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ field(size=10) }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
-                <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{% if field.errors %}
-                  <span style="color: #008000; font-weight: bold">&lt;ul</span> <span style="color: #7D9029">class=</span><span style="color: #BA2121">errors</span><span style="color: #008000; font-weight: bold">&gt;</span>
+            &lt;<span style="color: #008000; font-weight: bold">tr</span>&gt;&lt;<span style="color: #008000; font-weight: bold">td</span>&gt;{{ field.name }}&lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
+                &lt;<span style="color: #008000; font-weight: bold">td</span>&gt;{{ field(size=10) }}&lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
+                &lt;<span style="color: #008000; font-weight: bold">td</span>&gt;{% if field.errors %}
+                  &lt;<span style="color: #008000; font-weight: bold">ul</span> <span style="color: #7D9029">class</span><span style="color: #666666">=</span><span style="color: #BA2121">errors</span>&gt;
                   {% for error in field.errors %}
-                    <span style="color: #008000; font-weight: bold">&lt;li&gt;</span>{{ error }}<span style="color: #008000; font-weight: bold">&lt;/li&gt;</span>
-                  {% endfor %}<span style="color: #008000; font-weight: bold">&lt;/ul&gt;</span>
-                {% endif %}<span style="color: #008000; font-weight: bold">&lt;/td&gt;&lt;/tr&gt;</span>
+                    &lt;<span style="color: #008000; font-weight: bold">li</span>&gt;{{ error }}&lt;/<span style="color: #008000; font-weight: bold">li</span>&gt;
+                  {% endfor %}&lt;/<span style="color: #008000; font-weight: bold">ul</span>&gt;
+                {% endif %}&lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;&lt;/<span style="color: #008000; font-weight: bold">tr</span>&gt;
           {% endfor %}
 	  <span style="color: #408080; font-style: italic">&lt;!-- List all numbers with boolean --&gt;</span>
           {% for number, boolean in form_numbers_wbools %}
-          <span style="color: #008000; font-weight: bold">&lt;tr&gt;</span>
-	    <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ number.name }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
-            <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ number(size=20) }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
-            <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{% if number.errors %}
-              <span style="color: #008000; font-weight: bold">&lt;ul</span> <span style="color: #7D9029">class=</span><span style="color: #BA2121">errors</span><span style="color: #008000; font-weight: bold">&gt;</span>
+          &lt;<span style="color: #008000; font-weight: bold">tr</span>&gt;
+	    &lt;<span style="color: #008000; font-weight: bold">td</span>&gt;{{ number.name }}&lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
+            &lt;<span style="color: #008000; font-weight: bold">td</span>&gt;{{ number(size=20) }}&lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
+            &lt;<span style="color: #008000; font-weight: bold">td</span>&gt;{% if number.errors %}
+              &lt;<span style="color: #008000; font-weight: bold">ul</span> <span style="color: #7D9029">class</span><span style="color: #666666">=</span><span style="color: #BA2121">errors</span>&gt;
                   {% for error in number.errors %}
-                  <span style="color: #008000; font-weight: bold">&lt;li&gt;</span>{{ error }}<span style="color: #008000; font-weight: bold">&lt;/li&gt;</span>
-                  {% endfor %}<span style="color: #008000; font-weight: bold">&lt;/ul&gt;</span>
-                {% endif %}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
-	    <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ boolean.name }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
-            <span style="color: #008000; font-weight: bold">&lt;td&gt;</span>{{ boolean() }}<span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
-	    <span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
+                  &lt;<span style="color: #008000; font-weight: bold">li</span>&gt;{{ error }}&lt;/<span style="color: #008000; font-weight: bold">li</span>&gt;
+                  {% endfor %}&lt;/<span style="color: #008000; font-weight: bold">ul</span>&gt;
+                {% endif %}&lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
+	    &lt;<span style="color: #008000; font-weight: bold">td</span>&gt;{{ boolean.name }}&lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
+            &lt;<span style="color: #008000; font-weight: bold">td</span>&gt;{{ boolean() }}&lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
+	    &lt;/<span style="color: #008000; font-weight: bold">tr</span>&gt;
           {% endfor %}
-        <span style="color: #008000; font-weight: bold">&lt;/table&gt;</span>
-        <span style="color: #008000; font-weight: bold">&lt;p&gt;&lt;input</span> <span style="color: #7D9029">type=</span><span style="color: #BA2121">&quot;submit&quot;</span> <span style="color: #7D9029">value=</span><span style="color: #BA2121">&quot;Compute&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
-    <span style="color: #008000; font-weight: bold">&lt;/form&gt;&lt;/p&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
+        &lt;/<span style="color: #008000; font-weight: bold">table</span>&gt;
+        &lt;<span style="color: #008000; font-weight: bold">p</span>&gt;&lt;<span style="color: #008000; font-weight: bold">input</span> <span style="color: #7D9029">type</span><span style="color: #666666">=</span><span style="color: #BA2121">&quot;submit&quot;</span> <span style="color: #7D9029">value</span><span style="color: #666666">=</span><span style="color: #BA2121">&quot;Compute&quot;</span>&gt;
+    &lt;/<span style="color: #008000; font-weight: bold">form</span>&gt;&lt;/<span style="color: #008000; font-weight: bold">p</span>&gt;
+  &lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
 
-  <span style="color: #008000; font-weight: bold">&lt;td</span> <span style="color: #7D9029">valign=</span><span style="color: #BA2121">&quot;top&quot;</span><span style="color: #008000; font-weight: bold">&gt;</span>
+  &lt;<span style="color: #008000; font-weight: bold">td</span> <span style="color: #7D9029">valign</span><span style="color: #666666">=</span><span style="color: #BA2121">&quot;top&quot;</span>&gt;
     {% if result != None %}
-      <span style="color: #008000; font-weight: bold">&lt;h2&gt;</span>Results:<span style="color: #008000; font-weight: bold">&lt;/h2&gt;</span>
+      &lt;<span style="color: #008000; font-weight: bold">h2</span>&gt;Results:&lt;/<span style="color: #008000; font-weight: bold">h2</span>&gt;
         {{ result|safe }}
 
     {% endif %}
-  <span style="color: #008000; font-weight: bold">&lt;/td&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;/tr&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;/table&gt;</span>
-  <span style="color: #008000; font-weight: bold">&lt;/body&gt;</span>
-<span style="color: #008000; font-weight: bold">&lt;/html&gt;</span>
+  &lt;/<span style="color: #008000; font-weight: bold">td</span>&gt;
+  &lt;/<span style="color: #008000; font-weight: bold">tr</span>&gt;
+  &lt;/<span style="color: #008000; font-weight: bold">table</span>&gt;
+  &lt;/<span style="color: #008000; font-weight: bold">body</span>&gt;
+&lt;/<span style="color: #008000; font-weight: bold">html</span>&gt;
 </pre></div>
 <p>
 </div></p>
@@ -718,7 +716,7 @@ Filename: <code>on_off_vars</code>.
 <p>
 <!-- --- end exercise --- -->
 
-<h1 id="___sec43">Deployment </h1>
+<h1 id="___sec43" class="anchor">Deployment </h1>
 
 <p>
 The most obvious servers to deploy web applications on, like Google App Engine,
@@ -726,7 +724,7 @@ only support very light weight Python. For heavier scientific applications
 we may need more tools; SSH access, a Fortran compiler, etc. Therefore we
 introduce two servers we recommend for the scientific computing usage.
 
-<h2 id="___sec44">Wakari </h2>
+<h2 id="___sec44" class="anchor">Wakari </h2>
 
 <p>
 <a href="https://www.wakari.io" target="_self">Wakari</a> is originally meant to be a Python
@@ -738,7 +736,7 @@ server process running in Wakari is possible using SSH tunneling:
 <p>
 
 <!-- code=text (!bc sys) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">wakari-terminal&gt; python controller.py
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>wakari-terminal&gt; python controller.py
 laptop-terminal&gt; ssh -p [port] -f -N -L 5000:localhost:5000 \ 
                  [username]@[wakari-hostname].wakari.io
 </pre></div>
@@ -751,7 +749,7 @@ wakari-hostname, is available under <code>SSH Access</code> at the user submeu i
 Wakari.
 
 <p>
-<center><p><img src="fig-pp/wakari1.png" align="bottom" width=350></p></center>
+<br /><br /><center><p><img src="fig-pp/wakari1.png" align="bottom" width=350></p></center><br /><br />
 
 <p>
 It is also necessary to add your
@@ -780,7 +778,7 @@ on Wakari.)
 <!-- The script <code>install_on_wakari.sh</code> in the top -->
 <!-- directory of cbc-websolver accomplishes this. -->
 
-<h2 id="___sec45">Local server </h2>
+<h2 id="___sec45" class="anchor">Local server </h2>
 
 <p>
 If only little traffic is expected for a web application,
@@ -795,7 +793,7 @@ The simplest example of a Python CGI script running Flask goes like
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #408080; font-style: italic">#!/usr/bin/python</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #408080; font-style: italic">#!/usr/bin/python</span>
 <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">wsgiref.handlers</span> <span style="color: #008000; font-weight: bold">import</span> CGIHandler
 <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">controller</span> <span style="color: #008000; font-weight: bold">import</span> app
 
@@ -817,7 +815,7 @@ Also make sure that <code>controller.py</code> is in a directory listed in
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">sys</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span><span style="color: #008000; font-weight: bold">import</span> <span style="color: #0000FF; font-weight: bold">sys</span>
 <span style="color: #408080; font-style: italic"># controller.py is in /usr/local/my/software</span>
 sys<span style="color: #666666">.</span>path<span style="color: #666666">.</span>insert(<span style="color: #666666">0</span>, <span style="color: #BA2121">&#39;/usr/local/my/software&#39;</span>)
 <span style="color: #008000; font-weight: bold">from</span> <span style="color: #0000FF; font-weight: bold">controller</span> <span style="color: #008000; font-weight: bold">import</span> app
@@ -831,7 +829,7 @@ the import of the app is a bit different than before:
 <p>
 
 <!-- code=python (!bc pycod) typeset with pygments style "default" -->
-<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%">sys<span style="color: #666666">.</span>path <span style="color: #666666">+=</span> [<span style="color: #BA2121">&#39;path/to/myproject&#39;</span>] <span style="color: #408080; font-style: italic"># The folder containing settings.py</span>
+<div class="highlight" style="background: #f8f8f8"><pre style="line-height: 125%"><span></span>sys<span style="color: #666666">.</span>path <span style="color: #666666">+=</span> [<span style="color: #BA2121">&#39;path/to/myproject&#39;</span>] <span style="color: #408080; font-style: italic"># The folder containing settings.py</span>
 os<span style="color: #666666">.</span>environ[<span style="color: #BA2121">&#39;DJANGO_SETTINGS_MODULE&#39;</span>] <span style="color: #666666">=</span> <span style="color: #BA2121">&#39;myproject.settings&#39;</span>
 
 app <span style="color: #666666">=</span> django<span style="color: #666666">.</span>core<span style="color: #666666">.</span>handlers<span style="color: #666666">.</span>wsgi<span style="color: #666666">.</span>WSGIHandler()
@@ -842,7 +840,7 @@ Remember that all scripts and modules to be accessed from the web need to
 have permissions for everyone to read and execute. This can be done by, e.g.,
 <code>chmod 755 filename</code>.
 
-<h1 id="___sec46">Bibliography </h1>
+<h1 id="___sec46" class="anchor">Bibliography </h1>
 
 <p>
 <!-- begin bibliography -->
@@ -857,7 +855,7 @@ have permissions for everyone to read and execute. This can be done by, e.g.,
 
 <!-- end bibliography -->
 
-<h1 id="___sec47">Appendix: Installation of Parampool </h1>
+<h1 id="___sec47" class="anchor">Appendix: Installation of Parampool </h1>
 
 <p>
 Parampool needs

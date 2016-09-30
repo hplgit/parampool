@@ -87,7 +87,7 @@ def fenicsxml2pool(xmlfile, pool=None):
     iterate(root)
     return pool
 
-def set_fenics_prm(path, level, item, fenics_parameters):
+def set_dolfin_prm(path, level, item, fenics_parameters):
     """
     Fill parameters dict in FEniCS from a leaf in the Pool tree.
     Callback function for leaf in Pool tree in a FEniCS program:

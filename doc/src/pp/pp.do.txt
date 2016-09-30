@@ -735,7 +735,7 @@ With a pool we can give the parameters more readable logical names (not
 restricted to a valid variable name in Python), but we can also
 specify a lot other properties too, as will be explained.
 
-!bwarning: Parameter names must be unique!
+!bwarning Parameter names must be unique!
 The generated Flask or Django code has a class (in `model.py` or
 `models.py` for Flask and Django, respectively) where each parameter name
 is transformed to a static class variable. Such code requires each
@@ -1489,25 +1489,13 @@ def formula(x=1.0, c0=0.0, c1=1.0, p1=0.0, p2=0.0,
 Running the Parampool web generator on this compute function leads to
 the following GUI:
 
-<linebreak>
-<linebreak>
-
 FIGURE: [fig-pp/on_off_vars_default_UI, width=500 frac=0.7]
-
-<linebreak>
-<linebreak>
 
 However, it would look nicer if the boolean variables were grouped with
 their corresponding numbers, as here (also including results from
 the computation of the formula):
 
-<linebreak>
-<linebreak>
-
 FIGURE: [fig-pp/on_off_vars_desired_UI, width=500 frac=0.7]
-
-<linebreak>
-<linebreak>
 
 Edit the generated web application so that the user interface becomes
 as desired.
